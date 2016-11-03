@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block title %}關於 Kids Coding Studio{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="/html/css/about.css">
+{% endblock %}
+{% block content %}
+<br><br>
+<center>
+	<div class="container-card">
+		<div class="card-title">
+			Kids Coding Studio 宗旨
+		</div>
+		<br>
+		<div class="card-content">
+			<ol>
+				<li>
+					建立 Young Coder 族群
+						<ul>
+							<li>專注於中小學學子 (10-18歲) </li>
+							<li>促進年輕的程式學習者做交流</li>
+							<li>
+								策略：<br>
+									舉辦程式工作坊, 每週一次 (北大特區) <br>
+									舉辦程式俱樂部, 每月一次 (大台北地區)
+							</li>
+						</ul>
+				</li><br>
+				<li>
+					開發程式教材
+					<ul>
+						<li>降低學習程式的障礙</li>
+						<li>激發學習興趣</li>
+						<li>培育程式創作能力</li>
+						<li>
+							策略：<br>
+								Coding for Fun 免費 Scratch 課程 <br>
+								Python 程式語言初級課程
+						</li>
+					</ul>
+				</li><br>
+				<li>
+					與老師家長分享教學經驗
+					<ul>
+						<li>老師培訓</li>
+						<li>翻轉教室</li>
+						<li>
+							策略：<br>
+							 與老師家長分享教學經驗 <br>
+							 Scratch 師資培訓 (公益性質，開班無需授權)
+						</li>
+					</ul>
+				</li>
+			</ol>
+		</div>
+	</div>
+	<br><br>
+	<div class="container-card">
+		<div class="card-title">
+			成員簡介
+		</div>
+		<br>
+		<div class="card-content">
+			<ol>
+				<li>
+					Shalley Tsay (創辦人/老師/工友)
+					<ul>
+						<li>
+							經歷<br>
+							<!-- <ul> -->
+								現為 Kids Coding Studio 創辦人<br>
+								16年業界嵌入式系統軟體開發, 歷任經理/軟體工程師<br>
+								工研院電腦與通訊研究所、資策會<br>
+								明碁電腦、台達電子、普樺科技
+							<!-- </ul> -->
+						</li>
+						<li>
+							學歷<br>
+							<!-- <ul> -->
+								德州大學奧斯汀分校電機與資訊工程學系碩士<br>
+								交通大學電機工程系學士
+							<!-- </ul> -->
+						</li>
+						<br>
+						<button onclick="show('moreinfo-frame')" class="btn btn-primary">為何從程式設計師投入程式教育</button>
+					</ul>
+				</li>
+				<br>
+				<li>
+					Michael Pan (程式設計師) 
+					<ul>
+						<li>
+							經歷<br>
+								現為 Kids Coding Studio 程式設計師<br>
+								Coding for Fun 網站前端設計<br>
+								Coding for Fun 網站後端設計
+						</li>
+						<li>
+							學歷<br>
+								新北市高中自學生<br>
+								三峽國中
+						</li>
+					</ul>
+				</li>
+				<br>
+				<li>
+					3. Arthur Pan (顧問）
+					<ul>
+						<li>
+							經歷<br>
+								現為 Kids Coding Studio 顧問<br>
+								20 多年資訊業界經歷 (熱愛寫程式) <br>
+								30 年程式經驗
+						</li>
+						<li>
+							學歷<br>
+								交通大學資訊科學博士<br>
+								德州大學奧斯汀分校電腦科學系碩士<br>
+								台灣大學資訊工程系學士
+						</li>
+					</ul>
+				</li>
+			</ol>
+		</div>
+	</div>
+	<br><br>
+	<div class="container-card">
+		<div class="card-title">
+			合力提案
+		</div>
+		<br>
+		<div class="card-content">
+			人力不足, 尚有能力與公益團體進行合作。若有需要, 請 email 至 <a href="mailto:coding4fun.tw@gmail.com" style="color:orange">coding4fun.tw@gmail.com</a>。<br><br>
+
+			不提供老師派遣。只協助介紹老師。<br><br>
+
+			聯絡我們<br><br>
+
+			<a href="https://www.facebook.com/kidscodingtw" target="_blank" style="color:orange">Facebook</a><br>
+			<a href="http://www.kidscoding.tw" target="_blank" style="color:orange">Blog</a>
+		</div>
+	</div>
+	<br><br>
+</center>
+{% endblock %}
+{% block bcontent %}
+<div id="moreinfo-frame" class="loginsignup-frame">
+	<div class="loginsignup-frame-inside">
+		<a id="closeloginframe" onclick="hide('moreinfo-frame');" style="">X</a><br>
+		<div class="frame-content" style="padding-top: 0%;padding-left: 30px;padding-right: 30px">
+			<h2>為何從程式設計師投入程式教育</h2>
+			<h4>～2008 程式設計師</h4>
+			<span>
+				回顧我的程式設計師生涯, 第一個工作很幸運地在工研院電通所從事研發工作, 紮實的研發經驗培養了我開疆闢土的專業能力, 每當專案從無到有, 這種滿足與成就感是筆墨難以形容。<br>
+			</span>
+			
+			<br>
+			<span>
+				2000 年, 為了照顧年幼的小孩, 我轉換跑道成為 SOHO 族。但沒過多久,  一家儲存系統公司願意讓我在家做全職的工作, 每星期只需要一天到公司與同事進行溝通與測試,  程式設計師的生涯對我而言是完全的自由與彈性。<br>
+			</span>
+
+			<br>
+			<h4> 2008~2012 志工媽媽 </h4>
+			<span>
+				2008年, 為了給孩子更大的活動空間, 全家搬到了北大特區, 也告別了從事16年的程式設計師生涯。 進入桃子腳國中小擔任課輔媽媽, 輔導學生的課業; 後來進入班級帶孩子進行「節能減碳」與「動手做科學」課程。在這個過程中,   去除了帶一群小孩的恐懼, 逐漸掌握如何與孩子互動, 獲取孩子的信任。沒想到這個經歷,  對於我後來的兒童程式設計教學, 竟加分不少。<br>
+			</span>
+
+			<br>
+			<h4> 2012~2014 陪孩子走程式設計之路 </h4>
+			<span>
+				2012 年暑假, 因緣際會認識了 Raymond 老師, 由於升國中的孩子很喜歡程式設計, Raymond 老師不僅提供了免費的 Scratch 課程, 也邀請我幫忙修改教材。為了陪伴孩子走這段我還蠻熟悉的路, 我就這樣踏入了兒童程式教育。<br>
+			</span>
+
+			<br>
+			<h4> 2014~ 為台灣孩子鋪好程式設計的第一哩路 </h4>
+			<span>
+				2014 年因故離開前個工作, 創立 Kids Coding Studio。<br><br>
+
+				之前的教學方式, 是在 Scratch 課程後接軌 Udacity 「計算機概論」教材。我觀察到一般學生使用 Udacity 教材會遇到瓶頸, 過關與持續學習的比例太低。所以我想做一套 Python 初級課程, 讓孩子在 Scratch 與 Udacity 「計算機概論」之間先建立基本觀念, 之後再進行 Udacity 的課程。<br><br>
+
+				這套課程採取「翻轉教室」的方法, 讓學生自己看影片, 邊學邊動手, 強調實作能力。學生的回饋相當不錯, 之後進行 Udacity 「計算機概論」教材的痛苦指數大幅降低。<br><br>
+
+				同年我設計了 Coding for Fun 線上課程, 採取了類似的方法。<br><br>
+
+				2016 年, 我重新設計 Python 初級課程, 改進第一版的缺失, 希望能讓更多年輕學子進入程式設計的領域。<br>
+			</span>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% block title %}Admin 問題管理{% endblock %}
+{% block css %}
+<style>
+	table {
+		font-family: arial, sans-serif;
+		border-collapse: collapse;
+		width: 100%;
+	}
+
+	#userstable td,
+	#userstable th {
+		border: 1px solid #dddddd;
+		text-align: left;
+		padding: 8px;
+		font-size: 18px;
+	}
+
+	#userstable tr {
+		background-color: white;
+	}
+
+	#userstable tr.i:nth-child(even) {
+		background-color: #F39C12;
+	}
+	#userstable tr.i:nth-child(odd) {
+		background-color: #F1C40F;
+	}
+</style>
+{% endblock %}
+{% block content %}
+<div style="width: 90%;padding-left: 10%">
+	<br><br>
+	<a href="/admin/"><button id="submit">< 回去</button></a>
+	<br><br>
+	<table id="userstable">
+		<tbody id="users">
+		<tr>
+			<th>Id</th>
+			<th>Title</th>
+			<th>Type</th>
+			<th>Solved</th>
+			<th>Create At</th>
+			<th>Delete</th>
+		</tr>
+		</tbody>
+	</table>
+	<br><br>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+var q_typelist = [
+	"Scratch",
+	"Python",
+	"Other",
+]
+
+user_format = `\
+<tr class="i">
+	<td>{0}</td>
+	<td>{1}</td>
+	<td>
+		<div class="dropdown">
+			<button class="btn btn-default dropdown-toggle" id="dropdownMenu{0}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				{2}
+			</button>
+			<ul class="dropdown-menu" aria-labelledby="dropdownMenu{0}">
+				<li><a onclick="changetype('{0}', 0)">Scratch</a></li>
+				<li><a onclick="changetype('{0}', 1)">Python</a></li>
+				<li><a onclick="changetype('{0}', 2)">Other</a></li>
+			</ul>
+		</div>
+	</td>
+	<td>{3}</td>
+	<td>{4}</td>
+	<td><a onclick="deletequestion('{0}')" style="color:red;font-weight:bold;cursor:pointer;text-decoration:none">X</a></td>
+</tr>\
+`
+
+users_table = document.getElementById("users")
+var page = 0
+
+function changetype(id, type) {
+	if (type > q_typelist.length - 1) {
+		return ;
+	}
+	c = prompt("你確定改變問題種類?\n如果是的話請輸入問題的 Id")
+	if (c != id) {
+		alert("輸入失敗")
+		return ;
+	}
+}
+
+function closequestion (id, solved) {
+	c = prompt("你確定要關閉或開啟問題?\n如果是的話請輸入問題的 Id")
+	if (c != id) {
+		alert("輸入失敗")
+		return ;
+	}
+	$.ajax({
+		url: host + "question/",
+		type: "PUT",
+		dataType: "json",
+		data: JSON.stringify({"key": getCookie("key"), "qid":id, "solved":solved}),
+		contentType: "application/json; charset=utf-8",
+		success: function (msg) {
+			window.location.reload()
+		}
+	})
+}
+
+function deletequestion(id) {
+	c = prompt("你確定要刪除這個問題?\n如果是的話請輸入問題的 Id")
+	if (c != id) {
+		alert("輸入失敗")
+		return ;
+	}
+	url = window.location.origin + "/rest/1/question/?id={0}&key={1}"
+	$.ajax({
+		url: format(url, id, getCookie("key")),
+		type: 'DELETE',
+		success: function(result) {
+			window.location.reload()
+		}
+	});
+}
+
+$.ajax({
+	url: host + "question/",
+	type: "GET",
+	data: {},
+	success: function (msg) {
+		page = msg["pages"]
+		questions = msg["questions"]
+		for (i=0; i<questions.length; i++) {
+			user = format(user_format, questions[i]["id"],
+				questions[i]["title"], q_typelist[questions[i]["type"]],
+				questions[i]["solved"], questions[i]["create_at"])
+			users_table.innerHTML += user
+		}
+	},
+	error: function (msg) {
+		console.logs(msg)
+	}
+}).done(function (msg) {
+	if (page > 1) {
+		for (p=2; p<=page; p++) {
+			$.ajax({
+				url: host + "question/",
+				type: "GET",
+				data: {"page": p - 1},
+				success: function (msg) {
+					page = msg["page"]
+					questions = msg["questions"]
+					for (i=0; i<questions.length; i++) {
+						user = format(user_format, questions[i]["id"],
+							questions[i]["title"], q_typelist[questions[i]["type"]],
+							questions[i]["solved"], questions[i]["create_at"])
+						users_table.innerHTML += user
+					}
+				},
+				error: function (msg) {
+					console.logs(msg)
+				}
+			})
+		}
+	}
+})
+
+</script>
+{% endblock %}

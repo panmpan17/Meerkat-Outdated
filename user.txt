@@ -1,0 +1,23 @@
+userid=michaelpan628
+password=pan@michael
+email=panmpan@gmail.com
+birth_year=2000
+nickname=Michael
+job=Coding for Fun 工程師
+admin=True
+[\SPLIT/]
+userid=shalley2546
+password=shalley220
+email=shalley.tsay@gmail.com
+birth_year=1968
+nickname=Shalley
+job=Coding for Fun 老師
+admin=True
+[\SPLIT/]
+userid=testuser
+password=testuser
+email=testuser@gmail.com
+birth_year=2010
+nickname=TESTUSER
+job=TESTUSER
+admin=

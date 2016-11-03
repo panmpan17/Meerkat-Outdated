@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}Coding for Fun / 教學資源{% endblock %}
+{% block css %}
+<style>
+  div.classview-card {
+	width: 100%;
+	min-height: 190px;
+	max-height: 190px;
+	overflow-y: scroll;
+	background-color:rgba(245,245,245,1);
+	border-radius: 7px;
+	box-shadow: 3px 2px 5px 0px rgba(25,85,109,0.7);
+	padding: 20px;
+	padding-left: 0px;
+  }
+
+  img.card-image {
+	border-radius: 50%;
+	background-color: rgb(92, 102, 117);
+	max-height: 100px;
+	padding: 10px;
+	transform: translate(0, 27px);
+  }
+
+  div.title {
+	color: black;
+	font-size: 20px;
+	color: #3a91c4;
+	font-weight: 400;
+  }
+
+  div.describe {
+	font-weight: 200;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	color: black;
+	font-size: 18px;
+  }
+
+  div.col-md-6 {
+	padding-bottom: 20px;
+  }
+
+  div.container {
+	width: 80%;
+  }
+
+  div.col-sm-4 {
+	padding-bottom: 50px;
+	vertical-align: middle;
+  }
+
+  div.col-sm-8 {
+	padding-top: 20px;
+	text-align: left;
+  }
+
+  span#time {
+	color: rgba(160, 160, 160, 1);
+	font-weight: 200;
+	font-size: 16px;
+  }
+
+	span#price {
+		color:rgba(220, 185, 99, 1);
+	}
+
+	button#description {
+		padding-left: 30px;
+		padding-right: 30px;
+		background-color: #f2c037;
+		border: none;
+		text-decoration: none;
+		cursor: pointer;
+	}
+
+  @media (max-width: 768px) {
+	div.classview-card {
+		/*height: 400px;*/
+		max-height: 1000px;
+	}
+
+	div.col-sm-8 {
+		padding-top: 0px;
+		text-align: center;
+	}
+  }
+</style>
+{% endblock %}
+{% block content %}
+<br>
+<div class="container">
+
+<br>
+<div class="row">
+  <div class="col-md-6 col-sm-12">
+		<a href="/class/c/teacher_1">
+		  <div class="classview-container">
+				<div class="classview-card">
+				  <center>
+						<div class="col-sm-4 col-xs-12">
+						  <img src="/html/images/bigman.png" class="card-image" />
+						</div>
+						<div class="col-sm-8 col-xs-12">
+							<div class="title">
+								師資培訓課程影片
+								<span id="time">18 影片</span>
+							</div>
+							<div class="describe">
+								配合「Scratch 課程指導手冊」<br>
+								讓老師備課更容易<br>
+							</div>
+							<span id="price">
+								免費
+							</span>
+						</div>
+					</center>
+				</div>
+		  </div>
+	  </a>
+  </div>
+  <div class="col-md-6 col-sm-12">
+		<a href="https://storage.googleapis.com/coding4fun-class-video/others/coding4fun_curriculum.pdf" target="_blank" download>
+			<div class="classview-container">
+				<div class="classview-card">
+				  <center>
+						<div class="col-sm-4 col-xs-12">
+						  <img src="/html/images/bigman.png" class="card-image" />
+						</div>
+						<div class="col-sm-8 col-xs-12">
+							<div class="title">
+							  Scratch 課程指導手冊
+							</div>
+							<div class="describe">
+								如何使用 Coding for Fun<br>
+								歡迎下載<br>
+							</div>
+							<span id="price">
+							  免費
+							</span>
+						</div>
+				  </center>
+				</div>
+			</div>
+		</a>
+		<br><br>
+		<a href="http://www.suncolor.com.tw/index_book_c1_01_data.aspx?bokno=114010201024" target="_blank">
+		  <div class="classview-container">
+				<div class="classview-card">
+				  <center>
+						<div class="col-sm-4 col-xs-12">
+						  <img src="/html/images/book.png" class="card-image" />
+						</div>
+						<div class="col-sm-8 col-xs-12">
+							<div class="title">
+								讓孩子快樂學程式
+								<span id="time">書</span>
+							</div>
+							<div class="describe">
+								關於學程式的種種疑問，本書給你最精闢的解答！<br>
+							</div>
+							<span id="price">
+							  $280
+							</span>
+						</div>
+				  </center>
+				</div>
+		  </div>
+		</a>
+	</div>
+</div>
+
+</div>
+<br><br>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Admin 最新消息管理{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+<link rel="stylesheet" href="/html/css/editor.css">
+<style>
+	.preview a {
+		color:orange;
+		text-decoration:none;
+	}
+</style>
+{% endblock %}
+{% block content %}
+	<br><br>
+	<a href="/admin/" style="padding-left: 14%"><button id="submit">< 回去</button></a>
+	<br><br>
+	<div class="newPost">
+		<h3>新發佈</h3>
+		<div class="toolbar">
+			<button type="button" data-func="bold"><i class="fa fa-bold"></i></button>
+			<button type="button" data-func="italic"><i class="fa fa-italic"></i></button>
+			<button type="button" data-func="underline"><i class="fa fa-underline"></i></button>
+			<button type="button" data-func="strikeThrough"><i class="fa fa-strikethrough"></i></button>
+			<button type="button" data-func="justifyleft"><i class="fa fa-align-left"></i></button>
+			<button type="button" data-func="justifycenter"><i class="fa fa-align-center"></i></button>
+			<button type="button" data-func="justifyright"><i class="fa fa-align-right"></i></button>
+			<button type="button" data-func="insertunorderedlist"><i class="fa fa-list-ul"></i></button>
+			<button type="button" data-func="insertorderedlist"><i class="fa fa-list-ol"></i></button>
+			<button type="button" onclick="addlink()"><i class="fa fa-link"></i></button>
+			<button type="button" data-func="undo"><i class="fa fa-undo"></i></button>
+			<button type="button" data-func="redo"><i class="fa fa-repeat"></i></button>
+			
+			<div class="customSelect">
+				<select data-func="foreColor">
+					<option value="selfColor">自訂</option>
+					<option value="OrangeRed">紅</option>
+					<option value="Coral">橙</option>
+					<option value="Gold">黃</option>
+					<option value="ForestGreen">綠</option>
+					<option value="CornflowerBlue">藍</option>
+					<option value="DarkMagenta">紫</option>
+					<option value="Black" selected>黑</option>
+				</select>
+			</div>
+			<div class="customSelect">
+				<select data-func="formatblock">
+					<option value="h1">H1</option>
+					<option value="h2">H2</option>
+					<option value="h3">H3</option>
+					<option value="h4">H4</option>
+					<option value="h5">H5</option>
+					<option value="p" selected>內文</option>
+				</select>
+			</div>
+		</div>
+		<div class="editor" contenteditable></div>
+		<div class="buttons">
+			<button onclick="preview()" type="button">預覽</button>
+			<button onclick="post()" type="button">發布</button>
+		</div>
+		<br><br><br>
+		<hr>
+		<div class="preview" id="review"></div>
+	</div>
+
+	<div class="newPost">
+		<h3>管理最新消息</h3>
+		<table id="posts" style="width: 100%;"></table>
+	</div>
+{% endblock %}
+{% block script %}
+	<script src="/html/javascript/editor.js"></script>
+{% endblock %}

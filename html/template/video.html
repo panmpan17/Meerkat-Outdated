@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Video</title>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	<style>
+		html, body {
+			background-color: black;
+			position: fixed;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			font-family: Arial, sans-serif;
+			-webkit-touch-callout: none;
+		    -webkit-user-select: none;
+		    -khtml-user-select: none;
+		    -moz-user-select: none;
+		    -ms-user-select: none;
+		    user-select: none;
+		}
+		#playercontainer {
+			padding-top: 0px;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+		#player {
+			width: 100%;
+			height: 100%;
+			cursor: pointer;
+		}
+		#controls {
+			position: relative;
+			bottom: 62px;
+			padding-top: 12px;
+			padding-left: 15px;
+			padding-right: 15px;
+			width: calc(100% - 30px);
+			height: 50px;
+			background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.6));
+		}
+		#progressholder {
+			height: 5px;
+			border-radius: 4px;
+			background: #3d3d3d;
+			margin-bottom: 11px;
+			cursor: pointer;
+		}
+		#buffered {
+			height: 5px;
+			border-radius: 4px;
+			background: #a0a0a0;
+			width: 0;
+		}
+		#progress {
+			position: relative;
+			bottom: 5px;
+			height: 5px;
+			border-radius: 4px;
+			background: #ff0000;
+			width: 0;
+		}
+		#progressholder:hover #progressorb {
+			display: block;
+		}
+		#progressorb {
+			position: relative;
+			bottom: 14px;
+			width: 14px;
+			height: 14px;
+			border-radius: 10px;
+			background: #ff0000;
+			display: none;
+		}
+		#playpause {
+			font-size: 14pt;
+			color: #fff;
+			margin-left: 10px;
+			cursor: pointer;
+		}
+		#playpause:hover {
+			color: #d3d3d3;
+		}
+		#progresstime {
+			position: relative;
+			right: 10px;
+			font-size: 10pt;
+			color: #fff;
+			font-weight: bold;
+			float: right;
+		}
+	</style>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+</head>
+<body>
+	<div id="playercontainer">
+		<video id="player" src="{{ video }}"></video>
+		<div id="controls">
+			<div id="progressholder">
+				<div id="buffered"></div>
+				<div id="progress"></div>
+				<div id="progressorb"></div>
+			</div>
+			<div id="playpause" class="fa fa-play"></div>
+			<div id="progresstime">-:-- / -:--</div>
+		</div>
+	</div>
+	<script>
+		var player = document.getElementById("player");
+
+		var fadeTime;
+		var over = false;
+
+		$("#player").on("loadeddata", updateTime);
+
+		$("#player").click(toggleVideo);
+		$("#playpause").click(toggleVideo);
+
+		$("#playercontainer").mousemove(function() {
+			$("#controls").show();
+			$("#player").css("cursor", "pointer");
+			clearTimeout(fadeTime);
+			if(!player.paused) {
+				fadeTime = setTimeout(function() {
+					$("#controls").fadeOut("medium");
+					$("#player").css("cursor", "none");
+				}, 3000);
+			}
+		});
+
+		$(window).keypress(function (e) {
+		   if (e.keyCode === 32) {
+			  e.preventDefault()
+			  toggleVideo();
+		   }
+		});
+
+		$("#progressholder").hover(function(e) { over = true; }, function() { over = false; });
+
+		$("#progressholder").click(function(e) {
+			var pos = e.pageX - 25;
+			var prop = (pos + 1) / $("#progressholder").width();
+			var prog = prop * player.duration;
+			player.currentTime = prog;
+			updateProgress();
+		});
+
+		$("#progressholder").mousemove(function(e) { updateOrb(e); });
+
+		function toggleVideo() {
+			//We're playing
+			if(!player.paused) {
+				$("#controls").show();
+				$("#player").css("cursor", "pointer");
+				$("#playpause").attr("class", "fa fa-play");
+				player.pause();
+			} else {
+				$("#controls").fadeOut("medium");
+				$("#player").css("cursor", "none");
+				$("#playpause").attr("class", "fa fa-pause");
+				player.play();
+			}
+		}
+
+		function updateProgress() {
+			var bp = player.buffered.end(player.buffered.length-1) / player.duration;
+			var bw = bp * 100;
+			$("#buffered").css("width", bw + "%");
+			
+			var p = player.currentTime / player.duration;
+			var w = p * 100;
+			$("#progress").css("width", w + "%");
+			
+			updateTime();
+			
+			if(player.ended) {
+				$("#playpause").attr("class", "fa fa-repeat");
+				$("#controls").show();
+				$("#player").css("cursor", "pointer");
+				clearTimeout(fadeTime);
+			}
+		}
+
+		function updateOrb(e) {
+			var pos = e.pageX - 25;
+			var prop = pos / $("#progressholder").width();
+			var prog = prop * player.duration;
+			$("#progressorb").css("margin-left", pos + "px");
+		}
+
+		function updateTime() {
+			$("#progresstime").text(player.currentTime.toString().toHHMMSS() + " / " + player.duration.toString().toHHMMSS());
+		}
+
+		setInterval(updateProgress, 100);
+
+		String.prototype.toHHMMSS = function () {
+		    var sec_num = parseInt(this, 10);
+		    var minutes = Math.floor(sec_num / 60);
+		    var seconds = sec_num - (minutes * 60);
+			
+		    if (seconds < 10) {seconds = "0"+seconds;}
+		    var time = minutes + ':' + seconds;
+		    return time;
+		};
+	</script>
+</body>
+</html>

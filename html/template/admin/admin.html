@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+<div style="width: 90%;padding-left: 10%">
+	<br><br>
+	<a href="/admin/news">
+		<button id="submit">最新消息管理</button>
+	</a>
+	<br><br><br>
+	<a href="/admin/questions">
+		<button id="submit">問題管理</button>
+	</a>
+	<br><br><br>
+	<a href="/admin/files">
+		<button id="submit">檔案管理</button>
+	</a>
+	<br><br><br>
+	<a href="/admin/users">
+		<button id="submit">使用者管理</button>
+	</a>
+	<!-- <h3>Download:</h3>
+	<ul>
+		{% for f in files %}
+			<li>{{ f }}</li>
+		{% endfor %}
+	</ul>-->
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Coding for Fun / 最新消息{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="/html/css/about.css">
+{% endblock %}
+{% block content %}
+<br>
+<center id="news">
+</center>
+{% endblock %}
+{% block script %}
+<script>
+	news_format = `
+	<div class="container-card">
+		<div class="card-content">{0}</div>
+		<br />
+		<hr />
+		<span id="date">{1}</span>
+	</div>
+	<br /><br />
+	`
+	no_news = `
+	<br />
+	<br />
+	<center>
+		<div class="well well-lg" style="width:90%">
+			沒有任何的發佈
+		</div>
+	</center>
+	`
+
+	function loadnews() {
+		$.ajax({
+			url: host +  "post/",
+			type: "GET",
+			success: function (msg) {
+				posts = msg["posts"];
+
+				if (posts.length > 0) {
+					news = "";
+					for (i = 0; i < posts.length; i++) {
+						// paging += format(page_f, i, "");
+						news += format(news_format, posts[i]["content"], posts[i]["create_at"])
+					}
+					document.getElementById("news").innerHTML = news;
+				}
+				else {
+					document.getElementById("news").innerHTML = no_news;
+				}
+			}
+		})
+	}
+	loadnews()
+</script>
+{% endblock %}

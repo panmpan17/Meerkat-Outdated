@@ -1,0 +1,169 @@
+div#content-frame {
+	/*top: 100px;*/
+	background-color: white;
+	box-shadow: 0px 0px 20px #888888;
+	width: 90%;
+	padding: 10px;
+	text-align: left;
+}
+
+span#title {
+	/*color: white;*/
+	font-size: 36px;
+	font-weight: bold;
+}
+
+span#content {
+	/*color: white;*/
+	font-size: 24px;
+}
+
+div#solved {
+	width: 30px;
+	height: 30px;
+	border-radius: 18px;
+	display: inline-block;
+}
+
+span.type {
+	/*display: inline-block;*/
+	font-size:12px;
+	color: white;
+	height:16px;
+	background-color:rgba(254, 54, 147, 1);
+	padding: 0px 20px;
+}
+
+div.askframe {
+	position: fixed;
+	bottom: 40px;
+	left: 40px;
+}
+
+div.toggle-label {
+	display: none;
+	position: fixed;
+	height: 40px;
+	background-color: #DDD;
+	bottom: 40px;
+	left: 105px;
+	border-radius: 5px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	color: black;
+	font-family: fonta;
+	padding-top: 5px;
+	font-size: 30px;
+}
+
+textarea {
+	border-radius: 5px;
+	width: 90%;
+	max-width: 90%;
+	font-size:30px;
+	border:3px rgba(0,0,0,0.2);
+	box-shadow: 0px 1px 8px 0px rgba(0,0,0,0.2);
+	padding-top: 5px;
+}
+
+button#chosetype{
+	width:70%;
+	height:38px;
+	background-color: #4CAF50;
+	color: white;	
+	text-align: center;
+	border: none;
+	font-family: fonta;
+	font-size: 30px;
+}
+
+button#prevnext {
+	height:38px;
+	width:12%;
+	background-color: #4CAF50;
+	border-radius: 5px;
+	border: 3px;
+	font-family: fonta;
+	font-size: 30px;
+}
+
+div.card {
+	cursor:pointer;
+	width:80%;
+	height:105px;
+	background-color: rgba(245, 245, 245, 1);
+	box-shadow: 0px 0px 20px #888888;
+	text-align: left;
+	overflow-x: scroll;
+}
+
+span#card-title {
+	font-size:36px;
+	position: relative;
+	white-space: nowrap;
+	left: 45px;
+	top: -5px;
+}
+
+span#card-time {
+	padding-left: 20px;
+	font-size:12px;
+	color:#555;
+}
+
+span#card-type {
+	font-size:12px;
+	color: white;
+	height:16px;
+	background-color:rgba(254, 54, 147, 1);
+	padding: 0px 20px;
+}
+
+span#card-solved {
+	width: 36px;
+	height: 36px;
+	border-radius: 18px;
+	display: inline-block;
+	background-color: #96FF96;
+}
+
+li.label-button {
+	cursor:pointer;
+	padding-right: 12px;
+}
+
+li.paging {
+	cursor:pointer;
+}
+
+span#writer {
+	font-weight: bold;
+	font-size: 22px;
+}
+
+span#question-writer {
+	padding-right: 15px;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+sup#time {
+	color: rgba(150,150,150,1);
+}
+
+span#create_at {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+a.file-link {
+	color: orange;
+}
+
+textarea#answer-content {
+	font-size: 12px;
+	height: 50px;
+}
+
+#content a {
+	color: orange;
+}

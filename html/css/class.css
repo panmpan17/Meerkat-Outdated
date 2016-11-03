@@ -1,0 +1,103 @@
+div.class_block {
+  display:inline-block;
+  background-color: rgba(254, 144, 0,1);
+  height:30px;
+  text-align: center;
+  border-right: 1px solid white;
+  border-left: 1px solid white;
+  font-family: fonta;
+  font-size: 20px;
+  cursor:pointer;
+  color: white;
+}
+
+div#video {
+	width:80%;
+}
+
+div.classname-display {
+	top: 194px;
+	width:90%;
+	height:50px;
+	background: rgba(244, 230, 200, 1);
+	display:none;
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, 0px);
+	font-size: 36px;
+	font-family: fonta;
+	padding-top: 0px;
+	color: rgba(254, 144, 0,1); 
+	font-weight: bold;
+}
+
+div.button-display {
+	top: 202px;
+	width:88%;
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, 0px);
+	height:50px;
+	text-align:left;
+}
+
+div.lesson-display {
+	top: 120px;
+	width:90%;
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, 0px);
+}
+
+div#classname-now {
+	float:right;
+	display:inline;
+	font-size: 30px;
+	color: rgba(43,142,183,1);
+	font-family: fonta;
+}
+
+button#lesson-dropdown {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	font-size: 24px;
+}
+
+ul#lessons {
+	top:30px;
+	font-size: 24px;
+}
+
+li>a {
+	cursor:pointer;
+}
+
+div.rightarrow,
+div.leftarrow {
+	position: fixed;
+	font-size: 50px;
+	top: 300px;
+}
+
+div.leftarrow {
+	left: 10px;
+}
+
+div.rightarrow {
+	right: 10px;
+}
+
+.leftarrow a,
+.rightarrow a{
+  color: rgb(43,142,183);
+}
+
+.leftarrow a:hover,
+.rightarrow a:hover {
+  color: rgb(30,105,138);
+}
+
+.leftarrow a:active,
+.rightarrow a:active {
+  color: rgb(26,90,120);
+}

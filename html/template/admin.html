@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+<div style="width: 90%;padding-left: 10%">
+	<br><br>
+	<a href="/admin/news">
+		<button id="submit">最新消息管理</button>
+	</a>
+	<br><br><br>
+	<a href="/admin/question">
+		<button id="submit">問題管理</button>
+	</a>
+	<br><br><br>
+	<a href="/admin/files">
+		<button id="submit">檔案管理</button>
+	</a>
+	<br><br><br>
+	<a href="/admin/user">
+		<button id="submit">使用者管理</button>
+	</a>
+	<!-- <h3>Download:</h3>
+	<ul>
+		{% for f in files %}
+			<li>{{ f }}</li>
+		{% endfor %}
+	</ul>
+	<h3>User:</h3>
+	<table>
+		<tr>
+			<th>Id</th>
+			<th>Userid</th>
+			<th>Email</th>
+			<th>Birth Year</th>
+			<th>Nickname</th>
+			<th>Admin</th>
+			<th>Job</th>
+			<th>Point</th>
+			<th>Create At</th>
+		</tr>
+		{% for u in users %}
+			<tr class="i">
+				<td>{{ u.id}}</td>
+				<td>{{ u.userid }}</td>
+				<td>{{ u.email }}</td>
+				<td>{{ u.birth_year }}</td>
+				<td>{{ u.nickname }}</td>
+				<td>{{ u.admin }}</td>
+				<td>{{ u.job }}</td>
+				<td>{{ u.point }}</td>
+				<td>{{ u.create_at }}</td>
+			</tr>
+		{% endfor %}
+		{% for i in path %}
+			{{ i }} <br>
+		{% endfor %}
+	</table>
+	<br><br> -->
+</div>
+{% endblock %}

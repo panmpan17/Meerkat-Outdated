@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>{% block title %}{% endblock %}</title>
+	<script src=></script>
+
+	<script src="/html/javascript/jquery.min.js"></script>
+	<script src="/html/javascript/sha256.js"></script>
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+
+	<!-- my js css -->
+	<script src="/html/javascript/cookie.js"></script>
+	<script src="/html/javascript/loginsignupframe.js"></script>
+	<script src="/html/bootstrap/js/bootstrap.js"></script>
+
+	<link href="/html/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+	<link href="/html/css/font.css" rel="stylesheet">
+	<link href="/html/css/theme.css" rel="stylesheet">
+
+
+	{% block css %}
+	{% endblock %}
+
+</head>
+<body style="">
+	<div class="fixcontainer"></div>
+
+	
+	{% block content %}
+	{% endblock %}
+	<div class="opinionframe">
+		<img onclick="openopinion()" onmouseover="show('report-frame')" onmouseout="hide('report-frame')" src="/html/images/opinion.png" alt="">
+	</div>
+	<div id="report-frame" class="opinion-label">
+		回報問題
+	</div>
+	<div id="o-notlogin-frame" class="opinion-label" style="bottom: 90px;color:red;font-weight: bold;">
+		請先登錄
+	</div>
+	<div class="my-container">
+		<div class="account-logo">
+			<div class="dropdown">
+				<div id="accountmenu">
+					<a href="#" onclick="showinfo();">帳號資訊</a>
+					<!-- <a href="#">管理課程</a> -->
+					<a href="#" onclick="logout();">登出</a>
+				</div>
+			</div>
+			<!-- <img onclick="presslogo();" id="account-logo" src="/html/images/account.png" alt=""> -->
+			<a href="#" onclick="presslogo();" id="account-logo">登入/ 註冊</a>
+		</div>
+		<a href="/">
+			<img id="navbarlogo" src="/html/images/kidcodingicon.png" alt="">
+		</a>
+		<ul class="navbar">
+			<li class="navtext"><a class="btn-large" href="/news">最新</a></li>
+			<li class="navtext"><a class="btn-large" href="/classes">課程</a></li>
+			<li class="navtext"><a class="btn-large" href="/question">討論區</a></li>
+			<li class="navtext"><a class="btn-large" href="#" onclick="toggle('linksmenu')">+</a></li>
+		</ul>
+		<div class="dropdown">
+			<div id="linksmenu">
+				<a href="/about"> 關於 Kids Coding Studio </a>
+				<a href="/resource"> 教學資源 </a>
+				<!-- <a> Kids Coding Studio 的使命 </a> -->
+				<!-- <a> 學什麼？如何學？ </a> -->
+				<!-- <a> 教學資源 </a> -->
+				<!-- <a> 出版品 </a> -->
+				<!-- <a> 如何收費 </a> -->
+				<!-- <a> 建議網站 </a> -->
+			</div>
+		</div>
+	</div>
+
+
+	<!-- login frame -->
+	<div id="login-frame" class="loginsignup-frame">
+		<div class="loginsignup-frame-inside">
+			<a id="closeloginframe" onclick="hide('login-frame');" style="">X</a><br>
+			<div class="frame-content">
+				<center>
+					<input placeholder="帳號" name="login-userid" type="text"><br><br>
+					<input placeholder="密碼" name="login-password" type="password"><br><br>
+					<div id="login-errormsg" class="login-errorms">
+					
+					</div><br>
+					<button id="submit" onclick="login();">登入</button>
+					<br><br>
+					<a onclick="hide('login-frame');show('signup-frame');" style="color:gray;font-size: 16px;">註冊</a>
+				</center>
+			</div>
+		</div>
+	</div>
+	<!-- signup frame -->
+	<div id="signup-frame" class="loginsignup-frame">
+		<div class="loginsignup-frame-inside">
+			<a id="closeloginframe" onclick="hide('signup-frame');" style="">X</a><br>
+			<div class="frame-content" style="padding-top: 5%;">
+				<center>
+					<input placeholder="帳號 8-16 (英文字母, 數字, 符號 !@#$%)" name="signup-userid" type="text"><br><br>
+					<input placeholder="密碼 8-16 (英文字母, 數字, 符號 !@#$%)" name="signup-password" type="password"><br><br>
+					<input placeholder="確認密碼" name="signup-repassword" type="password"><br><br>
+					<input placeholder="Email" name="signup-email" type="text"><br><br>
+					<input placeholder="暱稱 (請勿用真實姓名)" name="signup-nickname" type="text"><br><br>
+					<input value=2005 max=2010 min=1950 id="number" placeholder="出生年" name="signup-birth_year" type="number"><br><br>
+					<input placeholder="Job (可不填)" name="signup-job" type="text"><br><br>
+					<div class="g-recaptcha" data-sitekey="6LcSMwoUAAAAAJoZ5gXYx0b6Qv9Ag75o9rn3qpMw"></div>
+					<div id="signup-errormsg" class="login-errorms">
+					</div><br>
+					<button id="submit" onclick="signup();">註冊</button>
+					<br><br>
+					<a onclick="hide('signup-frame');show('login-frame');" style="color:gray;font-size: 16px;">登入</a>
+				</center>
+			</div>
+		</div>
+	</div>
+	<!-- info frame -->
+	<div id="info-frame" class="loginsignup-frame">
+		<div class="loginsignup-frame-inside">
+			<a id="closeloginframe" onclick="hide('info-frame');" style="">X</a>
+			<br>
+			<div class="frame-content" style="padding-top: 5%;">
+				<table id="userinfo" style="width:90%">
+					<tr>
+						<td>帳號</td>
+						<td id="info-userid"></td>		
+					</tr>
+					<tr>
+						<td>積分</td>
+						<td id="info-point"></td>		
+					</tr>
+					<tr>
+						<td>等級</td>
+						<td id="info-level"></td>		
+					</tr>
+					<tr>
+						<td>暱稱</td>
+						<td id="info-nick"></td>		
+					</tr>
+					<tr>
+						<td>Email</td>
+						<td id="info-email"></td>		
+					</tr>
+					<tr>
+						<td>出生年</td>
+						<td id="info-birth"></td>		
+					</tr>
+					<tr>
+						<td>工作</td>
+						<td id="info-job"></td>		
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- info frame -->
+	<div id="opinion-frame" class="loginsignup-frame">
+		<div class="loginsignup-frame-inside">
+			<a id="closeloginframe" onclick="hide('opinion-frame');" style="">X</a>
+			<br>
+			<div class="frame-content" style="padding-top: 0%;">
+				<center>
+					<h1>意見 / 問題回饋</h1>
+					<textarea id="opinion"></textarea><br>
+					<button class="btn btn-primary" onclick="sendopinion()">送出</button>
+					<hr>
+					<div id="opinions"></div>
+				</center>
+			</div>
+		</div>
+	</div>
+	{% block bcontent %}
+	{% endblock %}
+	<script>
+function show(eid) {
+	// $(eid).show();
+	document.getElementById(eid).classList.add("show");
+}
+
+function hide(eid) {
+	// $(eid).hide();
+	document.getElementById(eid).classList.remove("show");
+}
+
+function toggle(eid) {
+	// 
+	document.getElementById(eid).classList.toggle("show");
+}
+
+function format() {
+	var s = arguments[0];
+	for (var i = 0; i < arguments.length - 1; i++) {       
+		var reg = new RegExp("\\{" + i + "\\}", "gm");             
+		s = s.replace(reg, arguments[i + 1]);
+	}
+	return s;
+}
+
+if (getCookie("userid") !== "") {
+	document.getElementById('account-logo').innerHTML = getCookie("userid");
+}
+
+opinion_fmt = `
+{0} <br />
+{1} | {2}
+<hr />
+`
+
+function sendopinion() {
+	c = document.getElementById("opinion");
+	if (c.value == "") {
+		alert("請不要留空")
+		return ;
+	}
+	key = getCookie("key")
+	j = {
+		"key": key,
+		"content": c.value
+		}
+	$.ajax({
+		url: host + "opinion/",
+		type: "POST",
+		dataType: "json",
+		data: JSON.stringify(j),
+		contentType: "application/json; charset=utf-8",
+		success: function (msg) {
+			document.getElementById("opinion").value = "";
+			hide("opinion-frame");
+			alert("謝謝你填寫意見!!");
+		},
+		error: function (msg) {
+			reload = confirm("請重新登錄");
+			if (reload) {
+				logout();
+			}
+		}
+
+	})
+}
+
+function openopinion() {
+	if (getCookie("id")) {
+		show("opinion-frame");
+		$.ajax({
+			url: host + "opinion/",
+			type: "GET",
+			success: function (msg) {
+				a = ""
+				for (i = 0; i < msg.length; i++) {
+					a += format(opinion_fmt, msg[i]["content"].replace(/\n/g, "<br>"), msg[i]["writer"], msg[i]["create_at"])
+				}
+				document.getElementById("opinions").innerHTML = a
+			}
+
+		})
+	}
+	else {
+		toggle("o-notlogin-frame");
+	}
+}
+	</script>
+
+	{% block script %}
+	{% endblock %}
+	
+ 
+</body>
+</html>

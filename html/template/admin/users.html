@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Admin 使用者管理{% endblock %}
+{% block css %}
+<style>
+	table {
+		font-family: arial, sans-serif;
+		border-collapse: collapse;
+		width: 100%;
+	}
+
+	#userstable td,
+	#userstable th {
+		border: 1px solid #dddddd;
+		text-align: left;
+		padding: 8px;
+		font-size: 18px;
+	}
+
+	#userstable tr {
+		background-color: white;
+	}
+
+	#userstable tr.i:nth-child(even) {
+		background-color: #F39C12;
+	}
+	#userstable tr.i:nth-child(odd) {
+		background-color: #F1C40F;
+	}
+</style>
+{% endblock %}
+{% block content %}
+<div style="width: 90%;padding-left: 10%">
+	<br><br>
+	<a href="/admin/"><button id="submit">< 回去</button></a>
+	<br><br>
+	<table id="userstable">
+		<tbody id="users">
+		<tr>
+			<th>Id</th>
+			<th>Userid</th>
+			<th>Email</th>
+			<th>Birth Year</th>
+			<th>Nickname</th>
+			<th>Admin</th>
+			<th>Job</th>
+			<th>Point</th>
+			<th>Create At</th>
+		</tr>
+		</tbody>
+	</table>
+	<br><br>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+user_format = `\
+<tr class="i">
+	<td>{0}</td>
+	<td>{1}</td>
+	<td>{2}</td>
+	<td>{3}</td>
+	<td>{4}</td>
+	<td>{5}</td>
+	<td>{6}</td>
+	<td>{7}</td>
+	<td>{8}</td>
+</tr>\
+`
+
+users_table = document.getElementById("users")
+
+$.ajax({
+	url: host + "user/",
+	type: "GET",
+	data: {"key": getCookie("key")},
+	success: function (msg) {
+		for (i=0; i<msg.length; i++) {
+			user = format(user_format, msg[i]["id"],
+				msg[i]["userid"], msg[i]["email"],
+				msg[i]["birth_year"], msg[i]["nickname"],
+				msg[i]["admin"], msg[i]["job"], msg[i]["point"],
+				msg[i]["create_at"])
+			users_table.innerHTML += user
+		}
+	}
+})
+</script>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Coding for Fun{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="/html/css/jquery.fullPage.css">
+<style>
+	.info-bottom {
+		position: fixed;
+		bottom: 0px;
+		width:100%;
+		height:70px;
+		background-color: rgba(43,142,183,1);
+		padding: 10px;
+	}
+
+	span#contact-icon {
+		position: absolute;
+		top: 50%;
+		font-size: 36px;
+		transform: translate(0,-18px);
+	}
+	img.scene {
+		padding-top:0px;
+	}
+</style>
+{% endblock %}
+{% block content %}
+
+<!-- <div id="fullpage"> -->
+	<div class="section " id="section0">
+		<img src="/html/images/scene_1.png" class="scene" alt="" style="width:100%;min-height:100%;">
+
+		<div class="info-bottom">
+			<center>
+				<a href="https://www.facebook.com/kidscodingtw" target="_blank"><img src="html/images/facebook.png" width="36" alt=""></a>
+				<a href="http://www.kidscoding.tw" target="_blank"><img src="html/images/blog.png" width="36" alt=""></a><br>
+				<span style="color:white">&copy; 2016 由 Kids Coding Studio 維護網站<span>
+			</center>
+		</div>
+	</div>
+	<!-- <div class="section" id="section1">
+		<br><br><br><br>
+		<center>
+			<h2 style="font-family:fonta">
+				Coding for Fun <br>
+				孩子學習「程式設計」的第一哩路 <br>
+				善用新世代探索的本性 <br>
+				快樂地學習程式語言 <br>
+				適合小學五年級以上 <br>
+				完全免費 <br>
+				<img src="/html/images/scratch.png" style="width:300px">
+			</h1>
+		</center>
+	</div>
+	<div class="section" id="section2">
+		<center>
+			<br><br><br>
+			<img src="/html/images/student_cup.png" style="border-radius:115px;background-color:red" alt="">
+			<br>
+			<img src="/html/images/teacher_cup.png" style="border-radius:115px;background-color:red" alt="">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<img src="/html/images/parent_cup.png" style="border-radius:115px;background-color:red" alt="">
+		</center>
+	</div>
+</div> -->
+
+<script src="/html/javascript/jquery.fullPage.js"></script>
+<script type="text/javascript">
+		$(document).ready(function() {
+			$('#fullpage').fullpage({
+				sectionsColor: ['#1bbc9b', '#EDEDED', '#7BAABE'],
+				anchors: ['firstPage', 'secondPage', '3rdPage'],
+				loopTop: false,
+				loopBottom: false
+			});
+		});
+	</script>
+
+{% endblock %}
