@@ -36,7 +36,26 @@ def count_page(r):
         return (r // 10)
     return (r // 10) + 1
 
-class SessionKeyView(object):
+class View(object):
+    def checklogin(self, json, key_mgr):
+        if "key" not in json:
+            return False
+
+        key_valid = key_mgr.get_key(json["key"])
+        if not key_valid[0]:
+           return False
+        return key_valid[1]
+
+    def checkadmin(self, uid, users, conn):
+        ss = select([users.c.admin]).where(and_(users.c.id == uid,
+                users.c.admin == True))
+        rst = conn.execute(ss)
+        rows = rst.fetchall()
+        if len(rows) < 1:
+            return False
+        return True
+
+class SessionKeyView(View):
     _cp_config = {
         "tools.json_out.on": True,
         "tools.json_in.on": True,
@@ -80,7 +99,7 @@ class SessionKeyView(object):
         else:
             raise cherrypy.HTTPError(404)
 
-class UserRestView(object):
+class UserRestView(View):
     _cp_config = {
         "tools.json_out.on": True,
         "tools.json_in.on": True,
@@ -198,7 +217,7 @@ class UserRestView(object):
         else:
             raise cherrypy.HTTPError(404)
 
-class QuestionRestView(object):
+class QuestionRestView(View):
     _cp_config = {
         "tools.json_out.on": True,
         "tools.json_in.on": True,
@@ -258,15 +277,7 @@ class QuestionRestView(object):
                 elif kwargs["solved"] == "True":
                     solved = True
 
-
                 ss = select([questions]).where(questions.c.solved == solved)
-            elif "type" in kwargs:
-                try:
-                    type_ = int(kwargs["type"])
-                except:
-                    raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("type"))
-
-                ss = select([questions]).where(questions.c.type == type_)
             elif "answer" in kwargs:
                 answers = meta.tables[Answer.TABLE_NAME]
                 try:
@@ -286,6 +297,14 @@ class QuestionRestView(object):
                 ss = select([questions]).where(questions.c.id.in_(qids))
             else:
                 ss = select([questions])
+
+            if "type" in kwargs:
+                try:
+                    type_ = int(kwargs["type"])
+                except:
+                    raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("type"))
+
+                ss = ss.where(questions.c.type == type_)
                 
             try:
                 page = int(kwargs["page"])
@@ -313,15 +332,9 @@ class QuestionRestView(object):
             if len(args) > 0:
                 raise cherrypy.HTTPError(404)
 
-            #check session key
-            if "key" not in data.keys():
-               raise cherrypy.HTTPError(401)
-
-            key_valid = key_mgr.get_key(data["key"])
-            if not key_valid[0]:
-               raise cherrypy.HTTPError(401)
-            key = data["key"]
-
+            uid = self.checklogin(data, key_mgr)
+            if not uid:
+                raise cherrypy.HTTPError(401)
 
             if "question_json" not in data.keys():
                 raise cherrypy.HTTPError(400, ErrMsg.MISS_PARAM.format("question_json"))
@@ -359,13 +372,9 @@ class QuestionRestView(object):
                 raise cherrypy.HTTPError(404)
 
             if "solved" in data:
-                if "key" not in data.keys():
+                uid = self.checklogin(data, key_mgr)
+                if not uid:
                     raise cherrypy.HTTPError(401)
-
-                key_valid = key_mgr.get_key(data["key"])
-                if not key_valid[0]:
-                    raise cherrypy.HTTPError(401)
-                uid = key_valid[1]
 
                 try:
                     qid = int(data["qid"])
@@ -378,8 +387,42 @@ class QuestionRestView(object):
                 elif data["solved"] == "True":
                     solved = True
 
+                admin = self.checkadmin(uid, users, conn)
+                if admin:
+                    stmt = update(questions).where(questions.c.id == qid).values({"solved": solved})
+                    ins = conn.execute(stmt)
+
+                    cherrypy.response.status = 201
+                    return {"success": True}
+
                 stmt = update(questions).where(and_(questions.c.id == qid,
                     questions.c.writer == uid)).values({"solved": solved})
+                ins = conn.execute(stmt)
+
+                cherrypy.response.status = 201
+                return {"success": True}
+            elif "type" in data:
+                uid = self.checklogin(data, key_mgr)
+                if not uid:
+                    raise cherrypy.HTTPError(401)
+
+                try:
+                    qid = int(data["qid"])
+                except:
+                    raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("qid"))
+
+                type_ = data["type"]
+
+                admin = self.checkadmin(uid, users, conn)
+                if admin:
+                    stmt = update(questions).where(questions.c.id == qid).values({"type": type_})
+                    ins = conn.execute(stmt)
+
+                    cherrypy.response.status = 201
+                    return {"success": True}
+
+                stmt = update(questions).where(and_(questions.c.id == qid,
+                    questions.c.writer == uid)).values({"type": type_})
                 ins = conn.execute(stmt)
 
                 cherrypy.response.status = 201
@@ -387,20 +430,12 @@ class QuestionRestView(object):
             else:
                 raise cherrypy.HTTPError(400, ErrMsg.MISS_PARAM.format("solved"))
         elif cherrypy.request.method == "DELETE":
-            if "key" not in kwargs:
-               raise cherrypy.HTTPError(401)
+            uid = self.checklogin(kwargs, key_mgr)
+            if not uid:
+                raise cherrypy.HTTPError(401)
 
-            key_valid = key_mgr.get_key(kwargs["key"])
-            if not key_valid[0]:
-               raise cherrypy.HTTPError(401)
-            uid = key_valid[1]
-
-            ss = select([users.c.admin]).where(and_(users.c.id == key_valid[1],
-                users.c.admin == True))
-            rst = conn.execute(ss)
-            rows = rst.fetchall()
-
-            if len(rows) < 1:
+            admin = self.checkadmin(uid, users, conn)
+            if not admin:
                 raise cherrypy.HTTPError(401)
 
             answers = meta.tables[Answer.TABLE_NAME]
@@ -431,14 +466,9 @@ class QuestionRestView(object):
             if len(args) > 0:
                 raise cherrypy.HTTPError(404)
 
-            # check session key
-            if "key" not in data.keys():
+            uid = self.checklogin(data, key_mgr)
+            if not uid:
                 raise cherrypy.HTTPError(401)
-
-            key_valid = key_mgr.get_key(data["key"])
-            if not key_valid[0]:
-                raise cherrypy.HTTPError(401)
-            uid = key_valid[1]
 
             if ("qid" not in data) or ("filepath" not in data):
                 raise cherrypy.HTTPError(400, ErrMsg.MISS_PARAM.format("qid ot filepath"))
@@ -479,7 +509,7 @@ class QuestionRestView(object):
         else:
             raise cherrypy.HTTPError(404)
 
-class AnswerRestView(object):
+class AnswerRestView(View):
     _cp_config = {
         "tools.json_out.on": True,
         "tools.json_in.on": True,
@@ -540,20 +570,14 @@ class AnswerRestView(object):
 
             else:
                 raise cherrypy.HTTPError(400, ErrMsg,MISS_PARAM.format("qid"))
-
         elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
             if len(args) > 0:
                 raise HTTPError(404)
 
-            # check session key
-            if "key" not in data.keys():
+            uid = self.checklogin(data, key_mgr)
+            if not uid:
                 raise cherrypy.HTTPError(401)
-
-            key_valid = key_mgr.get_key(data["key"])
-            if not key_valid[0]:
-                raise cherrypy.HTTPError(401)
-            key = data["key"]
 
             if "answer_json" not in data.keys():
                 raise cherrypy.HTTPError(400, ErrMsg.MISS_PARAM.format("answer_json"))
@@ -608,14 +632,9 @@ class AnswerRestView(object):
             if len(args) > 0:
                 raise cherrypy.HTTPError(404)
 
-            # check session key
-            if "key" not in data.keys():
+            uid = self.checklogin(data, key_mgr)
+            if not uid:
                 raise cherrypy.HTTPError(401)
-
-            key_valid = key_mgr.get_key(data["key"])
-            if not key_valid[0]:
-                raise cherrypy.HTTPError(401)
-            uid = key_valid[1]
 
             if ("aid" not in data) or ("filepath" not in data):
                 raise cherrypy.HTTPError(400, ErrMsg.MISS_PARAM.format("aid ot filepath"))
@@ -656,7 +675,7 @@ class AnswerRestView(object):
         else:
             raise cherrypy.HTTPError(404)
 
-class ClassesRestView(object):
+class ClassesRestView(View):
     _cp_config = {
         "tools.classestool.on": True,
         "tools.json_out.on": True,
@@ -693,7 +712,7 @@ class ClassesRestView(object):
         else:
             raise cherrypy.HTTPError(404)
 
-class PostRestView(object):
+class PostRestView(View):
     _cp_config = {
         "tools.json_out.on": True,
         "tools.json_in.on": True,
@@ -722,15 +741,11 @@ class PostRestView(object):
             if len(args) > 0:
                 raise cherrypy.HTTPError(404)
 
-            if "key" not in data.keys():
-               raise cherrypy.HTTPError(401)
+            uid = self.checklogin(data, key_mgr)
+            if not uid:
+                raise cherrypy.HTTPError(401)
 
-            key_valid = key_mgr.get_key(data["key"])
-            if not key_valid[0]:
-               raise cherrypy.HTTPError(401)
-            uid = key_valid[1]
-
-            ss = select([users.c.admin]).where(and_(users.c.id == key_valid[1],
+            ss = select([users.c.admin]).where(and_(users.c.id == uid,
                 users.c.admin == True))
             rst = conn.execute(ss)
             rows = rst.fetchall()
@@ -755,21 +770,12 @@ class PostRestView(object):
             else:
                 raise cherrypy.HTTPError(500)
         elif cherrypy.request.method == "DELETE":
-            # check admin
-            if "key" not in kwargs:
-               raise cherrypy.HTTPError(401)
+            uid = self.checklogin(kwargs, key_mgr)
+            if not uid:
+                raise cherrypy.HTTPError(401)
 
-            key_valid = key_mgr.get_key(kwargs["key"])
-            if not key_valid[0]:
-               raise cherrypy.HTTPError(401)
-            uid = key_valid[1]
-
-            ss = select([users.c.admin]).where(and_(users.c.id == key_valid[1],
-                users.c.admin == True))
-            rst = conn.execute(ss)
-            rows = rst.fetchall()
-
-            if len(rows) < 1:
+            admin = self.checkadmin(uid, users, conn)
+            if not admin:
                 raise cherrypy.HTTPError(401)
 
             if "id" not in kwargs:
@@ -806,7 +812,7 @@ class PostRestView(object):
             t_s_s = string.find("[#", t_l_e + 2)
         return string
 
-class OpinionRestView(object):
+class OpinionRestView(View):
     _cp_config = {
         "tools.json_out.on": True,
         "tools.json_in.on": True,
@@ -835,13 +841,9 @@ class OpinionRestView(object):
             if len(args) > 0:
                 raise cherrypy.HTTPError(404)
 
-            if "key" not in data.keys():
-               raise cherrypy.HTTPError(401)
-
-            key_valid = key_mgr.get_key(data["key"])
-            if not key_valid[0]:
-               raise cherrypy.HTTPError(401)
-            uid = key_valid[1]
+            uid = self.checklogin(data, key_mgr)
+            if not uid:
+                raise cherrypy.HTTPError(401)
 
             if "content" not in data.keys():
                 raise HTTPError.HTTPError(400, ErrMsg.MISS_PARAM.format("content"))

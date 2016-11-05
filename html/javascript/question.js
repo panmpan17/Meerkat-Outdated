@@ -1,5 +1,5 @@
 var question_id = null;
-
+var filter = {}
 
 // 
 // ASK QUESTION
@@ -444,12 +444,13 @@ function getallquestion(t, v) {
 		}
 	}
 
+	document.getElementById("cards").innerHTML = '<span style="font-size:48px;color:#aaa">請稍等</span>';
 	string_param = {"page": page - 1}
 	string_param[t] = select_values
 	$.ajax({
 		url: host + "question/",
 		type: "GET",
-		data: string_param,
+		data: jQuery.extend(string_param, filter),
 		success: function (msg) {
 			to_questions(msg);
 			page_limit = msg["pages"]
@@ -468,6 +469,20 @@ function getallquestion(t, v) {
 			}
 		}
 	})
+}
+
+function addfilter(t, v) {
+	if (v == null) {
+		delete filter[t]
+		document.getElementById("type-filter").innerHTML = "問題種類"
+		getallquestion(select_type, select_values);
+		return;
+	}
+	if (t == "type") {
+		document.getElementById("type-filter").innerHTML = "問題種類 - " + q_typelist[v]
+	}
+	filter[t] = v
+	getallquestion(select_type, select_values);
 }
 
 getallquestion(select_type, select_values);

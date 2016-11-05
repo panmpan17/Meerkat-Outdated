@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Admin 檔案管理{% endblock %}
+{% block css %}
+<style>
+	table {
+		font-family: arial, sans-serif;
+		border-collapse: collapse;
+		width: 100%;
+	}
+
+	#filetable td,
+	#filetable th {
+		border: 1px solid #dddddd;
+		text-align: left;
+		padding: 8px;
+		font-size: 18px;
+	}
+
+	#filetable tr {
+		background-color: white;
+	}
+
+	#filetable tr.i:nth-child(even) {
+		background-color: #F39C12;
+	}
+	#filetable tr.i:nth-child(odd) {
+		background-color: #F1C40F;
+	}
+	a.delete {
+		color:red;
+		font-weight:bold;
+		cursor:pointer;
+		text-decoration:none;
+	}
+</style>
+{% endblock %}
+{% block content %}
+<div style="width: 90%;padding-left: 10%">
+	<br><br>
+	<a href="/admin/"><button id="submit">< 回去</button></a>
+	<br><br>
+	<table id="filetable">
+		<tr>
+			<th>File</th>
+			<th>Delete</th>
+		</tr>
+		{% for f in files %}
+			<tr class="i">
+				<td>{{ f }}</td>
+				<td>
+					<a onclick="deletefile('{{f}}')" class="delete">X</a>
+				</td>
+			</tr>
+		{% endfor %}
+	</table>
+	<form method="post" id="form">
+		<input type="text" id="file" name="file" style="display: none">
+	</form>
+	<br><br>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+function deletefile(filename) {
+	document.getElementById("file").value = filename;
+	document.getElementById("form").submit();
+}
+</script>
+{% endblock %}

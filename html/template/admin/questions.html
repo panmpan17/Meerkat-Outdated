@@ -27,6 +27,7 @@
 		background-color: #F1C40F;
 	}
 </style>
+<link rel="stylesheet" href="/html/css/question.css">
 {% endblock %}
 {% block content %}
 <div style="width: 90%;padding-left: 10%">
@@ -48,6 +49,28 @@
 	<br><br>
 </div>
 {% endblock %}
+{% block bcontent %}
+<div id="question-frame" class="loginsignup-frame">
+	<div class="loginsignup-frame-inside">
+		<a id="closeloginframe" onclick="hide('question-frame');" style="">X</a><br>
+		<div class="frame-content" style="padding-top: 0%;padding-left: 10%">
+			<span id="title"></span><br>
+			<span id="question-writer"></span>
+			<span id="type" class="type"></span>
+			<span id="create_at"></span>
+			<button class="btn btn-warning btn-xs" id="closequestion"> 關閉問題 </button>
+			<hr>
+			<span id="content"></span>
+			<br>
+			<div id="files">
+				沒有檔案
+			</div>
+			<div id="answers"></div>
+			<br>
+		</div>
+	</div>
+</div>
+{% endblock %}
 {% block script %}
 <script>
 var q_typelist = [
@@ -56,10 +79,15 @@ var q_typelist = [
 	"Other",
 ]
 
+var q_solvedlist = {
+	true: "已解決",
+	false: "未解決",
+}
+
 user_format = `\
 <tr class="i">
 	<td>{0}</td>
-	<td>{1}</td>
+	<td><a onclick="openquestion('{0}')" style='cursor: pointer;text-decoration: none'>{1}</a></td>
 	<td>
 		<div class="dropdown">
 			<button class="btn btn-default dropdown-toggle" id="dropdownMenu{0}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -72,7 +100,17 @@ user_format = `\
 			</ul>
 		</div>
 	</td>
-	<td>{3}</td>
+	<td>
+		<div class="dropdown">
+			<button class="btn btn-default dropdown-toggle" id="dropdownMenu{0}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				{3}
+			</button>
+			<ul class="dropdown-menu" aria-labelledby="dropdownMenu{0}">
+				<li><a onclick="closequestion('{0}', 'True')">關閉問題</a></li>
+				<li><a onclick="closequestion('{0}', 'False')">開啟問題</a></li>
+			</ul>
+		</div>
+	</td>
 	<td>{4}</td>
 	<td><a onclick="deletequestion('{0}')" style="color:red;font-weight:bold;cursor:pointer;text-decoration:none">X</a></td>
 </tr>\
@@ -90,9 +128,19 @@ function changetype(id, type) {
 		alert("輸入失敗")
 		return ;
 	}
+	$.ajax({
+		url: host + "question/",
+		type: "PUT",
+		dataType: "json",
+		data: JSON.stringify({"key": getCookie("key"), "qid":id, "type":type}),
+		contentType: "application/json; charset=utf-8",
+		success: function (msg) {
+			window.location.reload()
+		}
+	})
 }
 
-function closequestion (id, solved) {
+function closequestion(id, solved) {
 	c = prompt("你確定要關閉或開啟問題?\n如果是的話請輸入問題的 Id")
 	if (c != id) {
 		alert("輸入失敗")
@@ -126,6 +174,11 @@ function deletequestion(id) {
 	});
 }
 
+function changefilename(filename) {
+	l = filename.split(".")
+	return l[l.length - 1]
+}
+
 $.ajax({
 	url: host + "question/",
 	type: "GET",
@@ -136,7 +189,8 @@ $.ajax({
 		for (i=0; i<questions.length; i++) {
 			user = format(user_format, questions[i]["id"],
 				questions[i]["title"], q_typelist[questions[i]["type"]],
-				questions[i]["solved"], questions[i]["create_at"])
+				q_solvedlist[questions[i]["solved"]],
+				questions[i]["create_at"])
 			users_table.innerHTML += user
 		}
 	},
@@ -156,7 +210,8 @@ $.ajax({
 					for (i=0; i<questions.length; i++) {
 						user = format(user_format, questions[i]["id"],
 							questions[i]["title"], q_typelist[questions[i]["type"]],
-							questions[i]["solved"], questions[i]["create_at"])
+							q_solvedlist[questions[i]["solved"]],
+							questions[i]["create_at"])
 						users_table.innerHTML += user
 					}
 				},
@@ -168,5 +223,115 @@ $.ajax({
 	}
 })
 
+function getanswer(qid) {
+	string_param = {"qid": qid}
+	$.ajax({
+		url: host + "answer/",
+		type: "GET",
+		data: string_param,
+		success: function (msg) {
+			answer_format = `<hr />
+			<span id="writer"> {1} </span> <sup id="time"> {2} </sup><br />
+			<div style="padding-left:30px">
+				{0}
+			</div>
+			`
+
+			answers = ""
+			for (i=0;i<msg["answers"].length;i++) {
+				m = msg["answers"][i]
+				answers += format(answer_format, m["content"].replace(/\n/g, "<br>"),
+					m["writer"], m["create_at"]);
+
+				file_format = '<a target="_blank" class="file-link" download href="{0}">- 檔案 {1} - {2} </a><br>'
+
+				file_display = "<div style=\"padding-left:30px\">"
+				if (m["file1"] != "") {
+					file_display += format(file_format, m["file1"], "1", changefilename(m["file1"]))
+					if (m["file2"] != "") {
+						file_display += format(file_format, m["file2"], "2", changefilename(m["file2"]))
+						if (m["file3"] != "") {
+							file_display += format(file_format, m["file3"], "3", changefilename(m["file3"]))
+						}
+					}
+					answers += file_display + "</div></div>";
+				}
+
+			}
+			answers += "<hr>"
+			document.getElementById("answers").innerHTML = answers;
+		},
+		error: function (msg) {
+			document.getElementById("answers").innerHTML = "<hr /> 目前沒有解答 <hr />";
+			// NO ANSWER
+		}
+	})
+}
+
+function showquestion(qid) {
+	string_param = {"id":qid}
+	$.ajax({
+		url: host + "question/",
+		type: "GET",
+		data: string_param,
+		success: function (msg) {
+			document.getElementById("content").innerHTML = msg["content"].replace(/\n/g, "<br>");
+			document.getElementById("type").innerHTML = q_typelist[msg["type"]];
+
+			a = "<div id=\"solved\" style=\"background-color:"
+			if (msg["solved"]) {
+					a += "LimeGreen";
+			}
+			else {
+					a += "Crimson";
+			}
+			a += "\"></div> " + msg["title"];
+			document.getElementById("title").innerHTML = a;
+			document.getElementById("create_at").innerHTML = msg["create_at"];
+			document.getElementById("question-writer").innerHTML = msg["writer"];
+			
+			if (getCookie("id") != msg["writer_id"]) {
+				document.getElementById("closequestion").disabled = true;
+				document.getElementById("closequestion").onclick = null;
+			}
+			else {
+				document.getElementById("closequestion").disabled = false;
+				if (msg["solved"]) {
+					document.getElementById("closequestion").onclick = function () {closequestion("False")};
+					document.getElementById("closequestion").innerHTML = "開啟問題";
+				}
+				else {
+					document.getElementById("closequestion").onclick = function () {closequestion("True")};
+					document.getElementById("closequestion").innerHTML = "關閉問題";
+				}
+			}
+			
+			file_format = '<a target="_blank" class="file-link" download href="{0}">- 檔案 {1} - {2} </a><br>'
+
+			file_display = ""
+			if (msg["file1"] != "") {
+				file_display += format(file_format, msg["file1"], "1", changefilename(msg["file1"]))
+				if (msg["file2"] != "") {
+					file_display += format(file_format, msg["file2"], "2", changefilename(msg["file2"]))
+					if (msg["file3"] != "") {
+						file_display += format(file_format, msg["file3"], "3", changefilename(msg["file3"]))
+					}
+				}
+				document.getElementById("files").innerHTML = file_display;
+			}
+			else {
+				document.getElementById("files").innerHTML = "沒有檔案";
+			}
+
+			getanswer(qid);
+			question_id = qid;
+		}
+	})
+}
+
+function openquestion (id) {
+	show("question-frame");
+	showquestion(id);
+}
 </script>
 {% endblock %}

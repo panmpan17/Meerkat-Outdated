@@ -31,7 +31,7 @@ class AdminHandler(object):
         users = meta.tables[User.TABLE_NAME]
         cookie = cherrypy.request.cookie
 
-        res = AdminHandler.checkadmin(cookie, key_mgr, users, conn)
+        res = self.checkadmin(cookie, key_mgr, users, conn)
         if not res:
             raise cherrypy.HTTPRedirect("/")
 
@@ -44,7 +44,7 @@ class AdminHandler(object):
         key_mgr = cherrypy.request.key
         cookie = cherrypy.request.cookie
 
-        res = AdminHandler.checkadmin(cookie, key_mgr, users, conn)
+        res = self.checkadmin(cookie, key_mgr, users, conn)
         if not res:
             raise cherrypy.HTTPRedirect("/")
 
@@ -52,7 +52,39 @@ class AdminHandler(object):
 
     @cherrypy.expose
     def questions(self):
+        meta, conn = cherrypy.request.db
+        users = meta.tables[User.TABLE_NAME]
+        key_mgr = cherrypy.request.key
+        cookie = cherrypy.request.cookie
+
+        res = self.checkadmin(cookie, key_mgr, users, conn)
+        if not res:
+            raise cherrypy.HTTPRedirect("/")
+            
         return render("admin/questions.html", {})
+
+    @cherrypy.expose
+    def files(self, file=None):
+        meta, conn = cherrypy.request.db
+        users = meta.tables[User.TABLE_NAME]
+        key_mgr = cherrypy.request.key
+        cookie = cherrypy.request.cookie
+
+        res = self.checkadmin(cookie, key_mgr, users, conn)
+        if not res:
+            raise cherrypy.HTTPRedirect("/")
+
+        if cherrypy.request.method == "POST":
+            classes = cherrypy.request.classes
+            os.remove(classes.get_download_path() + file)
+
+        files = []
+        for *_, fs in os.walk(os.getcwd() + "/downloads"):
+            for f in fs:
+                if f.find(".") != 0:
+                    files.append(f)
+
+        return render("admin/files.html", {"files": files})
 
     @cherrypy.expose
     def users(self):
@@ -61,14 +93,13 @@ class AdminHandler(object):
         key_mgr = cherrypy.request.key
         cookie = cherrypy.request.cookie
         
-        res = AdminHandler.checkadmin(cookie, key_mgr, users, conn)
+        res = self.checkadmin(cookie, key_mgr, users, conn)
         if not res:
             raise cherrypy.HTTPRedirect("/")
 
         return render("admin/users.html", {})
 
-    @classmethod
-    def checkadmin(cls, cookie, key_mgr, users, conn):
+    def checkadmin(self, cookie, key_mgr, users, conn):
         if "key" not in cookie:
             return False
         key = str(cookie["key"].value)
