@@ -128,4 +128,4 @@
  'subject': 'Hour of Code',
  'summary': '這是 Coding for Fun 的體驗課程<br>請使用 <a style=\"color:Coral\" target=\"_black\" href=\'https://www.google.com/intl/zh-HK/chrome/browser/desktop/\'>Google Chrome 瀏覽器</a>',
  'description': '',
- 'answer': ''}
+ 'titles': ["Hour of Code"]}

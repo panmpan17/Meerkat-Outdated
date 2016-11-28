@@ -1,5 +1,5 @@
 # firebird/base.py
-# Copyright (C) 2005-2015 the SQLAlchemy authors and contributors
+# Copyright (C) 2005-2016 the SQLAlchemy authors and contributors
 # <see AUTHORS file>
 #
 # This module is part of SQLAlchemy and is released under
@@ -648,7 +648,7 @@ class FBDialect(default.DefaultDialect):
                 'type': coltype,
                 'nullable': not bool(row['null_flag']),
                 'default': defvalue,
-                'autoincrement': defvalue is None
+                'autoincrement': 'auto',
             }
 
             if orig_colname.lower() == orig_colname:

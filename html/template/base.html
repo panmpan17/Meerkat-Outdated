@@ -12,14 +12,14 @@
 	<!-- my js css -->
 	<script src="/html/javascript/cookie.js"></script>
 	<script src="/html/javascript/loginsignupframe.js"></script>
+	<script src="/html/javascript/base.js"></script>
 	<script src="/html/bootstrap/js/bootstrap.js"></script>
 
 	<link href="/html/bootstrap/css/bootstrap.css" rel="stylesheet">
 
 	<link href="/html/css/font.css" rel="stylesheet">
 	<link href="/html/css/theme.css" rel="stylesheet">
-
-
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 	{% block css %}
 	{% endblock %}
 
@@ -187,15 +187,6 @@ function hide(eid) {
 function toggle(eid) {
 	// 
 	document.getElementById(eid).classList.toggle("show");
-}
-
-function format() {
-	var s = arguments[0];
-	for (var i = 0; i < arguments.length - 1; i++) {       
-		var reg = new RegExp("\\{" + i + "\\}", "gm");             
-		s = s.replace(reg, arguments[i + 1]);
-	}
-	return s;
 }
 
 if (getCookie("userid") !== "") {

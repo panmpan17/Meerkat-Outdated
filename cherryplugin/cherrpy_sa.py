@@ -27,7 +27,7 @@ from sqlalchemy import create_engine, MetaData
 #from sqlalchemy.orm import scoped_session, sessionmaker
 
 class SAPlugin(plugins.SimplePlugin):
-    def __init__(self, bus, connection_string=None, tables=[]):
+    def __init__(self, bus, db_str=None, tables=[]):
         """
         The plugin is registered to the CherryPy engine and therefore
         is part of the bus (the engine *is* a bus) registery.
@@ -38,7 +38,7 @@ class SAPlugin(plugins.SimplePlugin):
         """
         plugins.SimplePlugin.__init__(self, bus)
         self.sa_engine = self.sa_meta = None
-        self.sa_connstr = connection_string
+        self.sa_connstr = db_str
         self.tables = tables
  
     def start(self):
@@ -55,6 +55,9 @@ class SAPlugin(plugins.SimplePlugin):
         #    if hasattr(a.root, "create_schema"):
         #        a.root.create_schema(self.sa_engine, self.sa_meta)
         for t in self.tables:
+            if isinstance(t, tuple):
+                t[0].create_schema(self.sa_engine, self.sa_meta, euf=t[1])
+                continue
             t.create_schema(self.sa_engine, self.sa_meta)
 
 

@@ -1,5 +1,5 @@
 # oracle/cx_oracle.py
-# Copyright (C) 2005-2015 the SQLAlchemy authors and contributors
+# Copyright (C) 2005-2016 the SQLAlchemy authors and contributors
 # <see AUTHORS file>
 #
 # This module is part of SQLAlchemy and is released under
@@ -415,6 +415,21 @@ class _OracleLong(oracle.LONG):
 class _OracleString(_NativeUnicodeMixin, sqltypes.String):
     pass
 
+class _OracleEnum(_NativeUnicodeMixin, sqltypes.Enum):
+    def bind_processor(self, dialect):
+        enum_proc = sqltypes.Enum.bind_processor(self, dialect)
+        if util.py2k:
+            unicode_proc = _NativeUnicodeMixin.bind_processor(self, dialect)
+        else:
+            unicode_proc = None
+
+        def process(value):
+            raw_str = enum_proc(value)
+            if unicode_proc:
+                raw_str = unicode_proc(raw_str)
+            return raw_str
+        return process
+
 
 class _OracleUnicodeText(
         _LOBMixin, _NativeUnicodeMixin, sqltypes.UnicodeText):
@@ -651,6 +666,7 @@ class OracleDialect_cx_oracle(OracleDialect):
         sqltypes.String: _OracleString,
         sqltypes.UnicodeText: _OracleUnicodeText,
         sqltypes.CHAR: _OracleChar,
+        sqltypes.Enum: _OracleEnum,
 
         # a raw LONG is a text type, but does *not*
         # get the LobMixin with cx_oracle.
@@ -898,12 +914,16 @@ class OracleDialect_cx_oracle(OracleDialect):
             dsn = url.host
 
         opts = dict(
-            user=url.username,
-            password=url.password,
-            dsn=dsn,
             threaded=self.threaded,
             twophase=self.allow_twophase,
         )
+
+        if dsn is not None:
+            opts['dsn'] = dsn
+        if url.password is not None:
+            opts['password'] = url.password
+        if url.username is not None:
+            opts['user'] = url.username
 
         if util.py2k:
             if self._cx_oracle_with_unicode:

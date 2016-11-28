@@ -12,7 +12,7 @@ class Function:
         classes = ClassesPlugin(cherrypy.engine, path)
 
         dirname = "classes"
-        files = ["scratch_1.json", "hourofcode.json", "teacher_1.json"]
+        files = ["scratch_1.json", "hourofcode.json", "teacher_1.json", "python_01.json"]
 
         for f in files:
             file = open(dirname + "/" + f, "r")
@@ -127,7 +127,7 @@ class App():
             },
         }
 
-    def start(self, db_str, path):
+    def start(self, db_str, path, euf):
         from app.rest import rest_config, UserRestView, SessionKeyView, AnswerRestView
         from app.rest import QuestionRestView, ClassesRestView, PostRestView, OpinionRestView
         from app.render import UserCaseHandler, ClassHandler
@@ -135,6 +135,7 @@ class App():
         from cherryplugin.cherrpy_sa import SAPlugin, SATool
         from cherryplugin.session_mgr import KeyMgrPlugin, KeyMgrTool
         from cherryplugin.classes_load import ClassesTool
+        from cherryplugin.email_mgr import EmailPlugin, EmailTool
 
         self.site_conf = App.SITE_CONF
         self.log_conf = App.LOG_CONF
@@ -163,17 +164,18 @@ class App():
         cherrypy.tree.mount(AdminHandler(), AdminHandler._root,
             config=self.render_config)
         
-        from app.model import User, Question, Answer, Post, Opinion
+        from app.model import User, Question, Answer, Post, Opinion, ClassManage
 
         tables = [
-            User,
+            (User, euf),
             Question,
             Answer,
             Post,
-            Opinion
+            Opinion,
+            ClassManage,
             ]
 
-        sa_plugin = SAPlugin(cherrypy.engine, db_str, tables)
+        sa_plugin = SAPlugin(cherrypy.engine, db_str=db_str, tables=tables)
         sa_plugin.subscribe()
         cherrypy.tools.dbtool = SATool(sa_plugin)
 
@@ -201,6 +203,7 @@ if __name__ == "__main__":
     psr.add_argument('-dbprt')
     psr.add_argument('-dbname')
     psr.add_argument('-path')
+    psr.add_argument('-euf')
     vs = dumy()
     psr.parse_args(sys.argv[1:], namespace=vs)
 
@@ -214,7 +217,7 @@ if __name__ == "__main__":
         db_str = None
 
     web = App()
-    web.start(db_str, vs.path)
+    web.start(db_str, vs.path, vs.euf)
 
 
 

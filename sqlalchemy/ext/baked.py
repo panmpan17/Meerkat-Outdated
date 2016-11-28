@@ -1,5 +1,5 @@
 # sqlalchemy/ext/baked.py
-# Copyright (C) 2005-2015 the SQLAlchemy authors and contributors
+# Copyright (C) 2005-2016 the SQLAlchemy authors and contributors
 # <see AUTHORS file>
 #
 # This module is part of SQLAlchemy and is released under
@@ -194,7 +194,8 @@ class BakedQuery(object):
 
         """
         for k, cache_key, query in context.attributes["baked_queries"]:
-            bk = BakedQuery(self._bakery, lambda sess: query.with_session(sess))
+            bk = BakedQuery(self._bakery,
+                            lambda sess, q=query: q.with_session(sess))
             bk._cache_key = cache_key
             context.attributes[k] = bk.for_session(session).params(**params)
 
@@ -272,16 +273,15 @@ class Result(object):
         Equivalent to :meth:`.Query.one`.
 
         """
-        ret = list(self)
-
-        l = len(ret)
-        if l == 1:
-            return ret[0]
-        elif l == 0:
-            raise orm_exc.NoResultFound("No row was found for one()")
-        else:
+        try:
+            ret = self.one_or_none()
+        except orm_exc.MultipleResultsFound:
             raise orm_exc.MultipleResultsFound(
                 "Multiple rows were found for one()")
+        else:
+            if ret is None:
+                raise orm_exc.NoResultFound("No row was found for one()")
+            return ret
 
     def one_or_none(self):
         """Return one or zero results, or raise an exception for multiple
@@ -441,14 +441,12 @@ class BakedLazyLoader(strategies.LazyLoader):
         if pending or passive & attributes.NO_AUTOFLUSH:
             q.add_criteria(lambda q: q.autoflush(False))
 
-        if state.load_path:
-            q.spoil()
-            q.add_criteria(
-                lambda q:
-                q._with_current_path(state.load_path[self.parent_property]))
-
         if state.load_options:
             q.spoil()
+            args = state.load_path[self.parent_property]
+            q.add_criteria(
+                lambda q:
+                q._with_current_path(args), args)
             q.add_criteria(
                 lambda q: q._conditional_options(*state.load_options))
 
@@ -467,11 +465,15 @@ class BakedLazyLoader(strategies.LazyLoader):
             if rev.direction is interfaces.MANYTOONE and \
                 rev._use_get and \
                     not isinstance(rev.strategy, strategies.LazyLoader):
+
                 q.add_criteria(
                     lambda q:
                     q.options(
-                        strategy_options.Load(
-                            rev.parent).baked_lazyload(rev.key)))
+                        strategy_options.Load.for_existing_path(
+                            q._current_path[rev.parent]
+                        ).baked_lazyload(rev.key)
+                    )
+                )
 
         lazy_clause, params = self._generate_lazy_clause(state, passive)
 

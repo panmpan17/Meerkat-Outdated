@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Coding for Fun - {{ subject }}{% endblock %}
 {% block css %}
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 <link rel="stylesheet" href="/html/css/class.css">
 {% endblock %}
 {% block content %}
@@ -10,31 +9,28 @@
 <br>
 <br>
 <center>
-<div id="a"></div>
-<div class="button-display" id="buttons">
-	<!-- <button class="btn btn-primary">a</button> -->
+<div id="a">
 </div>
-<div class="classname-display" id="classname"></div>
-<br><br><br>
+<!-- <div class="classname-display" id="classname"></div> -->
+<br>
 <div id="video"></div>
 </center>
 
 <div class="lesson-display">
+	<div id="classname-now"></div>
 	<div class="dropdown push-left" style="width:50%;display:inline;font-family:fonta;">
 	  <button class="btn btn-default dropdown-toggle" type="button" id="lesson-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 		Dropdown
-		<span class="caret"></span>
 	  </button>
 	  <ul class="dropdown-menu" aria-labelledby="lesson-dropdown" id="lessons">
 	  </ul>
 	</div>
+	<div class="button-display" id="buttons" style="display:inline"></div>
 	
 	<div class="leftarrow">
 		<a onclick="prev()">
 			<i class="fa fa-chevron-left" aria-hidden="true"></i>
 		</a>
-	</div>
-	<div id="classname-now">
 	</div>
 	<div class="rightarrow">
 		<a onclick="next()">
@@ -45,8 +41,7 @@
 <br><br>
 {% endblock %}
 {% block script %}
-<script src="/html/javascript/class.js">
-</script>
+<script src="/html/javascript/class.js"></script>
 <script>
 subject_id = document.getElementById("subject_id").textContent
 loadclass(subject_id)

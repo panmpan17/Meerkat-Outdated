@@ -1,5 +1,6 @@
 function storeCookie(cname, value) {
-	document.cookie = cname + "=" + value;
+    f = "{0}={1}; path=/"
+	document.cookie = format(f, cname, value);
 }
 
 function getCookie(cname) {
@@ -14,5 +15,5 @@ function getCookie(cname) {
 }
 
 function deleteCookie(cname) {
-	document.cookie = cname + "=";
+	document.cookie = cname + "=; path=/";
 }

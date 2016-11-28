@@ -1,9 +1,10 @@
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
-from sqlalchemy import Boolean, DateTime, Text
+from sqlalchemy import Boolean, DateTime, Text, ARRAY, JSON
 from datetime import datetime, timedelta
 from cherrypy import HTTPError as httperror
 from uuid import uuid1
 from hashlib import sha256
+import os
 # from pytz import timezone
 
 def GMT(t):
@@ -38,7 +39,7 @@ class User(object):
         self.job = ""
 
     @classmethod
-    def create_schema(cls, db_engine, db_meta):
+    def create_schema(cls, db_engine, db_meta, euf=None):
         cls.user_t = Table(User.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
             Column("userid", String, nullable=False, autoincrement=False, unique=True),
@@ -56,11 +57,13 @@ class User(object):
             )
         cls.user_t.create(db_engine, checkfirst=True)
         cls.creat_user(db_meta, db_engine)
+        if euf:
+            cls.creat_user(db_meta, db_engine, filename=euf)
         return cls.user_t
 
     @classmethod
-    def creat_user(cls, meta, engine):
-        f = open("user.txt")
+    def creat_user(cls, meta, engine, filename="user.txt"):
+        f = open(filename)
         r = f.read()
         f.close()
         l = r.split("[\SPLIT/]")
@@ -69,13 +72,16 @@ class User(object):
         for u in l:
             ujson = u.split("\n")
             ujson.remove("")
-            j = {}
+            j = {"admin": False}
             for i in ujson:
                 key = i[:i.find("=")]
                 value = i[i.find("=") + 1:]
                 if key == "birth_year":
                     j[key] = int(value)
                 elif key == "password":
+                    if len(value) > 32:
+                        j[key] = value
+                        continue
                     j[key] = hash(value)
                 elif key == "admin":
                     j[key] = bool(value)
@@ -90,9 +96,8 @@ class User(object):
         for u in users_:
             try:
                 rst = conn.execute(ins, u)
-                print("User {} is create".format(j["userid"]))
             except:
-                print("User {} already exist".format(j["userid"]))
+                pass
 
     @classmethod
     def mk_dict(cls, row):
@@ -108,13 +113,35 @@ class User(object):
             "expert": row["expert"],
             "create_at": GMT(row["create_at"]),
             "last_login": GMT(row["last_login"]),
-            # "disabled": row["disabled"],
             }
+
+    @classmethod
+    def mk_dict_classes(cls, row):
+        d = {
+            "id": row["id"],
+            "userid": row["userid"],
+            "email": row["email"],
+            "birth_year": row["birth_year"],
+            "nickname": row["nickname"],
+            "job": row["job"],
+            "point": row["point"],
+            "admin": row["admin"], 
+            "expert": row["expert"],
+            "create_at": GMT(row["create_at"]),
+            "last_login": GMT(row["last_login"]),
+            }
+        for c in row["class_access"]:
+            d[c] = True
+        return d
 
     @classmethod
     def mk_info(cls, row):
         return {
+            "id": row["id"],
+            "userid": row["userid"],
+            "email": row["email"],
             "nickname": row["nickname"],
+            "create_at": GMT(row["create_at"]),
             }
 
     def validate_json(self, json):
@@ -173,7 +200,7 @@ class Question(object):
 
     @classmethod
     def mk_dict(cls, row):
-        return {
+        j = {
             "id": row["id"],
             "title": row["title"],
             "content": row["content"],
@@ -186,6 +213,16 @@ class Question(object):
             "file2": row["file2"],
             "file3": row["file3"],
             }
+        if j["file1"] != "":
+            if not os.path.isfile(j["file1"]):
+                j["file1"] = "檔案不存在"
+        if j["file2"] != "":
+            if not os.path.isfile(j["file2"]):
+                j["file2"] = "檔案不存在"
+        if j["file3"] != "":
+            if not os.path.isfile(j["file3"]):
+                j["file3"] = "檔案不存在"
+        return j
 
     @classmethod
     def mk_info(cls, row):
@@ -250,7 +287,7 @@ class Answer(object):
 
     @classmethod
     def mk_dict(cls, row):
-        return {
+        j = {
             "id": row["id"],
             "content": row["content"],
             "writer": row["writer"],
@@ -260,6 +297,16 @@ class Answer(object):
             "file2": row["file2"],
             "file3": row["file3"],
             }
+        if j["file1"] != "":
+            if not os.path.isfile(j["file1"]):
+                j["file1"] = "檔案不存在"
+        if j["file2"] != "":
+            if not os.path.isfile(j["file2"]):
+                j["file2"] = "檔案不存在"
+        if j["file3"] != "":
+            if not os.path.isfile(j["file3"]):
+                j["file3"] = "檔案不存在"
+        return j
 
     def validate_json(self, json):
         if (not isinstance(json, dict)) or (json == {}):
@@ -317,9 +364,6 @@ class Opinion(object):
     TABLE_NAME = "tb_opinion"
     opinion_t = None
 
-    def __init__(Self):
-        self.content = None
-
     @classmethod
     def create_schema(cls, db_engine, db_meta):
         cls.opinion_t = Table(Opinion.TABLE_NAME, db_meta,
@@ -340,9 +384,18 @@ class Opinion(object):
             "create_at": GMT(row["create_at"]),
             }
 
+class ClassManage(object):
+    TABLE_NAME = "tb_classmanage"
+    classmanage_t = None
 
-
-
-
+    @classmethod
+    def create_schema(cls, db_engine, db_meta):
+        cls.classmanage_t = Table(ClassManage.TABLE_NAME, db_meta,
+            Column("uid", Integer, ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
+            Column("class_access", ARRAY(String), nullable=True, default=[], autoincrement=True),
+            Column("class_record", JSON, nullable=True, default={}, autoincrement=True)
+            )
+        cls.classmanage_t.create(db_engine, checkfirst=True)
+        return cls.classmanage_t
 
 

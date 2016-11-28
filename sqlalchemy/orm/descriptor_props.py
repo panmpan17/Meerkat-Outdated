@@ -1,5 +1,5 @@
 # orm/descriptor_props.py
-# Copyright (C) 2005-2015 the SQLAlchemy authors and contributors
+# Copyright (C) 2005-2016 the SQLAlchemy authors and contributors
 # <see AUTHORS file>
 #
 # This module is part of SQLAlchemy and is released under
@@ -269,7 +269,7 @@ class CompositeProperty(DescriptorProperty):
             prop.active_history = self.active_history
             if self.deferred:
                 prop.deferred = self.deferred
-                prop.strategy_class = prop._strategy_lookup(
+                prop.strategy_key = (
                     ("deferred", True),
                     ("instrument", True))
             prop.group = self.group

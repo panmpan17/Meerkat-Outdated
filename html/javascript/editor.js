@@ -92,7 +92,7 @@ news_format = `
 	<td style="border-bottom: 1px solid #ddd;">{1}</td>
 	<td style="border-bottom: 1px solid #ddd;padding:10px;">{0}</td>
 	<td style="border-bottom: 1px solid #ddd;">
-		<a onclick="deletepost('{1}')" style="color:red;font-weight:bold;cursor:pointer">X</a>
+		<a onclick="deletepost('{1}')" style="color:red;font-weight:bold;">X</a>
 	</td>
 </tr>
 `

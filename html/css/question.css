@@ -127,12 +127,8 @@ span#card-solved {
 }
 
 li.label-button {
-	cursor:pointer;
+	cursor: pointer;
 	padding-right: 12px;
-}
-
-li.paging {
-	cursor:pointer;
 }
 
 span#writer {

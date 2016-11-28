@@ -1,5 +1,5 @@
 # sqlalchemy/processors.py
-# Copyright (C) 2010-2015 the SQLAlchemy authors and contributors
+# Copyright (C) 2010-2016 the SQLAlchemy authors and contributors
 # <see AUTHORS file>
 # Copyright (C) 2010 Gaetan de Menten gdementen@gmail.com
 #
@@ -53,7 +53,7 @@ def boolean_to_int(value):
     if value is None:
         return None
     else:
-        return int(value)
+        return int(bool(value))
 
 
 def py_fallback():
@@ -111,7 +111,7 @@ def py_fallback():
         if value is None:
             return None
         else:
-            return value and True or False
+            return bool(value)
 
     DATETIME_RE = re.compile(
         "(\d+)-(\d+)-(\d+) (\d+):(\d+):(\d+)(?:\.(\d+))?")

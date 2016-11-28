@@ -1,43 +1,26 @@
 div.class_block {
-  display:inline-block;
-  background-color: rgba(254, 144, 0,1);
-  height:30px;
-  text-align: center;
-  border-right: 1px solid white;
-  border-left: 1px solid white;
-  font-family: fonta;
-  font-size: 20px;
-  cursor:pointer;
-  color: white;
+	font-family: fonta;
+	display:inline-block;
+	background-color: rgba(254, 144, 0,1);
+	border-right: 1px solid rgb(219, 238, 252);
+	border-left: 1px solid rgb(219, 238, 252);
+	height:30px;
+	text-align: center;
+	font-size: 20px;
+	cursor:pointer;
+	color: white;
 }
 
 div#video {
 	width:80%;
 }
 
-div.classname-display {
-	top: 194px;
-	width:90%;
-	height:50px;
-	background: rgba(244, 230, 200, 1);
-	display:none;
-	position: absolute;
-	left: 50%;
-	transform: translate(-50%, 0px);
-	font-size: 36px;
-	font-family: fonta;
-	padding-top: 0px;
-	color: rgba(254, 144, 0,1); 
-	font-weight: bold;
-}
-
 div.button-display {
-	top: 202px;
+	top: 2px;
 	width:88%;
-	position: absolute;
-	left: 50%;
+	position: relative;
 	transform: translate(-50%, 0px);
-	height:50px;
+	height:55px;
 	text-align:left;
 }
 
@@ -50,7 +33,9 @@ div.lesson-display {
 }
 
 div#classname-now {
-	float:right;
+	position: fixed;
+	right: 10px;
+	/*float:right;*/
 	display:inline;
 	font-size: 30px;
 	color: rgba(43,142,183,1);
@@ -66,10 +51,6 @@ button#lesson-dropdown {
 ul#lessons {
 	top:30px;
 	font-size: 24px;
-}
-
-li>a {
-	cursor:pointer;
 }
 
 div.rightarrow,
@@ -100,4 +81,12 @@ div.rightarrow {
 .leftarrow a:active,
 .rightarrow a:active {
   color: rgb(26,90,120);
+}
+
+div#answer {
+  position: relative;
+  top: -3px;
+  width: 100%;
+  height: 5px;
+  background-color: #ead141;
 }

@@ -1,5 +1,5 @@
 # ext/automap.py
-# Copyright (C) 2005-2015 the SQLAlchemy authors and contributors
+# Copyright (C) 2005-2016 the SQLAlchemy authors and contributors
 # <see AUTHORS file>
 #
 # This module is part of SQLAlchemy and is released under
@@ -13,7 +13,7 @@ schema, typically though not necessarily one which is reflected.
 
 It is hoped that the :class:`.AutomapBase` system provides a quick
 and modernized solution to the problem that the very famous
-`SQLSoup <https://sqlsoup.readthedocs.org/en/latest/>`_
+`SQLSoup <https://sqlsoup.readthedocs.io/en/latest/>`_
 also tries to solve, that of generating a quick and rudimentary object
 model from an existing database on the fly.  By addressing the issue strictly
 at the mapper configuration level, and integrating fully with existing
@@ -112,7 +112,7 @@ explicit table declaration::
         Base.classes.user_order
 
 Specifying Classes Explicitly
-============================
+=============================
 
 The :mod:`.sqlalchemy.ext.automap` extension allows classes to be defined
 explicitly, in a way similar to that of the :class:`.DeferredReflection` class.
@@ -695,6 +695,7 @@ class AutomapBase(object):
             cls,
             engine=None,
             reflect=False,
+            schema=None,
             classname_for_table=classname_for_table,
             collection_class=list,
             name_for_scalar_relationship=name_for_scalar_relationship,
@@ -735,10 +736,19 @@ class AutomapBase(object):
          when a new :func:`.relationship` object is created that represents a
          collection.  Defaults to ``list``.
 
+        :param schema: When present in conjunction with the
+         :paramref:`.AutomapBase.prepare.reflect` flag, is passed to
+         :meth:`.MetaData.reflect` to indicate the primary schema where tables
+         should be reflected from.  When omitted, the default schema in use
+         by the database connection is used.
+
+         .. versionadded:: 1.1
+
         """
         if reflect:
             cls.metadata.reflect(
                 engine,
+                schema=schema,
                 extend_existing=True,
                 autoload_replace=False
             )

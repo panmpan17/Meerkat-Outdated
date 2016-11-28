@@ -8,7 +8,7 @@ from uuid import uuid1 as uuid
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader("html/template"))
 abs_cwd = os.path.join(os.getcwd(), os.path.dirname(__file__))
 
-def render(src, params):
+def render(src, params={}):
     # print(os.getcwd())
     t = jinja_env.get_template(src)
     return t.render(params)
@@ -25,7 +25,7 @@ class UserCaseHandler(object):
         }
     @cherrypy.expose
     def index(self):
-        return render("index.html", {})
+        return render("index.html")
 
     @cherrypy.expose
     def question(self, file1=None, file2=None, file3=None, **kwargs):
@@ -141,46 +141,27 @@ class UserCaseHandler(object):
 
         else:
             # return "GET"
-            return render("question.html", {})
+            return render("question.html")
         # return cherrypy.request.method
 
     @cherrypy.expose
     def about(self):
-        return render("about.html", {})
+        return render("about.html")
 
     @cherrypy.expose
     def mission(self):
-        return render("mission.html", {})
+        return render("mission.html")
 
     @cherrypy.expose
     def classes(self):
-        classes_plug = cherrypy.request.classes
-        classes_name = classes_plug.get_classes_name()
-
-        classes = []
-
-        for i in classes_name:
-            if i == "teacher_1":
-                continue
-            info = classes_plug.get_class(i)
-
-            classes.append({})
-            classes[-1]["subject"] = info["subject"]
-            classes[-1]["summary"] = info["summary"]
-            classes[-1]["description"] = info["description"]
-            classes[-1]["price"] = str(info["price"])
-            classes[-1]["time"] = info["time"]
-            classes[-1]["image"] = info["image"]
-            classes[-1]["id"] = info["id"]
-
-        return render("viewclasses.html", {"classes": classes})
+        return render("viewclasses.html")
 
     @cherrypy.expose
     def news(self):
-        return render("news.html", {})
+        return render("news.html")
 
     @cherrypy.expose
-    def video(self, key, video=None):
+    def video(self, key, video=None, file="", nextvid="", button="看答案", nextbutton="看問題"):
         access_deny = """
         <head>
             <title>Access Deny</title>
@@ -210,7 +191,7 @@ class UserCaseHandler(object):
             return access_deny
         uid = key_valid[1]
 
-        return render("video.html", {"video": video})
+        return render("video.html", {"video": video, "file": file.split(";"), "next": nextvid, "button": button, "nextbutton": nextbutton})
 
     @cherrypy.expose
     def hourofcode(self):
@@ -222,7 +203,7 @@ class UserCaseHandler(object):
 
     @cherrypy.expose
     def resource(self):
-        return render("resource.html", {})
+        return render("resource.html")
 
 class ClassHandler(object):
     _root = render_config["url_root"] + "class/"

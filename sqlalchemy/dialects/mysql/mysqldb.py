@@ -1,5 +1,5 @@
 # mysql/mysqldb.py
-# Copyright (C) 2005-2015 the SQLAlchemy authors and contributors
+# Copyright (C) 2005-2016 the SQLAlchemy authors and contributors
 # <see AUTHORS file>
 #
 # This module is part of SQLAlchemy and is released under
@@ -37,6 +37,11 @@ Google Cloud SQL now recommends use of the MySQLdb dialect.  Connect
 using a URL like the following::
 
     mysql+mysqldb://root@/<dbname>?unix_socket=/cloudsql/<projectid>:<instancename>
+
+Server Side Cursors
+-------------------
+
+The mysqldb dialect supports server-side cursors. See :ref:`mysql_ss_cursors`.
 
 """
 
@@ -87,9 +92,22 @@ class MySQLDialect_mysqldb(MySQLDialect):
     statement_compiler = MySQLCompiler_mysqldb
     preparer = MySQLIdentifierPreparer_mysqldb
 
+    def __init__(self, server_side_cursors=False, **kwargs):
+        super(MySQLDialect_mysqldb, self).__init__(**kwargs)
+        self.server_side_cursors = server_side_cursors
+
+    @util.langhelpers.memoized_property
+    def supports_server_side_cursors(self):
+        try:
+            cursors = __import__('MySQLdb.cursors').cursors
+            self._sscursor = cursors.SSCursor
+            return True
+        except (ImportError, AttributeError):
+            return False
+
     @classmethod
     def dbapi(cls):
-        return __import__("pymysql")
+        return __import__('MySQLdb')
 
     def do_executemany(self, cursor, statement, parameters, context=None):
         rowcount = cursor.executemany(statement, parameters)
@@ -193,6 +211,18 @@ class MySQLDialect_mysqldb(MySQLDialect):
             return 'latin1'
         else:
             return cset_name()
+
+    _isolation_lookup = set(['SERIALIZABLE', 'READ UNCOMMITTED',
+                             'READ COMMITTED', 'REPEATABLE READ',
+                             'AUTOCOMMIT'])
+
+    def _set_isolation_level(self, connection, level):
+        if level == 'AUTOCOMMIT':
+            connection.autocommit(True)
+        else:
+            connection.autocommit(False)
+            super(MySQLDialect_mysqldb, self)._set_isolation_level(connection,
+                                                                   level)
 
 
 dialect = MySQLDialect_mysqldb

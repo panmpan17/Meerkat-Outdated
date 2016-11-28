@@ -20,4 +20,3 @@ email=testuser@gmail.com
 birth_year=2010
 nickname=TESTUSER
 job=TESTUSER
-admin=

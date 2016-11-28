@@ -179,7 +179,6 @@ function to_html(dict) {
 }
 
 function showinfo() {
-	show('info-frame');
 	hide('accountmenu');
 
 	key = getCookie("key");
@@ -191,6 +190,7 @@ function showinfo() {
 		data: string_param,
 		success: function (msg) {
 			s = to_html(msg);
+			show('info-frame');
 			// console.log(s);
 		},
 		error: function (msg) {

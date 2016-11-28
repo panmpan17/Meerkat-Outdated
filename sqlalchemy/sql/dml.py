@@ -1,5 +1,5 @@
 # sql/dml.py
-# Copyright (C) 2009-2015 the SQLAlchemy authors and contributors
+# Copyright (C) 2009-2016 the SQLAlchemy authors and contributors
 # <see AUTHORS file>
 #
 # This module is part of SQLAlchemy and is released under
@@ -9,15 +9,18 @@ Provide :class:`.Insert`, :class:`.Update` and :class:`.Delete`.
 
 """
 
-from .base import Executable, _generative, _from_objects, DialectKWArgs
+from .base import Executable, _generative, _from_objects, DialectKWArgs, \
+    ColumnCollection
 from .elements import ClauseElement, _literal_as_text, Null, and_, _clone, \
     _column_as_key
-from .selectable import _interpret_as_from, _interpret_as_select, HasPrefixes
+from .selectable import _interpret_as_from, _interpret_as_select, \
+    HasPrefixes, HasCTE
 from .. import util
 from .. import exc
 
 
-class UpdateBase(DialectKWArgs, HasPrefixes, Executable, ClauseElement):
+class UpdateBase(
+        HasCTE, DialectKWArgs, HasPrefixes, Executable, ClauseElement):
     """Form the base for ``INSERT``, ``UPDATE``, and ``DELETE`` statements.
 
     """
@@ -29,6 +32,7 @@ class UpdateBase(DialectKWArgs, HasPrefixes, Executable, ClauseElement):
     _hints = util.immutabledict()
     _parameter_ordering = None
     _prefixes = ()
+    named_with_column = False
 
     def _process_colparams(self, parameters):
         def process_single(p):
@@ -191,6 +195,7 @@ class ValuesBase(UpdateBase):
     _has_multi_parameters = False
     _preserve_parameter_order = False
     select = None
+    _post_values_clause = None
 
     def __init__(self, table, values, prefixes):
         self.table = _interpret_as_from(table)
@@ -250,7 +255,7 @@ class ValuesBase(UpdateBase):
          The :class:`.Insert` construct also supports being passed a list
          of dictionaries or full-table-tuples, which on the server will
          render the less common SQL syntax of "multiple values" - this
-         syntax is supported on backends such as SQLite, Postgresql, MySQL,
+         syntax is supported on backends such as SQLite, PostgreSQL, MySQL,
          but not necessarily others::
 
             users.insert().values([
@@ -367,7 +372,7 @@ class ValuesBase(UpdateBase):
             if self._has_multi_parameters:
                 raise exc.ArgumentError(
                     "Can't pass kwargs and multiple parameter sets "
-                    "simultaenously")
+                    "simultaneously")
             else:
                 self.parameters.update(kwargs)
 

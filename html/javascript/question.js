@@ -68,6 +68,9 @@ function turn_url(string) {
 page_limit = 0
 page = 1
 function changepage(p) {
+	if (p == page) {
+		return ;
+	}
 	if (p <= page_limit) {
 		page = p;
 		getallquestion(select_type, select_values);
@@ -76,44 +79,58 @@ function changepage(p) {
 
 function prevpage () {
 	if ((page - 1) >= 1) {
-		page --
-		changepage(page)
+		changepage(page - 1)
 	}
 }
 
 function nextpage () {
 	if ((page + 1) <= page_limit) {
-		page ++
-		changepage(page)
+		changepage(page + 1)
 	}
 }
 
 function to_questions(l) {
 	// paging html
 	len_pages = l["pages"]
-	page_f = "<li {1} class=\"paging\" onclick=\"changepage({0})\"><a>{0}</a></li>"
+	page_f = "<li class=\"paging{1}\" onclick=\"changepage({0})\"><a>{0}</a></li>"
 
 	paging = `
 	<nav>
 		<ul class="pagination">
-			<li class="paging" onclick="prevpage()">
+			<li class="paging{0}" onclick="prevpage()">
 				<a aria-label="Previous">&laquo;</a>
 			</li>
 	`
 
+	if (page == 1) {
+		paging = format(paging, " disabled")
+	}
+	else {
+		paging = format(paging, "")
+	}
+
 	for (i = 1; i <= len_pages; i++) {
+		if (page == i) {
+			paging += format(page_f, i, " press");
+			continue
+		}
 		paging += format(page_f, i, "");
 	}
 
 	paging += `
-		<li class="paging" onclick="nextpage()">
-			<a aria-label="Next">&raquo;</a>
-		</li>
-	</ul>
+			<li class="paging{0}" onclick="nextpage()">
+				<a aria-label="Next">&raquo;</a>
+			</li>
+		</ul>
 	</nav>
 	<br>`
 
-
+	if (page == len_pages) {
+		paging = format(paging, " disabled")
+	}
+	else {
+		paging = format(paging, "")
+	}
 
 	card_format = `
 	<div class="card" onclick="openquestion({4})">

@@ -2,3 +2,8 @@
 	font-family: fonta;
 	src: url("/html/font/1.ttf");
 }
+
+a:hover {
+	cursor: pointer;
+	text-decoration: none;
+}

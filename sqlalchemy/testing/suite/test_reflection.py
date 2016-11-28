@@ -40,6 +40,15 @@ class ComponentReflectionTest(fixtures.TablesTest):
     __backend__ = True
 
     @classmethod
+    def setup_bind(cls):
+        if config.requirements.independent_connections.enabled:
+            from sqlalchemy import pool
+            return engines.testing_engine(
+                options=dict(poolclass=pool.StaticPool))
+        else:
+            return config.db
+
+    @classmethod
     def define_tables(cls, metadata):
         cls.define_reflected_tables(metadata, None)
         if testing.requires.schemas.enabled:
@@ -202,7 +211,7 @@ class ComponentReflectionTest(fixtures.TablesTest):
 
     @testing.requires.temp_table_names
     def test_get_temp_table_names(self):
-        insp = inspect(testing.db)
+        insp = inspect(self.bind)
         temp_table_names = insp.get_temp_table_names()
         eq_(sorted(temp_table_names), ['user_tmp'])
 
@@ -210,7 +219,7 @@ class ComponentReflectionTest(fixtures.TablesTest):
     @testing.requires.temp_table_names
     @testing.requires.temporary_views
     def test_get_temp_view_names(self):
-        insp = inspect(self.metadata.bind)
+        insp = inspect(self.bind)
         temp_table_names = insp.get_temp_view_names()
         eq_(sorted(temp_table_names), ['user_tmp_v'])
 
@@ -348,7 +357,7 @@ class ComponentReflectionTest(fixtures.TablesTest):
 
     @testing.requires.temp_table_reflection
     def test_get_temp_table_columns(self):
-        meta = MetaData(testing.db)
+        meta = MetaData(self.bind)
         user_tmp = self.tables.user_tmp
         insp = inspect(meta.bind)
         cols = insp.get_columns('user_tmp')
@@ -361,7 +370,7 @@ class ComponentReflectionTest(fixtures.TablesTest):
     @testing.requires.view_column_reflection
     @testing.requires.temporary_views
     def test_get_temp_view_columns(self):
-        insp = inspect(self.metadata.bind)
+        insp = inspect(self.bind)
         cols = insp.get_columns('user_tmp_v')
         eq_(
             [col['name'] for col in cols],
@@ -463,6 +472,58 @@ class ComponentReflectionTest(fixtures.TablesTest):
     def test_get_foreign_keys_with_schema(self):
         self._test_get_foreign_keys(schema=testing.config.test_schema)
 
+    @testing.requires.foreign_key_constraint_option_reflection
+    @testing.provide_metadata
+    def test_get_foreign_key_options(self):
+        meta = self.metadata
+
+        Table(
+            'x', meta,
+            Column('id', Integer, primary_key=True),
+            test_needs_fk=True
+        )
+
+        Table('table', meta,
+              Column('id', Integer, primary_key=True),
+              Column('x_id', Integer, sa.ForeignKey('x.id', name='xid')),
+              Column('test', String(10)),
+              test_needs_fk=True)
+
+        Table('user', meta,
+              Column('id', Integer, primary_key=True),
+              Column('name', String(50), nullable=False),
+              Column('tid', Integer),
+              sa.ForeignKeyConstraint(
+                  ['tid'], ['table.id'],
+                  name='myfk',
+                  onupdate="SET NULL", ondelete="CASCADE"),
+              test_needs_fk=True)
+
+        meta.create_all()
+
+        insp = inspect(meta.bind)
+
+        # test 'options' is always present for a backend
+        # that can reflect these, since alembic looks for this
+        opts = insp.get_foreign_keys('table')[0]['options']
+
+        eq_(
+            dict(
+                (k, opts[k])
+                for k in opts if opts[k]
+            ),
+            {}
+        )
+
+        opts = insp.get_foreign_keys('user')[0]['options']
+        eq_(
+            dict(
+                (k, opts[k])
+                for k in opts if opts[k]
+            ),
+            {'onupdate': 'SET NULL', 'ondelete': 'CASCADE'}
+        )
+
     @testing.provide_metadata
     def _test_get_indexes(self, schema=None):
         meta = self.metadata
@@ -503,7 +564,7 @@ class ComponentReflectionTest(fixtures.TablesTest):
     @testing.requires.temp_table_reflection
     @testing.requires.unique_constraint_reflection
     def test_get_temp_table_unique_constraints(self):
-        insp = inspect(self.metadata.bind)
+        insp = inspect(self.bind)
         reflected = insp.get_unique_constraints('user_tmp')
         for refl in reflected:
             # Different dialects handle duplicate index and constraints
@@ -513,7 +574,7 @@ class ComponentReflectionTest(fixtures.TablesTest):
 
     @testing.requires.temp_table_reflection
     def test_get_temp_table_indexes(self):
-        insp = inspect(self.metadata.bind)
+        insp = inspect(self.bind)
         indexes = insp.get_indexes('user_tmp')
         for ind in indexes:
             ind.pop('dialect_options', None)

@@ -1,5 +1,5 @@
 # util/langhelpers.py
-# Copyright (C) 2005-2015 the SQLAlchemy authors and contributors
+# Copyright (C) 2005-2016 the SQLAlchemy authors and contributors
 # <see AUTHORS file>
 #
 # This module is part of SQLAlchemy and is released under
@@ -59,6 +59,13 @@ class safe_reraise(object):
             self._exc_info = None   # remove potential circular references
             compat.reraise(exc_type, exc_value, exc_tb)
         else:
+            if not compat.py3k and self._exc_info and self._exc_info[1]:
+                # emulate Py3K's behavior of telling us when an exception
+                # occurs in an exception handler.
+                warn(
+                    "An exception has occurred during handling of a "
+                    "previous exception.  The previous exception "
+                    "is:\n %s %s\n" % (self._exc_info[0], self._exc_info[1]))
             self._exc_info = None   # remove potential circular references
             compat.reraise(type_, value, traceback)
 
@@ -1019,7 +1026,9 @@ def constructor_copy(obj, cls, *args, **kw):
     """
 
     names = get_cls_kwargs(cls)
-    kw.update((k, obj.__dict__[k]) for k in names if k in obj.__dict__)
+    kw.update(
+        (k, obj.__dict__[k]) for k in names.difference(kw)
+        if k in obj.__dict__)
     return cls(*args, **kw)
 
 
@@ -1375,3 +1384,26 @@ class EnsureKWArgType(type):
             return fn(*arg)
         return update_wrapper(wrap, fn)
 
+
+def wrap_callable(wrapper, fn):
+    """Augment functools.update_wrapper() to work with objects with
+    a ``__call__()`` method.
+
+    :param fn:
+      object with __call__ method
+
+    """
+    if hasattr(fn, '__name__'):
+        return update_wrapper(wrapper, fn)
+    else:
+        _f = wrapper
+        _f.__name__ = fn.__class__.__name__
+        if hasattr(fn, '__module__'):
+            _f.__module__ = fn.__module__
+
+        if hasattr(fn.__call__, '__doc__') and fn.__call__.__doc__:
+            _f.__doc__ = fn.__call__.__doc__
+        elif fn.__doc__:
+            _f.__doc__ = fn.__doc__
+
+        return _f
