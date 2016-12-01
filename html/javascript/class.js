@@ -65,6 +65,9 @@ function loadclass(classname) {
 }
 
 function display_description() {
+	if ("description-video" in class_) {
+		return ;
+	}
 
 	document.getElementById("a").innerHTML = "";
 	document.getElementById("lesson-dropdown").innerHTML = `課程介紹 <i class="fa fa-sort-asc" aria-hidden="true"></i>`

@@ -127,43 +127,12 @@ class App():
             },
         }
 
-    def start(self, db_str, path, euf):
-        from app.rest import rest_config, UserRestView, SessionKeyView, AnswerRestView
-        from app.rest import QuestionRestView, ClassesRestView, PostRestView, OpinionRestView
-        from app.render import UserCaseHandler, ClassHandler
-        from app.admin import AdminHandler
+    def subsribe_plugin(self, path, euf):
         from cherryplugin.cherrpy_sa import SAPlugin, SATool
         from cherryplugin.session_mgr import KeyMgrPlugin, KeyMgrTool
         from cherryplugin.classes_load import ClassesTool
         from cherryplugin.email_mgr import EmailPlugin, EmailTool
 
-        self.site_conf = App.SITE_CONF
-        self.log_conf = App.LOG_CONF
-
-        if not path:
-            path = os.getcwd() + "/downloads/"
-        print(path)
-
-        if not db_str:
-            db_str = rest_config["db_connstr"]
-
-        self.render_config["/downloads"]["tools.staticdir.root"] = path
-        cherrypy.tree.mount(SessionKeyView(), SessionKeyView._root, config={"/":rest_config})
-        cherrypy.tree.mount(QuestionRestView(), QuestionRestView._root, config={"/":rest_config})
-        cherrypy.tree.mount(AnswerRestView(), AnswerRestView._root, config={"/":rest_config})
-        cherrypy.tree.mount(ClassesRestView(), ClassesRestView._root, 
-            config={"/":rest_config})
-        cherrypy.tree.mount(UserRestView(), UserRestView._root, config={"/":rest_config})
-        cherrypy.tree.mount(PostRestView(), PostRestView._root, config={"/": rest_config})
-        cherrypy.tree.mount(OpinionRestView(), OpinionRestView._root, config={"/": rest_config})
-
-        cherrypy.tree.mount(UserCaseHandler(), UserCaseHandler._root, 
-            config=self.render_config)
-        cherrypy.tree.mount(ClassHandler(), ClassHandler._root, 
-            config=self.render_config)
-        cherrypy.tree.mount(AdminHandler(), AdminHandler._root,
-            config=self.render_config)
-        
         from app.model import User, Question, Answer, Post, Opinion, ClassManage
 
         tables = [
@@ -186,6 +155,44 @@ class App():
         classes_plugin = Function.loadClasses(path)
         classes_plugin.subscribe()
         cherrypy.tools.classestool = ClassesTool(classes_plugin)
+
+        email_plugin = EmailPlugin(cherrypy.engine)
+        email_plugin.subscribe()
+        cherrypy.tools.emailtool = EmailTool(email_plugin)
+
+    def start(self, db_str, path, euf):
+        from app.rest import rest_config, UserRestView, SessionKeyView, AnswerRestView
+        from app.rest import QuestionRestView, ClassesRestView, PostRestView, OpinionRestView
+        from app.render import UserCaseHandler, ClassHandler
+        from app.admin import AdminHandler
+
+        self.site_conf = App.SITE_CONF
+        # self.log_conf = App.LOG_CONF
+
+        if not path:
+            path = os.getcwd() + "/downloads/"
+
+        if not db_str:
+            db_str = rest_config["db_connstr"]
+
+        self.render_config["/downloads"]["tools.staticdir.root"] = path
+        cherrypy.tree.mount(SessionKeyView(), SessionKeyView._root, config={"/":rest_config})
+        cherrypy.tree.mount(QuestionRestView(), QuestionRestView._root, config={"/":rest_config})
+        cherrypy.tree.mount(AnswerRestView(), AnswerRestView._root, config={"/":rest_config})
+        cherrypy.tree.mount(ClassesRestView(), ClassesRestView._root, 
+            config={"/":rest_config})
+        cherrypy.tree.mount(UserRestView(), UserRestView._root, config={"/":rest_config})
+        cherrypy.tree.mount(PostRestView(), PostRestView._root, config={"/": rest_config})
+        cherrypy.tree.mount(OpinionRestView(), OpinionRestView._root, config={"/": rest_config})
+
+        cherrypy.tree.mount(UserCaseHandler(), UserCaseHandler._root, 
+            config=self.render_config)
+        cherrypy.tree.mount(ClassHandler(), ClassHandler._root, 
+            config=self.render_config)
+        cherrypy.tree.mount(AdminHandler(), AdminHandler._root,
+            config=self.render_config)
+
+        self.subsribe_plugin(path, euf)
 
         cherrypy.config.update(self.site_conf)
         cherrypy.engine.start()
@@ -217,6 +224,8 @@ if __name__ == "__main__":
         db_str = None
 
     web = App()
+    if vs.euf == "/":
+        vs.euf = None
     web.start(db_str, vs.path, vs.euf)
 
 

@@ -13,10 +13,10 @@ class KeyMgrPlugin(plugins.SimplePlugin):
 		self.keydict = {}
 
 	def start(self):
-		self.bus.log("Starting up Session Key Mgr")
+		pass
 
 	def stop(self):
-		self.bus.log('Stroping down Session Key Mgr')
+		pass
 
 	def get_key(self, key):
 		value = self.keydict.get(key)
@@ -37,9 +37,6 @@ class KeyMgrPlugin(plugins.SimplePlugin):
 			"datetime": datetime.now(),
 			"requester": requester,
 			}
-
-	# def delete_key(self, key):
-		# self.keydict.pop(key)
 
 class KeyMgrTool(cherrypy.Tool):
 	def __init__(self, key_plugin):

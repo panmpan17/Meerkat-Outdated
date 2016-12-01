@@ -9,6 +9,16 @@ from sqlalchemy import desc
 from sqlalchemy.sql import select, update, and_, join
 from sqlalchemy.exc import IntegrityError
 
+
+
+RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify"
+RECAPTCHA_SERCRET = "6LcSMwoUAAAAAEIO6z5s2FO4QNjz0pZqeD0mZqRZ"
+
+rest_config = {
+    "url_root":"/rest/1/",
+    "db_connstr":"sqlite:///db",
+    }
+
 class ErrMsg(ErrMsg):
     NOT_LIST = "'{}' must be a list"
     NOT_BOOL = "'{}' must be Boolen"
@@ -27,14 +37,6 @@ class ErrMsg(ErrMsg):
 
     WRONG_CLASS = "Class '{}' not exist"
     NO_ACCESS_TO_CLASS = "You have permission to watch the class '{}'"
-
-RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify"
-RECAPTCHA_SERCRET = "6LcSMwoUAAAAAEIO6z5s2FO4QNjz0pZqeD0mZqRZ"
-
-rest_config = {
-    "url_root":"/rest/1/",
-    "db_connstr":"sqlite:///db",
-    }
 
 def count_page(r):
     # print(r)
@@ -229,6 +231,8 @@ class UserRestView(View):
 
 class QuestionRestView(View):
     _root = rest_config["url_root"] + "question/"
+    _cp_config = View._cp_config
+    _cp_config["tools.emailtool.on"] = True
 
     @cherrypy.expose
     def index(self, *args, **kwargs):
@@ -360,12 +364,20 @@ class QuestionRestView(View):
             rst = conn.execute(ins, question_json)
 
             if rst.is_insert:
+                email = cherrypy.request.email
+
                 cherrypy.response.status = 201
                 
                 ss = select([questions.c.id]).order_by(desc(questions.c.id))
                 row = conn.execute(ss)
 
-                return {"question_id": row.first()["id"]}
+                qid = row.first()["id"]
+                title = "新問題: " + data["question_json"]["title"]
+                content = data["question_json"]["content"]
+                email.put("panmpan@gmail.com", title, content)
+                email.put("shalley.tsay@gmail.com", title, content)
+
+                return {"question_id": qid}
             else:
                 raise cherrypy.HTTPError(503)
         elif cherrypy.request.method == "PUT":
