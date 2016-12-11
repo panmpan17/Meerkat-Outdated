@@ -127,7 +127,7 @@ class App():
             },
         }
 
-    def subsribe_plugin(self, path, euf):
+    def subsribe_plugin(self, path, euf, db_str):
         from cherryplugin.cherrpy_sa import SAPlugin, SATool
         from cherryplugin.session_mgr import KeyMgrPlugin, KeyMgrTool
         from cherryplugin.classes_load import ClassesTool
@@ -192,7 +192,7 @@ class App():
         cherrypy.tree.mount(AdminHandler(), AdminHandler._root,
             config=self.render_config)
 
-        self.subsribe_plugin(path, euf)
+        self.subsribe_plugin(path, euf, db_str)
 
         cherrypy.config.update(self.site_conf)
         cherrypy.engine.start()

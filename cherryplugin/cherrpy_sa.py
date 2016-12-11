@@ -49,6 +49,7 @@ class SAPlugin(plugins.SimplePlugin):
             self.sa_engine = create_engine(self.sa_connstr, connect_args={'check_same_thread':False},
                 poolclass=StaticPool)
         else:
+            print(self.sa_connstr)
             self.sa_engine = create_engine(self.sa_connstr, echo=False)
         self.sa_meta = MetaData()
         #for p, a in cherrypy.tree.apps.items():

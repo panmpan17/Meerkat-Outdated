@@ -5,6 +5,7 @@ class ClassesPlugin(plugins.SimplePlugin):
 	def __init__(self, bus, downloadpath):
 		plugins.SimplePlugin.__init__(self, bus)
 		self.classes = {}
+		self.videos = {}
 		self.dl_path = downloadpath
 
 	def start(self):
@@ -15,6 +16,18 @@ class ClassesPlugin(plugins.SimplePlugin):
 
 	def new_class(self, class_id, classinfo):
 		self.classes[class_id] = classinfo
+		self.videos[class_id] = {}
+		for lesson in classinfo["info"]:
+			for class_ in lesson:
+				self.videos[class_id][class_["video"]] = class_["class_name"]
+
+	def video_find_class(self, videourl):
+		for class_id in self.videos:
+			try:
+				return self.videos[class_id][videourl], class_id
+			except:
+				pass
+		return None
 
 	def get_class(self, class_id):
 		if class_id not in self.classes:

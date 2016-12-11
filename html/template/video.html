@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Video</title>
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	<script src="/html/javascript/base.js"></script>
 	<style>
 		html, body {
 			background-color: black;
@@ -160,22 +161,32 @@
 	</div>
 	{% endif %}
 	<script>
-		function format() {
-			var s = arguments[0];
-			for (var i = 0; i < arguments.length - 1; i++) {       
-				var reg = new RegExp("\\{" + i + "\\}", "gm");             
-				s = s.replace(reg, arguments[i + 1]);
-			}
-			return s;
-		}
-
+		var host = window.location.host + "/rest/1/"
 		var player = document.getElementById("player");
 
 		var fadeTime;
 		var over = false;
 
-		$("#player").on("loadeddata", updateTime);
-		$("#player").on("loadeddata", function () {setInterval(updateProgress, 100)})
+		$("#player").on("loadeddata", function () {
+			setInterval(updateProgress, 100);
+			updateTime();
+			toggleVideo();
+			// json = {"key": getCookie("key"), "video": "{{ video }}"}
+			// console.log(json)
+			// $.ajax({
+			// 	url: host + "classes/record",
+			// 	type: "PUT",
+			// 	dataType: "json",
+			// 	data: JSON.stringify(json),
+			// 	contentType: "application/json; charset=utf-8",
+			// 	success: function (msg) {
+			// 		console.log(msg)
+			// 	},
+			// 	error: function (error) {
+			// 		console.log(error)
+			// 	}
+			// });
+		});
 
 		$("#player").click(toggleVideo);
 		$("#playpause").click(toggleVideo);

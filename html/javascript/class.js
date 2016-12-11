@@ -65,7 +65,7 @@ function loadclass(classname) {
 }
 
 function display_description() {
-	if ("description-video" in class_) {
+	if (class_["description-video"] == "") {
 		return ;
 	}
 

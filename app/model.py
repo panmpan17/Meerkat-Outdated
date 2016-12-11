@@ -24,7 +24,33 @@ class ErrMsg:
     NOT_INT = "'{}' must be a integer"
     CANT_INPUT = "This param is autoincrement '{}'"
 
-class User(object):
+class Base(object):
+    def validate_json(self, json):
+        if (not isinstance(json, dict)) or (json == {}):
+            return httperror(400, ErrMsg.NOT_DICT)
+
+        for attr, val in json.items():
+            if hasattr(self, attr):
+                self.__setattr__(attr, val)
+            else:
+                return httperror(400, ErrMsg.UNKNOWN_PARAM.format(attr))
+
+        for col in Question.question_t.columns:
+            if (not col.nullable) and (not col.autoincrement):
+                val = self.__getattribute__(col.name)
+                if val == None:
+                    return httperror(400, ErrMsg.MISS_PARAM.format(col.name))
+                if isinstance(col.type, String):
+                    val = val.strip("\t\n\r")
+                    self.__setattr__(col.name, val)
+                elif isinstance(col.type, Integer):
+                    try:
+                        val = int(self.__getattribute__(col.name))
+                        self.__setattr__(col.name, val)
+                    except:
+                        return httperror(400, ErrMsg.NOT_INT.format(col.name))
+
+class User(Base):
     TABLE_NAME = "tb_user"
     user_t = None
 
@@ -144,33 +170,7 @@ class User(object):
             "create_at": GMT(row["create_at"]),
             }
 
-    def validate_json(self, json):
-        if (not isinstance(json, dict)) or (json == {}):
-            return httperror(400, ErrMsg.NOT_DICT)
-        for attr, val in json.items():
-            if hasattr(self, attr):
-                self.__setattr__(attr,val)
-            else:
-                return httperror(400, ErrMsg.UNKNOWN_PARAM.format(attr))
-        for col in User.user_t.columns:
-            if (not col.nullable) and (not col.autoincrement):
-                val = self.__getattribute__(col.name)
-                if val == None:
-                    return httperror(400, ErrMsg.MISS_PARAM.format(col.name))
-                if isinstance(col.type, String):
-                    val = val.strip("\t\n\r")
-                    # regular expression
-                    self.__setattr__(col.name, val)
-                elif isinstance(col.type, Integer):
-                    try:
-                        val = int(self.__getattribute__(col.name))
-                        self.__setattr__(col.name, val)
-                    except:
-                        return httperror(400, ErrMsg.NOT_INT.format(col.name))
-            # elif col.nullable == True:
-                # check nullable attributes
-
-class Question(object):
+class Question(Base):
     TABLE_NAME = "tb_question"
     question_t = None
 
@@ -235,33 +235,7 @@ class Question(object):
             "create_at": GMT(row["create_at"]),
             }
 
-
-    def validate_json(self, json):
-        if (not isinstance(json, dict)) or (json == {}):
-            return httperror(400, ErrMsg.NOT_DICT)
-
-        for attr, val in json.items():
-            if hasattr(self, attr):
-                self.__setattr__(attr, val)
-            else:
-                return httperror(400, ErrMsg.UNKNOWN_PARAM.format(attr))
-
-        for col in Question.question_t.columns:
-            if (not col.nullable) and (not col.autoincrement):
-                val = self.__getattribute__(col.name)
-                if val == None:
-                    return httperror(400, ErrMsg.MISS_PARAM.format(col.name))
-                if isinstance(col.type, String):
-                    val = val.strip("\t\n\r")
-                    self.__setattr__(col.name, val)
-                elif isinstance(col.type, Integer):
-                    try:
-                        val = int(self.__getattribute__(col.name))
-                        self.__setattr__(col.name, val)
-                    except:
-                        return httperror(400, ErrMsg.NOT_INT.format(col.name))
-
-class Answer(object):
+class Answer(Base):
     TABLE_NAME = "tb_comment"
     answer_t = None
 
@@ -308,37 +282,11 @@ class Answer(object):
                 j["file3"] = "檔案不存在"
         return j
 
-    def validate_json(self, json):
-        if (not isinstance(json, dict)) or (json == {}):
-            return httperror(400, ErrMsg.NOT_DICT)
-
-        for attr, val in json.items():
-            if hasattr(self, attr):
-                self.__setattr__(attr, val)
-            else:
-                return httperror(400, ErrMsg.UNKNOWN_PARAM.format(attr))
-
-        for col in Answer.answer_t.columns:
-            if (not col.nullable) and (not col.autoincrement):
-                val = self.__getattribute__(col.name)
-                if val == None:
-                    return httperror(400, ErrMsg.MISS_PARAM.format(col.name))
-                if isinstance(col.type, String):
-                    val = val.strip("\t\n\r")
-                    self.__setattr__(col.name, val)
-                elif isinstance(col.type, Integer):
-                    try:
-                        val = int(self.__getattribute__(col.name))
-                        self.__setattr__(col.name, val)
-                    except:
-                        return httperror(400, ErrMsg.NOT_INT.format(col.name))
-
-class Post(object):
+class Post(Base):
     TABLE_NAME = "tb_post"
     post_t = None
 
     def __init__(self):
-        self.title = None
         self.content = None
 
     @classmethod
@@ -360,9 +308,13 @@ class Post(object):
             "create_at": GMT(row["create_at"]),
             }
 
-class Opinion(object):
+class Opinion(Base):
     TABLE_NAME = "tb_opinion"
     opinion_t = None
+
+    def __init__(self):
+        self.content = None
+        self.writer = None
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
@@ -384,9 +336,12 @@ class Opinion(object):
             "create_at": GMT(row["create_at"]),
             }
 
-class ClassManage(object):
+class ClassManage(Base):
     TABLE_NAME = "tb_classmanage"
     classmanage_t = None
+
+    def __init__(self):
+        self.uid = None
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):

@@ -16,7 +16,7 @@ RECAPTCHA_SERCRET = "6LcSMwoUAAAAAEIO6z5s2FO4QNjz0pZqeD0mZqRZ"
 
 rest_config = {
     "url_root":"/rest/1/",
-    "db_connstr":"sqlite:///db",
+    "db_connstr":"postgresql://cd4fun_u:mlmlml@localhost:5432/coding4fun_db?client_encoding=utf8",
     }
 
 class ErrMsg(ErrMsg):
@@ -37,6 +37,7 @@ class ErrMsg(ErrMsg):
 
     WRONG_CLASS = "Class '{}' not exist"
     NO_ACCESS_TO_CLASS = "You have permission to watch the class '{}'"
+    WRONG_VIDEO = "Videl '{}' is not in any class"
 
 def count_page(r):
     # print(r)
@@ -780,8 +781,8 @@ class ClassesRestView(View):
 
     @cherrypy.expose
     def price(self, *args, **kwargs):
+        classes = cherrypy.request.classes
         if cherrypy.request.method == "GET":
-            classes = cherrypy.request.classes
 
             paid_class = []
             free_class = []
@@ -794,6 +795,69 @@ class ClassesRestView(View):
         else:
             raise cherrypy.HTTPError(404)
 
+    @cherrypy.expose
+    def record(self, *args, **kwargs):
+        classes = cherrypy.request.classes
+        key_mgr = cherrypy.request.key
+        meta, conn = cherrypy.request.db
+        classmanages = meta.tables[ClassManage.TABLE_NAME]
+
+        if len(args) > 0:
+                raise cherrypy.HTTPError(404)
+
+        if cherrypy.request.method == "GET":
+            uid = self.checklogin(kwargs, key_mgr)
+            if not uid:
+                raise cherrypy.HTTPError(401)
+
+            ss = select([classmanages.c.class_record]).where(and_(classmanages.c.uid == uid))
+            rst = conn.execute(ss)
+            rows = rst.fetchall()
+
+            if len(rows) == 0:
+                raise cherrypy.HTTPError(400, ErrMsg.UNKNOWN_ID.format(uid))
+            return rows[0]["class_record"]
+
+        elif cherrypy.request.method == "PUT":
+            data = cherrypy.request.json
+
+            uid = self.checklogin(data, key_mgr)
+            if not uid:
+                raise cherrypy.HTTPError(401)
+
+            if "video" not in data:
+                raise cherrypy.HTTPError(400, ErrMsg.MISS_PARAM("video"))
+            video = data["video"]
+
+            class_name, class_id = classes.video_find_class(video)
+            if not class_name:
+                raise cherrypy.HTTPError(400, ErrMsg.WRONG_VIDEO.format(video))
+
+            ss = select([classmanages.c.class_record]).where(classmanages.c.uid == uid)
+            rst = conn.execute(ss)
+            rows = rst.fetchall()
+
+            if len(rows) == 0:
+                raise cherrypy.HTTPError(400, ErrMsg.UNKNOWN_ID.format(uid))
+            class_record = rows[0]["class_record"]
+
+            if class_id not in class_record:
+                class_record[class_id] = {}
+
+            if class_name not in class_record[class_id]:
+                class_record[class_id][class_name] = 1
+            else:
+                class_record[class_id][class_name] += 1
+
+            stmt = update(classmanages).where(classmanages.c.uid == uid).\
+                values({"class_record": class_record})
+            ins = conn.execute(stmt)
+
+            cherrypy.response.status = 201
+            return {"success": True}
+        else:
+            raise cherrypy.HTTPError(404)
+
 class PostRestView(View):
     _root = rest_config["url_root"] + "post/"
 
@@ -803,6 +867,10 @@ class PostRestView(View):
         key_mgr = cherrypy.request.key
         posts = meta.tables[Post.TABLE_NAME]
         users = meta.tables[User.TABLE_NAME]
+
+        if len(args) > 0:
+            raise cherrypy.HTTPError(404)
+
         if cherrypy.request.method == "GET":
             ss = select([posts]).order_by(desc(posts.c.create_at))
             rst = conn.execute(ss)
@@ -812,9 +880,6 @@ class PostRestView(View):
         elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
 
-            if len(args) > 0:
-                raise cherrypy.HTTPError(404)
-
             uid = self.checklogin(data, key_mgr)
             if not uid:
                 raise cherrypy.HTTPError(401)
@@ -823,7 +888,7 @@ class PostRestView(View):
             if not admin:
                 raise cherrypy.HTTPError(401)
 
-            if ("content" not in data):
+            if "content" not in data:
                 raise cherrypy.HTTPError(400)
 
             j = {
