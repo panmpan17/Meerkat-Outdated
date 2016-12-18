@@ -15,13 +15,14 @@ class EmailPlugin(plugins.SimplePlugin):
 		self.queue = Queue()
 
 	def start(self):
+		self.bus.log("Start Access stmp.gmail.com")
 		self.server = smtplib.SMTP('smtp.gmail.com')
 		self.server.ehlo()
 		self.server.starttls()
 		self.server.ehlo()
 
 		self.server.login(self.usrn, self.psw)
-		self.bus.log("Gmail Login '{}'".format(self.usrn))
+		self.bus.log("Logined '{}'".format(self.usrn))
 
 	def stop(self):
 		self.server.quit()
@@ -54,8 +55,7 @@ class EmailPlugin(plugins.SimplePlugin):
 class EmailTool(cherrypy.Tool):
 	def __init__(self, email_plugin):
 		cherrypy.Tool.__init__(self, "on_start_resource",
-			self.get_email_mgr,
-			priority= 10)
+			self.get_email_mgr, priority= 10)
 		self.email_plugin = email_plugin
 		_thread.start_new_thread(self.sendqueue, ())
 

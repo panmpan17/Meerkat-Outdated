@@ -43,18 +43,16 @@ class SAPlugin(plugins.SimplePlugin):
  
     def start(self):
         self.bus.log('Starting up DB access')
+        self.bus.log(self.sa_connstr)
         if self.sa_connstr == "sqlite:///:memory:" or self.sa_connstr == "sqlite://":
             from sqlalchemy.pool import StaticPool
             self.bus.log('create memory db')
             self.sa_engine = create_engine(self.sa_connstr, connect_args={'check_same_thread':False},
                 poolclass=StaticPool)
         else:
-            print(self.sa_connstr)
             self.sa_engine = create_engine(self.sa_connstr, echo=False)
         self.sa_meta = MetaData()
-        #for p, a in cherrypy.tree.apps.items():
-        #    if hasattr(a.root, "create_schema"):
-        #        a.root.create_schema(self.sa_engine, self.sa_meta)
+
         for t in self.tables:
             if isinstance(t, tuple):
                 t[0].create_schema(self.sa_engine, self.sa_meta, euf=t[1])

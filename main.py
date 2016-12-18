@@ -151,14 +151,16 @@ class App():
         key_plugin = KeyMgrPlugin(cherrypy.engine)
         key_plugin.subscribe()
         cherrypy.tools.keytool = KeyMgrTool(key_plugin)
+        cherrypy.engine.log("Start remove key remove threading")
 
         classes_plugin = Function.loadClasses(path)
         classes_plugin.subscribe()
         cherrypy.tools.classestool = ClassesTool(classes_plugin)
 
-        email_plugin = EmailPlugin(cherrypy.engine)
-        email_plugin.subscribe()
-        cherrypy.tools.emailtool = EmailTool(email_plugin)
+        # email_plugin = EmailPlugin(cherrypy.engine)
+        # email_plugin.subscribe()
+        # cherrypy.tools.emailtool = EmailTool(email_plugin)
+        # cherrypy.engine.log("Start send email threading")
 
     def start(self, db_str, path, euf):
         from app.rest import rest_config, UserRestView, SessionKeyView, AnswerRestView

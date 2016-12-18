@@ -3,6 +3,7 @@ import os
 import jinja2
 # from urllib import request, parse
 from uuid import uuid1 as uuid
+from gcloud import storage
 
 # template_dir = os.path.join(os.path.dirname(__file__), 'template')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader("html/template"))
@@ -16,11 +17,12 @@ def render(src, params={}):
 render_config = {
     "url_root":"/",
     }
+fileformat = "{id}_{filename}"
+STORAGE_PATH = "https://storage.googleapis.com/coding4fun-upload/"
 
 class UserCaseHandler(object):
     _root = render_config["url_root"]
     _cp_config = {
-        "tools.classestool.on": True,
         "tools.keytool.on": True,
         }
     @cherrypy.expose
@@ -32,76 +34,51 @@ class UserCaseHandler(object):
         if cherrypy.request.method == "POST":
             if (not file1) and (not file2) and (not file3):
                 raise cherrypy.HTTPRedirect("/question")
-
-            classes = cherrypy.request.classes
-            path = classes.get_download_path()
             size = 0
-            fileformat = path + "{id}_{filename}"
 
             filesname = []
-            try:
+            if file1.filename != "":
                 id_ = str(uuid())
                 filename = fileformat.format(id=id_, filename=file1.filename)
-                filesname.append(filename)
+                filesname.append(STORAGE_PATH + filename)
 
-                print("1", file1.filename)
+                client = storage.Client()
+                bucket = client.get_bucket("coding4fun-upload")
 
-                f = open(filename, "wb")
-                while True:
-                    data = file1.file.read(8192)
-                    if not data:
-                        break
-                    size += len(data)
-                    f.write(data)
-                f.close()
-            except:
-                if os.path.isfile(filename):
-                    os.remove(filename)
-                filesname.pop()
+                blob = bucket.get_blob("base.txt")
+                bucket.copy_blob(blob, bucket, new_name=filename)
 
-            try:
+                blob = bucket.get_blob(filename)
+                blob.upload_from_string(file1.file.read())
+
+            if file2.filename != "":
                 id_ = str(uuid())
                 filename = fileformat.format(id=id_, filename=file2.filename)
-                filesname.append(filename)
+                filesname.append(STORAGE_PATH + filename)
 
-                print("2", file2.filename)
+                client = storage.Client()
+                bucket = client.get_bucket("coding4fun-upload")
 
-                f2 = open(filename, "wb")
-                while True:
-                    data = file2.file.read(8192)
-                    if not data:
-                        break
-                    size += len(data)
-                    f2.write(data)
-                f2.close()
-            except:
-                if os.path.isfile(filename):
-                    os.remove(filename)
-                filesname.pop()
+                blob = bucket.get_blob("base.txt")
+                bucket.copy_blob(blob, bucket, new_name=filename)
 
-            try:
+                blob = bucket.get_blob(filename)
+                blob.upload_from_string(file1.file.read())
+
+            if file3.filename != "":
                 id_ = str(uuid())
                 filename = fileformat.format(id=id_, filename=file3.filename)
-                filesname.append(filename)
+                filesname.append(STORAGE_PATH + filename)
 
-                print("3", file3.filename)
+                client = storage.Client()
+                bucket = client.get_bucket("coding4fun-upload")
 
-                f3 = open(filename, "wb")
-                while True:
-                    data = file3.file.read(8192)
-                    if not data:
-                        break
-                    size += len(data)
-                    f3.write(data)
-                f3.close()
-            except:
-                if os.path.isfile(filename):
-                    os.remove(filename)
-                filesname.pop()
+                blob = bucket.get_blob("base.txt")
+                bucket.copy_blob(blob, bucket, new_name=filename)
 
-            filesname = [f.replace(path, "/downloads/") for f in filesname]
-                    
-            # link file to question
+                blob = bucket.get_blob(filename)
+                blob.upload_from_string(file1.file.read())
+
             r = None
 
             import requests

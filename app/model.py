@@ -24,33 +24,7 @@ class ErrMsg:
     NOT_INT = "'{}' must be a integer"
     CANT_INPUT = "This param is autoincrement '{}'"
 
-class Base(object):
-    def validate_json(self, json):
-        if (not isinstance(json, dict)) or (json == {}):
-            return httperror(400, ErrMsg.NOT_DICT)
-
-        for attr, val in json.items():
-            if hasattr(self, attr):
-                self.__setattr__(attr, val)
-            else:
-                return httperror(400, ErrMsg.UNKNOWN_PARAM.format(attr))
-
-        for col in Question.question_t.columns:
-            if (not col.nullable) and (not col.autoincrement):
-                val = self.__getattribute__(col.name)
-                if val == None:
-                    return httperror(400, ErrMsg.MISS_PARAM.format(col.name))
-                if isinstance(col.type, String):
-                    val = val.strip("\t\n\r")
-                    self.__setattr__(col.name, val)
-                elif isinstance(col.type, Integer):
-                    try:
-                        val = int(self.__getattribute__(col.name))
-                        self.__setattr__(col.name, val)
-                    except:
-                        return httperror(400, ErrMsg.NOT_INT.format(col.name))
-
-class User(Base):
+class User(object):
     TABLE_NAME = "tb_user"
     user_t = None
 
@@ -170,7 +144,33 @@ class User(Base):
             "create_at": GMT(row["create_at"]),
             }
 
-class Question(Base):
+    def validate_json(self, json):
+        if (not isinstance(json, dict)) or (json == {}):
+            return httperror(400, ErrMsg.NOT_DICT)
+        for attr, val in json.items():
+            if hasattr(self, attr):
+                self.__setattr__(attr,val)
+            else:
+                return httperror(400, ErrMsg.UNKNOWN_PARAM.format(attr))
+        for col in User.user_t.columns:
+            if (not col.nullable) and (not col.autoincrement):
+                val = self.__getattribute__(col.name)
+                if val == None:
+                    return httperror(400, ErrMsg.MISS_PARAM.format(col.name))
+                if isinstance(col.type, String):
+                    val = val.strip("\t\n\r")
+                    # regular expression
+                    self.__setattr__(col.name, val)
+                elif isinstance(col.type, Integer):
+                    try:
+                        val = int(self.__getattribute__(col.name))
+                        self.__setattr__(col.name, val)
+                    except:
+                        return httperror(400, ErrMsg.NOT_INT.format(col.name))
+            # elif col.nullable == True:
+                # check nullable attributes
+
+class Question(object):
     TABLE_NAME = "tb_question"
     question_t = None
 
@@ -213,15 +213,6 @@ class Question(Base):
             "file2": row["file2"],
             "file3": row["file3"],
             }
-        if j["file1"] != "":
-            if not os.path.isfile(j["file1"]):
-                j["file1"] = "檔案不存在"
-        if j["file2"] != "":
-            if not os.path.isfile(j["file2"]):
-                j["file2"] = "檔案不存在"
-        if j["file3"] != "":
-            if not os.path.isfile(j["file3"]):
-                j["file3"] = "檔案不存在"
         return j
 
     @classmethod
@@ -235,7 +226,33 @@ class Question(Base):
             "create_at": GMT(row["create_at"]),
             }
 
-class Answer(Base):
+
+    def validate_json(self, json):
+        if (not isinstance(json, dict)) or (json == {}):
+            return httperror(400, ErrMsg.NOT_DICT)
+
+        for attr, val in json.items():
+            if hasattr(self, attr):
+                self.__setattr__(attr, val)
+            else:
+                return httperror(400, ErrMsg.UNKNOWN_PARAM.format(attr))
+
+        for col in Question.question_t.columns:
+            if (not col.nullable) and (not col.autoincrement):
+                val = self.__getattribute__(col.name)
+                if val == None:
+                    return httperror(400, ErrMsg.MISS_PARAM.format(col.name))
+                if isinstance(col.type, String):
+                    val = val.strip("\t\n\r")
+                    self.__setattr__(col.name, val)
+                elif isinstance(col.type, Integer):
+                    try:
+                        val = int(self.__getattribute__(col.name))
+                        self.__setattr__(col.name, val)
+                    except:
+                        return httperror(400, ErrMsg.NOT_INT.format(col.name))
+
+class Answer(object):
     TABLE_NAME = "tb_comment"
     answer_t = None
 
@@ -271,22 +288,39 @@ class Answer(Base):
             "file2": row["file2"],
             "file3": row["file3"],
             }
-        if j["file1"] != "":
-            if not os.path.isfile(j["file1"]):
-                j["file1"] = "檔案不存在"
-        if j["file2"] != "":
-            if not os.path.isfile(j["file2"]):
-                j["file2"] = "檔案不存在"
-        if j["file3"] != "":
-            if not os.path.isfile(j["file3"]):
-                j["file3"] = "檔案不存在"
         return j
 
-class Post(Base):
+    def validate_json(self, json):
+        if (not isinstance(json, dict)) or (json == {}):
+            return httperror(400, ErrMsg.NOT_DICT)
+
+        for attr, val in json.items():
+            if hasattr(self, attr):
+                self.__setattr__(attr, val)
+            else:
+                return httperror(400, ErrMsg.UNKNOWN_PARAM.format(attr))
+
+        for col in Answer.answer_t.columns:
+            if (not col.nullable) and (not col.autoincrement):
+                val = self.__getattribute__(col.name)
+                if val == None:
+                    return httperror(400, ErrMsg.MISS_PARAM.format(col.name))
+                if isinstance(col.type, String):
+                    val = val.strip("\t\n\r")
+                    self.__setattr__(col.name, val)
+                elif isinstance(col.type, Integer):
+                    try:
+                        val = int(self.__getattribute__(col.name))
+                        self.__setattr__(col.name, val)
+                    except:
+                        return httperror(400, ErrMsg.NOT_INT.format(col.name))
+
+class Post(object):
     TABLE_NAME = "tb_post"
     post_t = None
 
     def __init__(self):
+        self.title = None
         self.content = None
 
     @classmethod
@@ -308,13 +342,9 @@ class Post(Base):
             "create_at": GMT(row["create_at"]),
             }
 
-class Opinion(Base):
+class Opinion(object):
     TABLE_NAME = "tb_opinion"
     opinion_t = None
-
-    def __init__(self):
-        self.content = None
-        self.writer = None
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
@@ -336,12 +366,9 @@ class Opinion(Base):
             "create_at": GMT(row["create_at"]),
             }
 
-class ClassManage(Base):
+class ClassManage(object):
     TABLE_NAME = "tb_classmanage"
     classmanage_t = None
-
-    def __init__(self):
-        self.uid = None
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
@@ -352,5 +379,3 @@ class ClassManage(Base):
             )
         cls.classmanage_t.create(db_engine, checkfirst=True)
         return cls.classmanage_t
-
-
