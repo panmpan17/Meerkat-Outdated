@@ -1,3 +1,20 @@
+host = "http://" + window.location.host + "/rest/1/"
+
+// this one check user's userid password
+id_pass_re = new RegExp("[a-zA-Z0-9]{8,16}");
+email_re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+function matchRE(r, text) {
+	match = r.exec(text);
+	if (match == null) {
+		return false;
+	}
+	if (match[0] != text) {
+		return false;
+	}
+	return true;
+}
+
 function presslogo() {
 	cookie = getCookie("id");
 	if (cookie == "") {
@@ -9,12 +26,6 @@ function presslogo() {
 	}
 }
 
-host = "http://" + window.location.host + "/rest/1/"
-
-// this one check user's userid password
-id_pass_re = /\w{8,16}/;
-email_re = /\w+@\w+(.\w+)*/;
-
 function login() {
 	errormsg = document.getElementById("login-errormsg")
 
@@ -25,10 +36,8 @@ function login() {
 		json = {"userid":userid, "password":password}
 		$.ajax({
 			url: host + "logon/",
-			type: "POST",
-			dataType: "json",
-			data: JSON.stringify(json),
-		    contentType: "application/json; charset=utf-8",
+			type: "GET",
+			data: json,
 			success: function (msg) {
 				storeCookie("id", msg["lastrowid"]);
 				storeCookie("userid", msg["userid"]);
@@ -68,18 +77,18 @@ function signup(){
 
 	// check every things is not empty and valid
 	if (userid && password && repassword && email && birth && nickname) {
-		id_valid = id_pass_re.test(userid);
-		pass_valid = id_pass_re.test(password);
-		email_valid = email_re.test(email);
-		if (id_valid == false) {
+		id_valid = matchRE(id_pass_re, userid);
+		pass_valid = matchRE(id_pass_re, password);
+		email_valid = matchRE(email_re, email);
+		if (!id_valid) {
 			errormsg.innerHTML = "帳號並不符合格式";
 			return
 		}
-		if (pass_valid == false) {
+		if (!pass_valid) {
 			errormsg.innerHTML = "密碼並不符合格式";
 			return
 		}
-		if (email_valid == false) {
+		if (!email_valid) {
 			errormsg.innerHTML = "Email 並不正確";
 			return
 		}

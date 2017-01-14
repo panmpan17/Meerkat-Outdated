@@ -34,7 +34,8 @@ describe_format = `
       </a>
     </center>
     <hr>
-    <div class="frame-content" style="padding:15px;padding-top: 0%;padding-bottom: 50px;">
+    <div class="frame-content"
+      style="padding:15px;padding-top: 0%;padding-bottom: 50px;">
       {1}
     </div>
   </div>
@@ -92,10 +93,15 @@ $.ajax({
       if (msg[i]["price"] == 0) {
         price = "免費"
       }
-      cardstext += format(card_format, msg[i]["id"], msg[i]["image"], msg[i]["subject"], msg[i]["time"], msg[i]["summary"], price)
+      else if (msg[i]["price"] == -1) {
+        price = "只提供實體課程"
+      }
+      cardstext += format(card_format, msg[i]["id"], msg[i]["image"],
+        msg[i]["subject"], msg[i]["time"], msg[i]["summary"], price)
 
       if (msg[i]["description"] != "") {
-        document.getElementById("describes").innerHTML += format(describe_format, msg[i]["id"], msg[i]["description"], msg[i]["price"])
+        document.getElementById("describes").innerHTML += format(describe_format,
+          msg[i]["id"], msg[i]["description"], msg[i]["price"])
       }
     }
     document.getElementById("cards").innerHTML = cardstext

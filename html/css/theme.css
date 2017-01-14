@@ -21,7 +21,7 @@ div.fixcontainer {
 img#navbarlogo {
 	background-color: rgba(43,142,183,1);
 
-	max-width: 120px;
+	max-height: 80px;
 	position: fixed;
 	top:10px;
 	left: 0px;

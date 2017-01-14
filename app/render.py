@@ -3,7 +3,6 @@ import os
 import jinja2
 # from urllib import request, parse
 from uuid import uuid1 as uuid
-from gcloud import storage
 
 # template_dir = os.path.join(os.path.dirname(__file__), 'template')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader("html/template"))
@@ -17,14 +16,18 @@ def render(src, params={}):
 render_config = {
     "url_root":"/",
     }
-fileformat = "{id}_{filename}"
-STORAGE_PATH = "https://storage.googleapis.com/coding4fun-upload/"
 
 class UserCaseHandler(object):
-    _root = render_config["url_root"]
+    _root = "/"
     _cp_config = {
+        "tools.classestool.on": True,
         "tools.keytool.on": True,
         }
+
+    @staticmethod
+    def error_404(status, message, traceback, version):
+        return "404 Error!"
+
     @cherrypy.expose
     def index(self):
         return render("index.html")
@@ -34,51 +37,76 @@ class UserCaseHandler(object):
         if cherrypy.request.method == "POST":
             if (not file1) and (not file2) and (not file3):
                 raise cherrypy.HTTPRedirect("/question")
+
+            classes = cherrypy.request.classes
+            path = classes.get_download_path()
             size = 0
+            fileformat = path + "{id}_{filename}"
 
             filesname = []
-            if file1.filename != "":
+            try:
                 id_ = str(uuid())
                 filename = fileformat.format(id=id_, filename=file1.filename)
-                filesname.append(STORAGE_PATH + filename)
+                filesname.append(filename)
 
-                client = storage.Client()
-                bucket = client.get_bucket("coding4fun-upload")
+                print("1", file1.filename)
 
-                blob = bucket.get_blob("base.txt")
-                bucket.copy_blob(blob, bucket, new_name=filename)
+                f = open(filename, "wb")
+                while True:
+                    data = file1.file.read(8192)
+                    if not data:
+                        break
+                    size += len(data)
+                    f.write(data)
+                f.close()
+            except:
+                if os.path.isfile(filename):
+                    os.remove(filename)
+                filesname.pop()
 
-                blob = bucket.get_blob(filename)
-                blob.upload_from_string(file1.file.read())
-
-            if file2.filename != "":
+            try:
                 id_ = str(uuid())
                 filename = fileformat.format(id=id_, filename=file2.filename)
-                filesname.append(STORAGE_PATH + filename)
+                filesname.append(filename)
 
-                client = storage.Client()
-                bucket = client.get_bucket("coding4fun-upload")
+                print("2", file2.filename)
 
-                blob = bucket.get_blob("base.txt")
-                bucket.copy_blob(blob, bucket, new_name=filename)
+                f2 = open(filename, "wb")
+                while True:
+                    data = file2.file.read(8192)
+                    if not data:
+                        break
+                    size += len(data)
+                    f2.write(data)
+                f2.close()
+            except:
+                if os.path.isfile(filename):
+                    os.remove(filename)
+                filesname.pop()
 
-                blob = bucket.get_blob(filename)
-                blob.upload_from_string(file1.file.read())
-
-            if file3.filename != "":
+            try:
                 id_ = str(uuid())
                 filename = fileformat.format(id=id_, filename=file3.filename)
-                filesname.append(STORAGE_PATH + filename)
+                filesname.append(filename)
 
-                client = storage.Client()
-                bucket = client.get_bucket("coding4fun-upload")
+                print("3", file3.filename)
 
-                blob = bucket.get_blob("base.txt")
-                bucket.copy_blob(blob, bucket, new_name=filename)
+                f3 = open(filename, "wb")
+                while True:
+                    data = file3.file.read(8192)
+                    if not data:
+                        break
+                    size += len(data)
+                    f3.write(data)
+                f3.close()
+            except:
+                if os.path.isfile(filename):
+                    os.remove(filename)
+                filesname.pop()
 
-                blob = bucket.get_blob(filename)
-                blob.upload_from_string(file1.file.read())
-
+            filesname = [f.replace(path, "/downloads/") for f in filesname]
+                    
+            # link file to question
             r = None
 
             import requests
@@ -182,8 +210,25 @@ class UserCaseHandler(object):
     def resource(self):
         return render("resource.html")
 
+    # @cherrypy.expose
+    # @cherrypy.tools.emailvalidtool()
+    # def active(self, key):
+    #     email_valid = cherrypy.request.email_valid
+    #     cookie = cherrypy.request.cookie
+    #     key_mgr = cherrypy.request.key
+
+    #     skey = str(cookie["key"].value)
+        
+    #     key_valid = key_mgr.get_key(skey)
+    #     if not key_valid[0]:
+    #        raise cherrypy.HTTPRedirect("/")
+    #     uid = key_valid[1]
+
+    #     email_valid.check_mail(uid, key)
+    #     return key
+
 class ClassHandler(object):
-    _root = render_config["url_root"] + "class/"
+    _root = "/class/"
     _cp_config = {
         "tools.classestool.on": True,
     }
@@ -196,8 +241,6 @@ class ClassHandler(object):
             raise cherrypy.HTTPError(404)
         return render("class.html", {"class_id": class_id, "subject": subject})
         #return class_id + " " + subject
-
-
 
 
 

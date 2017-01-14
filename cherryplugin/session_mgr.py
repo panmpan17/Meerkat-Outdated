@@ -12,11 +12,10 @@ class KeyMgrPlugin(plugins.SimplePlugin):
 		plugins.SimplePlugin.__init__(self, bus)
 		self.keydict = {}
 
-	def start(self):
-		pass
-
-	def stop(self):
-		pass
+	# def start(self):
+	# 	pass
+	# def stop(self):
+	# 	pass
 
 	def get_key(self, key):
 		value = self.keydict.get(key)
@@ -41,8 +40,7 @@ class KeyMgrPlugin(plugins.SimplePlugin):
 class KeyMgrTool(cherrypy.Tool):
 	def __init__(self, key_plugin):
 		cherrypy.Tool.__init__(self, "on_start_resource",
-			self.get_key_mgr,
-			priority=10)
+			self.get_key_mgr, priority=10)
 		self.key_plugin = key_plugin
 		_thread.start_new_thread(self.delete_key, ())
 
@@ -69,12 +67,3 @@ class KeyMgrTool(cherrypy.Tool):
 				for i in keys:
 					self.key_plugin.keydict.pop(i)
 					print("Key '{}' been delete".format(i))
-
-
-
-
-
-
-
-
-

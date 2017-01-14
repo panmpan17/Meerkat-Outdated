@@ -4,20 +4,63 @@ from app.model import ErrMsg, User, Question, Answer, Post, Opinion, ClassManage
 from uuid import uuid1 as uuid
 from datetime import datetime
 from requests import get as http_get
+from requests import post as http_post
 
 from sqlalchemy import desc
 from sqlalchemy.sql import select, update, and_, join
 from sqlalchemy.exc import IntegrityError
 
 
-
+EMAIL_REST_URL = "http://restemailserver.appspot.com"
 RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify"
 RECAPTCHA_SERCRET = "6LcSMwoUAAAAAEIO6z5s2FO4QNjz0pZqeD0mZqRZ"
+
+EMAIL_VALID = """
+<html><head>
+<style>
+div \{
+font-size: 24px;
+}
+div#c4f \{
+top: 0px;
+left: 0px;
+position: absolute;
+width:100%;
+font-size:36px;
+color: white;
+background-color:rgb(43,142,183);}
+button \{
+width:300px;
+height:  100px;
+font-size: 24px;
+color: white;
+background-color:rgb(43,142,183);
+border: 0px;}
+button:hover \{
+background-color: rgb(30,105,138);
+}</style></head><body>
+<center>
+<div id="c4f">Codinf For Fun  Email 認證</div><br /><br /><br />
+<div>
+按下面的按鈕, 來啟動你的帳戶: <br /><br />
+<a href="url"><button>啟動我的帳戶</button></a><br /><br />
+或使用以下網址:<br><a href="url">url</a></div></body></center></html>
+"""
 
 rest_config = {
     "url_root":"/rest/1/",
     "db_connstr":"postgresql://cd4fun_u:mlmlml@localhost:5432/coding4fun_db?client_encoding=utf8",
     }
+
+def count_page(r):
+    if (r % 10) == 0:
+        return (r // 10)
+    return (r // 10) + 1
+
+def send_email_valid(key, addr):
+    url = cherrypy.url() + "/active/" + key
+    cnt = EMAIL_VALID.replace("url", key)
+    http_post(EMAIL_REST_URL, params={"addr": addr, "sub": "Email 認證", "cnt": cnt})
 
 class ErrMsg(ErrMsg):
     NOT_LIST = "'{}' must be a list"
@@ -39,12 +82,6 @@ class ErrMsg(ErrMsg):
     NO_ACCESS_TO_CLASS = "You have permission to watch the class '{}'"
     WRONG_VIDEO = "Videl '{}' is not in any class"
 
-def count_page(r):
-    # print(r)
-    if (r % 10) == 0:
-        return (r // 10)
-    return (r // 10) + 1
-
 class View(object):
     _cp_config = {
         "tools.json_out.on": True,
@@ -55,7 +92,7 @@ class View(object):
         "tools.encode.encoding": "utf-8"
         }
 
-    def checklogin(self, json, key_mgr):
+    def check_login(self, json, key_mgr):
         if "key" not in json:
             return False
 
@@ -64,7 +101,7 @@ class View(object):
            return False
         return key_valid[1]
 
-    def checkadmin(self, uid, users, conn):
+    def check_admin(self, uid, users, conn):
         ss = select([users.c.admin]).where(and_(users.c.id == uid,
                 users.c.admin == True))
         rst = conn.execute(ss)
@@ -72,6 +109,12 @@ class View(object):
         if len(rows) < 1:
             return False
         return True
+
+    @staticmethod
+    def check_key(_dict, keys):
+        for key in keys:
+            if key not in _dict:
+                raise cherrypy.HTTPError(400, ErrMsg.MISS_PARAM.format(key))
 
 class SessionKeyView(View):
     _root = rest_config["url_root"] + "logon/"
@@ -82,35 +125,31 @@ class SessionKeyView(View):
     @cherrypy.expose
     def index(self, *args, **kwargs):
         key_mgr = cherrypy.request.key
-        if cherrypy.request.method == "POST":
-            data = cherrypy.request.json
-            if len(data) > 0:
-                if ("userid" in data) and ("password" in data):
-                    meta, conn = cherrypy.request.db
-                    users = meta.tables[User.TABLE_NAME]
-                    ss = select([users.c.id]).where(and_(users.c.userid == data["userid"],
-                        users.c.password == data["password"]))
-                    rst = conn.execute(ss)
-                    rows = rst.fetchall()
+        if cherrypy.request.method == "GET":
+            View.check_key(kwargs, ("userid", "password"))
 
-                    if len(rows) <= 0:
-                        raise cherrypy.HTTPError(400, ErrMsg.WRONG_PASSWORD)
-                    else:
-                        # create session key and return it
-                        key = str(uuid())
-                        key_mgr.update_key(key, rows[0]["id"])
+            meta, conn = cherrypy.request.db
+            users = meta.tables[User.TABLE_NAME]
+            ss = select([users.c.id]).where(and_(users.c.userid == kwargs["userid"],
+                users.c.password == kwargs["password"]))
+            rst = conn.execute(ss)
+            rows = rst.fetchall()
 
-                        return {"key":key, "lastrowid": rows[0]["id"], "userid": data["userid"]}
-
-                else:
-                    raise cherrypy.HTTPError(400, ErrMsg.MISS_PARAM.format("userid or password"))
+            if len(rows) <= 0:
+                raise cherrypy.HTTPError(400, ErrMsg.WRONG_PASSWORD)
             else:
-                raise cherrypy.HTTPError(400, ErrMsg.MISS_PARAM.format("userid or password"))
+                # create session key and return it
+                key = str(uuid())
+                key_mgr.update_key(key, rows[0]["id"])
+
+                return {"key":key, "lastrowid": rows[0]["id"], "userid": kwargs["userid"]}
         else:
             raise cherrypy.HTTPError(404)
 
 class UserRestView(View):
     _root = rest_config["url_root"] + "user/"
+    _cp_config = View._cp_config
+    _cp_config["tools.emailvalidtool.on"] = True
 
     def __init__(self):
         self.app_logger = logging.getLogger("app")
@@ -161,12 +200,12 @@ class UserRestView(View):
                     if uid == key_valid[1]:
                         return User.mk_dict_classes(rows[0])
 
-                    admin = self.checkadmin(key_valid[1], users, conn)
+                    admin = self.check_admin(key_valid[1], users, conn)
                     if admin:
                         return User.mk_dict_classes(rows[0])
                     return User.mk_info(row[0])
                 else:
-                    admin = self.checkadmin(key_valid[1], users, conn)
+                    admin = self.check_admin(key_valid[1], users, conn)
                     if not admin:
                         raise cherrypy.HTTPError(401)
 
@@ -217,7 +256,12 @@ class UserRestView(View):
                 if rst.is_insert:
                     cherrypy.response.status = 201
                     key = str(uuid())
+                    uid = rst.lastrowid
                     key_mgr.update_key(key, rst.lastrowid)
+
+                    # key = cherrypy.request.email_valid.new_mail(uid)
+                    # send_email_valid(key, usersjson[0]["email"])
+
                     return {"key": key, "lastrowid": rst.lastrowid,
                         "userid": usersjson[-1]["userid"]}
                 else:
@@ -233,7 +277,6 @@ class UserRestView(View):
 class QuestionRestView(View):
     _root = rest_config["url_root"] + "question/"
     _cp_config = View._cp_config
-    _cp_config["tools.emailtool.on"] = True
 
     @cherrypy.expose
     def index(self, *args, **kwargs):
@@ -339,7 +382,7 @@ class QuestionRestView(View):
             if len(args) > 0:
                 raise cherrypy.HTTPError(404)
 
-            uid = self.checklogin(data, key_mgr)
+            uid = self.check_login(data, key_mgr)
             if not uid:
                 raise cherrypy.HTTPError(401)
 
@@ -365,8 +408,6 @@ class QuestionRestView(View):
             rst = conn.execute(ins, question_json)
 
             if rst.is_insert:
-                email = cherrypy.request.email
-
                 cherrypy.response.status = 201
                 
                 ss = select([questions.c.id]).order_by(desc(questions.c.id))
@@ -375,8 +416,12 @@ class QuestionRestView(View):
                 qid = row.first()["id"]
                 title = "新問題: " + data["question_json"]["title"]
                 content = data["question_json"]["content"]
-                email.put("panmpan@gmail.com", title, content)
-                email.put("shalley.tsay@gmail.com", title, content)
+
+
+                http_post(EMAIL_REST_URL,
+                    params={"addr":"panmpan@gmail.com", "sub": title, "cnt": content})
+                http_post(EMAIL_REST_URL,
+                    params={"addr":"shalley.tsay@gmail.com", "sub": title, "cnt": content})
 
                 return {"question_id": qid}
             else:
@@ -387,7 +432,7 @@ class QuestionRestView(View):
                 raise cherrypy.HTTPError(404)
 
             if "solved" in data:
-                uid = self.checklogin(data, key_mgr)
+                uid = self.check_login(data, key_mgr)
                 if not uid:
                     raise cherrypy.HTTPError(401)
 
@@ -402,7 +447,7 @@ class QuestionRestView(View):
                 elif data["solved"] == "True":
                     solved = True
 
-                admin = self.checkadmin(uid, users, conn)
+                admin = self.check_admin(uid, users, conn)
                 if admin:
                     stmt = update(questions).where(questions.c.id == qid).values({"solved": solved})
                     ins = conn.execute(stmt)
@@ -417,7 +462,7 @@ class QuestionRestView(View):
                 cherrypy.response.status = 201
                 return {"success": True}
             elif "type" in data:
-                uid = self.checklogin(data, key_mgr)
+                uid = self.check_login(data, key_mgr)
                 if not uid:
                     raise cherrypy.HTTPError(401)
 
@@ -428,7 +473,7 @@ class QuestionRestView(View):
 
                 type_ = data["type"]
 
-                admin = self.checkadmin(uid, users, conn)
+                admin = self.check_admin(uid, users, conn)
                 if admin:
                     stmt = update(questions).where(questions.c.id == qid).values({"type": type_})
                     ins = conn.execute(stmt)
@@ -445,11 +490,11 @@ class QuestionRestView(View):
             else:
                 raise cherrypy.HTTPError(400, ErrMsg.MISS_PARAM.format("solved"))
         elif cherrypy.request.method == "DELETE":
-            uid = self.checklogin(kwargs, key_mgr)
+            uid = self.check_login(kwargs, key_mgr)
             if not uid:
                 raise cherrypy.HTTPError(401)
 
-            admin = self.checkadmin(uid, users, conn)
+            admin = self.check_admin(uid, users, conn)
             if not admin:
                 raise cherrypy.HTTPError(401)
 
@@ -481,7 +526,7 @@ class QuestionRestView(View):
             if len(args) > 0:
                 raise cherrypy.HTTPError(404)
 
-            uid = self.checklogin(data, key_mgr)
+            uid = self.check_login(data, key_mgr)
             if not uid:
                 raise cherrypy.HTTPError(401)
 
@@ -574,7 +619,7 @@ class AnswerRestView(View):
             if len(args) > 0:
                 raise HTTPError(404)
 
-            uid = self.checklogin(data, key_mgr)
+            uid = self.check_login(data, key_mgr)
             if not uid:
                 raise cherrypy.HTTPError(401)
 
@@ -630,7 +675,7 @@ class AnswerRestView(View):
             if len(args) > 0:
                 raise cherrypy.HTTPError(404)
 
-            uid = self.checklogin(data, key_mgr)
+            uid = self.check_login(data, key_mgr)
             if not uid:
                 raise cherrypy.HTTPError(401)
 
@@ -691,7 +736,7 @@ class ClassesRestView(View):
                 if class_["price"] == 0:
                     return class_
                 else:
-                    uid = self.checklogin(kwargs, key_mgr)
+                    uid = self.check_login(kwargs, key_mgr)
                     if not uid:
                         raise cherrypy.HTTPError(401)
 
@@ -718,11 +763,11 @@ class ClassesRestView(View):
             if "uid" not in data:
                 raise cherrypy.HTTPError(400, ErrMsg.MISS_PARAM.format("uid"))
 
-            uid = self.checklogin(data, key_mgr)
+            uid = self.check_login(data, key_mgr)
             if not uid:
                 raise cherrypy.HTTPError(401)
 
-            admin = self.checkadmin(uid, users, conn)
+            admin = self.check_admin(uid, users, conn)
             if not admin:
                 raise cherrypy.HTTPError(401)
 
@@ -750,11 +795,11 @@ class ClassesRestView(View):
             if "uid" not in kwargs:
                 raise cherrypy.HTTPError(400, ErrMsg.MISS_PARAM.format("uid"))
 
-            uid = self.checklogin(kwargs, key_mgr)
+            uid = self.check_login(kwargs, key_mgr)
             if not uid:
                 raise cherrypy.HTTPError(401)
 
-            admin = self.checkadmin(uid, users, conn)
+            admin = self.check_admin(uid, users, conn)
             if not admin:
                 raise cherrypy.HTTPError(401)
 
@@ -806,7 +851,7 @@ class ClassesRestView(View):
                 raise cherrypy.HTTPError(404)
 
         if cherrypy.request.method == "GET":
-            uid = self.checklogin(kwargs, key_mgr)
+            uid = self.check_login(kwargs, key_mgr)
             if not uid:
                 raise cherrypy.HTTPError(401)
 
@@ -821,7 +866,7 @@ class ClassesRestView(View):
         elif cherrypy.request.method == "PUT":
             data = cherrypy.request.json
 
-            uid = self.checklogin(data, key_mgr)
+            uid = self.check_login(data, key_mgr)
             if not uid:
                 raise cherrypy.HTTPError(401)
 
@@ -880,11 +925,11 @@ class PostRestView(View):
         elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
 
-            uid = self.checklogin(data, key_mgr)
+            uid = self.check_login(data, key_mgr)
             if not uid:
                 raise cherrypy.HTTPError(401)
 
-            admin = self.checkadmin(uid, users, conn)
+            admin = self.check_admin(uid, users, conn)
             if not admin:
                 raise cherrypy.HTTPError(401)
 
@@ -905,11 +950,11 @@ class PostRestView(View):
             else:
                 raise cherrypy.HTTPError(500)
         elif cherrypy.request.method == "DELETE":
-            uid = self.checklogin(kwargs, key_mgr)
+            uid = self.check_login(kwargs, key_mgr)
             if not uid:
                 raise cherrypy.HTTPError(401)
 
-            admin = self.checkadmin(uid, users, conn)
+            admin = self.check_admin(uid, users, conn)
             if not admin:
                 raise cherrypy.HTTPError(401)
 
@@ -968,7 +1013,7 @@ class OpinionRestView(View):
             if len(args) > 0:
                 raise cherrypy.HTTPError(404)
 
-            uid = self.checklogin(data, key_mgr)
+            uid = self.check_login(data, key_mgr)
             if not uid:
                 raise cherrypy.HTTPError(401)
 

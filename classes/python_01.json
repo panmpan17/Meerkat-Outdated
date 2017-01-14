@@ -1160,7 +1160,7 @@
              'description': '',
              'video': 'https://docs.google.com/forms/d/e/1FAIpQLSdWfA_5_i9rU8SmcmyEDH9O1EYcEgV6mxhymDKuvqS9t4EwQQ/viewform?embedded=true'}]],
  'link': '',
- 'price': 500,
+ 'price': -1,
  'subject': 'Python 入門課程',
  'summary': '從 Scratch 邁向 Python<br>適合學過 Coding for Fun 的同學<br>以 Scratch 課程為基礎<br>請使用 <a style=\"color:Coral\" target=\"_black\" href=\"https://www.google.com/intl/zh-HK/chrome/browser/desktop/\">Google Chrome 瀏覽器</a>',
  'time': '10 堂課 (尚未開放)',

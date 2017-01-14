@@ -131,7 +131,7 @@ class App():
         from cherryplugin.cherrpy_sa import SAPlugin, SATool
         from cherryplugin.session_mgr import KeyMgrPlugin, KeyMgrTool
         from cherryplugin.classes_load import ClassesTool
-        from cherryplugin.email_mgr import EmailPlugin, EmailTool
+        from cherryplugin.email_valid import EmailValidPlugin, EmailValidTool
 
         from app.model import User, Question, Answer, Post, Opinion, ClassManage
 
@@ -157,10 +157,9 @@ class App():
         classes_plugin.subscribe()
         cherrypy.tools.classestool = ClassesTool(classes_plugin)
 
-        # email_plugin = EmailPlugin(cherrypy.engine)
-        # email_plugin.subscribe()
-        # cherrypy.tools.emailtool = EmailTool(email_plugin)
-        # cherrypy.engine.log("Start send email threading")
+        email_valid_plugin = EmailValidPlugin(cherrypy.engine)
+        email_valid_plugin.subscribe()
+        cherrypy.tools.emailvalidtool = EmailValidTool(email_valid_plugin)
 
     def start(self, db_str, path, euf):
         from app.rest import rest_config, UserRestView, SessionKeyView, AnswerRestView
@@ -197,6 +196,7 @@ class App():
         self.subsribe_plugin(path, euf, db_str)
 
         cherrypy.config.update(self.site_conf)
+        cherrypy.config.update({"error_page.404": UserCaseHandler.error_404})
         cherrypy.engine.start()
         cherrypy.engine.block()
 
