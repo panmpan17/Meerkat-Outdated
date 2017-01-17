@@ -3,6 +3,11 @@ from cherrypy.process import plugins
 from datetime import datetime
 from uuid import uuid1
 
+MINUTE = 60
+HOUR = 60
+DAY = 24
+KEYTIMEOUT = 2 * DAY * HOUR * MINUTE
+
 class EmailValidPlugin(plugins.SimplePlugin):
 	def __init__(self, bus):
 		plugins.SimplePlugin.__init__(self, bus)
@@ -15,14 +20,22 @@ class EmailValidPlugin(plugins.SimplePlugin):
 
 	def new_mail(self, uid):
 		key = str(uuid1())
-		self.validdict[uid] = key
+		self.validdict[uid] = {
+			"key": key,
+			"datetime": datetime.now(),
+			}
 		return key
 
 	def check_mail(self, uid, key):
-		if uid in self.validdict:
-			if self.validdict[uid] == key:
+		value = self.validdict.get(uid)
+		if value:
+			if self.validdict[uid]["key"] == key:
+				timedelta = datetime.now() - self.validdict[uid]["datetime"]
 				self.validdict.pop(uid)
-				return True
+				if timedelta.seconds < KEYTIMEOUT:
+					return True
+		else:
+			pass
 		return False
 
 class EmailValidTool(cherrypy.Tool):

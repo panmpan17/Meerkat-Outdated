@@ -53,7 +53,8 @@ class User(object):
             Column("expert", Integer, default=0, nullable=True, autoincrement=True),
             Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
             Column("last_login", DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, autoincrement=True),
-            # Column("disabled", Boolean, default=False, nullable=True, autoincrement=True)
+            Column("active", Boolean, default=False, nullable=True, autoincrement=True),
+            Column("disabled", Boolean, default=False, nullable=True, autoincrement=True),
             )
         cls.user_t.create(db_engine, checkfirst=True)
         cls.creat_user(db_meta, db_engine)
@@ -113,6 +114,8 @@ class User(object):
             "expert": row["expert"],
             "create_at": GMT(row["create_at"]),
             "last_login": GMT(row["last_login"]),
+            "active": row["active"],
+            "disabled": row["disabled"],
             }
 
     @classmethod
@@ -129,6 +132,8 @@ class User(object):
             "expert": row["expert"],
             "create_at": GMT(row["create_at"]),
             "last_login": GMT(row["last_login"]),
+            "active": row["active"],
+            "disabled": row["disabled"],
             }
         for c in row["class_access"]:
             d[c] = True
@@ -142,6 +147,7 @@ class User(object):
             "email": row["email"],
             "nickname": row["nickname"],
             "create_at": GMT(row["create_at"]),
+            "disabled": row["disabled"],
             }
 
     def validate_json(self, json):
@@ -212,6 +218,24 @@ class Question(object):
             "file1": row["file1"],
             "file2": row["file2"],
             "file3": row["file3"],
+            }
+        return j
+
+    @classmethod
+    def mk_dict_user(cls, row):
+        j = {
+            "id": row["id"],
+            "title": row["title"],
+            "content": row["content"],
+            "type": row["type"],
+            "solved": row["solved"],
+            "last_reply": GMT(row["last_reply"]),
+            "create_at": GMT(row["create_at"]),
+            "writer_id": row["writer"],
+            "file1": row["file1"],
+            "file2": row["file2"],
+            "file3": row["file3"],
+            "writer": row["nickname"],
             }
         return j
 

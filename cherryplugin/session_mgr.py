@@ -4,18 +4,21 @@ from datetime import datetime
 from time import sleep
 import _thread
 
-KEYTIMEOUT = 7 # hour
-KEYTIMEOUT = KEYTIMEOUT * 24 * 60 * 60 #become seconds
+MINUTE = 60
+HOUR = 60 * MINUTE
+DAY = 24 * HOUR
+WEEK = 7 * DAY
+KEYTIMEOUT = WEEK #become seconds
 
 class KeyMgrPlugin(plugins.SimplePlugin):
 	def __init__(self, bus):
 		plugins.SimplePlugin.__init__(self, bus)
 		self.keydict = {}
 
-	# def start(self):
-	# 	pass
-	# def stop(self):
-	# 	pass
+	def start(self):
+		pass
+	def stop(self):
+		pass
 
 	def get_key(self, key):
 		value = self.keydict.get(key)
@@ -25,10 +28,9 @@ class KeyMgrPlugin(plugins.SimplePlugin):
 				value["datetime"] = datetime.now()
 				return (True, value["requester"])
 			else:
-				print(key, "timeout")
+				self.keydict.pop(key)
 				return (False, "timeout")
 		else:
-			print(key, "wrong")
 			return (False, "wrong")
 
 	def update_key(self, key, requester):
@@ -52,7 +54,7 @@ class KeyMgrTool(cherrypy.Tool):
 
 	def delete_key(self):
 		while True:
-			sleep(KEYTIMEOUT)
+			sleep(DAY)
 			keys = []
 			now = datetime.now()
 			for i in self.key_plugin.keydict:

@@ -51,7 +51,10 @@ function login() {
 				if (errortype == "Username or password wrong") {
 					errormsg.innerHTML = "帳號密碼不正確";
 				}
-				return 
+				else if (errortype.indexOf("disable") > -1) {
+					errormsg.innerHTML = "帳號已被封鎖"
+				}
+				return
 			},
 		})
 	}
@@ -167,23 +170,10 @@ function to_html(dict) {
 	else if (point > 100) {document.getElementById("info-level").innerHTML = "白金"}
 	else if (point > 20) {document.getElementById("info-level").innerHTML = "黃金"}
 
-	if (dict["admin"]) {
-		tr = document.createElement("tr")
-
-		td1 = document.createElement("td")
-		td1.appendChild(document.createTextNode("Admin"))
-
-		td2 = document.createElement("td")
-		a = document.createElement("a")
-		a.appendChild(document.createTextNode("True"))
-		a.href = "/admin"
-		a.style.color = "#000"
-		td2.appendChild(a)
-
-		tr.appendChild(td1)
-		tr.appendChild(td2)
-
-		document.getElementById("userinfo").appendChild(tr)
+	if (!dict["admin"]) {
+		document.getElementById("userinfo").childNodes[1].removeChild(
+			document.getElementById("info-admin")
+			)
 	}
 }
 

@@ -3,29 +3,6 @@ import logging, logging.config
 import os
 import json
 
-class Function:
-
-    @classmethod
-    def loadClasses(cls, path):
-        from cherryplugin.classes_load import ClassesPlugin
-
-        classes = ClassesPlugin(cherrypy.engine, path)
-
-        dirname = "classes"
-        files = ["scratch_1.json", "hourofcode.json", "teacher_1.json", "python_01.json"]
-
-        for f in files:
-            file = open(dirname + "/" + f, "r")
-            read = file.read()
-            file.close()
-
-            read = read.replace("'", "\"")
-
-            class_ = json.loads(read)
-            classes.new_class(class_["id"], class_)
-
-        return classes
-
 class App():
     SITE_CONF = {
         "server.socket_host": "0.0.0.0",
@@ -153,7 +130,7 @@ class App():
         cherrypy.tools.keytool = KeyMgrTool(key_plugin)
         cherrypy.engine.log("Start remove key remove threading")
 
-        classes_plugin = Function.loadClasses(path)
+        classes_plugin = App.loadClasses(path)
         classes_plugin.subscribe()
         cherrypy.tools.classestool = ClassesTool(classes_plugin)
 
@@ -199,6 +176,27 @@ class App():
         cherrypy.config.update({"error_page.404": UserCaseHandler.error_404})
         cherrypy.engine.start()
         cherrypy.engine.block()
+
+    @classmethod
+    def loadClasses(cls, path):
+        from cherryplugin.classes_load import ClassesPlugin
+
+        classes = ClassesPlugin(cherrypy.engine, path)
+
+        dirname = "classes"
+        files = ["scratch_1.json", "hourofcode.json", "teacher_1.json", "python_01.json"]
+
+        for f in files:
+            file = open(dirname + "/" + f, "r")
+            read = file.read()
+            file.close()
+
+            read = read.replace("'", "\"")
+
+            class_ = json.loads(read)
+            classes.new_class(class_["id"], class_)
+
+        return classes
 
 if __name__ == "__main__":
     import sys, argparse

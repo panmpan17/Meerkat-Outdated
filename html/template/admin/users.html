@@ -140,6 +140,17 @@
 					<td>管理者</td>
 					<td id="userinfo-admin"></td>		
 				</tr>
+				<tr>
+					<td>被封鎖</td>
+					<td id="userinfo-disabled">
+						<button id="disable" class="btn btn-danger btn-lg">
+							封鎖使用者
+						</button>
+						<button id="undisable" class="btn btn-success btn-lg">
+							解鎖使用者
+						</button>
+					</td>		
+				</tr>
 			</table>
 		</div>
 	</div>
@@ -206,16 +217,33 @@ function showdetail(uid) {
 			else if (point > 100) {document.getElementById("userinfo-level").innerHTML = "白金"}
 			else if (point > 20) {document.getElementById("userinfo-level").innerHTML = "黃金"}
 
+			if (msg["disabled"]) {
+				$("#undisable").show();
+				$("#disable").hide();
+
+
+				$("#undisable")[0].onclick = function () {
+					disableuser(msg["id"], false)
+				}
+			}
+			else {
+				$("#undisable").hide();
+				$("#disable").show();
+
+				$("#disable")[0].onclick = function () {
+					disableuser(msg["id"], true)
+				}
+			}
 
 			for (i=0;i<paid_class.length;i++) {
 				classid = paid_class[i]
 				if (classid in msg){
 					document.getElementById(classid).checked = true;
-					document.getElementById(classid).onclick = function () {openclass(classid, msg["id"], false)}
+					document.getElementById(classid).onclick = function () {openclass(classid, msg["id"], "False")}
 				}
 				else {
 					document.getElementById(classid).checked = false;
-					document.getElementById(classid).onclick = function () {openclass(classid, msg["id"], true)}
+					document.getElementById(classid).onclick = function () {openclass(classid, msg["id"], "True")}
 				}
 			}
 		}
@@ -254,6 +282,22 @@ function openclass(classid, uid, open_close) {
 		})
 	}
 	// document.getElementById(classid).onclick = openclass(classid, uid, !open_close);
+}
+
+function disableuser(uid, disabled) {
+	$.ajax({
+		url: host + "user/",
+		type: "PUT",
+		dataType: "json",
+		data: JSON.stringify({"key": getCookie("key"), "uid":uid, "disabled": disabled}),
+		contentType: "application/json; charset=utf-8",
+		success: function (msg) {
+			showdetail(uid);
+		},
+		error: function (err) {
+			console.log(err)
+		}
+	})
 }
 
 $.ajax({

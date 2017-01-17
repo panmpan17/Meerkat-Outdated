@@ -43,12 +43,10 @@
 		<div class="account-logo">
 			<div class="dropdown">
 				<div id="accountmenu">
-					<a href="#" onclick="showinfo();">帳號資訊</a>
-					<!-- <a href="#">管理課程</a> -->
-					<a href="#" onclick="logout();">登出</a>
+					<a onclick="showinfo();">帳號資訊</a>
+					<a onclick="logout();">登出</a>
 				</div>
 			</div>
-			<!-- <img onclick="presslogo();" id="account-logo" src="/html/images/account.png" alt=""> -->
 			<a href="#" onclick="presslogo();" id="account-logo">登入/ 註冊</a>
 		</div>
 		<a href="/">
@@ -150,6 +148,10 @@
 					<tr>
 						<td>工作</td>
 						<td id="info-job"></td>		
+					</tr>
+					<tr id="info-admin">
+						<td>Admin</td>
+						<td><a href="/admin" style="color: Coral">管理員頁面</a></td>		
 					</tr>
 				</table>
 			</div>

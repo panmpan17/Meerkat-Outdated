@@ -62,13 +62,13 @@ a#account-logo {
 }
 
 a {
-  text-decoration:none;
-  color:white;
+	text-decoration:none;
+	color:white;
 }
 
 a:link {
-  text-decoration:none;
-  color:white;
+	text-decoration:none;
+	color:white;
 }
 
 
@@ -82,7 +82,7 @@ div.loginsignup-frame {
     width: 100%;
     height: 100%;
     padding-top: 10%;
-    padding-left: 10%
+    padding-left: 10%;
 }
 
 div.loginsignup-frame-inside {
@@ -213,18 +213,16 @@ div#linksmenu {
 		/*padding-left: 0px;*/
 	}
 }
-/*
+
 @media (min-width: 768px) {
-	li.navtext {
-		font-size: 36px;
+	div.frame-content {
+		padding-top: 10%;
 	}
-    /*div.loginsignup-frame-inside {
-        width: 80%;
-    }
-    div.loginsignup-frame {
-        padding-left: 15%;
-    }
-}*/
+
+	div.loginsignup-frame {
+		padding-top: 5%;
+	}
+}
 div.dropdown a {
 	font-size: 28px;
 	font-family: fonta;

@@ -1,5 +1,5 @@
 document.onkeydown = checkKey;
-window_ = ["signup-frame", "login-frame", "opinion-frame", "ask-frame", "question-frame"]
+window_ = ["info-frame", "signup-frame", "login-frame", "opinion-frame", "ask-frame", "question-frame"]
 
 function checkKey(e) {
     e = e || window.event;
