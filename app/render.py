@@ -1,8 +1,8 @@
 import cherrypy
 import os
 import jinja2
-# from urllib import request, parse
 from uuid import uuid1 as uuid
+import requests
 
 # template_dir = os.path.join(os.path.dirname(__file__), 'template')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader("html/template"))
@@ -109,8 +109,6 @@ class UserCaseHandler(object):
                     
             # link file to question
             r = None
-
-            import requests
             cookie = cherrypy.request.cookie
             if "questionkey" in kwargs:
                 key = str(cookie["key"].value)
@@ -197,7 +195,13 @@ class UserCaseHandler(object):
             return access_deny
         uid = key_valid[1]
 
-        return render("video.html", {"video": video, "file": file.split(";"), "next": nextvid, "button": button, "nextbutton": nextbutton})
+        return render("video.html", {
+            "video": video,
+            "file": file.split(";"),
+            "next": nextvid,
+            "button": button,
+            "nextbutton": nextbutton,
+            })
 
     @cherrypy.expose
     def hourofcode(self):
@@ -212,26 +216,26 @@ class UserCaseHandler(object):
         return render("resource.html")
 
     @cherrypy.expose
-    def active(self, key):
-        email_valid = cherrypy.request.email_valid
+    def active(self, ekey):
         cookie = cherrypy.request.cookie
-        key_mgr = cherrypy.request.key
+        try:
+            key = str(cookie["key"].value)
+        except:
+            raise cherrypy.HTTPRedirect("/")
 
-        skey = str(cookie["key"].value)
-        
-        key_valid = key_mgr.get_key(skey)
-        if not key_valid[0]:
-           raise cherrypy.HTTPRedirect("/")
-        uid = key_valid[1]
+        r = requests.put("http://0.0.0.0/rest/1/user/emailvalid", json={
+            "key": key, "ekey": ekey})
+        if r.status_code != 201:
+            raise cherrypy.HTTPRedirect("/")
 
-        r = email_valid.check_mail(uid, key)
-        return "帳戶已啟動"
+        return render("active.html")
+
 
 class ClassHandler(object):
     _root = "/class/"
     _cp_config = {
         "tools.classestool.on": True,
-    }
+        }
 
     @cherrypy.expose
     def c(self, class_id):
@@ -240,10 +244,53 @@ class ClassHandler(object):
         if not subject:
             raise cherrypy.HTTPError(404)
         return render("class.html", {"class_id": class_id, "subject": subject})
-        #return class_id + " " + subject
 
+class TeacherHandler(object):
+    _root = "/teacher/"
+    _cp_config = {
+        "tools.classestool.on": True,
+        "tools.keytool.on": True,
+        }
 
+    @cherrypy.expose
+    def index(self):
+        cookie = cherrypy.request.cookie
+        try:
+            key = str(cookie["teacher-key"].value)
+        except:
+            raise cherrypy.HTTPRedirect("/")
 
+        key_mgr = cherrypy.request.key
+
+        key_valid = key_mgr.get_key(key)
+        if not key_valid[0]:
+            cookie['teacher-userid'] = ""
+            cookie['teacher-id'] = ""
+            cookie['teacher-key'] = ""
+            raise cherrypy.HTTPRedirect("/teacher/login")
+        uid = key_valid[1]
+
+        return render("teacher/index.html")
+
+    @cherrypy.expose
+    def login(self):
+        cookie = cherrypy.request.cookie
+        try:
+            key = str(cookie["teacher-key"].value)
+        except:
+            key = ""
+
+        key_mgr = cherrypy.request.key
+
+        key_valid = key_mgr.get_key(key)
+        if key_valid[0]:
+            raise cherrypy.HTTPRedirect("/teacher/")
+
+        return render("teacher/login.html")
+
+    @cherrypy.expose
+    def advertise(self):
+        return render("teacher/advertise.html")
 
 
 

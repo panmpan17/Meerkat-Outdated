@@ -110,15 +110,19 @@ class App():
         from cherryplugin.classes_load import ClassesTool
         from cherryplugin.email_valid import EmailValidPlugin, EmailValidTool
 
-        from app.model import User, Question, Answer, Post, Opinion, ClassManage
+        import app.model as model
 
         tables = [
-            (User, euf),
-            Question,
-            Answer,
-            Post,
-            Opinion,
-            ClassManage,
+            (model.User, euf),
+            model.Question,
+            model.Answer,
+            model.Post,
+            model.Opinion,
+            model.ClassManage,
+
+            model.Teacher,
+            model.Classroom,
+            model.Advertise,
             ]
 
         sa_plugin = SAPlugin(cherrypy.engine, db_str=db_str, tables=tables)
@@ -141,7 +145,8 @@ class App():
     def start(self, db_str, path, euf):
         from app.rest import rest_config, UserRestView, SessionKeyView, AnswerRestView
         from app.rest import QuestionRestView, ClassesRestView, PostRestView, OpinionRestView
-        from app.render import UserCaseHandler, ClassHandler
+        from app.rest import TeacherRestView, AdvertiseRestVIew
+        from app.render import UserCaseHandler, ClassHandler, TeacherHandler
         from app.admin import AdminHandler
 
         self.site_conf = App.SITE_CONF
@@ -162,12 +167,16 @@ class App():
         cherrypy.tree.mount(UserRestView(), UserRestView._root, config={"/":rest_config})
         cherrypy.tree.mount(PostRestView(), PostRestView._root, config={"/": rest_config})
         cherrypy.tree.mount(OpinionRestView(), OpinionRestView._root, config={"/": rest_config})
+        cherrypy.tree.mount(TeacherRestView(), TeacherRestView._root, config={"/": rest_config})
+        cherrypy.tree.mount(AdvertiseRestVIew(), AdvertiseRestVIew._root, config={"/": rest_config})
 
         cherrypy.tree.mount(UserCaseHandler(), UserCaseHandler._root, 
             config=self.render_config)
         cherrypy.tree.mount(ClassHandler(), ClassHandler._root, 
             config=self.render_config)
         cherrypy.tree.mount(AdminHandler(), AdminHandler._root,
+            config=self.render_config)
+        cherrypy.tree.mount(TeacherHandler(), TeacherHandler._root,
             config=self.render_config)
 
         self.subsribe_plugin(path, euf, db_str)

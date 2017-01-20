@@ -1,3 +1,5 @@
+var host = "http://" + window.location.host + "/rest/1/"
+
 document.onkeydown = checkKey;
 window_ = ["info-frame", "signup-frame", "login-frame", "opinion-frame", "ask-frame", "question-frame"]
 

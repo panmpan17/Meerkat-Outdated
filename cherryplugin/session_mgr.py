@@ -22,7 +22,7 @@ class KeyMgrPlugin(plugins.SimplePlugin):
 
 	def get_key(self, key):
 		value = self.keydict.get(key)
-		if value:
+		if value != None:
 			timedelta = datetime.now() - value["datetime"]
 			if timedelta.seconds < KEYTIMEOUT:
 				value["datetime"] = datetime.now()

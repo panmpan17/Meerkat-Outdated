@@ -40,7 +40,7 @@ class User(object):
 
     @classmethod
     def create_schema(cls, db_engine, db_meta, euf=None):
-        cls.user_t = Table(User.TABLE_NAME, db_meta,
+        cls.user_t = Table(cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
             Column("userid", String, nullable=False, autoincrement=False, unique=True),
             Column("password", String, nullable=False, autoincrement=False),
@@ -90,7 +90,7 @@ class User(object):
                     j[key] = value
             users_.append(j)
 
-        users = meta.tables[User.TABLE_NAME]
+        users = meta.tables[cls.TABLE_NAME]
         conn = engine.connect()
         ins = users.insert()
 
@@ -188,7 +188,7 @@ class Question(object):
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
-        cls.question_t = Table(Question.TABLE_NAME, db_meta,
+        cls.question_t = Table(cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
             Column("title", String, nullable=False, autoincrement=False),
             Column("content", Text, nullable=False, autoincrement=False),
@@ -287,7 +287,7 @@ class Answer(object):
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
-        cls.answer_t = Table(Answer.TABLE_NAME, db_meta,
+        cls.answer_t = Table(cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
             Column("content", Text, nullable=False, autoincrement=False),
             Column("writer", Integer, ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
@@ -349,7 +349,7 @@ class Post(object):
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
-        cls.post_t = Table(Post.TABLE_NAME, db_meta,
+        cls.post_t = Table(cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
             Column("content", Text, nullable=False, autoincrement=False),
             Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
@@ -372,7 +372,7 @@ class Opinion(object):
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
-        cls.opinion_t = Table(Opinion.TABLE_NAME, db_meta,
+        cls.opinion_t = Table(cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
             Column("content", Text, nullable=False, autoincrement=False),
             Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
@@ -396,10 +396,83 @@ class ClassManage(object):
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
-        cls.classmanage_t = Table(ClassManage.TABLE_NAME, db_meta,
+        cls.classmanage_t = Table(cls.TABLE_NAME, db_meta,
             Column("uid", Integer, ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
             Column("class_access", ARRAY(String), nullable=True, default=[], autoincrement=True),
-            Column("class_record", JSON, nullable=True, default={}, autoincrement=True)
+            Column("class_record", JSON, nullable=True, default={}, autoincrement=True),
             )
         cls.classmanage_t.create(db_engine, checkfirst=True)
         return cls.classmanage_t
+
+########################################
+class Teacher(object):
+    TABLE_NAME = "tb_teacher"
+    teacher_t = None
+
+    @classmethod
+    def create_schema(cls, db_engine, db_meta):
+        cls.teacher_t = Table(cls.TABLE_NAME, db_meta,
+            Column("id", Integer, primary_key=True, autoincrement=True),
+            Column("userid", String, nullable=False, autoincrement=False, unique=True),
+            Column("password", String, nullable=False, autoincrement=False),
+            Column("name", String, nullable=False, autoincrement=False),
+            Column("phone", String, nullable=False, autoincrement=False),
+            Column("ext_area", Integer, nullable=True, autoincrement=True, default=0),
+            Column("whole_city", Integer, nullable=True, autoincrement=True, default=0),
+            Column("disabled", Boolean, default=False, nullable=True, autoincrement=True),
+            )
+        cls.teacher_t.create(db_engine, checkfirst=True)
+        return cls.teacher_t
+
+    @classmethod
+    def mk_dict(cls, row):
+        return {
+            "id": row["id"],
+            "userid": row["userid"],
+            "name": row["name"],
+            "phone": row["phone"],
+            "ext_area": row["ext_area"],
+            "whole_city": row["whole_city"],
+            "disabled": row["disabled"],
+            }
+
+class Classroom(object):
+    TABLE_NAME = "tb_classroom"
+    classroom_t = None
+
+    @classmethod
+    def create_schema(cls, db_engine, db_meta):
+        cls.classroom_t = Table(cls.TABLE_NAME, db_meta,
+            Column("id", Integer, primary_key=True, autoincrement=True),
+            Column("name", String, nullable=False, autoincrement=False, unique=True),
+            Column("teacher", ForeignKey("tb_teacher.id"), nullable=False, autoincrement=False),
+            Column("students", ARRAY(Integer), nullable=False, autoincrement=False),
+            Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
+            )
+        cls.classroom_t.create(db_engine, checkfirst=True)
+        return cls.classroom_t
+
+class Advertise(object):
+    TABLE_NAME = "tb_advertise"
+    advertise_t = None
+
+    @classmethod
+    def create_schema(cls, db_engine, db_meta):
+        cls.advertise_t = Table(cls.TABLE_NAME, db_meta,
+            Column("id", Integer, primary_key=True, autoincrement=True),
+            Column("teacher", ForeignKey("tb_teacher.id"), nullable=False, autoincrement=False),
+            Column("city", Integer, nullable=False, autoincrement=False),
+            Column("town", Integer, nullable=False, autoincrement=False),
+            )
+        cls.advertise_t.create(db_engine, checkfirst=True)
+        return cls.advertise_t
+
+    @classmethod
+    def mk_dict(cls, row):
+        return {
+            "id": row["id"],
+            "teacher": row["teacher"],
+            "city": row["city"],
+            "town": row["town"],
+            }
+

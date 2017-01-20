@@ -1,5 +1,3 @@
-host = "http://" + window.location.host + "/rest/1/"
-
 // this one check user's userid password
 id_pass_re = new RegExp("[a-zA-Z0-9]{8,16}");
 email_re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -55,7 +53,7 @@ function login() {
 					errormsg.innerHTML = "帳號已被封鎖"
 				}
 				return
-			},
+			}
 		})
 	}
 	else {
@@ -125,7 +123,7 @@ function signup(){
 		type: "POST",
 		dataType: "json",
 		data: JSON.stringify({"recapcha": human, users: [json]}),
-	    contentType: "application/json; charset=utf-8",
+		contentType: "application/json; charset=utf-8",
 		success: function (msg) {
 			userid = document.getElementsByName("signup-userid")[0].value;
 			storeCookie("id", msg["lastrowid"]);
@@ -170,10 +168,22 @@ function to_html(dict) {
 	else if (point > 100) {document.getElementById("info-level").innerHTML = "白金"}
 	else if (point > 20) {document.getElementById("info-level").innerHTML = "黃金"}
 
-	if (!dict["admin"]) {
-		document.getElementById("userinfo").childNodes[1].removeChild(
-			document.getElementById("info-admin")
+	if (dict["active"]) {
+        try {
+            document.getElementById("userinfo").childNodes[1].removeChild(
+				document.getElementById("info-active")
 			)
+        }
+        catch(err) {}
+	}
+
+	if (!dict["admin"]) {
+        try {
+			document.getElementById("userinfo").childNodes[1].removeChild(
+				document.getElementById("info-admin")
+			)
+        }
+        catch(err) {}
 	}
 }
 
@@ -201,4 +211,25 @@ function showinfo() {
 		}
 	})
 	return back;
+}
+
+
+function resentmail() {
+	$.ajax({
+		url: host + "user/emailvalid",
+		type: "POST",
+		dataType: "json",
+		data: JSON.stringify({"key": getCookie("key")}),
+		contentType: "application/json; charset=utf-8",
+		success: function (msg) {
+			alert("請檢查 Email!!");
+		},
+		error: function (msg) {
+			reload = confirm("請重新登錄");
+			if (reload) {
+				logout();
+			}
+		}
+
+	})
 }

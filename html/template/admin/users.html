@@ -141,6 +141,10 @@
 					<td id="userinfo-admin"></td>		
 				</tr>
 				<tr>
+					<td>Email 認證</td>
+					<td id="userinfo-active"></td>		
+				</tr>
+				<tr>
 					<td>被封鎖</td>
 					<td id="userinfo-disabled">
 						<button id="disable" class="btn btn-danger btn-lg">
@@ -210,6 +214,7 @@ function showdetail(uid) {
 			document.getElementById("userinfo-createat").innerHTML = msg["create_at"];
 			document.getElementById("userinfo-job").innerHTML = msg["job"];
 			document.getElementById("userinfo-admin").innerHTML = msg["admin"];
+			document.getElementById("userinfo-active").innerHTML = msg["active"]
 
 			document.getElementById("userinfo-level").innerHTML = "一般";
 			point = msg["point"];

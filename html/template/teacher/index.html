@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="utf-8">
+	<!-- <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="widtd=device-widtd, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="autdor" content=""> -->
+
+	<title>教師頁面</title>
+	<script src="html/javascript/jquery.min.js"></script>
+	<script src="html/bootstrap/js/bootstrap.min.js"></script>
+	<script src="html/javascript/taiwan_town.js"></script>
+	<script src="html/javascript/base.js"></script>
+
+	<link href="html/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="html/css/sb-admin.css" rel="stylesheet">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+	<style>
+		textarea {
+			max-width: 100%;
+			resize: none;
+		}
+
+		ul.side-nav > li > a {
+			cursor: pointer;
+		}
+
+		td.b-close {
+			color: red;
+			width: 30px;
+			cursor: pointer;
+			background-color: white;
+		}
+		td.b-close:hover {
+			background-color: #DDD;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div id="wrapper">
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">&#8592; 回首頁</a>
+			</div>
+			<!-- Top Menu Items -->
+			<ul class="nav navbar-right top-nav">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smitd <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+						</li>
+						<li class="divider"></li>
+						<li>
+							<a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav side-nav" id="navbar">
+					<li id="button-createclassroom" class="active">
+						<a onclick="change_page('createclassroom')"><i class="fa fa-fw fa-plus"></i> 建立一個新的教室</a>
+					</li>
+					<li id="button-advertise">
+						<a onclick="change_page('advertise')"><i class="fa fa-fw fa-edit"></i> 廣告管理</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<div id="p-createclassroom" class="page-wrapper">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-12">
+						<h1>建立一個新的教室</h1>
+						<hr>
+						<input type="text" class="form-control" placeholder="教室名稱" id="name">
+						<br>
+					</div>
+					<div class="col-lg-4">
+						<h3>學生姓名</h3>
+						<textarea class="form-control" rows="10" id="names"></textarea>
+						<br>
+					</div>
+					<div class="col-lg-4">
+						<h3>Coding 4 Fun 帳號</h3>
+						<textarea class="form-control" rows="10" id="cids"></textarea>
+						<br>
+					</div>
+					<div class="col-lg-4">
+						<h3>Scratch 帳號</h3>
+						<textarea class="form-control" rows="10" id="sids"></textarea>
+						<br>
+					</div>
+					<div class="col-lg-12">
+						<br><br>
+						<button type="button" class="btn btn-info btn-lg btn-block" onclick="check_students()">
+							檢查學生資料
+						</button>
+						<br>
+						<table class="table">
+							<tbody>
+								<tr>
+									<th>學生姓名</th>
+									<th>Coding 4 Fun 帳號</th>
+									<th>Scratch 帳號</th>
+								</tr>
+							</tbody>
+							<tbody id="students"></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="p-advertise" class="page-wrapper" hidden>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-12">
+						<h1>
+							管理廣告
+							<small>
+								廣告上限 <span id="ext_area">5</span>
+								全區廣告上限 <span id="whole_city">0</span>
+							</small>
+						</h1>
+						<hr>
+					</div>
+					<div class="col-lg-5 col-md-5 col-sm-12">
+						<select class="form-control" id="city" onchange="changecity()">
+							<option value="臺北市">臺北市</option>
+							<option value="新北市">新北市</option>
+							<option value="桃園市">桃園市</option>
+							<option value="臺中市">臺中市</option>
+							<option value="臺南市">臺南市</option>
+							<option value="高雄市">高雄市</option>
+							<option value="基隆市">基隆市</option>
+							<option value="新竹市">新竹市</option>
+							<option value="嘉義市">嘉義市</option>
+							<option value="新竹縣">新竹縣</option>
+							<option value="苗栗縣">苗栗縣</option>
+							<option value="彰化縣">彰化縣</option>
+							<option value="南投縣">南投縣</option>
+							<option value="雲林縣">雲林縣</option>
+							<option value="嘉義縣">嘉義縣</option>
+							<option value="屏東縣">屏東縣</option>
+							<option value="宜蘭縣">宜蘭縣</option>
+							<option value="花蓮縣">花蓮縣</option>
+							<option value="臺東縣">臺東縣</option>
+							<option value="澎湖縣">澎湖縣</option>
+							<option value="金門縣">金門縣</option>
+							<option value="連江縣">連江縣</option>
+						</select>
+						<br>
+					</div>
+					<div class="col-lg-5 col-md-5 col-sm-12">
+						<select id="towns" class="form-control">
+							<option value="中正區">中正區</option>
+							<option value="大同區">大同區</option>
+							<option value="中山區">中山區</option>
+							<option value="松山區">松山區</option>
+							<option value="大安區">大安區</option>
+							<option value="萬華區">萬華區</option>
+							<option value="信義區">信義區</option>
+							<option value="士林區">士林區</option>
+							<option value="北投區">北投區</option>
+							<option value="內湖區">內湖區</option>
+							<option value="南港區">南港區</option>
+							<option value="文山區">文山區</option>
+						</select>
+						<br>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-12">
+						<button type="button" class="btn btn-info btn-block" onclick="newarea()">
+							新增地區
+						</button>
+						<br>
+					</div>
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						<br>
+						<table class="table">
+							<thead>
+								<tr>
+									<th>縣市</th>
+									<th>鄉鎮市區</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody id="tadvertise"></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		title_format = '<h1 class="page-header">{0}</h1>';
+
+		function change_page(d) {
+			$("[class=active]")[0].classList.remove("active");
+			$("#button-" + d)[0].classList.add("active");
+
+			$("[class=page-wrapper]").hide();
+			$("#p-" + d).show();
+
+			if (d == "advertise") {
+				loadadverise();
+			}
+		}
+		
+		// newclassroom
+		function check_students() {
+			names = document.getElementById("names").value
+			cids = document.getElementById("cids").value
+			sids = document.getElementById("sids").value
+
+			if ((names == []) || (cids == []) || (sids == [])) {
+				alert("欄位不能留空")
+				return
+			}
+
+			names = names.split("\n")
+			cids = cids.split("\n")
+			sids = sids.split("\n")
+			
+			if (!((names.length == cids.length) && (cids.length == cids.length))) {
+				alert("確定 3 個欄位都一樣長")
+			}
+
+			students_table = document.getElementById("students");
+			students_table .innerHTML = "";
+
+			for (sid=0;sid<sids.length;sid++) {
+				tr = document.createElement("tr")
+
+				name_td = document.createElement("td");
+				name_td.innerHTML = names[sid];
+
+				cid_td = document.createElement("td");
+				cid_td.innerHTML = cids[sid];
+
+				tr.appendChild(name_td);
+				tr.appendChild(cid_td);
+
+				url = "https://scratch.mit.edu/users/" + sids[sid] + "/"
+
+				s = sids[sid]
+				$.when(
+					$.ajax(url)
+				).done(function (msg) {
+					sid_td = document.createElement("tr");
+					sid_td.innerHTML = s;
+					console.log(s)
+
+					tr.appendChild(sid_td)
+				});
+				students_table.appendChild(tr)
+			}
+		}
+
+		// advertise
+		ADVERTISE_LIMT = 5
+		advertise_num = 0
+		advertise_format = `
+		<tr>
+		<td>{0}</td>
+		<td>{1}</td>
+		<td class="b-close" onclick="deletearea('{2}')"><i class="fa fa-times"></i></td>
+		</tr>
+		`
+
+		function newarea() {
+			if (advertise_num >= ADVERTISE_LIMT) {
+				alert("達到上限")
+				return;
+			}
+
+			city = document.getElementById("city").value;
+			town = document.getElementById("towns").value;
+
+			town = city_towns[city].indexOf(town);
+			city = cities.indexOf(city);
+
+			json = {
+				"tkey": getCookie("teacher-key"),
+				"city": city,
+				"town": town,
+				}
+			$.ajax({
+				url: host + "advertise/",
+				type: "POST",
+				dataType: "json",
+				data: JSON.stringify(json),
+				contentType: "application/json; charset=utf-8",
+				success: function (msg) {
+					loadadverise();
+				}
+			})
+		}
+
+		function loadadverise() {
+			$.ajax({
+				url: host + "advertise/",
+				type: "GET",
+				data: {"tkey": getCookie("teacher-key")},
+				success: function (msg) {
+					$("#tadvertise")[0].innerHTML = "";
+					ADVERTISE_LIMT = 5 + msg["ext_area"]
+					$("#ext_area").html(ADVERTISE_LIMT)
+					$("#whole_city").html(msg["whole_city"])
+
+					advertises = msg["advertise"]
+					advertise_num = advertises.length
+					for (a=0;a<advertises.length;a++) {
+						city = cities[advertises[a]["city"]]
+						town = city_towns[city][advertises[a]["town"]]
+						$("#tadvertise")[0].innerHTML += format(
+							advertise_format,
+							city,
+							town,
+							advertises[a]["id"]);
+					}
+				}
+			})
+		}
+
+		function deletearea(aid) {
+			json = {"tkey": getCookie("teacher-key"), "aid": aid}
+			$.ajax({
+				url: host + "advertise/?" + $.param(json),
+				type: "DELETE",
+				success: function(result) {
+					loadadverise();
+				}
+			});
+		}
+		// loadadverise();
+	</script>
+</body>
+
+</html>

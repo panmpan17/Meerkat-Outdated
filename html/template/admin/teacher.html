@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% block title %}Admin 老師管理{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="/html/css/editor.css">
+<style>
+	.preview a {
+		color:orange;
+		text-decoration:none;
+	}
+
+	table {
+		font-family: arial, sans-serif;
+		border-collapse: collapse;
+		width: 100%;
+	}
+
+	.table td,
+	.table th {
+		border: 1px solid #dddddd;
+		text-align: left;
+		padding: 8px;
+		font-size: 20px;
+	}
+
+	.table tr {
+		background-color: white;
+	}
+
+	.table tr.i:nth-child(even) {
+		background-color: #F39C12;
+	}
+	.table tr.i:nth-child(odd) {
+		background-color: #F1C40F;
+	}
+
+	i.fa-minus,
+	i.fa-plus {
+		cursor: pointer;
+	}
+</style>
+{% endblock %}
+{% block content %}
+	<br><br>
+	<a href="/admin/" style="padding-left: 14%"><button id="submit">< 回去</button></a>
+	<br><br>
+	<div class="container text-center">
+		<input type="text" name="userid" placeholder="帳號">
+		<br><br>
+		<input type="text" name="password" placeholder="密碼">
+		<br><br>
+		<input type="text" name="name" placeholder="名字">
+		<br><br>
+		<input type="text" name="phone" placeholder="電話">
+		<br><br>
+		<div id="signup-errormsg" class="login-errorms">
+		</div><br>
+		<button id="submit" onclick="signup()">註冊</button>
+		<br><br>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>帳號</th>
+					<th>名字</th>
+					<th>電話</th>
+					<th>停用</th>
+					<th style="width: 200px;">額外的廣告數量</th>
+				</tr>
+			</thead>
+			<tbody id="teachers">
+			</tbody>
+		</table>
+	</div>
+	<br><br><br><br><br>
+{% endblock %}
+{% block script %}
+<script>
+	teacher_format = `\
+	<tr class="i">
+		<td>{0}</td>
+		<td>{1}</td>
+		<td>{2}</td>
+		<td>{3}</td>
+		<td><input type="checkbox" {4} /></td>
+		<td>
+			地區: <i class="fa fa-minus" onclick="change_area('{0}', -1)"></i>
+			{5}
+			<i class="fa fa-plus" onclick="change_area('{0}', 1)"></i><br />
+			整縣市: <i class="fa fa-minus" onclick="change_city('{0}', -1)"></i>
+			{6}
+			<i class="fa fa-plus" onclick="change_city('{0}', 1)"></i>
+		</td>
+	</tr>`
+
+	teachers_table = document.getElementById("teachers")
+
+	function signup() {
+		errormsg = document.getElementById("signup-errormsg")
+
+		userid = document.getElementsByName("userid")[0].value;
+		password = document.getElementsByName("password")[0].value;
+		name = document.getElementsByName("name")[0].value;
+		phone = document.getElementsByName("phone")[0].value;
+
+		if (!(userid && password && name && phone)) {
+			errormsg.innerHTML = "請不要留空白";
+			return
+		}
+
+		password = sha256(password);
+
+		json = {
+			"key": getCookie("key"),
+			"userid": userid,
+			"password": password,
+			"name": name,
+			"phone": phone,
+			}
+		$.ajax({
+			url: host + "teacher/",
+			type: "POST",
+			dataType: "json",
+			data: JSON.stringify(json),
+			contentType: "application/json; charset=utf-8",
+			success: function (msg) {
+				location.reload();
+			}
+		})
+	}
+
+	function change_area(tid, num) {
+		$.ajax({
+			url: host + "teacher/",
+			type: "PUT",
+			dataType: "json",
+			data: JSON.stringify({"key":getCookie("key"), "tid": tid, "ext_area": num}),
+			contentType: "application/json; charset=utf-8",
+			success: function (msg) {
+				load_teachers();
+			}
+		})
+	}
+
+	function change_city(tid, num) {
+		$.ajax({
+			url: host + "teacher/",
+			type: "PUT",
+			dataType: "json",
+			data: JSON.stringify({"key":getCookie("key"), "tid": tid, "whole_city": num}),
+			contentType: "application/json; charset=utf-8",
+			success: function (msg) {
+				load_teachers();
+			}
+		})
+	}
+
+	function load_teachers() {
+		$.ajax({
+			url: host + "teacher/",
+			type: "GET",
+			data: {"key": getCookie("key")},
+			success: function (msg) {
+				teachers_table.innerHTML = "";
+				teachers = msg["teachers"]
+				for (i=0; i<teachers.length; i++) {
+					disabled = ""
+					if (teachers[i]["disabled"]) {
+						disabled = "disabled"
+					}
+					user = format(teacher_format,
+						teachers[i]["id"],
+						teachers[i]["userid"],
+						teachers[i]["name"],
+						teachers[i]["phone"],
+						disabled,
+						5 + teachers[i]["ext_area"],
+						teachers[i]["whole_city"],
+						)
+					teachers_table.innerHTML += user
+				}
+			}
+		})
+	}
+	load_teachers();
+</script>
+{% endblock %}

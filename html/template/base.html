@@ -3,23 +3,20 @@
 <head>
 	<meta charset="UTF-8">
 	<title>{% block title %}{% endblock %}</title>
-	<script src=></script>
 
 	<script src="/html/javascript/jquery.min.js"></script>
 	<script src="/html/javascript/sha256.js"></script>
 	<script src='https://www.google.com/recaptcha/api.js'></script>
-
-	<!-- my js css -->
-	<script src="/html/javascript/cookie.js"></script>
-	<script src="/html/javascript/loginsignupframe.js"></script>
-	<script src="/html/javascript/base.js"></script>
 	<script src="/html/bootstrap/js/bootstrap.js"></script>
 
 	<link href="/html/bootstrap/css/bootstrap.css" rel="stylesheet">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+	<!-- my js css -->
+	<script src="/html/javascript/loginsignupframe.js"></script>
+	<script src="/html/javascript/base.js"></script>
 
 	<link href="/html/css/font.css" rel="stylesheet">
 	<link href="/html/css/theme.css" rel="stylesheet">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 	{% block css %}
 	{% endblock %}
 
@@ -56,7 +53,7 @@
 			<li class="navtext"><a class="btn-large" href="/news">最新</a></li>
 			<li class="navtext"><a class="btn-large" href="/classes">課程</a></li>
 			<li class="navtext"><a class="btn-large" href="/question">討論區</a></li>
-			<li class="navtext"><a class="btn-large" href="#" onclick="toggle('linksmenu')">+</a></li>
+			<li class="navtext"><a class="btn-large" href="#" onclick="toggle('linksmenu')"><i class="fa fa-bars" aria-hidden="true"></i></a></li>
 		</ul>
 		<div class="dropdown">
 			<div id="linksmenu">
@@ -68,11 +65,11 @@
 				<!-- <a> 出版品 </a> -->
 				<!-- <a> 如何收費 </a> -->
 				<!-- <a> 建議網站 </a> -->
+				<a href="/teacher/advertise">廣告</a>
+				<a href="/teacher/login">教師頁面</a>
 			</div>
 		</div>
 	</div>
-
-
 	<!-- login frame -->
 	<div id="login-frame" class="loginsignup-frame">
 		<div class="loginsignup-frame-inside">
@@ -148,6 +145,12 @@
 					<tr>
 						<td>工作</td>
 						<td id="info-job"></td>		
+					</tr>
+					<tr id="info-active">
+						<td>Email 認證</td>
+						<td>
+							<button class="btn btn-success btn-lg" onclick="resentmail()">重送 Email</button>
+						</td>
 					</tr>
 					<tr id="info-admin">
 						<td>Admin</td>

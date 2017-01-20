@@ -10,7 +10,7 @@ from sqlalchemy.sql import select, and_
 
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader("html/template"))
 
-def render(src, params):
+def render(src, params={}):
     # print(os.getcwd())
     t = jinja_env.get_template(src)
     return t.render(params)
@@ -26,53 +26,25 @@ class AdminHandler(object):
 
     @cherrypy.expose
     def index(self):
-        meta, conn = cherrypy.request.db
-        key_mgr = cherrypy.request.key
-        users = meta.tables[User.TABLE_NAME]
-        cookie = cherrypy.request.cookie
+        self.checkadmin()
 
-        res = self.checkadmin(cookie, key_mgr, users, conn)
-        if not res:
-            raise cherrypy.HTTPRedirect("/")
-
-        return render("admin/admin.html", {})
+        return render("admin/admin.html")
 
     @cherrypy.expose
     def news(self, title=None, html=None):
-        meta, conn = cherrypy.request.db
-        users = meta.tables[User.TABLE_NAME]
-        key_mgr = cherrypy.request.key
-        cookie = cherrypy.request.cookie
+        self.checkadmin()
 
-        res = self.checkadmin(cookie, key_mgr, users, conn)
-        if not res:
-            raise cherrypy.HTTPRedirect("/")
-
-        return render("admin/adminnews.html", {})
+        return render("admin/adminnews.html")
 
     @cherrypy.expose
     def questions(self):
-        meta, conn = cherrypy.request.db
-        users = meta.tables[User.TABLE_NAME]
-        key_mgr = cherrypy.request.key
-        cookie = cherrypy.request.cookie
-
-        res = self.checkadmin(cookie, key_mgr, users, conn)
-        if not res:
-            raise cherrypy.HTTPRedirect("/")
+        self.checkadmin()
             
-        return render("admin/questions.html", {})
+        return render("admin/questions.html")
 
     @cherrypy.expose
     def files(self, file=None):
-        meta, conn = cherrypy.request.db
-        users = meta.tables[User.TABLE_NAME]
-        key_mgr = cherrypy.request.key
-        cookie = cherrypy.request.cookie
-
-        res = self.checkadmin(cookie, key_mgr, users, conn)
-        if not res:
-            raise cherrypy.HTTPRedirect("/")
+        self.checkadmin()
 
         if cherrypy.request.method == "POST":
             classes = cherrypy.request.classes
@@ -88,35 +60,37 @@ class AdminHandler(object):
 
     @cherrypy.expose
     def users(self):
+        self.checkadmin()
+
+        return render("admin/users.html")
+
+    @cherrypy.expose
+    def teacher(self):
+        self.checkadmin()
+
+        return render("admin/teacher.html")
+
+    def checkadmin(self):
+        key_mgr = cherrypy.request.key
         meta, conn = cherrypy.request.db
         users = meta.tables[User.TABLE_NAME]
-        key_mgr = cherrypy.request.key
         cookie = cherrypy.request.cookie
-        
-        res = self.checkadmin(cookie, key_mgr, users, conn)
-        if not res:
-            raise cherrypy.HTTPRedirect("/")
 
-        return render("admin/users.html", {})
-
-    def checkadmin(self, cookie, key_mgr, users, conn):
         if "key" not in cookie:
-            return False
+            raise cherrypy.HTTPRedirect("/")
         key = str(cookie["key"].value)
 
         key_valid = key_mgr.get_key(key)
         if not key_valid[0]:
-            return False
+            raise cherrypy.HTTPRedirect("/")
 
-        ss = select([users.c.admin]).where(and_(users.c.id == key_valid[1],
-                users.c.admin == True))
+        ss = select([users.c.admin]).where(and_(
+            users.c.id == key_valid[1],
+            users.c.admin == True))
         rst = conn.execute(ss)
-        rows = rst.fetchall()
-        if len(rows) < 1:
-            return False
-
-        if not rows[0]:
-            return False
+        row = rst.fetchone()
+        if not row:
+            raise cherrypy.HTTPRedirect("/")
         return True
 
 

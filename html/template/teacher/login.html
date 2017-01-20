@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Coding 4 Fun 教師登入</title>
+	<style>
+		body {
+			font-family: 'Gudea', sans-serif;
+			background-color: #232323;
+		}
+
+		body .login {
+			opacity: 1;
+			width: 360px;
+			height: 300px;
+			position: absolute;
+			margin: auto;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			padding: 100px 40px 40px 40px;
+			background: #1f222e;
+		}
+
+		body .login_title {
+			color: #afb1be;
+			height: 60px;
+			text-align: left;
+			font-size: 20px;
+		}
+
+		body .login_fields {
+			height: 312px;
+			position: absolute;
+			left: 0;
+		}
+
+		body .login_fields input[type='password'] {
+			color: #DC6180 !important;
+		}
+
+		body .login_fields input[type='text'], body .login_fields input[type='password'] {
+			color: #afb1be;
+			width: 390px;
+			height: 40px;
+			font-size: 20px;
+			margin-top: -2px;
+			background: #32364a;
+			left: 0;
+			padding: 10px 25px;
+			border-top: 2px solid #393d52;
+			border-bottom: 2px solid #393d52;
+			border-right: none;
+			border-left: none;
+			outline: none;
+			font-family: 'Gudea', sans-serif;
+			box-shadow: none;
+		}
+
+		body .login_fields__user, body .login_fields__password {
+			position: relative;
+		}
+
+		body .login_submit {
+			position: relative;
+			top: 35px;
+			left: 0;
+			width: 80%;
+			right: 0;
+			margin: auto;
+		}
+
+		button {
+			border-radius: 50px;
+			background: transparent;
+			padding: 10px 50px;
+			border: 2px solid #DC6180;
+			color: #DC6180;
+			font-size: 18px;
+		}
+
+		button:hover {
+			color: white;
+			background: #DC6180;
+			cursor: pointer;
+		}
+	</style>
+	<script src="/html/javascript/jquery.min.js"></script>
+	<script src="/html/javascript/sha256.js"></script>
+</head>
+<body>
+	<a href="/">
+		<button>回首頁</button>
+	</a>
+	<div class="login">
+		<div class="login_title">
+			<span>教師登入</span>
+		</div>
+		<div class="login_fields">
+			<div class="login_fields__user">
+				<input name="userid" placeholder="教師帳號" type="text">
+			</div>
+			<div class="login_fields__password">
+				<input name="password" placeholder="教師密碼" type="password">
+			</div>
+			<div class="login_submit">
+				<button onclick="login()">登入</button>
+			</div>
+		</div>
+	</div>
+	<script>
+		function storeCookie(cname, value) {
+			f = "{0}={1}; path=/"
+			document.cookie = format(f, cname, value);
+		}
+
+		function getCookie(cname) {
+			var name = cname + "=";
+			var ca = document.cookie.split(';');
+			for(var i=0; i<ca.length; i++) {
+				var c = ca[i];
+				while (c.charAt(0)==' ') c = c.substring(1);
+				if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+			}
+			return "";
+		}
+
+		function format() {
+			var s = arguments[0];
+			for (var i = 0; i < arguments.length - 1; i++) {       
+				var reg = new RegExp("\\{" + i + "\\}", "gm");             
+				s = s.replace(reg, arguments[i + 1]);
+			}
+			return s;
+		}
+
+		function login() {
+			userid = document.getElementsByName("userid")[0].value;
+			password = document.getElementsByName("password")[0].value;
+
+			if (!(userid && password)) {
+				alert("請不要留空白")
+			}
+			else {
+				password = sha256(password);
+				json = {"userid":userid, "password":password}
+				$.ajax({
+					url: "http://0.0.0.0/rest/1/teacher/login",
+					type: "GET",
+					data: json,
+					success: function (msg) {
+						storeCookie("teacher-id", msg["id"]);
+						storeCookie("teacher-userid", msg["userid"]);
+						storeCookie("teacher-key", msg["key"]);
+						location.pathname = "/teacher/";
+					},
+					error: function (error) {
+						errormsg = document.getElementById("login-errormsg")
+						p1 = error.responseText.indexOf("<p>") + 3
+						errortype = error.responseText.substring(p1, error.responseText.indexOf("</p>", p1))
+						if (errortype == "Username or password wrong") {
+							alert("帳號密碼不正確");
+						}
+						else if (errortype.indexOf("disable") > -1) {
+							alert("帳戶目前被封鎖，請確定有繳錢");
+						}
+						return
+					}
+				})
+			}
+		}
+	</script>
+</body>
+</html>
