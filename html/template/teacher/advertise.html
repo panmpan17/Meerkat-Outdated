@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}廣告{% endblock %}
 {% block css %}
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <style>
 	table#advertisetable {
 		width: 100%;
@@ -31,9 +30,10 @@
 	<br><br><br>
 	<div class="container">
 		<div class="row">
-			<div class="col-md-2 col-sm-1"></div>
-			<div class="col-md-3 col-sm-5">
-				<select class="form-control" id="city" onchange="changecity()">
+			<div class="col-lg-2 col-md-1 col-sm-12"></div>
+			<div class="col-lg-4 col-md-5 col-sm-6">
+				<select class="form-control" id="city" onchange="changecity(true)">
+					<option value="">全臺</option>
 					<option value="臺北市" selected>臺北市</option>
 					<option value="新北市">新北市</option>
 					<option value="桃園市">桃園市</option>
@@ -58,11 +58,19 @@
 					<option value="連江縣">連江縣</option>
 				</select>
 				<br>
+				<select id="class" class="form-control">
+					<option value="" selected>所有的課程</option>
+					<option value="python_01">Python 初級</option>
+					<option value="scratch_1">Scratch 初級</option>
+					<option value="hourofcode">Hour of Code</option>
+					<option value="teacher_1">教師訓練</option>
+				</select>
+				<br>
 			</div>
-			<div class="col-md-3 col-sm-5">
-				<select id="towns" class="form-control" onchange="town=this.value">
-					<option value="">無限制</option>
-					<option value="中正區" selected>中正區</option>
+			<div class="col-lg-4 col-md-5 col-sm-6">
+				<select id="towns" class="form-control">
+					<option value="" selected>全縣市</option>
+					<option value="中正區">中正區</option>
 					<option value="大同區">大同區</option>
 					<option value="中山區">中山區</option>
 					<option value="松山區">松山區</option>
@@ -75,17 +83,14 @@
 					<option value="南港區">南港區</option>
 					<option value="文山區">文山區</option>
 				</select>
-				<br>
-			</div>
-			<div class="col-md-1 col-sm-1">
-				<input id="citytoggle" type="checkbox" checked data-toggle="toggle" data-on="篩選開啟" data-off="篩選關閉">
+				<br><br>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-2 col-sm-1"></div>
-			<div class="col-md-8 col-sm-10">
-				<button class="btn btn-block btn-info">
-					Search
+			<div class="col-lg-2 col-md-1 col-sm-12"></div>
+			<div class="col-lg-8 col-md-10 col-sm-12">
+				<button class="btn btn-block btn-info" onclick="loadadverise()">
+					搜尋
 				</button>
 			</div>
 		</div>
@@ -98,7 +103,9 @@
 						<tr>
 							<th>縣市</th>
 							<th>鄉鎮市區</th>
-							<th></th>
+							<th>課程種類</th>
+							<th>老師</th>
+							<th>電話</th>
 						</tr>
 					</thead>
 					<tbody id="tadvertise"></tbody>
@@ -111,38 +118,66 @@
 	<script src="html/javascript/taiwan_town.js"></script>
 	<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 	<script>
+		CLASS_TO = {
+			"python_01": "Python 初級",
+			"scratch_1": "Scratch 初級",
+			"hourofcode": "Hour of Code",
+			"teacher_1": "教師訓練",
+		}
+
 		advertise_format = `
 		<tr>
 		<td>{0}</td>
 		<td>{1}</td>
-		<td></td>
+		<td>{2}</td>
+		<td>{3}</td>
+		<td>{4}</td>
 		</tr>
 		`
 
-		$(function() {
-			$('#citytoggle').change(function() {
-				selectcity = $("select#city")[0]
-				selecttown = $("select#towns")[0]
-				selectcity.disabled = !selectcity.disabled
-				selecttown.disabled = !selecttown.disabled
-			})
-		})
-
 		function loadadverise() {
+			c = $("#city")[0].value
+			t = $("#towns")[0].value
+			cl = $("#class")[0].value
+
+			json = {};
+			if (c !== "") {
+				if (t != "") {
+					t = city_towns[city].indexOf(t);
+					json["town"] = t;
+				}
+				c = cities.indexOf(c);
+				json["city"] = c;
+			}
+			if (cl != "") {
+				json["class"] = cl;
+			}
+
 			$.ajax({
 				url: host + "advertise/",
 				type: "GET",
+				data: json,
 				success: function (advertises) {
+					$("#tadvertise")[0].innerHTML = "";
 					for (a=0;a<advertises.length;a++) {
 						city = cities[advertises[a]["city"]]
 						town = city_towns[city][advertises[a]["town"]]
+
+						types = [];
+						for (i=0;i<advertises[a]["type"].length;i++) {
+							types.push(CLASS_TO[advertises[a]["type"][i]])
+						}
+						
 						$("#tadvertise")[0].innerHTML += format(
 							advertise_format,
 							city,
-							town);
+							town,
+							types,
+							advertises[a]["teacher"]["name"],
+							advertises[a]["teacher"]["phone"]);
 					}
 				}
-			})
+			});
 		}
 		loadadverise()
 	</script>

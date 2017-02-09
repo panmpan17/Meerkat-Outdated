@@ -254,21 +254,21 @@ class TeacherHandler(object):
 
     @cherrypy.expose
     def index(self):
-        cookie = cherrypy.request.cookie
-        try:
-            key = str(cookie["teacher-key"].value)
-        except:
-            raise cherrypy.HTTPRedirect("/")
+        # cookie = cherrypy.request.cookie
+        # try:
+        #     key = str(cookie["teacher-key"].value)
+        # except:
+        #     raise cherrypy.HTTPRedirect("/")
 
-        key_mgr = cherrypy.request.key
+        # key_mgr = cherrypy.request.key
 
-        key_valid = key_mgr.get_key(key)
-        if not key_valid[0]:
-            cookie['teacher-userid'] = ""
-            cookie['teacher-id'] = ""
-            cookie['teacher-key'] = ""
-            raise cherrypy.HTTPRedirect("/teacher/login")
-        uid = key_valid[1]
+        # key_valid = key_mgr.get_key(key)
+        # if not key_valid[0]:
+        #     cookie['teacher-userid'] = ""
+        #     cookie['teacher-id'] = ""
+        #     cookie['teacher-key'] = ""
+        #     raise cherrypy.HTTPRedirect("/teacher/login")
+        # uid = key_valid[1]
 
         return render("teacher/index.html")
 

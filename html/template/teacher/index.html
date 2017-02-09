@@ -11,13 +11,60 @@
 
 	<title>教師頁面</title>
 	<script src="html/javascript/jquery.min.js"></script>
-	<script src="html/bootstrap/js/bootstrap.min.js"></script>
+	<script src="html/bootstrap/js/bootstrap.js"></script>
 	<script src="html/javascript/taiwan_town.js"></script>
 	<script src="html/javascript/base.js"></script>
+	<script src="html/slick/slick.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+		CLASS_TO = {
+			"python_01": "Python 初級",
+			"scratch_1": "Scratch 初級",
+			"hourofcode": "Hour of Code",
+			"teacher_1": "教師訓練",
+		}
 
-	<link href="html/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<link href="html/css/sb-admin.css" rel="stylesheet">
+		class_fromat = `<option value="{0}">{1}</option>`
+
+		classlist_fromat = `
+		<dd>
+			<input name="newareatype" type="checkbox" id="cid-{0}" value="{0}">
+			<label for="cid-{0}">{1}</label>
+		</dd>`
+
+		tkey = getCookie("teacher-key")
+		if (tkey == "") {location.pathname = "/teacher/login"}
+		$.ajax({
+			url: host + "teacher/",
+			data: {"tkey": tkey},
+			success: function (msg) {
+				advertise_limit = 5 + msg["ext_area"]
+				$("#ext_area").html(advertise_limit)
+				$("#whole_city").html(msg["whole_city"])
+
+				$.each(msg["class_permission"], function (_, v) {
+					$.each($("[name=class_permission]"), function (_, c) {
+						c.innerHTML += format(class_fromat,
+							v,
+							CLASS_TO[v])
+					})
+					$.each($("[name=classlist]"), function (_, c) {
+						c.innerHTML += format(classlist_fromat,
+							v,
+							CLASS_TO[v])
+					})
+				})
+			},
+			error: function (err) {location.pathname = "/teacher/login"}
+		})
+	</script>
+
+	<link rel="stylesheet" href="/html/css/checklist.css">
+	<link rel="stylesheet" href="html/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" href="html/css/sb-admin.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+	<link rel="stylesheet" href="html/css/circle-loading.css">
+	<link rel="stylesheet" type="text/css" href="html/slick/slick.css">
+	<link rel="stylesheet" type="text/css" href="html/slick/slick-theme.css">
 	<style>
 		textarea {
 			max-width: 100%;
@@ -28,14 +75,79 @@
 			cursor: pointer;
 		}
 
-		td.b-close {
+		.b-close {
 			color: red;
 			width: 30px;
 			cursor: pointer;
 			background-color: white;
 		}
-		td.b-close:hover {
+		.b-close:hover {
 			background-color: #DDD;
+		}
+
+		img#hoverimg {
+			position: absolute;
+			/*left: 0px;
+			top: 0px;*/
+			border-radius: 5px;
+			border: 2px solid gray;
+		}
+
+		h3> small {
+		  cursor: pointer;
+		}
+
+		@media (max-width: 1000px) {
+			img#hoverimg {
+				left: 0px;
+				top: 30px;
+			}
+		}
+
+		ul#classrooms > li {
+			cursor: pointer;
+		}
+		ul#classrooms > li.active {
+			background: #000;
+		}
+
+		dl {
+			box-shadow: 0px 1px 8px 0px rgba(0,0,0,0.2);
+			padding: 5px 5px;
+		}
+
+		div#scratch_project {
+			position: fixed;
+			width: 100%;
+			height: 100%;
+			top: 0px;
+			left: 0px;
+			z-index: 100001;
+			text-align: center;
+			line-height: 100vh;
+			background-color: rgba(0,0,0,0.7);
+		}
+
+		div.close {
+			color: white;
+		}
+
+		.slider {
+			width: 80%;
+			margin: 100px auto;
+		}
+
+		.slick-slide {
+			margin: 0px 20px;
+		}
+
+		.slick-slide img {
+			width: 100%;
+		}
+
+		.slick-prev:before,
+		.slick-next:before {
+			color: black;
 		}
 	</style>
 </head>
@@ -57,62 +169,81 @@
 			<!-- Top Menu Items -->
 			<ul class="nav navbar-right top-nav">
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smitd <b class="caret"></b></a>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
-						</li>
-						<li class="divider"></li>
-						<li>
-							<a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
-						</li>
-					</ul>
+					<a href="#" data-toggle="dropdown" onclick="logout()">
+						登出
+					</a>
 				</li>
 			</ul>
 
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav side-nav" id="navbar">
-					<li id="button-createclassroom" class="active">
+					<li id="button-main" class="active">
+						<a onclick="change_page('main')"><i class="fa fa-fw fa-home"></i> 資訊</a>
+					</li>
+					<li id="button-createclassroom">
 						<a onclick="change_page('createclassroom')"><i class="fa fa-fw fa-plus"></i> 建立一個新的教室</a>
 					</li>
 					<li id="button-advertise">
 						<a onclick="change_page('advertise')"><i class="fa fa-fw fa-edit"></i> 廣告管理</a>
 					</li>
+					<li>
+						<a href="mailto:shalley.tsay@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i> 聯絡我們</a>
+					</li>
+					<li>
+						<a data-toggle="collapse" data-target="#classrooms" class="" aria-expanded="true">
+							教室列表 <i class="fa fa-fw fa-caret-down"></i>
+						</a>
+						<ul id="classrooms" class="collapse" aria-expanded="true">
+							<li>
+								<a>你還沒有任何的教室</a>
+							</li>
+						</ul>
+					</li>
 				</ul>
 			</div>
 		</nav>
 
-		<div id="p-createclassroom" class="page-wrapper">
+		<div id="p-main" class="page-wrapper">
+			<center>
+				<a href="https://www.google.com.tw/chrome/browser/desktop/">
+					<h4>建議使用 Google Chrome 操作</h4>
+					<img width="150" src="https://upload.wikimedia.org/wikipedia/en/b/be/Google_Chrome_for_Android-_Android_5.0_Logo.png" alt="">
+				</a>
+			</center>
+		</div>
+
+		<div id="p-createclassroom" class="page-wrapper" hidden>
 			<div class="container-fluid">
 				<div class="row">
-					<div class="col-lg-12">
+					<div class="col-md-12">
 						<h1>建立一個新的教室</h1>
 						<hr>
-						<input type="text" class="form-control" placeholder="教室名稱" id="name">
+					</div>
+					<div class="col-md-6">
+						<input type="text" class="form-control" placeholder="教室名稱" id="classroom-name">
 						<br>
 					</div>
-					<div class="col-lg-4">
-						<h3>學生姓名</h3>
-						<textarea class="form-control" rows="10" id="names"></textarea>
+					<div class="col-md-6">
+						<select id="select-type" class="form-control" name="class_permission"></select>
 						<br>
 					</div>
-					<div class="col-lg-4">
-						<h3>Coding 4 Fun 帳號</h3>
-						<textarea class="form-control" rows="10" id="cids"></textarea>
+					<div class="col-md-12">
+						<h3>
+							學生資料
+							<small onmouseover="$('#hoverimg').show();" onmouseout="$('#hoverimg').hide();">
+								建議利用 Excel, Number 編輯後再貼上 (?)
+							</small>
+							<img hidden id="hoverimg" src="html/images/teacher_example.png" height="150px" alt="" />
+						</h3>
+						<textarea class="form-control" rows="10" id="field" onkeyup="remove_blank()"></textarea>
 						<br>
 					</div>
-					<div class="col-lg-4">
-						<h3>Scratch 帳號</h3>
-						<textarea class="form-control" rows="10" id="sids"></textarea>
-						<br>
-					</div>
-					<div class="col-lg-12">
-						<br><br>
+					<div class="col-md-12">
 						<button type="button" class="btn btn-info btn-lg btn-block" onclick="check_students()">
-							檢查學生資料
+							<i class="fa fa-check" aria-hidden="true"></i> 檢查學生資料
 						</button>
 						<br>
-						<table class="table">
+						<table class="table" id="students-table" hidden>
 							<tbody>
 								<tr>
 									<th>學生姓名</th>
@@ -140,7 +271,7 @@
 						</h1>
 						<hr>
 					</div>
-					<div class="col-lg-5 col-md-5 col-sm-12">
+					<div class="col-md-3 col-sm-12">
 						<select class="form-control" id="city" onchange="changecity()">
 							<option value="臺北市">臺北市</option>
 							<option value="新北市">新北市</option>
@@ -167,7 +298,7 @@
 						</select>
 						<br>
 					</div>
-					<div class="col-lg-5 col-md-5 col-sm-12">
+					<div class="col-md-3 col-sm-12">
 						<select id="towns" class="form-control">
 							<option value="中正區">中正區</option>
 							<option value="大同區">大同區</option>
@@ -184,19 +315,26 @@
 						</select>
 						<br>
 					</div>
-					<div class="col-lg-2 col-md-2 col-sm-12">
+					<div class="col-md-3 col-sm-12">
+						<dl class="check-list-right" name="classlist">
+							<dt>課程種類</dt>
+						</dl>
+						<br>
+					</div>
+					<div class="col-md-3 col-sm-12">
 						<button type="button" class="btn btn-info btn-block" onclick="newarea()">
 							新增地區
 						</button>
 						<br>
 					</div>
-					<div class="col-lg-12 col-md-12 col-sm-12">
+					<div class="col-md-12 col-sm-12">
 						<br>
 						<table class="table">
 							<thead>
 								<tr>
 									<th>縣市</th>
 									<th>鄉鎮市區</th>
+									<th>課程種類</th>
 									<th></th>
 								</tr>
 							</thead>
@@ -206,9 +344,47 @@
 				</div>
 			</div>
 		</div>
+
+		<div id="p-classroomview" class="page-wrapper" hidden>
+			<h3>
+				<span id="class-name"></span>
+				<small>
+					<span id="student-num"></span> 個學生
+					<div class="text-right">
+						課程種類 - <span id="classroom-type"></span>
+					</div>
+				</small>
+			</h3>
+			<hr>
+			<div id="porjects">
+				<!--  -->
+			</div>
+		</div>
+	</div>
+
+	<div id="bg" hidden>
+		<svg width="120" height="120">
+			<circle id="c1" cx="50" cy="50" r="40" />
+			<circle id="c2" cx="50" cy="50" r="30" />
+			<circle id="c3" cx="50" cy="50" r="20" />
+		</svg>
+	</div>
+
+	<div id="scratch_project" hidden>
+		<div style="position:fixed;top:5;left:5;color:white;cursor:pointer;font-size: 30px;" onclick="$('#scratch_project').hide();$('#scratch_iframe')[0].src=''">X</div>
+		<iframe id="scratch_iframe" allowtransparency="true" width="600" height="600" src="" frameborder="0" style="padding-top: 100px;"></iframe>
 	</div>
 	<script>
-		title_format = '<h1 class="page-header">{0}</h1>';
+		a2z = "abcdefghijklmnopqrstuvwxyz"
+		// create classroom
+		classroom_name = null;
+		student_field_format = `\
+		<tr>
+			<td>{0}</td>
+			<td class="bg-success" id="cid-{1}">{1}</td>
+			<td id="sid-{2}"">{2}</td>
+		</tr>
+		`
 
 		function change_page(d) {
 			$("[class=active]")[0].classList.remove("active");
@@ -221,135 +397,230 @@
 				loadadverise();
 			}
 		}
+
+		function logout() {
+			storeCookie("teacher-key", "");
+			storeCookie("teacher-userid", "");
+			storeCookie("teacher-id", "");
+			location.reload();
+		}
 		
 		// newclassroom
-		function check_students() {
-			names = document.getElementById("names").value
-			cids = document.getElementById("cids").value
-			sids = document.getElementById("sids").value
+		sid_colors = {};
+		function remove_blank() {
+			f = $("#field")[0]
+			f.value = f.value.replace(/\t/g, ",")
+			f.value = f.value.replace(/     /g, ",")
+			f.value = f.value.replace(/    /g, ",")
+			f.value = f.value.replace(/   /g, ",")
+			f.value = f.value.replace(/  /g, ",")
+			f.value = f.value.replace(/ /g, ",")
+		}
 
-			if ((names == []) || (cids == []) || (sids == [])) {
-				alert("欄位不能留空")
+		function check_students() {
+			classroom_name = $("#classroom-name")[0].value;
+			if (classroom_name == "") {
+				alert("教室名稱不能留白");
+				return;
+			}
+			f = $("#field")[0]
+			if (f.value == "") {
+				alert("學生資料欄位不能留空");
 				return
 			}
 
-			names = names.split("\n")
-			cids = cids.split("\n")
-			sids = sids.split("\n")
-			
-			if (!((names.length == cids.length) && (cids.length == cids.length))) {
-				alert("確定 3 個欄位都一樣長")
-			}
+			data = f.value.split("\n")
 
 			students_table = document.getElementById("students");
 			students_table .innerHTML = "";
 
-			for (sid=0;sid<sids.length;sid++) {
-				tr = document.createElement("tr")
-
-				name_td = document.createElement("td");
-				name_td.innerHTML = names[sid];
-
-				cid_td = document.createElement("td");
-				cid_td.innerHTML = cids[sid];
-
-				tr.appendChild(name_td);
-				tr.appendChild(cid_td);
-
-				url = "https://scratch.mit.edu/users/" + sids[sid] + "/"
-
-				s = sids[sid]
-				$.when(
-					$.ajax(url)
-				).done(function (msg) {
-					sid_td = document.createElement("tr");
-					sid_td.innerHTML = s;
-					console.log(s)
-
-					tr.appendChild(sid_td)
-				});
-				students_table.appendChild(tr)
-			}
-		}
-
-		// advertise
-		ADVERTISE_LIMT = 5
-		advertise_num = 0
-		advertise_format = `
-		<tr>
-		<td>{0}</td>
-		<td>{1}</td>
-		<td class="b-close" onclick="deletearea('{2}')"><i class="fa fa-times"></i></td>
-		</tr>
-		`
-
-		function newarea() {
-			if (advertise_num >= ADVERTISE_LIMT) {
-				alert("達到上限")
-				return;
-			}
-
-			city = document.getElementById("city").value;
-			town = document.getElementById("towns").value;
-
-			town = city_towns[city].indexOf(town);
-			city = cities.indexOf(city);
-
-			json = {
-				"tkey": getCookie("teacher-key"),
-				"city": city,
-				"town": town,
+			names = [];
+			cids = [];
+			sids = [];
+			for (i=0;i<data.length;i++) {
+				student = data[i].split(",")
+				if (student.length < 3) {
+					alert("學生資料不完整請檢查");
+					return;
 				}
-			$.ajax({
-				url: host + "advertise/",
-				type: "POST",
-				dataType: "json",
-				data: JSON.stringify(json),
-				contentType: "application/json; charset=utf-8",
-				success: function (msg) {
-					loadadverise();
-				}
-			})
-		}
 
-		function loadadverise() {
-			$.ajax({
-				url: host + "advertise/",
-				type: "GET",
-				data: {"tkey": getCookie("teacher-key")},
-				success: function (msg) {
-					$("#tadvertise")[0].innerHTML = "";
-					ADVERTISE_LIMT = 5 + msg["ext_area"]
-					$("#ext_area").html(ADVERTISE_LIMT)
-					$("#whole_city").html(msg["whole_city"])
+				name = student[0];cid = student[1];sid = student[2];
 
-					advertises = msg["advertise"]
-					advertise_num = advertises.length
-					for (a=0;a<advertises.length;a++) {
-						city = cities[advertises[a]["city"]]
-						town = city_towns[city][advertises[a]["town"]]
-						$("#tadvertise")[0].innerHTML += format(
-							advertise_format,
-							city,
-							town,
-							advertises[a]["id"]);
+				names.push(name)
+				cids.push(cid)
+				sids.push(sid)
+
+				sid = sid.toLowerCase();
+				sid_colors[sid] = false;
+				$.ajax("https://scratch.mit.edu/users/" + sid).done(function (msg) {
+					sname = msg.substring(msg.indexOf("<title>") + 7, msg.indexOf(" on Scratch</title>"));
+					sname = sname.toLowerCase();
+					sid_colors[sname] = true;
+				})
+				$("#students")[0].innerHTML += format(student_field_format,
+					name,
+					cid,
+					sid)
+			}
+			$.ajax({
+				url: host + "teacher/user",
+				data: {"tkey": getCookie("teacher-key"), "users": cids},
+				success: function (msg) {
+					for (i=0;i<msg["none"].length;i++) {
+						$("#cid-" + msg["none"][i])[0].classList.remove("bg-success")
+						$("#cid-" + msg["none"][i])[0].classList.add("bg-danger")
 					}
 				}
 			})
+
+			$("#students-table").show()
+			$("#bg").show()
+
+			setTimeout(function () {
+				$.each(sid_colors, function (k,v) {
+					k = k.toLowerCase()
+					if (v) {
+						$("#sid-" + k)[0].classList.add("bg-success")
+					}
+					else {
+						$("#sid-" + k)[0].classList.add("bg-danger")
+					}
+				})
+				$("#bg").hide();
+
+				if ($("[class=bg-danger]").length == 0) {
+					c = confirm("創建教室");
+					if (c) {
+						json = {
+							"tkey": getCookie("teacher-key"),
+							"students_name": names,
+							"students_cid": cids,
+							"students_sid": sids,
+							"type": $("#select-type")[0].value,
+							"name": classroom_name,
+						}
+
+						$.ajax({
+							url: host + "classroom/",
+							type: "POST",
+							dataType: "json",
+							data: JSON.stringify(json),
+							contentType: "application/json; charset=utf-8",
+							success: function (msg) {
+								location.reload();
+							}
+						})
+					}
+				}
+			}, (2000 * Object.keys(sid_colors).length));
 		}
 
-		function deletearea(aid) {
-			json = {"tkey": getCookie("teacher-key"), "aid": aid}
-			$.ajax({
-				url: host + "advertise/?" + $.param(json),
-				type: "DELETE",
-				success: function(result) {
-					loadadverise();
-				}
-			});
+		// 
+		advertise_limit = 5;
+advertise_num = 0;
+advertise_format = `
+<tr>
+<td>{0}</td>
+<td>{1}</td>
+<td>{2}</td>
+<td class="b-close" onclick="deletearea('{3}')"><i class="fa fa-times"></i></td>
+</tr>
+`
+
+function newarea() {
+	if (advertise_num >= advertise_limit) {
+		alert("達到上限")
+		return;
+	}
+
+	city = document.getElementById("city").value;
+	town = document.getElementById("towns").value;
+	
+
+	type = [];
+	c = $("[name=newareatype]")
+	for (i=0;i<c.length;i++) {
+		if (c[i].checked) {
+			type.push(c[i].value);
 		}
-		// loadadverise();
+	}
+	if (type.length == 0) {
+		alert("請選一種課程");
+		return;
+	}
+
+	town = city_towns[city].indexOf(town);
+	city = cities.indexOf(city);
+
+	json = {
+		"tkey": getCookie("teacher-key"),
+		"city": city,
+		"town": town,
+		"type": type,
+		}
+	$.ajax({
+		url: host + "advertise/",
+		type: "POST",
+		dataType: "json",
+		data: JSON.stringify(json),
+		contentType: "application/json; charset=utf-8",
+		success: function (msg) {
+			loadadverise();
+		},
+		error: function (err) {
+			p1 = err.responseText.indexOf("<p>") + 3
+			errortype = err.responseText.substring(p1, err.responseText.indexOf("</p>", p1))
+			if (errortype == "This advertise repeat") {
+				alert(format("這個區域你已經有了: {0}, {1}",
+					document.getElementById("city").value,
+					document.getElementById("towns").value))
+			}
+		}
+	})
+}
+
+function loadadverise() {
+	$.ajax({
+		url: host + "advertise/",
+		type: "GET",
+		data: {"tkey": getCookie("teacher-key")},
+		success: function (msg) {
+			$("#tadvertise")[0].innerHTML = "";
+
+			advertises = msg["advertise"]
+			advertise_num = advertises.length
+			for (a=0;a<advertises.length;a++) {
+				city = cities[advertises[a]["city"]]
+				town = city_towns[city][advertises[a]["town"]]
+
+				types = [];
+				for (i=0;i<advertises[a]["type"].length;i++) {
+					types.push(CLASS_TO[advertises[a]["type"][i]])
+				}
+				$("#tadvertise")[0].innerHTML += format(
+					advertise_format,
+					city,
+					town,
+					types,
+					advertises[a]["id"]);
+			}
+		}
+	})
+}
+
+function deletearea(aid) {
+	json = {"tkey": getCookie("teacher-key"), "aid": aid}
+	$.ajax({
+		url: host + "advertise/?" + $.param(json),
+		type: "DELETE",
+		success: function(result) {
+			loadadverise();
+		}
+	});
+}
 	</script>
+
+	<script src="html/javascript/teacher/classroom.js" type="text/javascript" charset="utf-8"></script>
 </body>
 
 </html>

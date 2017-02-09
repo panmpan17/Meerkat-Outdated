@@ -39,6 +39,12 @@ class KeyMgrPlugin(plugins.SimplePlugin):
 			"requester": requester,
 			}
 
+	def pop(self, key):
+		try:
+			self.pop(key)
+		except:
+			pass
+
 class KeyMgrTool(cherrypy.Tool):
 	def __init__(self, key_plugin):
 		cherrypy.Tool.__init__(self, "on_start_resource",

@@ -94,8 +94,8 @@
 			<a id="closeloginframe" onclick="hide('signup-frame');" style="">X</a><br>
 			<div class="frame-content" style="padding-top: 5%;">
 				<center>
-					<input placeholder="帳號 8-16 (英文字母, 數字, 符號 !@#$%)" name="signup-userid" type="text"><br><br>
-					<input placeholder="密碼 8-16 (英文字母, 數字, 符號 !@#$%)" name="signup-password" type="password"><br><br>
+					<input placeholder="帳號 8-16 (英文字母, 數字)" name="signup-userid" type="text"><br><br>
+					<input placeholder="密碼 8-16 (英文字母, 數字)" name="signup-password" type="password"><br><br>
 					<input placeholder="確認密碼" name="signup-repassword" type="password"><br><br>
 					<input placeholder="Email" name="signup-email" type="text"><br><br>
 					<input placeholder="暱稱 (請勿用真實姓名)" name="signup-nickname" type="text"><br><br>
@@ -121,6 +121,18 @@
 					<tr>
 						<td>帳號</td>
 						<td id="info-userid"></td>		
+					</tr>
+					<tr>
+						<td>密碼更改</td>
+						<td>
+							<input type="password" id="change_password" placeholder="舊密碼">
+							<br>
+							<input type="password" id="change_newpassword" placeholder="新密碼">
+							<br>
+							<input type="password" id="change_check_password" placeholder="新密碼確認">
+							<br>
+							<button class="btn btn-success" onclick="changepassword()">更改密碼</button>
+						</td>		
 					</tr>
 					<tr>
 						<td>積分</td>

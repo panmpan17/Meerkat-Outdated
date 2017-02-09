@@ -142,47 +142,50 @@ class App():
         email_valid_plugin.subscribe()
         cherrypy.tools.emailvalidtool = EmailValidTool(email_valid_plugin)
 
+    def mount(self, handler, config):
+        cherrypy.tree.mount(
+            handler(),
+            handler._root,
+            config=config,
+            )
+
     def start(self, db_str, path, euf):
-        from app.rest import rest_config, UserRestView, SessionKeyView, AnswerRestView
-        from app.rest import QuestionRestView, ClassesRestView, PostRestView, OpinionRestView
-        from app.rest import TeacherRestView, AdvertiseRestVIew
-        from app.render import UserCaseHandler, ClassHandler, TeacherHandler
-        from app.admin import AdminHandler
+        import app.rest as restapi
+        import app.render as render
+        import app.admin as admin
 
         self.site_conf = App.SITE_CONF
-        # self.log_conf = App.LOG_CONF
 
         if not path:
             path = os.getcwd() + "/downloads/"
-
         if not db_str:
-            db_str = rest_config["db_connstr"]
+            db_str = restapi.rest_config["db_connstr"]
 
         self.render_config["/downloads"]["tools.staticdir.root"] = path
-        cherrypy.tree.mount(SessionKeyView(), SessionKeyView._root, config={"/":rest_config})
-        cherrypy.tree.mount(QuestionRestView(), QuestionRestView._root, config={"/":rest_config})
-        cherrypy.tree.mount(AnswerRestView(), AnswerRestView._root, config={"/":rest_config})
-        cherrypy.tree.mount(ClassesRestView(), ClassesRestView._root, 
-            config={"/":rest_config})
-        cherrypy.tree.mount(UserRestView(), UserRestView._root, config={"/":rest_config})
-        cherrypy.tree.mount(PostRestView(), PostRestView._root, config={"/": rest_config})
-        cherrypy.tree.mount(OpinionRestView(), OpinionRestView._root, config={"/": rest_config})
-        cherrypy.tree.mount(TeacherRestView(), TeacherRestView._root, config={"/": rest_config})
-        cherrypy.tree.mount(AdvertiseRestVIew(), AdvertiseRestVIew._root, config={"/": rest_config})
 
-        cherrypy.tree.mount(UserCaseHandler(), UserCaseHandler._root, 
-            config=self.render_config)
-        cherrypy.tree.mount(ClassHandler(), ClassHandler._root, 
-            config=self.render_config)
-        cherrypy.tree.mount(AdminHandler(), AdminHandler._root,
-            config=self.render_config)
-        cherrypy.tree.mount(TeacherHandler(), TeacherHandler._root,
-            config=self.render_config)
+        restview_config = {"/": restapi.rest_config}
+        self.mount(restapi.SessionKeyView, restview_config)
+        self.mount(restapi.QuestionRestView, restview_config)
+        self.mount(restapi.AnswerRestView, restview_config)
+        self.mount(restapi.ClassesRestView, restview_config)
+        self.mount(restapi.UserRestView, restview_config)
+        self.mount(restapi.PostRestView, restview_config)
+        self.mount(restapi.OpinionRestView, restview_config)
+        self.mount(restapi.TeacherRestView, restview_config)
+        self.mount(restapi.AdvertiseRestView, restview_config)
+        self.mount(restapi.ClassroomRestView, restview_config)
+        
+        self.mount(render.UserCaseHandler, self.render_config)
+        self.mount(render.ClassHandler, self.render_config)
+        self.mount(render.TeacherHandler, self.render_config)
+        self.mount(admin.AdminHandler, self.render_config)
 
         self.subsribe_plugin(path, euf, db_str)
 
         cherrypy.config.update(self.site_conf)
-        cherrypy.config.update({"error_page.404": UserCaseHandler.error_404})
+        cherrypy.config.update(
+            {"error_page.404": render.UserCaseHandler.error_404}
+            )
         cherrypy.engine.start()
         cherrypy.engine.block()
 
@@ -204,7 +207,6 @@ class App():
 
             class_ = json.loads(read)
             classes.new_class(class_["id"], class_)
-
         return classes
 
 if __name__ == "__main__":

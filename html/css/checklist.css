@@ -1,0 +1,87 @@
+.radio-list-right input[type="radio"],
+.check-list-right input[type="checkbox"] {
+	opacity: 0;
+	float: left;
+	width: 1px;
+	margin: 0;
+}
+
+.radio-list-right input[type="radio"] + label,
+.check-list-right input[type="checkbox"] + label {
+	position: relative;
+	margin: 0;
+	display: block;
+	width: 100%;
+	padding: 10px;
+	color: #222;
+	background: #fff;
+	border-bottom: 1px solid #eee;
+}
+
+.radio-list-right input[type="radio"] + label:before,
+.check-list-right input[type="checkbox"] + label:before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	background: #ddd;
+	border: 1px solid #aaa;
+}
+
+.radio-list-right input[type="radio"]:checked + label,
+.check-list-right input[type="checkbox"]:checked + label {
+	color: #2ea34e;
+}
+
+.radio-list-right input[type="radio"]:checked + label:before,
+.check-list-right input[type="checkbox"]:checked + label:before {
+	background: #3dc863;
+	border-color: #2ea44e;
+}
+
+.radio-list-right input[type="radio"]:disabled + label, .check-list-right input[type="checkbox"]:disabled + label {
+	color: #ccc;
+}
+
+.radio-list-right input[type="radio"]:disabled + label:before,
+.check-list-right input[type="checkbox"]:disabled + label:before {
+	background: rgba(204, 204, 204, 0.5);
+	border: 2px dotted #ccc;
+}
+
+.radio-list-right input[type="radio"]:focus + label,
+.check-list-right input[type="checkbox"]:focus + label {
+	box-shadow: inset 0 0 3px #eee;
+}
+
+dl {
+	max-width: 350px;
+	padding-left: 100px;
+}
+
+dl dt {
+	font-size: 18px;
+}
+
+.radio-list-right input[type="radio"] + label {
+	padding-right: 50px;
+}
+
+.radio-list-right input[type="radio"] + label:before {
+	height: 20px;
+	width: 20px;
+	margin-top: -11px;
+	right: 10px;
+	border-radius: 100%;
+}
+
+.check-list-right input[type="checkbox"] + label {
+	padding-right: 50px;
+}
+
+.check-list-right input[type="checkbox"] + label:before {
+	height: 24px;
+	width: 24px;
+	margin-top: -13px;
+	right: 10px;
+	border-radius: 4px;
+}

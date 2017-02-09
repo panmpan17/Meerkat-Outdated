@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Coding for Fun{% endblock %}
 {% block css %}
-<link rel="stylesheet" href="/html/css/jquery.fullPage.css">
 <style>
 	.info-bottom {
 		position: fixed;
@@ -62,17 +61,5 @@
 		</center>
 	</div>
 </div> -->
-
-<script src="/html/javascript/jquery.fullPage.js"></script>
-<script type="text/javascript">
-		$(document).ready(function() {
-			$('#fullpage').fullpage({
-				sectionsColor: ['#1bbc9b', '#EDEDED', '#7BAABE'],
-				anchors: ['firstPage', 'secondPage', '3rdPage'],
-				loopTop: false,
-				loopBottom: false
-			});
-		});
-	</script>
 
 {% endblock %}

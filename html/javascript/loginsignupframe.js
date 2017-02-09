@@ -155,12 +155,12 @@ function logout() {
 }
 
 function to_html(dict) {
-	document.getElementById("info-userid").innerHTML = dict["userid"];
-	document.getElementById("info-point").innerHTML = dict["point"];
-	document.getElementById("info-nick").innerHTML = dict["nickname"];
-	document.getElementById("info-email").innerHTML = dict["email"];
-	document.getElementById("info-birth").innerHTML = dict["birth_year"];
-	document.getElementById("info-job").innerHTML = dict["job"];
+	$("#info-userid")[0].innerHTML = dict["userid"];
+	$("#info-point")[0].innerHTML = dict["point"];
+	$("#info-nick")[0].innerHTML = dict["nickname"];
+	$("#info-email")[0].innerHTML = dict["email"];
+	$("#info-birth")[0].innerHTML = dict["birth_year"];
+	$("#info-job")[0].innerHTML = dict["job"];
 
 	document.getElementById("info-level").innerHTML = "一般";
 	point = dict["point"];
@@ -227,9 +227,56 @@ function resentmail() {
 		error: function (msg) {
 			reload = confirm("請重新登錄");
 			if (reload) {
-				logout();
+				hide('info-frame');
+				show("login-frame");
 			}
 		}
 
+	})
+}
+
+function changepassword() {
+	password = $("#change_password")[0].value
+	newpassword = $("#change_newpassword")[0].value
+	check_password = $("#change_check_password")[0].value
+
+	if (!(password && newpassword && check_password)) {
+		alert("不能留空");
+		return;
+	}
+
+	if (password == check_password) {
+		alert("請確定密碼一致");
+		return;
+	}
+
+	pass_valid = matchRE(id_pass_re, newpassword);
+	password = sha256(password);
+	newpassword = sha256(newpassword);
+
+	json = {
+		"key": getCookie("key"),
+		"password": password,
+		"newpassword": newpassword,
+	}
+	$.ajax({
+		url: host + "user/password",
+		type: "PUT",
+		dataType: "json",
+		data: JSON.stringify(json),
+		contentType: "application/json; charset=utf-8",
+		success: function (msg) {
+			alert("密碼已改變, 請重新登錄");
+			hide('info-frame');
+			show("login-frame");
+		},
+		error: function (error) {
+			p1 = error.responseText.indexOf("<p>") + 3
+			errortype = error.responseText.substring(p1, error.responseText.indexOf("</p>", p1))
+			if (errortype == "Username or password wrong") {
+				alert("密碼不正確");
+				return;
+			}
+		}
 	})
 }

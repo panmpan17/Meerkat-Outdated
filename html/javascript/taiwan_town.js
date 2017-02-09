@@ -554,11 +554,19 @@ city_towns = {
 		],
 }
 
-function changecity() {
+function changecity(nolimit=false) {
 	city = document.getElementById("city").value;
 	
 	towns_select = document.getElementById("towns")
 	towns_select.innerHTML = ""
+
+	if (nolimit) {
+		option = document.createElement("option")
+		option.value = ""
+		option.text = "無限制 (鄉鎮市)"
+		towns_select.appendChild(option)
+	}
+
 	for (town=0;town<city_towns[city].length;town++) {
 		option = document.createElement("option")
 		option.value = city_towns[city][town]
