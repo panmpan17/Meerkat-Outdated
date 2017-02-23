@@ -123,15 +123,15 @@
 		"teacher_1": "教師訓練",
 	}
 
-	teachers_table = document.getElementById("teachers")
+	teachers_table = $("#teachers")[0]
 
 	function signup() {
-		errormsg = document.getElementById("signup-errormsg")
+		errormsg = $("#signup-errormsg")[0]
 
-		userid = document.getElementsByName("userid")[0].value;
-		password = document.getElementsByName("password")[0].value;
-		name = document.getElementsByName("name")[0].value;
-		phone = document.getElementsByName("phone")[0].value;
+		userid = $("[name=userid]")[0].value;
+		password = $("[name=password]")[0].value;
+		name = $("[name=name]")[0].value;
+		phone = $("[name=phone]")[0].value;
 
 		checked_list = [];
 		c = $("[name=class_permission]")

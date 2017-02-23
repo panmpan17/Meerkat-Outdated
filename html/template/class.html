@@ -54,7 +54,7 @@
 {% block script %}
 <script src="/html/javascript/class.js"></script>
 <script>
-subject_id = document.getElementById("subject_id").textContent
+subject_id = $("#subject_id")[0].textContent
 loadclass(subject_id)
 </script>
 {% endblock %}

@@ -1,7 +1,6 @@
 {'description': '',
  'description-video': 'http://www.youtube.com/embed/x9gjp2xYZ3k?rel=0',
  'id': 'python_01',
- 'image': 'class_python.png',
  'info': [[{'answer': '',
             'buttons': [],
             'class_name': '1-1 與 Python 相遇',

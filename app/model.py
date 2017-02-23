@@ -1,5 +1,5 @@
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
-from sqlalchemy import Boolean, DateTime, Text, ARRAY, JSON
+from sqlalchemy import Boolean, DateTime, Text, ARRAY, JSON, Time, Date
 from datetime import datetime, timedelta
 from cherrypy import HTTPError as httperror
 from uuid import uuid1
@@ -52,7 +52,8 @@ class User(object):
             Column("admin", Boolean, default=False, nullable=True, autoincrement=True),
             Column("expert", Integer, default=0, nullable=True, autoincrement=True),
             Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
-            Column("last_login", DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, autoincrement=True),
+            Column("last_login", DateTime, default=datetime.utcnow, onupdate=datetime.utcnow,
+                autoincrement=True),
             Column("active", Boolean, default=False, nullable=True, autoincrement=True),
             Column("disabled", Boolean, default=False, nullable=True, autoincrement=True),
             )
@@ -290,8 +291,10 @@ class Answer(object):
         cls.answer_t = Table(cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
             Column("content", Text, nullable=False, autoincrement=False),
-            Column("writer", Integer, ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
-            Column("answer_to", Integer, ForeignKey("tb_question.id"), nullable=False, autoincrement=False),
+            Column("writer", Integer, ForeignKey("tb_user.id"),
+                nullable=False, autoincrement=False),
+            Column("answer_to", Integer, ForeignKey("tb_question.id"),
+                nullable=False, autoincrement=False),
             Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
             Column("file1", String, nullable=True, autoincrement=False, default=""),
             Column("file2", String, nullable=True, autoincrement=False, default=""),
@@ -376,7 +379,8 @@ class Opinion(object):
             Column("id", Integer, primary_key=True, autoincrement=True),
             Column("content", Text, nullable=False, autoincrement=False),
             Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
-            Column("writer", Integer, ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
+            Column("writer", Integer, ForeignKey("tb_user.id"),
+                nullable=False, autoincrement=False),
             )
         cls.opinion_t.create(db_engine, checkfirst=True)
         return cls.opinion_t
@@ -421,6 +425,7 @@ class Teacher(object):
             Column("whole_city", Integer, nullable=True, autoincrement=True, default=0),
             Column("disabled", Boolean, default=False, nullable=True, autoincrement=True),
             Column("class_permission", ARRAY(String), nullable=False, autoincrement=False),
+            Column("summary", Text, nullable=False, autoincrement=False),
             )
         cls.teacher_t.create(db_engine, checkfirst=True)
         return cls.teacher_t
@@ -436,6 +441,26 @@ class Teacher(object):
             "whole_city": row["whole_city"],
             "disabled": row["disabled"],
             "class_permission": row["class_permission"],
+            "summary": row["summary"],
+            }
+
+    @classmethod
+    def mk_dict_adarea_adclass(cls, row):
+        return {
+            "id": row["id"],
+            "name": row["name"],
+            "phone": row["phone"],
+            "summary": row["summary"],
+
+            "city": row["city"],
+            "town": row["town"],
+
+            "address": row["address"],
+            "type": row["type"],
+            "date": row["date"].strftime("%Y 年 %m 月 %d 日"),
+            "start_time": row["start_time"].strftime("%I:%M %p"),
+            "end_time": row["end_time"].strftime("%I:%M %p"),
+            "weekdays": row["weekdays"],
             }
 
 class Classroom(object):
@@ -451,14 +476,26 @@ class Classroom(object):
             Column("students_name", ARRAY(String), nullable=False, autoincrement=False),
             Column("students_cid", ARRAY(Integer), nullable=False, autoincrement=False),
             Column("students_sid", ARRAY(String), nullable=False, autoincrement=False),
+            Column("folder", String, nullable=True, autoincrement=True, default=""),
             Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
-            Column("type", String, nullable=False, autoincrement=False),
+            Column("type", String, nullable=True, autoincrement=False),
             )
         cls.classroom_t.create(db_engine, checkfirst=True)
         return cls.classroom_t
 
     @classmethod
     def mk_dict(cls, row):
+        if len(row["students_sid"]) == 0:
+            students = dict(zip(row["students_cid"], row["students_name"]))
+            return {
+                "id": row["id"],
+                "name": row["name"],
+                "teacher": row["teacher"],
+                "students": students,
+                "create_at": GMT(row["create_at"]),
+                "folder": row["folder"],
+                "type": row["type"],
+                }
         students = list(zip(row["students_name"], row["students_cid"], row["students_sid"]))
         return {
             "id": row["id"],
@@ -466,12 +503,35 @@ class Classroom(object):
             "teacher": row["teacher"],
             "name": row["name"],
             "create_at": GMT(row["create_at"]),
+            "folder": row["folder"],
+            "type": row["type"],
+            }
+
+    @classmethod
+    def mk_info(cls, row, sid):
+        if len(row["students_sid"]) == 0:
+            return {
+                "id": row["id"],
+                "name": row["name"],
+                "teacher": row["teacher"],
+                "create_at": GMT(row["create_at"]),
+                "folder": row["folder"],
+                "type": row["type"],
+                }
+        students = dict(zip(row["students_cid"], row["students_sid"]))
+        return {
+            "id": row["id"],
+            "name": row["name"],
+            "teacher": row["teacher"],
+            "student_cid": students[sid],
+            "create_at": GMT(row["create_at"]),
+            "folder": row["folder"],
             "type": row["type"],
             }
 
 
-class Advertise(object):
-    TABLE_NAME = "tb_advertise"
+class AdArea(object):
+    TABLE_NAME = "tb_adarea"
     advertise_t = None
 
     @classmethod
@@ -481,7 +541,6 @@ class Advertise(object):
             Column("teacher", ForeignKey("tb_teacher.id"), nullable=False, autoincrement=False),
             Column("city", Integer, nullable=False, autoincrement=False),
             Column("town", Integer, nullable=False, autoincrement=False),
-            Column("type", ARRAY(String), nullable=False, autoincrement=False),
             )
         cls.advertise_t.create(db_engine, checkfirst=True)
         return cls.advertise_t
@@ -493,19 +552,36 @@ class Advertise(object):
             "teacher": row["teacher"],
             "city": row["city"],
             "town": row["town"],
-            "type": row["type"],
             }
 
+class AdClass(object):
+    TABLE_NAME = "tb_adclass"
+    advertise_t = None
+
     @classmethod
-    def mk_dict_teacher(cls, row):
+    def create_schema(cls, db_engine, db_meta):
+        cls.advertise_t = Table(cls.TABLE_NAME, db_meta,
+            Column("id", Integer, primary_key=True, autoincrement=True),
+            Column("teacher", ForeignKey("tb_teacher.id"), nullable=False, autoincrement=False),
+            Column("address", String, nullable=False, autoincrement=False),
+            Column("type", String, nullable=False, autoincrement=False),
+            Column("date", Date, nullable=False, autoincrement=False),
+            Column("start_time", Time, nullable=False, autoincrement=False),
+            Column("end_time", Time, nullable=False, autoincrement=False),
+            Column("weekdays", ARRAY(Integer), nullable=False, autoincrement=False)
+            )
+        cls.advertise_t.create(db_engine, checkfirst=True)
+        return cls.advertise_t
+
+    @classmethod
+    def mk_dict(cls, row):
         return {
             "id": row["id"],
+            "address": row["address"],
             "type": row["type"],
-            "teacher": {
-                "name": row["name"],
-                "phone": row["phone"],
-                },
-            "city": row["city"],
-            "town": row["town"],
+            "date": row["date"].strftime("%Y 年 %m 月 %d 日"),
+            "start_time": row["start_time"].strftime("%I:%M %p"),
+            "end_time": row["end_time"].strftime("%I:%M %p"),
+            "weekdays": row["weekdays"],
             }
 

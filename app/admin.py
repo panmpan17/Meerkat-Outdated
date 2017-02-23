@@ -44,14 +44,14 @@ class AdminHandler(object):
 
     @cherrypy.expose
     def files(self, file=None):
+        classes = cherrypy.request.classes
         self.checkadmin()
 
         if cherrypy.request.method == "POST":
-            classes = cherrypy.request.classes
             os.remove(classes.get_download_path() + file)
 
         files = []
-        for *_, fs in os.walk(os.getcwd() + "/downloads"):
+        for *_, fs in os.walk(classes.get_download_path()):
             for f in fs:
                 if f.find(".") != 0:
                     files.append(f)

@@ -122,7 +122,8 @@ class App():
 
             model.Teacher,
             model.Classroom,
-            model.Advertise,
+            model.AdArea,
+            model.AdClass,
             ]
 
         sa_plugin = SAPlugin(cherrypy.engine, db_str=db_str, tables=tables)
@@ -164,7 +165,7 @@ class App():
         self.render_config["/downloads"]["tools.staticdir.root"] = path
 
         restview_config = {"/": restapi.rest_config}
-        self.mount(restapi.SessionKeyView, restview_config)
+        self.mount(restapi.SessionKeyRestView, restview_config)
         self.mount(restapi.QuestionRestView, restview_config)
         self.mount(restapi.AnswerRestView, restview_config)
         self.mount(restapi.ClassesRestView, restview_config)
@@ -172,8 +173,10 @@ class App():
         self.mount(restapi.PostRestView, restview_config)
         self.mount(restapi.OpinionRestView, restview_config)
         self.mount(restapi.TeacherRestView, restview_config)
-        self.mount(restapi.AdvertiseRestView, restview_config)
+        self.mount(restapi.AdAreaRestView, restview_config)
+        self.mount(restapi.AdClassRestView, restview_config)
         self.mount(restapi.ClassroomRestView, restview_config)
+        self.mount(restapi.FileUploadRestView, restview_config)
         
         self.mount(render.UserCaseHandler, self.render_config)
         self.mount(render.ClassHandler, self.render_config)
@@ -238,11 +241,3 @@ if __name__ == "__main__":
     if vs.euf == "/":
         vs.euf = None
     web.start(db_str, vs.path, vs.euf)
-
-
-
-
-
-
-
-

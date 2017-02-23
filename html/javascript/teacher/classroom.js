@@ -1,4 +1,5 @@
 classrooms = null;
+a2z = "abcdefghijklmnopqrstuvwxyz"
 classroom_format = `<li id="button-classroom-{1}">
 	<a onclick="changeclassroom('{1}')">{0}</a>
 </li>`
@@ -12,7 +13,19 @@ picture_fromat = `\
 	</a>
 </div>`
 project_embed_fromat = "//scratch.mit.edu/projects/embed/{0}/?autostart=false"
+project_page_format = "https://scratch.mit.edu/projects/{0}/"
 s_projct_match = null
+
+file_re = RegExp("[0-9]+_[0-9]+")
+
+p_p_f = `\
+<div>
+	<a style="cursor: pointer" onclick="show_file('/downloads/{1}/{2}')">
+		<img src="http://placehold.it/144x108/366f9e/fed958/?text={0}" style="border: 1px rgba(50, 50, 50, 0.5) solid;"/>
+	</a>
+</div>
+`
+
 function loadallclassroom() {
 	$.ajax({
 		url: host + "classroom/",
@@ -45,17 +58,25 @@ function changeclassroom(cls_id) {
 	classroom = classrooms[cls_id];
 	$("#class-name")[0].innerHTML = classroom["name"];
 	$("#student-num")[0].innerHTML = classroom["students"].length;
-	$("#classroom-type")[0].innerHTML = CLASS_TO[classroom["type"]]
+	$("#classroom-type")[0].innerHTML = CLASS_TO[classroom["type"]];
 
 	$("#porjects")[0].innerHTML = "";
+	$("#homewrok")[0].innerHTML = "";
+	$("#refreshclassroom")[0].onclick = function () {
+		changeclassroom(cls_id);
+	}
+
+	homework = new Set();
+	students_project = {};
 	if (classroom["type"].indexOf("scratch") != -1) {
 		t_l = classroom["type"].split("_")
 		s_level = a2z[t_l[1] - 1]
 
-		homework = new Set();
 		s_projct_match = RegExp("[" + s_level + s_level.toUpperCase() + "][0-9]{1,3}\-")
 		$.each(classroom["students"], function (i) {
-			loadscratchhomwork(classroom["students"][i][2])
+			loadscratchhomwork(
+				classroom["students"][i][2],
+				classroom["students"][i][0])
 		})
 
 		setTimeout(function () {
@@ -65,12 +86,128 @@ function changeclassroom(cls_id) {
 				slidesToShow: 3,
 				slidesToScroll: 3
 			});
-			console.log(Array.from(homework).sort())
+			homework = Array.from(homework).sort();
+
+			thead = "<thead><tr><th>學生 \\ 功課</th>";
+			$.each(homework, function (i) {
+				thead += "<th>" + homework[i] + "</th>"
+			})
+			thead += "</tr></thead>";
+
+			tbody = "<tbody>"
+			$.each(students_project, function (k,v) {
+				tbody += "<tr><td>" + k + "</td>"
+
+				$.each(homework, function (i) {
+					h = v[homework[i]];
+					if (h != undefined) {
+						tbody += `<td><i class="fa fa-check" aria-hidden="true"></i></td>`
+					}
+					else {
+						tbody += `<td></td>`
+					}
+				})
+
+				tbody += "</tr>"
+			})
+			tbody += "</tbody>"
+
+			t = format(`<table class="table homework">{0}{1}</table>`, thead, tbody)
+			// console.log(tbody)
+			// console.log(t)
+			$("#homewrok")[0].innerHTML = t
 		}, (600 * classroom["students"].length));
+	}
+	else if (classroom["type"].indexOf("python") != -1) {
+		$.ajax({
+			url: host + "classroom/check_folder",
+			data: {"folder": classroom["folder"]},
+			success: function (msg) {
+				files = {}
+				$.each(msg, function (i) {
+					cid_hwn = file_re.exec(msg[i])[0]
+					cid_hwn = cid_hwn.split("_")
+					cid = cid_hwn[0]
+					hwn = cid_hwn[1]
+
+					homework.add(hwn)
+					if (students_project[cid] == undefined) {
+						students_project[cid] = []
+						files[cid] = {}
+					}
+					files[cid][hwn] = msg[i]
+					students_project[cid].push(hwn)
+				})
+
+				$.each(classroom["students"], function (cid, _) {
+					if (students_project[cid] == undefined) {
+						students_project[cid] = []
+					}
+				})
+
+				homework = Array.from(homework).sort();
+
+				thead = "<thead><tr><th>學生 \\ 功課</th>";
+				$.each(homework, function (i) {
+					thead += "<th>" + homework[i] + "</th>"
+				})
+				thead += "</tr></thead>";
+
+				tbody = "<tbody>"
+				$.each(students_project, function (k,v) {
+					tbody += "<tr><td>" + classroom["students"][k] + "</td>"
+
+					v.sort()
+					$.each(homework, function (i) {
+						h = v.indexOf(homework[i])
+						if (h != -1) {
+							tbody += `<td><i class="fa fa-check" aria-hidden="true"></i></td>`
+						}
+						else {
+							tbody += `<td></td>`
+						}
+					})
+
+					projects_html = $("#porjects")[0]
+					slide = ""
+					$.each(v, function (i) {
+						if (slide == "") {
+							slide = `<section class="regular slider python">`
+						}
+						slide += format(p_p_f,
+							v[i],
+							classroom["folder"],
+							files[k][v[i]])
+					})
+					projects_html.innerHTML += "<h4>" + classroom["students"][k] + "</h4>"
+
+					if (slide != "") {
+						slide += "</section><br>"
+						projects_html.innerHTML += slide
+					}
+					tbody += "</tr>"
+				})
+				tbody += "</tbody>"
+
+				t = format(`<table class="table homework">{0}{1}</table>`, thead, tbody)
+
+				$("#homewrok")[0].innerHTML = t
+
+				setTimeout(function () {
+					$(".python").slick({
+						dots: true,
+						infinite: true,
+						slidesToShow: 4,
+						slidesToScroll: 4
+					});
+				}, 100);
+			}
+		})
+		
 	}
 }
 
-function loadscratchhomwork(student_id) {
+function loadscratchhomwork(student_id, student_name) {
 	$.ajax({
 		url: format(projects_fromat, student_id),
 		success: function (msg) {
@@ -106,13 +243,19 @@ function loadscratchhomwork(student_id) {
 				if (slide == "") {
 					slide = `<section class="regular slider scratch">`
 				}
-				slide += format(picture_fromat, projects[p[i]], p[i])
+				slide += format(picture_fromat,
+					projects[p[i]],
+					p[i])
 			})
-			projects_html.innerHTML += "<h4>" + student_id + "</h4>" 
+			projects_html.innerHTML += format(`<h4>{0} ({1})</h4>`,
+				student_name,
+				student_id)
 			if (slide != "") {
 				slide += "</section><br>"
 				projects_html.innerHTML += slide
 			}
+
+			students_project[student_name] = projects;
 		}
 	})
 }
@@ -120,5 +263,13 @@ function loadscratchhomwork(student_id) {
 function play_scratch_project(project_id) {
 	$("#scratch_project").show();
 	$("#scratch_iframe")[0].src = format(project_embed_fromat, project_id)
+
+	$("#s_project_page")[0].href = format(project_page_format, project_id)
 }
-loadallclassroom();
+
+function show_file(file) {
+	$("#scratch_project").show();
+	$("#scratch_iframe")[0].src = file
+
+	$("#s_project_page")[0].href = file
+}

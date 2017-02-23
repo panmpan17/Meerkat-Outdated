@@ -555,9 +555,9 @@ city_towns = {
 }
 
 function changecity(nolimit=false) {
-	city = document.getElementById("city").value;
+	city = $("#city")[0].value;
 	
-	towns_select = document.getElementById("towns")
+	towns_select = $("#towns")[0]
 	towns_select.innerHTML = ""
 
 	if (nolimit) {

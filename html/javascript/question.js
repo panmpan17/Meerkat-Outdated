@@ -19,7 +19,7 @@ function openask() {
 var q_type = 0;
 var select_type = "all";
 var select_values = null;
-var q_text = document.getElementById("dropdownMenu1");
+var q_text = $("#dropdownMenu1")[0];
 var q_typelist = [
 	"Scratch",
 	"Python",
@@ -185,7 +185,7 @@ function to_questions(l) {
 		`
 	}
 
-	document.getElementById("cards").innerHTML = cards;
+	$("#cards")[0].innerHTML = cards;
 }
 // 
 // SHOW SIGNLE QUESTION
@@ -226,10 +226,10 @@ function getanswer(qid) {
 
 			}
 			answers += "<hr>"
-			document.getElementById("answers").innerHTML = answers;
+			$("#answers")[0].innerHTML = answers;
 		},
 		error: function (msg) {
-			document.getElementById("answers").innerHTML = "<hr /> 目前沒有解答 <hr />";
+			$("#answers")[0].innerHTML = "<hr /> 目前沒有解答 <hr />";
 			// NO ANSWER
 		}
 	})
@@ -242,9 +242,9 @@ function showquestion(qid) {
 		type: "GET",
 		data: string_param,
 		success: function (msg) {
-			document.getElementById("answer-content").value = "";
-			document.getElementById("content").innerHTML = msg["content"].replace(/\n/g, "<br>");
-			document.getElementById("type").innerHTML = q_typelist[msg["type"]];
+			$("#answer-content")[0].value = "";
+			$("#content")[0].innerHTML = msg["content"].replace(/\n/g, "<br>");
+			$("#type")[0].innerHTML = q_typelist[msg["type"]];
 
 			a = "<div id=\"solved\" style=\"background-color:"
 			if (msg["solved"]) {
@@ -254,23 +254,23 @@ function showquestion(qid) {
 					a += "Crimson";
 			}
 			a += "\"></div> " + msg["title"];
-			document.getElementById("title").innerHTML = a;
-			document.getElementById("create_at").innerHTML = msg["create_at"];
-			document.getElementById("question-writer").innerHTML = msg["writer"];
+			$("#title")[0].innerHTML = a;
+			$("#create_at")[0].innerHTML = msg["create_at"];
+			$("#question-writer")[0].innerHTML = msg["writer"];
 			
 			if (getCookie("id") != msg["writer_id"]) {
-				document.getElementById("closequestion").disabled = true;
-				document.getElementById("closequestion").onclick = null;
+				$("#closequestion")[0].disabled = true;
+				$("#closequestion")[0].onclick = null;
 			}
 			else {
 				document.getElementById("closequestion").disabled = false;
 				if (msg["solved"]) {
-					document.getElementById("closequestion").onclick = function () {closequestion("False")};
-					document.getElementById("closequestion").innerHTML = "開啟問題";
+					$("#closequestion")[0].onclick = function () {closequestion("False")};
+					$("#closequestion")[0].innerHTML = "開啟問題";
 				}
 				else {
-					document.getElementById("closequestion").onclick = function () {closequestion("True")};
-					document.getElementById("closequestion").innerHTML = "關閉問題";
+					$("#closequestion")[0].onclick = function () {closequestion("True")};
+					$("#closequestion")[0].innerHTML = "關閉問題";
 				}
 			}
 			if (msg["solved"]) {
@@ -291,10 +291,10 @@ function showquestion(qid) {
 						file_display += format(file_format, msg["file3"], "3", changefilename(msg["file3"]))
 					}
 				}
-				document.getElementById("files").innerHTML = file_display;
+				$("#files")[0].innerHTML = file_display;
 			}
 			else {
-				document.getElementById("files").innerHTML = "沒有檔案";
+				$("#files")[0].innerHTML = "沒有檔案";
 			}
 
 			getanswer(qid);
@@ -338,7 +338,7 @@ function closequestion (v) {
 }
 
 function answer() {
-	content = document.getElementById("answer-content").value;
+	content = $("#answer-content")[0].value;
 
 	if (content) {
 		key = getCookie("key");
@@ -355,15 +355,15 @@ function answer() {
 			data: JSON.stringify({key: key,answer_json: json}),
 			contentType: "application/json; charset=utf-8",
 			success: function (msg) {
-				f1 = document.getElementById("f1-a").files[0]
-				f2 = document.getElementById("f2-a").files[0]
-				f3 = document.getElementById("f3-a").files[0]
+				f1 = $("#f1-a")[0].files[0]
+				f2 = $("#f2-a")[0].files[0]
+				f3 = $("#f3-a")[0].files[0]
 				if ((f1 != undefined) || (f2 != undefined) || (f3 != undefined)) {
-					document.getElementById("answerkey").value = msg["answer_id"]
-					document.getElementById("answerform").submit()
+					$("#answerkey")[0].value = msg["answer_id"]
+					$("#answerform")[0].submit()
 				}
 				else {
-					document.getElementsByName("ask-content").value = "";
+					$("[name=ask-content]").value = "";
 					showquestion(question_id)
 				}
 			},
@@ -382,10 +382,10 @@ function answer() {
 }
 
 function ask() {
-	errormsg = document.getElementById("ask-errormsg");
+	errormsg = $("#ask-errormsg")[0];
 
-	title = document.getElementById("ask-title").value
-	content = document.getElementById("ask-content").value;
+	title = $("#ask-title")[0].value
+	content = $("#ask-content")[0].value;
 	if (title && content) {
 		key = getCookie("key");
 		uid = getCookie("id");
@@ -402,19 +402,19 @@ function ask() {
 			data: JSON.stringify({key: key,question_json: json}),
 			contentType: "application/json; charset=utf-8",
 			success: function (msg) {
-				f1 = document.getElementById("f1-q").files[0]
-				f2 = document.getElementById("f2-q").files[0]
-				f3 = document.getElementById("f3-q").files[0]
+				f1 = $("#f1-q")[0].files[0];
+				f2 = $("#f2-q")[0].files[0];
+				f3 = $("#f3-q")[0].files[0];
 				if ((f1 != undefined) || (f2 != undefined) || (f3 != undefined)) {
-					document.getElementById("questionkey").value = msg["question_id"]
-					document.getElementById("questionform").submit()
+					$("#questionkey")[0].value = msg["question_id"];
+					$("#questionform")[0].submit();
 				}
 				else {
-					document.getElementById("ask-title").value = "";
-					document.getElementById("ask-content").value = "";
-					hide("ask-frame")
-					openquestion(msg["question_id"])
-					getallquestion(select_type, select_values)
+					$("#ask-title")[0].value = "";
+					$("#ask-content")[0].value = "";
+					hide("ask-frame");
+					openquestion(msg["question_id"]);
+					getallquestion(select_type, select_values);
 				}
 			},
 			error: function (msg) {
@@ -443,12 +443,12 @@ function getallquestion(t, v) {
 
 	select_values = v
 	if (select_values == "True") {
-		document.getElementsByClassName("active")[0].classList.remove("active");
-		document.getElementById("solved").classList.add("active")
+		$(".active")[0].classList.remove("active");
+		$("#solved")[0].classList.add("active")
 	}
 	if (select_values == "False") {
-		document.getElementsByClassName("active")[0].classList.remove("active");
-		document.getElementById("unsolved").classList.add("active")
+		$(".active")[0].classList.remove("active");
+		$("#unsolved")[0].classList.add("active")
 	}
 
 	if (select_type != t) {
@@ -456,12 +456,12 @@ function getallquestion(t, v) {
 		select_type = t;
 
 		if ((t != "solved") && (t != "answer")) {
-			document.getElementsByClassName("active")[0].classList.remove("active");
-			document.getElementById(t).classList.add("active")
+			$(".active")[0].classList.remove("active");
+			$("#" + t)[0].classList.add("active")
 		}
 	}
 
-	document.getElementById("cards").innerHTML = '<span style="font-size:48px;color:#aaa">請稍等</span>';
+	$("#cards")[0].innerHTML = '<span style="font-size:48px;color:#aaa">請稍等</span>';
 	string_param = {"page": page - 1}
 	string_param[t] = select_values
 	$.ajax({
@@ -473,8 +473,8 @@ function getallquestion(t, v) {
 			page_limit = msg["pages"]
 
 			if (t == "answer") {
-				document.getElementsByClassName("active")[0].classList.remove("active");
-				document.getElementById(t).classList.add("active")
+				$(".active")[0].classList.remove("active");
+				$("#" + t)[0].classList.add("active")
 			}
 		},
 		error: function (msg) {
@@ -491,12 +491,12 @@ function getallquestion(t, v) {
 function addfilter(t, v) {
 	if (v == null) {
 		delete filter[t]
-		document.getElementById("type-filter").innerHTML = "問題種類"
+		$("type-filter").innerHTML = "問題種類"
 		getallquestion(select_type, select_values);
 		return;
 	}
 	if (t == "type") {
-		document.getElementById("type-filter").innerHTML = "問題種類 - " + q_typelist[v]
+		$("#type-filter")[0].innerHTML = "問題種類 - " + q_typelist[v]
 	}
 	filter[t] = v
 	getallquestion(select_type, select_values);

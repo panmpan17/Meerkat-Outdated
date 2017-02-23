@@ -62,8 +62,8 @@
 {% block script %}
 <script>
 function deletefile(filename) {
-	document.getElementById("file").value = filename;
-	document.getElementById("form").submit();
+	$("#file")[0].value = filename;
+	$("#form")[0].submit();
 }
 </script>
 {% endblock %}

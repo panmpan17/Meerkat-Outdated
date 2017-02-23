@@ -17,9 +17,6 @@ var class_ = null;
 var lesson = 0
 var video = 0
 
-//  onmouseover="\
-// document.getElementById('classname').innerHTML\
-//  = '{2}';show('classname');" onmouseout="hide('classname');"\
 var classblock = `<div class="class_block"\
  style="width:{0}%" onclick="video_jump({3})">{1}<div id="answer" style="display: {4}"></div></div>`;
 
@@ -69,14 +66,14 @@ function display_description() {
 		return ;
 	}
 
-	document.getElementById("a").innerHTML = "";
-	document.getElementById("lesson-dropdown").innerHTML = `課程介紹 <i class="fa fa-sort-asc" aria-hidden="true"></i>`
-	document.getElementById("buttons").innerHTML = ""
+	$("#a")[0].innerHTML = "";
+	$("#lesson-dropdown")[0].innerHTML = `課程介紹 <i class="fa fa-sort-asc" aria-hidden="true"></i>`
+	$("#buttons")[0].innerHTML = ""
 	lesson = -1
 
 	a = format(videoblock, class_["description-video"])
-	document.getElementById("video").innerHTML = a;
-	document.getElementById("classname-now").innerHTML = "";
+	$("#video")[0].innerHTML = a;
+	$("#classname-now")[0].innerHTML = "";
 }
 
 function display_lessons() {
@@ -97,7 +94,7 @@ function display_lessons() {
 		}
 		b += format(lessonblock, i, "課程" + (i + 1));
 	}
-	document.getElementById("lessons").innerHTML = b;
+	$("#lessons")[0].innerHTML = b;
 }
 
 function display_lesson() {
@@ -112,19 +109,19 @@ function display_lesson() {
 		}
 		b += format(classblock, oneblock, i + 1, l[i]["class_name"], i, "none");
 	}
-	document.getElementById("a").innerHTML = b;
+	$("#a")[0].innerHTML = b;
 	if (class_.hasOwnProperty("titles")){
 		if (class_["titles"][lesson] != undefined) {
-			document.getElementById("lesson-dropdown").innerHTML = class_["titles"][lesson] +
+			$("#lesson-dropdown")[0].innerHTML = class_["titles"][lesson] +
 				` <i class="fa fa-sort-asc" aria-hidden="true"></i>`
 		}
 		else {
-			document.getElementById("lesson-dropdown").innerHTML = "課程" + (lesson + 1) +
+			$("#lesson-dropdown")[0].innerHTML = "課程" + (lesson + 1) +
 				` <i class="fa fa-sort-asc" aria-hidden="true"></i>`
 		}
 	}
 	else {
-		document.getElementById("lesson-dropdown").innerHTML = "課程" + (lesson + 1) +
+		$("#lesson-dropdown")[0].innerHTML = "課程" + (lesson + 1) +
 			` <i class="fa fa-sort-asc" aria-hidden="true"></i>`
 	}
 
@@ -144,15 +141,15 @@ function display_video() {
 		}
 	}
 
-	document.getElementById("video").innerHTML = a;
-	document.getElementById("classname-now").innerHTML = classvideo["class_name"];
+	$("#video")[0].innerHTML = a;
+	$("#classname-now")[0].innerHTML = classvideo["class_name"];
 
 	buttons = ""
 	button = classvideo["buttons"]
 	for (i=0; i<button.length; i++) {
 		buttons += format(buttonblock, button[i][0], button[i][1])
 	}
-	document.getElementById("buttons").innerHTML = buttons
+	$("#buttons")[0].innerHTML = buttons
 }
 
 function video_jump(classnumber) {
@@ -187,13 +184,6 @@ function showanswer(classnumber) {
 
 	a += format(questionblock, video)
 
-	document.getElementById("video").innerHTML = a;
-	document.getElementById("classname-now").innerHTML = class_["info"][lesson][video]["class_name"] + " 解答";
-
-	// buttons = ""
-	// button = class_["info"][lesson][video]["buttons"]
-	// for (i=0; i<button.length; i++) {
-	// 	buttons += format(buttonblock, button[i][0], button[i][1])
-	// }
-	// document.getElementById("buttons").innerHTML = buttons
+	$("#video")[0].innerHTML = a;
+	$("#classname-now")[0].innerHTML = class_["info"][lesson][video]["class_name"] + " 解答";
 }

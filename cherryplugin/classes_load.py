@@ -48,7 +48,6 @@ class ClassesPlugin(plugins.SimplePlugin):
 				"time": self.classes[c]["time"],
 				"price": self.classes[c]["price"],
 				"summary": self.classes[c]["summary"],
-				"image": self.classes[c]["image"],
 				"description": self.classes[c]["description"],
 				"id": self.classes[c]["id"],
 				}

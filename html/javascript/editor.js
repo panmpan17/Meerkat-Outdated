@@ -109,7 +109,7 @@ function loadnews() {
 				for (i = 0; i < posts.length; i++) {
 					news += format(news_format, posts[i]["content"], posts[i]["id"])
 				}
-				document.getElementById("posts").innerHTML = news;
+				$("#posts")[0].innerHTML = news;
 			}
 		}
 	})

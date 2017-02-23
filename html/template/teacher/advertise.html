@@ -2,29 +2,48 @@
 {% block title %}廣告{% endblock %}
 {% block css %}
 <style>
-	table#advertisetable {
+	#advertisetable,
+	#adclasstable {
 		width: 100%;
 	}
 
 	#advertisetable td,
-	#advertisetable th {
+	#advertisetable th,
+	#adclasstable td,
+	#adclasstable th {
 		border: 1px solid #dddddd;
 		text-align: left;
 		padding: 8px;
 		font-size: 18px;
 	}
 
-	#advertisetable tr {
+	#advertisetable thead tr,
+	#adclasstable thead tr {
 		background-color: white;
 	}
 
-	#advertisetable > tbody > tr:nth-child(even) {
+
+	#advertisetable tbody tr:nth-child(even),
+	#adclasstable tbody tr:nth-child(even) {
 		background-color: #F39C12;
 	}
-	#advertisetable > tbody > tr:nth-child(odd) {
+	#advertisetable tbody tr:nth-child(odd),
+	#adclasstable tbody tr:nth-child(odd) {
 		background-color: #F1C40F;
 	}
+
+
+	#advertisetable tbody tr:hover:nth-child(even) {
+		background-color: #e2900d;
+		cursor: pointer;
+	}
+
+	#advertisetable tbody tr:hover:nth-child(odd) {
+		background-color: #dbb20f;
+		cursor: pointer;
+	}
 </style>
+<link rel="stylesheet" href="html/css/datepicker.css">
 {% endblock %}
 {% block content %}
 	<br><br><br>
@@ -58,16 +77,6 @@
 					<option value="連江縣">連江縣</option>
 				</select>
 				<br>
-				<select id="class" class="form-control">
-					<option value="" selected>所有的課程</option>
-					<option value="python_01">Python 初級</option>
-					<option value="scratch_1">Scratch 初級</option>
-					<option value="hourofcode">Hour of Code</option>
-					<option value="teacher_1">教師訓練</option>
-				</select>
-				<br>
-			</div>
-			<div class="col-lg-4 col-md-5 col-sm-6">
 				<select id="towns" class="form-control">
 					<option value="" selected>全縣市</option>
 					<option value="中正區">中正區</option>
@@ -83,7 +92,28 @@
 					<option value="南港區">南港區</option>
 					<option value="文山區">文山區</option>
 				</select>
-				<br><br>
+				<br>
+			</div>
+			<div class="col-lg-4 col-md-5 col-sm-6">
+				<select id="classtype" class="form-control">
+					<option value="" selected>所有的課程</option>
+					<option value="python_01">Python 初級</option>
+					<option value="scratch_1">Scratch 初級</option>
+					<option value="hourofcode">Hour of Code</option>
+					<option value="teacher_1">教師訓練</option>
+				</select>
+				<br>
+				<div class="date-picker" style="float: left;">
+					<div class="input">
+						<div class="result">上課日期: <span id="classdate"></span></div>
+						<button><i class="fa fa-calendar"></i></button>
+					</div>
+					<div class="calendar"></div>
+				</div>
+				<div class="date-picker-cancel" onclick="$('#classdate')[0].textContent = ''">
+					<i class="fa fa-ban" aria-hidden="true"></i>
+				</div>
+				<br>
 			</div>
 		</div>
 		<div class="row">
@@ -101,18 +131,40 @@
 				<table id="advertisetable">
 					<thead>
 						<tr>
-							<th>縣市</th>
-							<th>鄉鎮市區</th>
-							<th>課程種類</th>
 							<th>老師</th>
 							<th>電話</th>
+							<th>地區</th>
+							<th>簡介</th>
 						</tr>
 					</thead>
-					<tbody id="tadvertise"></tbody>
+					<tbody id="teachers"></tbody>
 				</table>
 			</div>
 		</div>
 	</div>
+{% endblock %}
+{% block bcontent %}
+<div id="adclass-frame" class="loginsignup-frame" hidden>
+	<div class="loginsignup-frame-inside">
+		<a id="closeloginframe" onclick="hide('adclass-frame');" style="">X</a>
+		<br>
+		<div class="frame-content" style="padding-top: 0%;">
+			<table id="adclasstable">
+				<thead>
+					<tr>
+						<th>地址</th>
+						<th>課程種類</th>
+						<th>開課日期</th>
+						<th>上課時間</th>
+						<th>下課時間</th>
+						<th>上課日</th>
+					</tr>
+				</thead>
+				<tbody id="adclasses"></tbody>
+			</table>
+		</div>
+	</div>
+</div>
 {% endblock %}
 {% block script %}
 	<script src="html/javascript/taiwan_town.js"></script>
@@ -126,19 +178,49 @@
 		}
 
 		advertise_format = `
-		<tr>
-		<td>{0}</td>
-		<td>{1}</td>
-		<td>{2}</td>
-		<td>{3}</td>
-		<td>{4}</td>
+		<tr id="teacher-{5}" onclick="showadclass({5})">
+			<td>{0}</td> <!-- Name -->
+			<td>{1}</td> <!-- Phone -->
+			<td>{2} {3}</td> <!-- City Town -->
+			<td>{4}</td>
 		</tr>
 		`
 
+		adclass_format = `
+		<tr>
+			<td>{0}</td>
+			<td>{1}</td>
+			<td>{2}</td>
+			<td>{3}</td>
+			<td>{4}</td>
+			<td>{5}</td>
+		</tr>
+		`
+
+		chinese_weekday = [
+			"",
+			"一",
+			"二",
+			"三",
+			"四",
+			"五",
+			"六",
+			"日",
+		]
+
+		CLASS_TO = {
+			"python_01": "Python 初級",
+			"scratch_1": "Scratch 初級",
+			"hourofcode": "Hour of Code",
+			"teacher_1": "教師訓練",
+		}
+
+		ads = {}
 		function loadadverise() {
 			c = $("#city")[0].value
 			t = $("#towns")[0].value
-			cl = $("#class")[0].value
+			classtype = $("#classtype")[0].value;
+			date = $("#classdate")[0].textContent;
 
 			json = {};
 			if (c !== "") {
@@ -149,36 +231,83 @@
 				c = cities.indexOf(c);
 				json["city"] = c;
 			}
-			if (cl != "") {
-				json["class"] = cl;
+			if (classtype != "") {
+				json["type"] = classtype;
+			}
+			if (date != "") {
+				json["date"] = date;
 			}
 
+
 			$.ajax({
-				url: host + "advertise/",
+				url: host + "adarea/",
 				type: "GET",
 				data: json,
-				success: function (advertises) {
-					$("#tadvertise")[0].innerHTML = "";
-					for (a=0;a<advertises.length;a++) {
-						city = cities[advertises[a]["city"]]
-						town = city_towns[city][advertises[a]["town"]]
+				success: function (teachers) {
+					teachers_table = $("#teachers")[0]
 
-						types = [];
-						for (i=0;i<advertises[a]["type"].length;i++) {
-							types.push(CLASS_TO[advertises[a]["type"][i]])
+					ads = {}
+					teachers_table.innerHTML = "";
+					$.each(teachers, function (i) {
+						if ($("#teacher-" + teachers[i]["id"])[0] == undefined) {
+							t = city_towns[cities[teachers[i]["city"]]][teachers[i]["town"]]
+							c = cities[teachers[i]["city"]]
+
+							summary = teachers[i]["summary"]
+							if (summary == "" || summary == null) {
+								summary = "沒有自我介紹"
+							}
+							teachers_table.innerHTML += format(advertise_format,
+								teachers[i]["name"],
+								teachers[i]["phone"],
+								c,
+								t,
+								summary.replace(/\n/g, "<br>"),
+								teachers[i]["id"])
+
+							ads[teachers[i]["id"]] = []
 						}
-						
-						$("#tadvertise")[0].innerHTML += format(
-							advertise_format,
-							city,
-							town,
-							types,
-							advertises[a]["teacher"]["name"],
-							advertises[a]["teacher"]["phone"]);
-					}
+
+						ads[teachers[i]["id"]].push({
+							"address": teachers[i]["address"],
+							"type": teachers[i]["type"],
+							"date": teachers[i]["date"],
+							"start_time": teachers[i]["start_time"],
+							"end_time": teachers[i]["end_time"],
+							"weekdays": teachers[i]["weekdays"],
+							})
+					})
 				}
 			});
 		}
+
+		function showadclass(tid) {
+			show("adclass-frame");
+
+			$("#adclasses")[0].innerHTML = ""
+			$.each(ads[tid], function (a) {
+				c_weekdays = []
+				$.each(ads[tid][a]["weekdays"], function (i) {
+					c_weekdays.push(
+						chinese_weekday[
+							ads[tid][a]["weekdays"][i]
+							])
+				})
+
+				$("#adclasses")[0].innerHTML += format(
+					adclass_format,
+					ads[tid][a]["address"],
+					CLASS_TO[ads[tid][a]["type"]],
+					ads[tid][a]["date"],
+					ads[tid][a]["start_time"],
+					ads[tid][a]["end_time"],
+					c_weekdays,
+					ads[tid][a]["id"]);
+			})
+		}
+
 		loadadverise()
 	</script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+	<script src="/html/javascript/datepicker.js"></script>
 {% endblock %}

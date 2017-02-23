@@ -8,9 +8,12 @@
 	<script src="/html/javascript/sha256.js"></script>
 	<script src='https://www.google.com/recaptcha/api.js'></script>
 	<script src="/html/bootstrap/js/bootstrap.js"></script>
+	<script src="html/slick/slick.js" type="text/javascript" charset="utf-8"></script>
 
 	<link href="/html/bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+	<link rel="stylesheet" href="html/slick/slick.css">
+	<link rel="stylesheet" href="html/slick/slick-theme.css">
 	<!-- my js css -->
 	<script src="/html/javascript/loginsignupframe.js"></script>
 	<script src="/html/javascript/base.js"></script>
@@ -41,6 +44,7 @@
 			<div class="dropdown">
 				<div id="accountmenu">
 					<a onclick="showinfo();">帳號資訊</a>
+					<a onclick="showclassroom();">參加課程</a>
 					<a onclick="logout();">登出</a>
 				</div>
 			</div>
@@ -56,7 +60,7 @@
 			<li class="navtext"><a class="btn-large" href="#" onclick="toggle('linksmenu')"><i class="fa fa-bars" aria-hidden="true"></i></a></li>
 		</ul>
 		<div class="dropdown">
-			<div id="linksmenu">
+			<div id="linksmenu" hidden>
 				<a href="/about"> 關於 Kids Coding Studio </a>
 				<a href="/resource"> 教學資源 </a>
 				<!-- <a> Kids Coding Studio 的使命 </a> -->
@@ -71,7 +75,7 @@
 		</div>
 	</div>
 	<!-- login frame -->
-	<div id="login-frame" class="loginsignup-frame">
+	<div id="login-frame" class="loginsignup-frame" hidden>
 		<div class="loginsignup-frame-inside">
 			<a id="closeloginframe" onclick="hide('login-frame');" style="">X</a><br>
 			<div class="frame-content">
@@ -89,13 +93,13 @@
 		</div>
 	</div>
 	<!-- signup frame -->
-	<div id="signup-frame" class="loginsignup-frame">
+	<div id="signup-frame" class="loginsignup-frame" hidden>
 		<div class="loginsignup-frame-inside">
 			<a id="closeloginframe" onclick="hide('signup-frame');" style="">X</a><br>
 			<div class="frame-content" style="padding-top: 5%;">
 				<center>
-					<input placeholder="帳號 8-16 (英文字母, 數字)" name="signup-userid" type="text"><br><br>
-					<input placeholder="密碼 8-16 (英文字母, 數字)" name="signup-password" type="password"><br><br>
+					<input placeholder="帳號 8-16 (英文字母, 數字, @.)" name="signup-userid" type="text"><br><br>
+					<input placeholder="密碼 8-16 (英文字母, 數字, @.)" name="signup-password" type="password"><br><br>
 					<input placeholder="確認密碼" name="signup-repassword" type="password"><br><br>
 					<input placeholder="Email" name="signup-email" type="text"><br><br>
 					<input placeholder="暱稱 (請勿用真實姓名)" name="signup-nickname" type="text"><br><br>
@@ -112,7 +116,7 @@
 		</div>
 	</div>
 	<!-- info frame -->
-	<div id="info-frame" class="loginsignup-frame">
+	<div id="info-frame" class="loginsignup-frame" hidden>
 		<div class="loginsignup-frame-inside">
 			<a id="closeloginframe" onclick="hide('info-frame');" style="">X</a>
 			<br>
@@ -127,7 +131,7 @@
 						<td>
 							<input type="password" id="change_password" placeholder="舊密碼">
 							<br>
-							<input type="password" id="change_newpassword" placeholder="新密碼">
+							<input type="password" id="change_newpassword" placeholder="新密碼 8-16 (英文字母, 數字, @.)">
 							<br>
 							<input type="password" id="change_check_password" placeholder="新密碼確認">
 							<br>
@@ -172,8 +176,8 @@
 			</div>
 		</div>
 	</div>
-	<!-- info frame -->
-	<div id="opinion-frame" class="loginsignup-frame">
+	<!-- opinion frame -->
+	<div id="opinion-frame" class="loginsignup-frame" hidden>
 		<div class="loginsignup-frame-inside">
 			<a id="closeloginframe" onclick="hide('opinion-frame');" style="">X</a>
 			<br>
@@ -188,26 +192,54 @@
 			</div>
 		</div>
 	</div>
+	<!-- classroom frame -->
+	<div id="classroom-frame" class="loginsignup-frame" hidden>
+		<div class="loginsignup-frame-inside">
+			<a id="closeloginframe" onclick="hide('classroom-frame');" style="">X</a>
+			<br>
+			<div class="frame-content" style="padding-top: 0%;">
+				<center id="classroom-homework"></center>
+			</div>
+		</div>
+	</div>
+	<!-- how to upload homework frame -->
+	<div id="howuploadhomework-frame" class="loginsignup-frame" hidden>
+		<div class="loginsignup-frame-inside">
+			<a id="closeloginframe" onclick="hide('howuploadhomework-frame');" style="">X</a>
+			<br>
+			<div class="frame-content" style="padding-top: 0%;">
+				<div class="howtoupload text-center" id="howtoupload-scratch_1">
+					<img src="html/images/howtoupload-scratch.png" alt="">
+				</div>
+				<div class="howtoupload text-center" id="howtoupload-python_01">
+					a
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="scratch_project" hidden>
+		<div style="position:fixed;top:5;left:5;color:white;cursor:pointer;font-size: 30px;" onclick="$('#scratch_project').hide();$('#scratch_iframe')[0].src=''">X</div>
+		<iframe id="scratch_iframe" allowtransparency="true" width="600" height="500" src="" frameborder="0" style="margin-top: 100px;background: white;overflow-y: scroll;"></iframe>
+		<a target="_blank" id="s_project_page"><span class="spanbutton">看程式</span></a>
+	</div>
 	{% block bcontent %}
 	{% endblock %}
 	<script>
 function show(eid) {
-	// $(eid).show();
-	document.getElementById(eid).classList.add("show");
+	$("#" + eid).show();
 }
 
 function hide(eid) {
-	// $(eid).hide();
-	document.getElementById(eid).classList.remove("show");
+	$("#" + eid).hide();
 }
 
 function toggle(eid) {
-	// 
-	document.getElementById(eid).classList.toggle("show");
+	$("#" + eid).toggle()
 }
 
 if (getCookie("userid") !== "") {
-	document.getElementById('account-logo').innerHTML = getCookie("userid");
+	$("#account-logo")[0].innerHTML = getCookie("userid");
 }
 
 opinion_fmt = `
@@ -217,7 +249,7 @@ opinion_fmt = `
 `
 
 function sendopinion() {
-	c = document.getElementById("opinion");
+	c = $("#opinion")[0];
 	if (c.value == "") {
 		alert("請不要留空")
 		return ;
@@ -234,7 +266,7 @@ function sendopinion() {
 		data: JSON.stringify(j),
 		contentType: "application/json; charset=utf-8",
 		success: function (msg) {
-			document.getElementById("opinion").value = "";
+			$("#opinion")[0].value = "";
 			hide("opinion-frame");
 			alert("謝謝你填寫意見!!");
 		},
@@ -259,7 +291,7 @@ function openopinion() {
 				for (i = 0; i < msg.length; i++) {
 					a += format(opinion_fmt, msg[i]["content"].replace(/\n/g, "<br>"), msg[i]["writer"], msg[i]["create_at"])
 				}
-				document.getElementById("opinions").innerHTML = a
+				$("#opinions")[0].innerHTML = a
 			}
 
 		})

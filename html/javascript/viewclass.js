@@ -4,18 +4,18 @@ card_format = `
     <div class="classview-card">
       <center>
         <div class="col-sm-4 col-xs-12">
-          <img src="/html/images/{1}" class="card-image" />
+          <img src="/html/images/class/{0}.png" class="card-image" />
         </div>
         <div class="col-sm-8 col-xs-12">
             <div class="title">
-              {2}
-              <span id="time">{3}</span>
+              {1}
+              <span id="time">{2}</span>
             </div>
             <div class="describe">
-              {4}
+              {3}
             </div>
             <span id="price">
-              {5}
+              {4}
             </span>
         </div>
       </center>
@@ -24,7 +24,7 @@ card_format = `
 </div>`
 
 describe_format = `
-<div id="{0}-frame" class="loginsignup-frame">
+<div hidden id="{0}-frame" class="loginsignup-frame">
   <div class="loginsignup-frame-inside">
     <a id="closeloginframe" onclick="hide('{0}-frame');" style="">X</a>
     <br>
@@ -42,7 +42,7 @@ describe_format = `
 </div>`
 
 function goclass(id) {
-  a = document.getElementById(id + "-frame");
+  a = $("#" + id + "-frame")[0];
   if (a != undefined) {
     show(id + "-frame")
   }
@@ -96,14 +96,20 @@ $.ajax({
       else if (msg[i]["price"] == -1) {
         price = "只提供實體課程"
       }
-      cardstext += format(card_format, msg[i]["id"], msg[i]["image"],
-        msg[i]["subject"], msg[i]["time"], msg[i]["summary"], price)
+      cardstext += format(card_format,
+        msg[i]["id"],
+        msg[i]["subject"],
+        msg[i]["time"],
+        msg[i]["summary"],
+        price)
 
       if (msg[i]["description"] != "") {
-        document.getElementById("describes").innerHTML += format(describe_format,
-          msg[i]["id"], msg[i]["description"], msg[i]["price"])
+        $("#describes")[0].innerHTML += format(describe_format,
+          msg[i]["id"],
+          msg[i]["description"],
+          msg[i]["price"])
       }
     }
-    document.getElementById("cards").innerHTML = cardstext
+    $("#cards")[0].innerHTML = cardstext
   }
 })

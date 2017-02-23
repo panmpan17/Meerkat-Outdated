@@ -162,7 +162,7 @@
 	{% endif %}
 	<script>
 		var host = window.location.host + "/rest/1/"
-		var player = document.getElementById("player");
+		var player = $("#player")[0];
 
 		var fadeTime;
 		var over = false;
@@ -254,7 +254,7 @@
 				$("#player").css("cursor", "pointer");
 				clearTimeout(fadeTime);
 				{% if next %}
-					document.getElementById("next").classList.add("show")
+					$("#next")[0].classList.add("show")
 				{% endif %}
 			}
 		}
@@ -285,7 +285,7 @@
 			$("#player").css("cursor", "none");
 			$("#playpause").attr("class", "fa fa-pause");
 			player.play();
-			document.getElementById("next").classList.remove("show")
+			$("#next")[0].classList.remove("show")
 		}
 
 		{% if next %}

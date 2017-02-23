@@ -1,7 +1,6 @@
 {'description': '',
  'description-video': '',
  'id': 'teacher_1',
- 'image': 'class_python.png',
  'info': [[{'answer': '',
             'buttons': [],
             'class_name': '課程介紹',

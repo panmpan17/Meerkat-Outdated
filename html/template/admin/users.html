@@ -94,7 +94,7 @@
 </div>
 {% endblock %}
 {% block bcontent %}
-<div id="userinfo-frame" class="loginsignup-frame">
+<div id="userinfo-frame" class="loginsignup-frame" hidden>
 	<div class="loginsignup-frame-inside">
 		<a id="closeloginframe" onclick="hide('userinfo-frame');" style="">X</a>
 		<br>
@@ -174,7 +174,7 @@ user_format = `\
 </tr>\
 `
 
-var users_table = document.getElementById("users")
+var users_table = $("#users")[0]
 var alphatable = "abcdefghijklmnopqrstuvwxyz0123456789"
 
 function loaduser(alpha) {
@@ -205,27 +205,26 @@ function showdetail(uid) {
 		data: {"key": getCookie("key"), "id": uid},
 		success: function (msg) {
 			show('userinfo-frame');
-			document.getElementById("userinfo-id").innerHTML = msg["id"];
-			document.getElementById("userinfo-userid").innerHTML = msg["userid"];
-			document.getElementById("userinfo-point").innerHTML = msg["point"];
-			document.getElementById("userinfo-nick").innerHTML = msg["nickname"];
-			document.getElementById("userinfo-email").innerHTML = msg["email"];
-			document.getElementById("userinfo-birth").innerHTML = msg["birth_year"];
-			document.getElementById("userinfo-createat").innerHTML = msg["create_at"];
-			document.getElementById("userinfo-job").innerHTML = msg["job"];
-			document.getElementById("userinfo-admin").innerHTML = msg["admin"];
-			document.getElementById("userinfo-active").innerHTML = msg["active"]
+			$("#userinfo-id")[0].innerHTML = msg["id"];
+			$("#userinfo-userid")[0].innerHTML = msg["userid"];
+			$("#userinfo-point")[0].innerHTML = msg["point"];
+			$("#userinfo-nick")[0].innerHTML = msg["nickname"];
+			$("#userinfo-email")[0].innerHTML = msg["email"];
+			$("#userinfo-birth")[0].innerHTML = msg["birth_year"];
+			$("#userinfo-createat")[0].innerHTML = msg["create_at"];
+			$("#userinfo-job")[0].innerHTML = msg["job"];
+			$("#userinfo-admin")[0].innerHTML = msg["admin"];
+			$("#userinfo-active")[0].innerHTML = msg["active"]
 
-			document.getElementById("userinfo-level").innerHTML = "一般";
+			$("#userinfo-level")[0].innerHTML = "一般";
 			point = msg["point"];
-			if (point > 200) {document.getElementById("userinfo-level").innerHTML = "鑽石"}
-			else if (point > 100) {document.getElementById("userinfo-level").innerHTML = "白金"}
-			else if (point > 20) {document.getElementById("userinfo-level").innerHTML = "黃金"}
+			if (point > 200) {$("#userinfo-level")[0].innerHTML = "鑽石"}
+			else if (point > 100) {$("#userinfo-level")[0].innerHTML = "白金"}
+			else if (point > 20) {$("#userinfo-level")[0].innerHTML = "黃金"}
 
 			if (msg["disabled"]) {
 				$("#undisable").show();
 				$("#disable").hide();
-
 
 				$("#undisable")[0].onclick = function () {
 					disableuser(msg["id"], false)
@@ -243,12 +242,14 @@ function showdetail(uid) {
 			for (i=0;i<paid_class.length;i++) {
 				classid = paid_class[i]
 				if (classid in msg){
-					document.getElementById(classid).checked = true;
-					document.getElementById(classid).onclick = function () {openclass(classid, msg["id"], "False")}
+					$("#" + classid)[0].checked = true;
+					$("#" + classid)[0].onclick = function () {
+						openclass(classid, msg["id"], "False")}
 				}
 				else {
-					document.getElementById(classid).checked = false;
-					document.getElementById(classid).onclick = function () {openclass(classid, msg["id"], "True")}
+					$("#" + classid)[0].checked = false;
+					$("#" + classid)[0].onclick = function () {
+						openclass(classid, msg["id"], "True")}
 				}
 			}
 		}
@@ -265,7 +266,7 @@ function openclass(classid, uid, open_close) {
 			data: JSON.stringify(j),
 			contentType: "application/json; charset=utf-8",
 			success: function (msg) {
-				document.getElementById(classid).onclick = function () {openclass(classid, uid, !open_close)}
+				$("#" + classid)[0].onclick = function () {openclass(classid, uid, !open_close)}
 			},
 			error: function (error) {
 				console.log(error)
@@ -279,14 +280,14 @@ function openclass(classid, uid, open_close) {
 			type: "DELETE",
 			data: j,
 			success: function (msg) {
-				document.getElementById(classid).onclick = function () {openclass(classid, uid, !open_close)}
+				$("#" + classid)[0].onclick = function () {openclass(classid, uid, !open_close)}
 			},
 			error: function (error) {
 				console.log(error)
 			}
 		})
 	}
-	// document.getElementById(classid).onclick = openclass(classid, uid, !open_close);
+	// $(c#lassid).onclick = openclass(classid, uid, !open_close);
 }
 
 function disableuser(uid, disabled) {
@@ -324,7 +325,7 @@ $.ajax({
 
 			tr.appendChild(td1)
 			tr.appendChild(td2)
-			document.getElementById("userinfo2").appendChild(tr)
+			$("#userinfo2")[0].appendChild(tr)
 		}
 	}
 })

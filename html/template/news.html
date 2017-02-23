@@ -42,10 +42,10 @@
 						// paging += format(page_f, i, "");
 						news += format(news_format, posts[i]["content"], posts[i]["create_at"])
 					}
-					document.getElementById("news").innerHTML = news;
+					$("#news")[0].innerHTML = news;
 				}
 				else {
-					document.getElementById("news").innerHTML = no_news;
+					$("#news")[0].innerHTML = no_news;
 				}
 			}
 		})

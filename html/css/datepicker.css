@@ -1,0 +1,249 @@
+.date-picker {
+	width: 260px;
+	height: auto;
+	max-height: 50px;
+	background: white;
+	position: relative;
+	overflow: hidden;
+	transition: all 0.3s 0s ease-in-out;
+}
+
+.date-picker .input {
+	background-color: #92a2b7;
+	width: 100%;
+	height: 50px;
+	font-size: 0;
+	cursor: pointer;
+}
+
+.date-picker .input .result,
+.date-picker .input button {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.date-picker .input .result {
+	width: calc(100% - 50px);
+	height: 50px;
+	line-height: 50px;
+	font-size: 16px;
+	padding: 0 10px;
+	color: white;
+	box-sizing: border-box;
+}
+
+.date-picker .input button {
+	cursor: pointer;
+	width: 50px;
+	height: 50px;
+	background-color: #8392A7;
+	color: white;
+	line-height: 50px;
+	border: 0;
+	font-size: 18px;
+	padding: 0;
+}
+
+.date-picker .input button:hover {
+	background-color: #68768A;
+}
+
+.date-picker .input button:focus {
+	outline: 0;
+}
+
+.date-picker .calendar {
+	position: relative;
+	width: 100%;
+	background: #92a2b7;
+	border-radius: 0px;
+	overflow: hidden;
+}
+
+.date-picker .ui-datepicker-inline {
+	position: relative;
+	width: 100%;
+}
+
+.date-picker .ui-datepicker-header {
+	height: 100%;
+	line-height: 50px;
+	background: #8392A7;
+	color: #fff;
+	margin-bottom: 10px;
+}
+
+.date-picker .ui-datepicker-prev, .date-picker .ui-datepicker-next {
+	width: 20px;
+	height: 20px;
+	text-indent: 9999px;
+	border: 2px solid #fff;
+	border-radius: 100%;
+	cursor: pointer;
+	overflow: hidden;
+	margin-top: 12px;
+}
+
+.date-picker .ui-datepicker-prev {
+	float: left;
+	margin-left: 12px;
+}
+
+.date-picker .ui-datepicker-prev:after {
+	transform: rotate(45deg);
+	margin: -43px 0px 0px 8px;
+}
+
+.date-picker .ui-datepicker-next {
+	float: right;
+	margin-right: 12px;
+}
+
+.date-picker .ui-datepicker-next:after {
+	transform: rotate(-135deg);
+	margin: -43px 0px 0px 6px;
+}
+
+.date-picker .ui-datepicker-prev:after,
+.date-picker .ui-datepicker-next:after {
+	content: '';
+	position: absolute;
+	display: block;
+	width: 4px;
+	height: 4px;
+	border-left: 2px solid #fff;
+	border-bottom: 2px solid #fff;
+}
+
+.date-picker .ui-datepicker-prev:hover,
+.date-picker .ui-datepicker-next:hover,
+.date-picker .ui-datepicker-prev:hover:after,
+.date-picker .ui-datepicker-next:hover:after {
+	border-color: #68768A;
+}
+
+.date-picker .ui-datepicker-title {
+	text-align: center;
+}
+
+.date-picker .ui-datepicker-calendar {
+	width: 100%;
+	text-align: center;
+}
+
+.date-picker .ui-datepicker-calendar thead tr th span {
+	display: block;
+	width: 100%;
+	color: #cccccc;
+	margin-bottom: 5px;
+	font-size: 13px;
+}
+
+.date-picker .ui-state-default {
+	display: block;
+	text-decoration: none;
+	color: #fff;
+	line-height: 40px;
+	font-size: 12px;
+}
+
+.date-picker .ui-state-default:hover {
+	background: rgba(0, 0, 0, 0.02);
+}
+
+.date-picker .ui-state-highlight {
+	color: #68768A;
+}
+
+.date-picker .ui-state-active {
+	color: #68768A;
+	background-color: rgba(131, 146, 167, 0.12);
+	font-weight: 600;
+}
+
+.date-picker .ui-datepicker-unselectable .ui-state-default {
+	color: #eee;
+	border: 2px solid transparent;
+}
+
+.date-picker.open {
+	max-height: 400px;
+}
+
+.date-picker-cancel {
+	float: left;
+	height: 50px;
+	width: 50px;
+	font-size: 18px;
+	cursor: pointer;
+	color: red;
+	line-height: 50px;
+	padding-left: 15px;
+	background-color: #758396;
+}
+
+.date-picker-cancel:hover {
+	background-color: #5d697a;
+}
+/*TIME PICKER BY MYSELF*/
+.clock {
+  display: inline-block;
+  box-shadow: 0px 0px 5px 0px gray;
+  border-radius: 2px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 60px;
+}
+
+.clock .title {
+  font-weight: 700;
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+.clock .hourblock,
+.clock .minblock{
+  float:left;
+  text-align: center;
+  width: 50px;
+  height: 60px;
+  display:inline-block;
+}
+
+.clock .ampm {
+  float:left;
+  text-align: center;
+  width: 50px;
+  padding-top: 45px;
+}
+
+.clock button {
+  background: #46b946;
+  width: 40px;
+  height: 25px;
+  border-radius: 5px;
+  border: none;
+  box-shadow: 2px 1px 2px 0px gray;
+  cursor: pointer;
+}
+
+.clock button:hover {
+  background: #609f60;
+}
+
+.clock .hour,
+.clock .min{
+  padding-top: 8px;
+  padding-bottom: 8px;
+  font-size: 36px;
+  position: relative;
+}
+
+.clock .hour:after {
+  content: ":";
+  position: absolute;
+  left: 45px;
+}
+
+
+

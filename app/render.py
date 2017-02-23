@@ -36,6 +36,16 @@ class UserCaseHandler(object):
     @cherrypy.expose
     def question(self, file1=None, file2=None, file3=None, **kwargs):
         if cherrypy.request.method == "POST":
+            cookie = cherrypy.request.cookie
+            try:
+                key = str(cookie["key"].value)
+            except:
+                raise cherrypy.HTTPRedirect("/")
+
+            key_valid = key_mgr.get_key(key)
+            if not key_valid[0]:
+                raise cherrypy.HTTPRedirect("/")
+
             if (not file1) and (not file2) and (not file3):
                 raise cherrypy.HTTPRedirect("/question")
 
@@ -110,27 +120,20 @@ class UserCaseHandler(object):
             # link file to question
             r = None
             cookie = cherrypy.request.cookie
-            if "questionkey" in kwargs:
-                key = str(cookie["key"].value)
+            data = {
+                "key":key,
+                "filepath":filesname
+            }
 
+            if "questionkey" in kwargs:
                 id_ = int(kwargs["questionkey"])
-                data = {
-                    "key":key,
-                    "qid":id_,
-                    "filepath":filesname
-                }
+                data["qid"] = id_
 
                 r = requests.post("http://0.0.0.0/rest/1/question/fileattach", json=data)
                 print(r.text, id_)
             elif "answerkey" in kwargs:
-                key = str(cookie["key"].value)
-
                 id_ = str(kwargs["answerkey"])
-                data = {
-                    "key":key,
-                    "aid":id_,
-                    "filepath":filesname
-                }
+                data["aid"] = id_
 
                 r = requests.post("http://0.0.0.0/rest/1/answer/fileattach", json=data)
             else:
@@ -230,7 +233,6 @@ class UserCaseHandler(object):
 
         return render("active.html")
 
-
 class ClassHandler(object):
     _root = "/class/"
     _cp_config = {
@@ -254,22 +256,6 @@ class TeacherHandler(object):
 
     @cherrypy.expose
     def index(self):
-        # cookie = cherrypy.request.cookie
-        # try:
-        #     key = str(cookie["teacher-key"].value)
-        # except:
-        #     raise cherrypy.HTTPRedirect("/")
-
-        # key_mgr = cherrypy.request.key
-
-        # key_valid = key_mgr.get_key(key)
-        # if not key_valid[0]:
-        #     cookie['teacher-userid'] = ""
-        #     cookie['teacher-id'] = ""
-        #     cookie['teacher-key'] = ""
-        #     raise cherrypy.HTTPRedirect("/teacher/login")
-        # uid = key_valid[1]
-
         return render("teacher/index.html")
 
     @cherrypy.expose

@@ -5,7 +5,6 @@
 <link rel="stylesheet" href="/html/css/question.css">
 <style>
 	div.bbackground {
-		display: none;
 		position: fixed;
 		background-color: rgba(0,0,0,0.85);
 		top: 0px;
@@ -83,7 +82,7 @@
 </div>
 {% endblock %}
 {% block bcontent %}
-<div id="question-frame" class="loginsignup-frame">
+<div id="question-frame" class="loginsignup-frame" hidden>
 	<div class="loginsignup-frame-inside">
 		<a id="closeloginframe" onclick="hide('question-frame');" style="">X</a><br>
 		<div class="frame-content" style="padding-top: 0%;padding-left: 10%">
@@ -119,7 +118,7 @@
 	</div>
 </div>
 
-<div id="ask-frame" class="loginsignup-frame">
+<div id="ask-frame" class="loginsignup-frame" hidden>
 	<div class="loginsignup-frame-inside">
 		<a id="closeloginframe" onclick="hide('ask-frame');" style="">X</a><br>
 		<div class="frame-content" style="padding-top: 5%;">
@@ -153,7 +152,7 @@
 	</div>
 </div>
 
-<div class="bbackground" id="bbackground">
+<div class="bbackground" id="bbackground" hidden>
 	<div style="color:white;font-size:36px;cursor: pointer;" onclick="stopVideo();hide('bbackground')">X</div>
 	<center>
 		<div id="player"></div>

@@ -136,8 +136,8 @@
 		}
 
 		function login() {
-			userid = document.getElementsByName("userid")[0].value;
-			password = document.getElementsByName("password")[0].value;
+			userid = $("[name=userid]")[0].value;
+			password = $("[name=password]")[0].value;
 
 			if (!(userid && password)) {
 				alert("請不要留空白")
@@ -156,7 +156,6 @@
 						location.pathname = "/teacher/";
 					},
 					error: function (error) {
-						errormsg = document.getElementById("login-errormsg")
 						p1 = error.responseText.indexOf("<p>") + 3
 						errortype = error.responseText.substring(p1, error.responseText.indexOf("</p>", p1))
 						if (errortype == "Username or password wrong") {

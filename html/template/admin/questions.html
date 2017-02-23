@@ -35,22 +35,24 @@
 	<a href="/admin/"><button id="submit">< 回去</button></a>
 	<br><br>
 	<table id="userstable">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Title</th>
+				<th>Type</th>
+				<th>Solved</th>
+				<th>Create At</th>
+				<th>Delete</th>
+			</tr>
+		</thead>
 		<tbody id="users">
-		<tr>
-			<th>Id</th>
-			<th>Title</th>
-			<th>Type</th>
-			<th>Solved</th>
-			<th>Create At</th>
-			<th>Delete</th>
-		</tr>
 		</tbody>
 	</table>
 	<br><br>
 </div>
 {% endblock %}
 {% block bcontent %}
-<div id="question-frame" class="loginsignup-frame">
+<div id="question-frame" class="loginsignup-frame" hidden>
 	<div class="loginsignup-frame-inside">
 		<a id="closeloginframe" onclick="hide('question-frame');" style="">X</a><br>
 		<div class="frame-content" style="padding-top: 0%;padding-left: 10%">
@@ -116,7 +118,7 @@ user_format = `\
 </tr>\
 `
 
-users_table = document.getElementById("users")
+users_table = $("#users")[0]
 var page = 0
 
 function changetype(id, type) {
@@ -135,7 +137,7 @@ function changetype(id, type) {
 		data: JSON.stringify({"key": getCookie("key"), "qid":id, "type":type}),
 		contentType: "application/json; charset=utf-8",
 		success: function (msg) {
-			window.location.reload()
+			loadquestion();
 		}
 	})
 }
@@ -153,7 +155,7 @@ function closequestion(id, solved) {
 		data: JSON.stringify({"key": getCookie("key"), "qid":id, "solved":solved}),
 		contentType: "application/json; charset=utf-8",
 		success: function (msg) {
-			window.location.reload()
+			loadquestion();
 		}
 	})
 }
@@ -169,7 +171,7 @@ function deletequestion(id) {
 		url: format(url, id, getCookie("key")),
 		type: 'DELETE',
 		success: function(result) {
-			window.location.reload()
+			loadquestion();
 		}
 	});
 }
@@ -179,49 +181,52 @@ function changefilename(filename) {
 	return l[l.length - 1]
 }
 
-$.ajax({
-	url: host + "question/",
-	type: "GET",
-	data: {},
-	success: function (msg) {
-		page = msg["pages"]
-		questions = msg["questions"]
-		for (i=0; i<questions.length; i++) {
-			user = format(user_format, questions[i]["id"],
-				questions[i]["title"], q_typelist[questions[i]["type"]],
-				q_solvedlist[questions[i]["solved"]],
-				questions[i]["create_at"])
-			users_table.innerHTML += user
+function loadquestion() {
+	users_table.innerHTML = ""
+	$.ajax({
+		url: host + "question/",
+		type: "GET",
+		data: {},
+		success: function (msg) {
+			page = msg["pages"]
+			questions = msg["questions"]
+			for (i=0; i<questions.length; i++) {
+				user = format(user_format, questions[i]["id"],
+					questions[i]["title"], q_typelist[questions[i]["type"]],
+					q_solvedlist[questions[i]["solved"]],
+					questions[i]["create_at"])
+				users_table.innerHTML += user
+			}
+		},
+		error: function (msg) {
+			console.logs(msg)
 		}
-	},
-	error: function (msg) {
-		console.logs(msg)
-	}
-}).done(function (msg) {
-	if (page > 1) {
-		for (p=2; p<=page; p++) {
-			$.ajax({
-				url: host + "question/",
-				type: "GET",
-				data: {"page": p - 1},
-				success: function (msg) {
-					page = msg["page"]
-					questions = msg["questions"]
-					for (i=0; i<questions.length; i++) {
-						user = format(user_format, questions[i]["id"],
-							questions[i]["title"], q_typelist[questions[i]["type"]],
-							q_solvedlist[questions[i]["solved"]],
-							questions[i]["create_at"])
-						users_table.innerHTML += user
+	}).done(function (msg) {
+		if (page > 1) {
+			for (p=2; p<=page; p++) {
+				$.ajax({
+					url: host + "question/",
+					type: "GET",
+					data: {"page": p - 1},
+					success: function (msg) {
+						page = msg["page"]
+						questions = msg["questions"]
+						for (i=0; i<questions.length; i++) {
+							user = format(user_format, questions[i]["id"],
+								questions[i]["title"], q_typelist[questions[i]["type"]],
+								q_solvedlist[questions[i]["solved"]],
+								questions[i]["create_at"])
+							users_table.innerHTML += user
+						}
+					},
+					error: function (msg) {
+						console.logs(msg)
 					}
-				},
-				error: function (msg) {
-					console.logs(msg)
-				}
-			})
+				})
+			}
 		}
-	}
-})
+	})
+}
 
 function getanswer(qid) {
 	string_param = {"qid": qid}
@@ -259,10 +264,10 @@ function getanswer(qid) {
 
 			}
 			answers += "<hr>"
-			document.getElementById("answers").innerHTML = answers;
+			$("#answers")[0].innerHTML = answers;
 		},
 		error: function (msg) {
-			document.getElementById("answers").innerHTML = "<hr /> 目前沒有解答 <hr />";
+			$("#answers")[0].innerHTML = "<hr /> 目前沒有解答 <hr />";
 			// NO ANSWER
 		}
 	})
@@ -275,8 +280,8 @@ function showquestion(qid) {
 		type: "GET",
 		data: string_param,
 		success: function (msg) {
-			document.getElementById("content").innerHTML = msg["content"].replace(/\n/g, "<br>");
-			document.getElementById("type").innerHTML = q_typelist[msg["type"]];
+			$("#content")[0].innerHTML = msg["content"].replace(/\n/g, "<br>");
+			$("#type")[0].innerHTML = q_typelist[msg["type"]];
 
 			a = "<div id=\"solved\" style=\"background-color:"
 			if (msg["solved"]) {
@@ -286,23 +291,23 @@ function showquestion(qid) {
 					a += "Crimson";
 			}
 			a += "\"></div> " + msg["title"];
-			document.getElementById("title").innerHTML = a;
-			document.getElementById("create_at").innerHTML = msg["create_at"];
-			document.getElementById("question-writer").innerHTML = msg["writer"];
+			$("#title")[0].innerHTML = a;
+			$("#create_at")[0].innerHTML = msg["create_at"];
+			$("#question-writer")[0].innerHTML = msg["writer"];
 			
 			if (getCookie("id") != msg["writer_id"]) {
-				document.getElementById("closequestion").disabled = true;
-				document.getElementById("closequestion").onclick = null;
+				$("#closequestion")[0].disabled = true;
+				$("#closequestion")[0].onclick = null;
 			}
 			else {
-				document.getElementById("closequestion").disabled = false;
+				$("#closequestion")[0].disabled = false;
 				if (msg["solved"]) {
-					document.getElementById("closequestion").onclick = function () {closequestion("False")};
-					document.getElementById("closequestion").innerHTML = "開啟問題";
+					$("#closequestion")[0].onclick = function () {closequestion("False")};
+					$("#closequestion")[0].innerHTML = "開啟問題";
 				}
 				else {
-					document.getElementById("closequestion").onclick = function () {closequestion("True")};
-					document.getElementById("closequestion").innerHTML = "關閉問題";
+					$("#closequestion")[0].onclick = function () {closequestion("True")};
+					$("#closequestion")[0].innerHTML = "關閉問題";
 				}
 			}
 			
@@ -317,10 +322,10 @@ function showquestion(qid) {
 						file_display += format(file_format, msg["file3"], "3", changefilename(msg["file3"]))
 					}
 				}
-				document.getElementById("files").innerHTML = file_display;
+				$("#files")[0].innerHTML = file_display;
 			}
 			else {
-				document.getElementById("files").innerHTML = "沒有檔案";
+				$("#files")[0].innerHTML = "沒有檔案";
 			}
 
 			getanswer(qid);
@@ -333,5 +338,7 @@ function openquestion (id) {
 	show("question-frame");
 	showquestion(id);
 }
+
+loadquestion();
 </script>
 {% endblock %}
