@@ -477,6 +477,7 @@ class Classroom(object):
             Column("students_cid", ARRAY(Integer), nullable=False, autoincrement=False),
             Column("students_sid", ARRAY(String), nullable=False, autoincrement=False),
             Column("folder", String, nullable=True, autoincrement=True, default=""),
+            Column("comment", JSON, nullable=True, default={}, autoincrement=True),
             Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
             Column("type", String, nullable=True, autoincrement=False),
             )
@@ -493,6 +494,7 @@ class Classroom(object):
                 "teacher": row["teacher"],
                 "students": students,
                 "create_at": GMT(row["create_at"]),
+                "comment": row["comment"],
                 "folder": row["folder"],
                 "type": row["type"],
                 }
@@ -501,6 +503,7 @@ class Classroom(object):
             "id": row["id"],
             "students": students,
             "teacher": row["teacher"],
+            "comment": row["comment"],
             "name": row["name"],
             "create_at": GMT(row["create_at"]),
             "folder": row["folder"],

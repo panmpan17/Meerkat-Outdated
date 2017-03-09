@@ -2,13 +2,6 @@
 {% block title %}Coding for Fun - {{ subject }}{% endblock %}
 {% block css %}
 <link rel="stylesheet" href="/html/css/class.css">
-<style>
-	div.ccright {
-		position: fixed;
-		left: 20px;
-		bottom: 20px;
-	}
-</style>
 {% endblock %}
 {% block content %}
 <span id="subject_id" style="display: none">{{ class_id }}</span>
@@ -22,10 +15,6 @@
 <br>
 <div id="video"></div>
 </center>
-
-{% if class_id=="scratch_1" %}
-	<div class="ccright"><img src="/html/images/cc_scratch.png" alt=""></div>
-{% endif %}
 
 <div class="lesson-display">
 	<div id="classname-now"></div>

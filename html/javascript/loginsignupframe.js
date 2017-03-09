@@ -1,8 +1,9 @@
 // this one check user's userid password
 id_pass_re = new RegExp("[a-zA-Z0-9@\.]{8,16}");
-file_re = new RegExp("[0-9]+_[0-9]+")
+// file_re = new RegExp("[0-9]+_[0-9]+")
 email_re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+comments = {}
 a2z = "abcdefghijklmnopqrstuvwxyz"
 classroom_homwork_format = `
 <div class="classroom-card">
@@ -28,9 +29,9 @@ classroom_homwork_format = `
 
 python_upload_html = `
 <div class="close" style="padding-right:10px; color:blue">
-	<label for="pythonhomework">交作業</label>
+	<label for="pythonhomework" style="cursor:pointer">交作業</label>
 	<form enctype="multipart/form-data" action="rest/1/upload/homework" method="post" id="homeworkupload" hidden>
-		<input name="homwork" id="pythonhomework" type="file" onchange="upload()"/>
+		<input name="homwork" id="pythonhomework" type="file" onchange="upload()" multiple/>
 		<input name="session" type="text" />
 		<input name="type" type="text" value="python_01"/>
 		<input name="clsroomid" type="text" value="{0}"/>
@@ -41,7 +42,7 @@ python_upload_html = `
 
 p_p_f = `\
 <div>
-	<a style="cursor: pointer" onclick="show_file('/downloads/{1}/{2}')">
+	<a style="cursor: pointer" onclick="show_file('/downloads/{1}/{2}', '{3}')">
 		<img src="http://placehold.it/144x108/366f9e/fed958/?text={0}" style="border: 1px rgba(50, 50, 50, 0.5) solid;"/>
 	</a>
 </div>
@@ -49,12 +50,14 @@ p_p_f = `\
 
 picture_fromat = `\
 <div>
-	<a style="cursor: pointer" onclick="play_scratch_project('{0}')">
+	<a style="cursor: pointer" onclick="play_scratch_project('{0}', '{1}', '{2}')">
 		<img src="//cdn2.scratch.mit.edu/get_image/project/{0}_144x108.png" style="border: 1px rgba(50, 50, 50, 0.5) solid;"/>
 	</a>
 </div>`
 
 project_embed_fromat = "//scratch.mit.edu/projects/embed/{0}/?autostart=false"
+python_homework_re = new RegExp("(test|hw)1?[0-9]-[0-9]{1,2}\.py")
+project_page_format = "https://scratch.mit.edu/projects/{0}/"
 
 function matchRE(r, text) {
 	match = r.exec(text);
@@ -341,6 +344,7 @@ function changepassword() {
 function showclassroom() {
 	hide('accountmenu');
 
+	files = {}
 	$.ajax({
 		url: host + "classroom/",
 		type: "GET",
@@ -349,6 +353,7 @@ function showclassroom() {
 			show("classroom-frame");
 			homework_html = $("#classroom-homework")[0]
 			homework_html.innerHTML = "<br>";
+			homeworks = {}
 
 			$.each(msg, function (i) {
 				name = msg[i]["name"]
@@ -386,7 +391,8 @@ function showclassroom() {
 	})
 }
 
-function loadscratchhomwork(student_id, clsr_id) {
+function loadscratchhomwork(student_id, cls_id) {
+	loadcomment(cls_id)
 	$.ajax({
 		url: "https://scratch.mit.edu/users/" + student_id + "/projects/",
 		success: function (msg) {
@@ -427,7 +433,9 @@ function loadscratchhomwork(student_id, clsr_id) {
 					slide = `<section class="regular slider" id="s{0}">`
 				}
 				slide += format(picture_fromat,
-					projects[homework[i]])
+					projects[homework[i]],
+					cls_id,
+					homework[i])
 				thead += "<th>" + homework[i] + "</th>";
 				tbody += `<td style="font-size: 15px"><i class="fa fa-check" aria-hidden="true"></i></td>`
 			})
@@ -435,12 +443,13 @@ function loadscratchhomwork(student_id, clsr_id) {
 				slide += "</section><br>"
 			}
 
-			$("#thead-" + clsr_id)[0].innerHTML = thead
-			$("#tbody-" + clsr_id)[0].innerHTML = tbody
-			$("#homeworkshelf-" + clsr_id)[0].innerHTML = format(slide, clsr_id)
+			$("#thead-" + cls_id)[0].innerHTML = thead
+			$("#tbody-" + cls_id)[0].innerHTML = tbody
+			$("#homeworkshelf-" + cls_id)[0].innerHTML = format(slide, cls_id)
+			homeworks[cls_id] = homework
 
 			setTimeout(function () {
-				$("#s" + clsr_id).slick({
+				$("#s" + cls_id).slick({
 					dots: true,
 					infinite: true,
 					slidesToShow: 3,
@@ -451,7 +460,8 @@ function loadscratchhomwork(student_id, clsr_id) {
 	})
 }
 
-function loadfilehomework(folder, clsr_id) {
+function loadfilehomework(folder, cls_id) {
+	loadcomment(cls_id)
 	$.ajax({
 		url: host + "classroom/check_folder",
 		data: {"folder": folder,
@@ -459,50 +469,70 @@ function loadfilehomework(folder, clsr_id) {
 		success: function (msg) {
 			homework = new Set()
 			projects = []
-			files = {}
-
+			units = []
+			files[cls_id] = {}
 			$.each(msg, function (i) {
-				cid_hwn = file_re.exec(msg[i])[0]
-				cid_hwn = cid_hwn.split("_")
-				cid = cid_hwn[0]
-				hwn = cid_hwn[1]
+				if (python_homework_re.test(msg[i])) {
+					cid_hwn = msg[i].split("_")
+					cid = cid_hwn[0]
+					hwn = cid_hwn[1]
+					if (hwn.indexOf(".") != -1) {
+						hwn = hwn.substring(0, hwn.indexOf("."))
+					}
 
-				homework.add(hwn)
+					homework.add(hwn)
+					units.push(hwn.substring(0, hwn.indexOf("-")))
 
-				files[hwn] = msg[i]
-				projects.push(hwn)
-			})
-
-			homework = Array.from(homework).sort();
-
-			thead = "<thead><tr>";
-			tbody = "<tbody><tr>"
-			slide = ""
-			$.each(homework, function (i) {
-				if (slide == "") {
-					slide = `<section style="clear: both; padding:10px;">`
+					files[cls_id][hwn] = msg[i]
+					projects.push(hwn)
 				}
-				slide += format(`<div style="display: inline-block;background: #366f9e;width: 100px;border-radius: 10px;\
-					padding: 5px;text-align: center;color: #fed958;margin: 5px;cursor: pointer"\
-					onclick="show_file('/downloads/{1}/{2}')">{0}</div>`,
-					homework[i],
-					folder,
-					files[homework[i]])
-				thead += "<th>" + homework[i] + "</th>"
-				tbody += `<td style="font-size: 15px"><i class="fa fa-check" aria-hidden="true"></i></td>`
 			})
-			if (slide != "") {
-				slide += "</section><br>"
+
+			homeworks[cls_id] = homework
+			if (units.length > 0) {
+				buttonsgroup = `<br><div class="dropdown">
+					<button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					課程 <span id="lessonbtn"></span></button>
+					<ul class="dropdown-menu">`
+				$.each(units, function (i) {
+					f = `<li style="cursor:pointer">\
+						<a onclick="changefileunit('{0}','{1}','{2}')">{1}</a></li>`
+					buttonsgroup += format(f, folder, units[i], cls_id)
+				})
+				buttonsgroup += `</ul></div><br>`
+
+				$("#thead-" + cls_id)[0].innerHTML = buttonsgroup
+				changefileunit(folder, units[0], cls_id)
 			}
-
-			thead += "</tr></thead>";
-			tbody += "</tr></tbody>"
-
-			$("#thead-" + clsr_id)[0].innerHTML = thead
-			$("#tbody-" + clsr_id)[0].innerHTML = tbody
-			$("#homeworkshelf-" + clsr_id)[0].innerHTML = slide
+			else {
+				// No file uploaded
+			}
 		}
 	})
+}
+
+function changefileunit(folder, unit, cls_id) {
+	homework = Array.from(homeworks[cls_id]).sort();
+
+	slide = ""
+	$.each(homework, function (i) {
+		if (homework[i].startsWith(unit)) {
+			if (slide == "") {
+				slide = `<section style="clear: both; padding:10px;">`
+			}
+			slide += format(`<div style="display: inline-block;background: #366f9e;width: 100px;border-radius: 10px;\
+				padding: 5px;text-align: center;color: #fed958;margin: 5px;cursor: pointer"\
+				onclick="show_file('/downloads/{1}/{2}')">{0}</div>`,
+				homework[i],
+				folder,
+				files[cls_id][homework[i]],
+				cls_id)
+		}
+	})
+	if (slide != "") {
+		slide += "</section><br>"
+	}
+	$("#homeworkshelf-" + cls_id)[0].innerHTML = slide
 }
 
 function howtoupload(type) {
@@ -515,28 +545,76 @@ function howtoupload(type) {
 
 function upload() {
 	lesson = null
-	while (!lesson) {
-		lesson = prompt("第幾課的功課? (數字)")
-		if (lesson == null) {
-			return;
-		}
-		lesson = parseInt(lesson)
-	}
 	$("[name=session]")[0].value = lesson
 	$("[name=key]")[0].value = getCookie("key")
 	$("#homeworkupload")[0].submit()
 }
 
-function play_scratch_project(project_id) {
-	$("#scratch_project").show();
-	$("#scratch_iframe")[0].src = format(project_embed_fromat, project_id)
+function play_scratch_project(project_id, cls_id, hw_s) {
+	$("#scratch_project").modal("show");
+	$("#scratch_iframe").show();
+	$("#file").hide();
 
+	$("#scratch_iframe")[0].src = format(project_embed_fromat, project_id)
 	$("#s_project_page")[0].href = format(project_page_format, project_id)
+	$("#hwcomment")[0].innerHTML = ""
+
+	if (comments[cls_id] != undefined) {
+		if (comments[cls_id][getCookie("id")]) {
+			if (comments[cls_id][getCookie("id")][hw_s] != undefined) {
+				$("#hwcomment")[0].innerHTML = comments[cls_id][getCookie("id")][hw_s]
+			}
+		}
+	}
 }
 
-function show_file(file) {
-	$("#scratch_project").show();
-	$("#scratch_iframe")[0].src = file
+function parse_file(Text) {
+	Text = Text.replace(/\</g, "&lt;").replace(/\>/g, "&gt;")
+	l = Text.split("\n")
 
+	maxident = l.length.toString().length
+	Text = ""
+	for (i=0;i<l.length;i++) {
+		Text += (i + 1) + "&nbsp;&nbsp;"
+		Text += "&nbsp;&nbsp;".repeat(maxident - (i + 1).toString().length)
+		Text += "|" + "&nbsp;"
+		Text += l[i] + "<br>"
+	}
+	Text = Text.replace(/ /g, "&nbsp;&nbsp;")
+	return Text
+}
+
+function show_file(file, cls_id) {
+	$("#scratch_project").modal("show");
+	$("#file").show();
+	$("#scratch_iframe").hide();
+
+	$("#scratch_iframe")[0].src = ""
 	$("#s_project_page")[0].href = file
+	$("#hwcomment")[0].innerHTML = ""
+
+	$.ajax({
+		url: file,
+		success: function (msg) {
+			$("#file")[0].innerHTML = parse_file(msg)
+		}
+	})
+
+	hw_s = file.substring(file.indexOf("-") + 1, file.indexOf("."))
+	if (comments[cls_id] != undefined) {
+		if (comments[cls_id][getCookie("id")]) {
+			if (comments[cls_id][getCookie("id")][hw_s] != undefined) {
+				$("#hwcomment")[0].innerHTML = comments[cls_id][getCookie("id")][hw_s]
+			}
+		}
+	}
+}
+
+function loadcomment(cls_id) {
+	$.ajax({
+		url: "http://0.0.0.0/rest/1/classroom/comment?cls_id=" + cls_id,
+		success: function (msg) {
+			comments[cls_id] = msg
+		}
+	})
 }

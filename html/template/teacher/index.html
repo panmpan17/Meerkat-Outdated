@@ -74,18 +74,6 @@
 			padding: 5px 5px;
 		}
 
-		div#scratch_project {
-			position: fixed;
-			width: 100%;
-			height: 100%;
-			top: 0px;
-			left: 0px;
-			z-index: 100001;
-			text-align: center;
-			line-height: 100vh;
-			background-color: rgba(0,0,0,0.7);
-		}
-
 		div.close {
 			color: white;
 		}
@@ -111,8 +99,6 @@
 			border-radius: 4px;
 		}
 
-
-
 		div#changepasswordframe {
 			border-left: none;
 		}
@@ -120,6 +106,21 @@
 			div#changepasswordframe {
 				border-left: 1px rgb(200, 200, 200) solid;
 			}
+		}
+
+		button {
+			border-radius: 50px;
+			padding: 10px 50px;
+			border: 2px solid #DC6180;
+			color: #DC6180;
+			font-size: 18px;
+			background-color: white;
+		}
+
+		button:hover {
+			color: white;
+			background: #DC6180;
+			cursor: pointer;
 		}
 	</style>
 </head>
@@ -456,6 +457,7 @@
 						</h3>
 						<hr>
 						<a style="cursor: pointer;" id="refreshclassroom"><i class="fa fa-refresh" aria-hidden="true"></i></a>
+						<div id="buttonsgroup"></div>
 						<div id="homewrok"></div>
 						<hr>
 						<div id="porjects"></div>
@@ -473,11 +475,28 @@
 		</svg>
 	</div>
 
-	<div id="scratch_project" hidden>
-		<div style="position:fixed;top:5;left:5;color:white;cursor:pointer;font-size: 30px;" onclick="$('#scratch_project').hide();$('#scratch_iframe')[0].src=''">X</div>
-		<iframe id="scratch_iframe" allowtransparency="true" width="600" height="500" src="" frameborder="0" style="margin-top: 100px;background: white;overflow-y: scroll;"></iframe>
-		<a target="_blank" id="s_project_page"><span class="spanbutton">看程式</span></a>
+	<div class="modal fade" tabindex="-1" role="dialog" id="scratch_project">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="project-title"></h4>
+				</div>
+				<div class="modal-body">
+					<iframe id="scratch_iframe" width="580" height="500" frameborder="0" style="background: white;overflow-y: scroll;"></iframe><div id="file" style="overflow-x: scroll;white-space: wrap"></div><br>
+					<textarea maxlength="100" placeholder="作品評論 (100 字以下)" id="project-comment" cols="30" rows="5" class="form-control"></textarea>
+				</div>
+				<div class="modal-footer">
+					<button id="copycode" onclick="copycode()" type="button" class="btn btn-info">複製程式</button>
+					<button id="changecomment" type="button" class="btn btn-success">改評論</button>
+					<a target="_blank" id="s_project_page">
+						<button type="button" class="btn btn-warning">看程式</button>
+					</a>
+				</div>
+			</div>
+		</div>
 	</div>
+
 	<script>
 		CLASS_TO = {
 			"python_01": "Python 初級",

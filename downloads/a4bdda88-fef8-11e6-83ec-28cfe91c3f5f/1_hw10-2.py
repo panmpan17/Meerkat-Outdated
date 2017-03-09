@@ -3,7 +3,7 @@ import os
 lines = 0
 file_count = 0
 path = os.getcwd() + "/code/meerkat/"
-print(path)
+
 for dirn, dirns, filens in os.walk(path):
     if (".git" in dirn) or ("__pycache__" in dirn) or ("cherrypy" in dirn) or ("downloads" in dirn):
         continue
@@ -16,6 +16,8 @@ for dirn, dirns, filens in os.walk(path):
             continue
         if file == "six.py" or file == "sb-admin.css" or file == "cherrpy_sa.py":
             continue
+        if file == "sha256.js":
+            continue
         if file.endswith((".py", ".html", ".css", '.js')):
             file_count += 1
             print(file)
@@ -26,6 +28,8 @@ for dirn, dirns, filens in os.walk(path):
                 file_lines = file_lines.split("\n")
                 fl = 0
                 for l in file_lines:
+                    if l.startswith("#") or l.startswith("//") or l.startswith("/*") or l.startswith("<!--"):
+                        continue
                     if l != "":
                         lines += 1
                         fl += 1

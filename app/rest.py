@@ -2,6 +2,8 @@ import cherrypy
 import logging, logging.config
 import os
 import re
+import json
+
 from app.model import ErrMsg, User, Question, Answer, Post
 from app.model import Opinion, ClassManage, Teacher, AdArea, Classroom, AdClass
 from uuid import uuid1 as uuid
@@ -12,6 +14,8 @@ from requests import post as http_post
 from sqlalchemy import desc
 from sqlalchemy.sql import select, update, and_, join
 from sqlalchemy.exc import IntegrityError
+
+PY_FILE_RE = r"(test|hw)1?[0-9]-[0-9]{1,2}\.py"
 
 ADVERTISE_LIMIT = 5
 EMAIL_REST_URL = "http://restemailserver.appspot.com"
@@ -1723,10 +1727,66 @@ class ClassroomRestView(View):
         else:
             raise cherrypy.HTTPError(404)
 
+    @cherrypy.expose
+    def comment(self, *args, **kwargs):
+        meta, conn = cherrypy.request.db
+        classrooms = meta.tables[Classroom.TABLE_NAME]
+
+        if cherrypy.request.method == "GET":
+            self.check_key(kwargs, ("cls_id", ))
+
+            ss = select([classrooms.c.comment,
+                classrooms.c.students_cid]).where(
+                classrooms.c.id == kwargs["cls_id"])
+            rst = conn.execute(ss)
+            row = rst.fetchone()
+
+            return row["comment"]
+        elif cherrypy.request.method == "POST":
+            data = cherrypy.request.json
+            self.check_login_teacher(data)
+
+            self.check_key(data, ("cls_id", "student", "hw", "comment" ))
+
+            if len(data["comment"]) > 100:
+                raise cherrypy.HTTPError(400, "Comment too long")
+
+            ss = select([classrooms.c.comment,
+                classrooms.c.students_cid]).where(
+                classrooms.c.id == data["cls_id"])
+            rst = conn.execute(ss)
+            row = rst.fetchone()
+
+            if not row:
+                raise cherrypy.HTTPError(400)
+
+            try:
+                student = int(data["student"])
+            except:
+                raise cherrypy.HTTPError(400,
+                    ErrMsg.NOT_INT.format(data["student"]))
+            if student not in row["students_cid"]:
+                raise cherrypy.HTTPError(400)
+
+            student = str(student)
+            if student not in row["comment"]:
+                row["comment"][student] = {}
+            row["comment"][student][data["hw"]] = data["comment"]
+
+            stmt = update(classrooms).where(
+                classrooms.c.id == data["cls_id"]).values(
+                {"comment": row["comment"]})
+            conn.execute(stmt)
+
+            cherrypy.response.status = 201
+            return {"success": True}
+        else:
+            raise cherrypy.HTTPError(404)
+
 class FileUploadRestView(View):
     _root = rest_config["url_root"] + "upload/"
     _cp_config = {
-        "tools.json_out.on": True,
+        "tools.json_out.on": False,
         "tools.json_in.on": False,
         "tools.dbtool.on": True,
         "tools.keytool.on": True,
@@ -1746,12 +1806,10 @@ class FileUploadRestView(View):
             user = self.check_login_u(kwargs)
 
             self.check_key(kwargs, ("homwork",
-                "session",
-                "type",
                 "clsroomid",
                 "key", ))
 
-            ss = select([classrooms.c.type, classrooms.c.folder]).where(and_(
+            ss = select([classrooms.c.folder]).where(and_(
                 classrooms.c.id==kwargs["clsroomid"],
                 classrooms.c.students_cid.any(user["id"])))
             rst = conn.execute(ss)
@@ -1759,38 +1817,34 @@ class FileUploadRestView(View):
 
             if not row:
                 raise cherrypy.HTTPError(400)
-            if row["type"] != kwargs["type"]:
-                raise cherrypy.HTTPError(400)
 
             path = classes.get_download_path()
-            fileformat = path + "{folder}/{uid}_{session}{filetype}"
+            fileformat = path + "{folder}/{uid}_{filename}"
 
-            try:
-                id_ = str(uuid())
-
+            for file in kwargs["homwork"]:
                 try:
-                    filetype = re.findall(r"\.[^S.]+", kwargs['homwork'].filename)[-1]
+                    if not re.fullmatch(PY_FILE_RE, file.filename):
+                        continue
+
+                    filename = file.filename
+                    print(filename)
+                    filename.replace("test", "")
+
+                    filename = fileformat.format(
+                        folder=row["folder"],
+                        uid=user["id"],
+                        filename=filename)
+
+                    f = open(filename, "wb")
+                    while True:
+                        data = file.file.read(8192)
+                        if not data:
+                            break
+                        f.write(data)
+                    f.close()
                 except:
-                    filetype = ""
-
-                filename = fileformat.format(
-                    folder=row["folder"],
-                    uid=user["id"],
-                    session=kwargs["session"],
-                    filetype=filetype)
-
-                print(filename)
-                f = open(filename, "wb")
-                while True:
-                    data = kwargs["homwork"].file.read(8192)
-                    if not data:
-                        break
-                    f.write(data)
-                f.close()
-            except:
-                if os.path.isfile(filename):
-                    os.remove(filename)
-                filesname.pop()
+                    if os.path.isfile(filename):
+                        os.remove(filename)
 
             raise cherrypy.HTTPRedirect("/")
         else:

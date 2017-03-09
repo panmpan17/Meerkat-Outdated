@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Coding 4 Fun 教師登入</title>
+	<style>
+		body {
+			font-family: 'Gudea', sans-serif;
+			background-color: #232323;
+		}
+
+		body .login {
+			opacity: 1;
+			width: 360px;
+			height: 300px;
+			position: absolute;
+			margin: auto;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			padding: 100px 40px 40px 40px;
+			background: #1f222e;
+		}
+
+		body .login_title {
+			color: #afb1be;
+			height: 60px;
+			text-align: left;
+			font-size: 20px;
+		}
+
+		body .login_fields {
+			height: 312px;
+			position: absolute;
+			left: 0;
+		}
+
+		body .login_fields input[type='password'] {
+			color: #DC6180 !important;
+		}
+
+		body .login_fields input[type='text'], body .login_fields input[type='password'] {
+			color: #afb1be;
+			width: 390px;
+			height: 40px;
+			font-size: 20px;
+			margin-top: -2px;
+			background: #32364a;
+			left: 0;
+			padding: 10px 25px;
+			border-top: 2px solid #393d52;
+			border-bottom: 2px solid #393d52;
+			border-right: none;
+			border-left: none;
+			outline: none;
+			font-family: 'Gudea', sans-serif;
+			box-shadow: none;
+		}
+
+		body .login_fields__user, body .login_fields__password {
+			position: relative;
+		}
+
+		body .login_submit {
+			position: relative;
+			top: 35px;
+			left: 0;
+			width: 80%;
+			right: 0;
+			margin: auto;
+		}
+
+		button {
+			border-radius: 50px;
+			background: transparent;
+			padding: 10px 50px;
+			border: 2px solid #DC6180;
+			color: #DC6180;
+			font-size: 18px;
+		}
+
+		button:hover {
+			color: white;
+			background: #DC6180;
+			cursor: pointer;
+		}
+	</style>
+	<script src="/html/javascript/jquery.min.js"></script>
+	<script src="/html/javascript/sha256.js"></script>
+</head>
+<body>
+	<a href="/">
+		<button>回首頁</button>
+	</a>
+	<div class="login">
+		{% if code %}
+			<div class="login_title">
+				<center style="font-size: 36px">
+					{{ code }}
+				</center>
+			</div>
+		{% else %}
+			<div class="login_title">
+				<span>Admin</span>
+			</div>
+			<div class="login_fields">
+				<form method="post">
+					<div class="login_fields__user">
+						<input name="username" placeholder="帳號" type="text">
+					</div>
+					<div class="login_fields__password">
+						<input name="password" placeholder="密碼" type="password">
+					</div>
+					<div class="login_submit">
+						<button>登入</button>
+					</div>
+				</form>
+			</div>
+		{% endif %}
+	</div>
+	<script>
+	</script>
+</body>
+</html>
