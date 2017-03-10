@@ -167,6 +167,22 @@ class UserCaseHandler(object):
     def news(self):
         return render("news.html")
 
+    # @cherrypy.expose
+    # def hourofcode(self):
+    #     raise cherrypy.HTTPRedirect("/class/c/hourofcode")
+
+    @cherrypy.expose
+    def scratch(self):
+        raise cherrypy.HTTPRedirect("/class/c/scratch_1")
+
+    @cherrypy.expose
+    def resource(self):
+        return render("resource.html")
+
+    @cherrypy.expose
+    def classattend(self):
+        return render("classattend.html")
+
     @cherrypy.expose
     def video(self, key, video=None, file="", nextvid="", button="看答案", nextbutton="看問題"):
         access_deny = """
@@ -205,18 +221,6 @@ class UserCaseHandler(object):
             "button": button,
             "nextbutton": nextbutton,
             })
-
-    @cherrypy.expose
-    def hourofcode(self):
-        raise cherrypy.HTTPRedirect("/class/c/hourofcode")
-
-    @cherrypy.expose
-    def scratch(self):
-        raise cherrypy.HTTPRedirect("/class/c/scratch_1")
-
-    @cherrypy.expose
-    def resource(self):
-        return render("resource.html")
 
     @cherrypy.expose
     def active(self, ekey):
