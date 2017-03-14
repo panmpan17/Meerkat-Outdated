@@ -189,14 +189,20 @@ div#accountmenu {
 	}
 }
 
-div#linksmenu {
-	top: 30px;
+div#linksmenu,
+div#how-to-learn {
+	top: 40px;
 	left: 180px;
 	position: absolute;
 	background-color: #f9f9f9;
 	min-width: 160px;
 	overflow: auto;
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+div#how-to-learn {
+	left: 20px;
+	top: 160px;
 }
 
 @media (min-width: 768px) {
