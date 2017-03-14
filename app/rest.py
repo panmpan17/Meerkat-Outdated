@@ -4,15 +4,18 @@ import os
 import re
 import json
 
-from app.model import ErrMsg, User, Question, Answer, Post
-from app.model import Opinion, ClassManage, Teacher, AdArea, Classroom, AdClass
+from app.model import ErrMsg, User, Question, Answer, Post, Opinion
+from app.model import ClassManage, Teacher, AdArea, Classroom, AdClass
+from app.model import Activity
 from uuid import uuid1 as uuid
-from datetime import datetime, date, time, timedelta
+from datetime import datetime, timedelta
+from datetime import date as Date
+from datetime import time as Time
 from requests import get as http_get
 from requests import post as http_post
 
-from sqlalchemy import desc
-from sqlalchemy.sql import select, update, and_, join
+from sqlalchemy import desc, not_
+from sqlalchemy.sql import select, update, and_, join, or_
 from sqlalchemy.exc import IntegrityError
 
 PY_FILE_RE = r"(test|hw)1?[0-9]-[0-9]{1,2}\.py"
@@ -202,6 +205,11 @@ class View(object):
                 raise cherrypy.HTTPError(400, ErrMsg.MISS_PARAM.format(key))
 
     def parsetime(self, string):
+        """
+        RIGHT FORM:
+        1:30 PM
+        11:50 AM
+        """
         try:
             _time, apm = string.split()
 
@@ -212,15 +220,20 @@ class View(object):
             if hour == 24:
                 hour = 0
 
-            return time(hour=hour, minute=min_)
+            return Time(hour=hour, minute=min_)
         except:
             return False
 
     def parsedate(self, string):
+        """
+        RIGHT FORM:
+        10/3/2017
+        day / moth / year
+        """
         try:
             day, month, year = [int(i) for i in string.split("/")]
 
-            return date(year=year, month=month, day=day)
+            return Date(year=year, month=month, day=day)
         except:
             return False
 
@@ -316,6 +329,20 @@ class UserRestView(View):
 
                 # otherwise return part of info
                 return User.mk_info(row)
+            elif "nicknames[]" in kwargs:
+                if not user["admin"]:
+                    raise cherrypy.HTTPError(401)
+
+                ss = select([users.c.id, users.c.nickname, users.c.userid]).where(
+                    users.c.id.in_(kwargs["nicknames[]"]))
+                rst = conn.execute(ss)
+                rows = rst.fetchall()
+
+                id_2_nick = {}
+                for row in rows:
+                    id_2_nick[row["id"]] = [row["userid"], row["nickname"]]
+
+                return id_2_nick
             else:
                 # need admin to access
                 if not user["admin"]:
@@ -642,7 +669,8 @@ class QuestionRestView(View):
 
                 stmt = update(questions).where(and_(
                     questions.c.id == qid,
-                    questions.c.writer == user["id"])).values({"solved": solved})
+                    questions.c.writer == user["id"])).values(
+                        {"solved": solved})
                 ins = conn.execute(stmt)
 
                 cherrypy.response.status = 201
@@ -1444,7 +1472,7 @@ class AdAreaRestView(View):
                         if m == 13:
                             y += 1
                             m = 1
-                        next_month_start = date(
+                        next_month_start = Date(
                             year=y,
                             month=m,
                             day=1)
@@ -1850,6 +1878,189 @@ class FileUploadRestView(View):
         else:
             raise cherrypy.HTTPError(404)
 
+class ActivityRestView(View):
+    _root = rest_config["url_root"] + "activity/"
 
+    @cherrypy.expose
+    def index(self, *args, **kwargs):
+        meta, conn = cherrypy.request.db
+        activities = meta.tables[Activity.TABLE_NAME]
 
+        if cherrypy.request.method == "GET":
+            user = self.check_login_u(kwargs)
 
+            if "participant" in kwargs:
+                ss = select([activities])
+
+                if kwargs["participant"] == "True":
+                    ss = ss.where(activities.c.participant.any(user["id"]))
+                else:
+                    ss = """SELECT * FROM tb_activity
+                        WHERE NOT %i = ANY(participant);""" % user["id"]
+
+                rst = conn.execute(ss)
+                rows = rst.fetchall()
+
+                return [Activity.mk_info(row) for row in rows]
+            elif "present" in kwargs:
+                ss = select([activities])
+
+                if kwargs["present"] == "True":
+                    ss = ss.where(activities.c.present.any(user["id"]))
+                else:
+                    ss = """SELECT * FROM tb_activity
+                        WHERE id = ANY(participant)
+                        AND NOT id = ANY(present);""".replace("id", str(user["id"]))
+
+                rst = conn.execute(ss)
+                rows = rst.fetchall()
+
+                return [Activity.mk_info(row) for row in rows]
+            elif "year" in kwargs:
+                try:
+                    year = int(kwargs["year"])
+                except:
+                    raise cherrypy.HTTPError(400)
+
+                ss = select([activities]).where(and_(
+                    activities.c.date>=Date(year=year, month=1, day=1),
+                    activities.c.date<=Date(year=year, month=12, day=31)))
+                rst = conn.execute(ss)
+                rows = rst.fetchall()
+
+                if user["admin"]:
+                    activities_date = [Activity.mk_dict(row) for row in rows]
+                else:
+                    activities_date = [Activity.mk_info(row) for row in rows]
+
+                ss = select([activities]).where(and_(
+                    activities.c.repeat!=0,
+                    activities.c.disabled==False))
+                rst = conn.execute(ss)
+                rows = rst.fetchall()
+
+                if user["admin"]:
+                    activities_repeat = [Activity.mk_dict(row) for row in rows]
+                else:
+                    activities_repeat = [Activity.mk_info(row) for row in rows]
+
+                return {"date": activities_date, "repeat": activities_repeat}
+            else:
+                raise cherrypy.HTTPError(400)
+        elif cherrypy.request.method == "POST":
+            data = cherrypy.request.json
+            user = self.check_login_u(data)
+
+            if not user["admin"]:
+                raise cherrypy.HTTPError(401)
+
+            self.check_key(data, (
+                "name",
+                "repeat",
+                "time",
+                "date",
+                "addr",
+                "summary",
+                "point",
+                ))
+
+            try:
+                repeat = int(data["repeat"])
+            except:
+                raise cherrypy.HTTPError(400)
+
+            time = self.parsetime(data["time"])
+            if not time:
+                raise cherrypy.HTTPError(400)
+
+            try:
+                int(data["point"])
+            except:
+                raise cherrypy.HTTPError(400)
+
+            json = {
+                "name": data["name"],
+                "repeat": repeat,
+                "time": time,
+                "addr": data["addr"],
+                "summary": data["summary"],
+                "point": data["point"],
+                }
+
+            if repeat == 0:
+                date = self.parsedate(data["date"])
+                if not date:
+                    raise cherrypy.HTTPError(400)
+                json["date"] = date
+
+            ins = activities.insert()
+            rst = conn.execute(ins, json)
+
+            if rst.is_insert:
+                cherrypy.response.status = 201
+
+                return {"success": True}
+            else:
+                raise cherrypy.HTTPError(503)
+        elif cherrypy.request.method == "PUT":
+            data = cherrypy.request.json
+            user = self.check_login_u(data)
+
+            if "participant" in data:
+                self.check_key(data, ("id",))
+
+                ss = select([activities.c.participant]).where(
+                    activities.c.id==data["id"])
+                rst = conn.execute(ss)
+                row = rst.fetchone()
+
+                if user["id"] in row["participant"]:
+                    row["participant"].remove(user["id"])
+                else:
+                    row["participant"].append(user["id"])
+
+                stmt = update(activities).where(
+                    activities.c.id == data["id"]).values(
+                        {"participant": row["participant"]})
+                conn.execute(stmt)
+
+                return {"success": True}
+            elif "present" in data:
+                if not user["admin"]:
+                    raise cherrypy.HTTPError(401)
+
+                if not isinstance(data["present"], dict):
+                    raise cherrypy.HTTPError(400, ErrMsg.NOT_DICT)
+
+                for i in  data["present"]:
+                    stmt = update(activities).where(
+                        activities.c.id==i).values(
+                            {"present": data["present"][i]})
+                    conn.execute(stmt)
+
+                return {"success": True}
+            elif "point":
+                if not user["admin"]:
+                    raise cherrypy.HTTPError(401)
+
+                self.check_key(data, ("presents", ))
+
+                try:
+                    int(data["point"])
+                except:
+                    raise cherrypy.HTTPError(400)
+
+                if not isinstance(data["presents"], list):
+                    raise cherrypy.HTTPError(400)
+                users = meta.tables[User.TABLE_NAME]
+
+                stmt = update(users).where(
+                    users.c.id.in_(data["presents"])).values(
+                        point=users.c.point + data["point"])
+                conn.execute(stmt)
+
+                return {"sccuess": True}
+            else:
+                raise cherrypy.HTTPError(400)
+        else:
+            raise cherrypy.HTTPError(404)

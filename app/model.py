@@ -588,3 +588,61 @@ class AdClass(object):
             "weekdays": row["weekdays"],
             }
 
+class Activity(object):
+    TABLE_NAME = "tb_activity"
+    activity_t = None
+
+    @classmethod
+    def create_schema(cls, db_engine, db_meta):
+        cls.activity_t = Table(cls.TABLE_NAME, db_meta,
+            Column("id", Integer, primary_key=True, autoincrement=True),
+            Column("name", String, nullable=False, autoincrement=False),
+            Column("repeat", Integer, nullable=False, autoincrement=False),
+            Column("time", Time, nullable=False, autoincrement=False),
+            Column("date", Date, nullable=True, autoincrement=False),
+            Column("addr", String, nullable=False, autoincrement=False),
+            Column("summary", Text, nullable=False, autoincrement=False),
+            Column("present", ARRAY(Integer), nullable=True, autoincrement=True, default=[]),
+            Column("participant", ARRAY(Integer), nullable=True, autoincrement=True, default=[]),
+            Column("disabled", Boolean, default=False, nullable=True, autoincrement=True),
+            Column("point", Integer, nullable=False, autoincrement=False),
+            )
+        cls.activity_t.create(db_engine, checkfirst=True)
+        return cls.activity_t
+
+    @classmethod
+    def mk_info(cls, row):
+        try:
+            date = row["date"].strftime("%Y 年 %m 月 %d 日")
+        except:
+            date = ""
+        return {
+            "id": row["id"],
+            "name": row["name"],
+            "repeat": row["repeat"],
+            "time": row["time"].strftime("%I:%M %p"),
+            "date": date,
+            "addr": row["addr"],
+            "summary": row["summary"],
+            "participant": row["participant"],
+            }
+
+    @classmethod
+    def mk_dict(cls, row):
+        try:
+            date = row["date"].strftime("%Y 年 %m 月 %d 日")
+        except:
+            date = ""
+        return {
+            "id": row["id"],
+            "name": row["name"],
+            "repeat": row["repeat"],
+            "time": row["time"].strftime("%I:%M %p"),
+            "date": date,
+            "addr": row["addr"],
+            "summary": row["summary"],
+            "participant": row["participant"],
+            "present": row["present"],
+            "disabled": row["disabled"],
+            "point": row["point"],
+            }

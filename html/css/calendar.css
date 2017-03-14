@@ -1,0 +1,134 @@
+.calendarshow {
+	border: 5px #ff3385 solid;
+	padding-bottom: 10px;
+	border-radius: 5px;
+	text-align: left;
+}
+
+.calendarshow .title {
+	background: #ff3385;
+	padding-top: 15px;
+	padding-bottom: 20px;
+}
+
+.calendarshow .title .g,
+.calendarshow .title .i,
+.calendarshow .title .e {
+	display: inline-block;
+	text-align: center;
+	font-size: 24px;
+	color: white;
+}
+
+.calendarshow .title .g {
+	width: 100px;
+}
+
+.calendarshow .title .i {
+	cursor: pointer;
+	width: 100px;
+}
+
+.calendarshow .title .e {
+	cursor: pointer;
+	width: 200px;
+}
+
+.calendarshow .body {
+	background: white;
+	margin-bottom: -10px;
+}
+
+.calendarshow .calendar-date {
+	padding-left: 30px;
+}
+
+.calendarshow .day {
+	margin-top: 5px;
+	width:13%;
+	background: #ff3385;
+	color: white;
+	padding: 5px;
+	height: 80px;
+	display: inline-block;
+	font-size: 18px;
+	font-family: fonta;
+}
+
+.calendarshow .blankday {
+	margin-top: 5px;
+	width:13%;
+	padding: 5px;
+	height: 80px;
+	display: inline-block;
+}
+
+.calendarshow .weekday {
+	width:13%;
+	height: 40px;
+	display: inline-block;
+	text-align: center;
+	padding-top: 8px;
+	font-weight: 900;
+}
+
+.calendarshow .day:hover {
+	background: #f41a72;
+	cursor: pointer;
+	font-weight: 700;
+	font-family: fonta;
+}
+
+.date-act,
+.repeat-act {
+	width: 45%;
+	border: blue 2px solid;
+	border-top: blue 5px solid;
+	border-radius: 5px;
+	padding: 5px;
+	text-align: left;
+	display: inline-block;
+	margin:3px;
+	background: white;
+	float: left;
+}
+
+.repeat-act {
+	border: green 2px solid;
+	border-top: green 5px solid;
+}
+
+.date-act .title,
+.repeat-act .title {
+	font-size: 20px;
+	color: CornflowerBlue;
+}
+
+.date-act .time,
+.date-act .addr,
+.repeat-act .time,
+.repeat-act .addr {
+	font-size: 13px;
+	color: #AAA;
+}
+
+.date-act .summary,
+.repeat-act .summary {
+	padding-left: 15px;
+}
+
+.date-act button,
+.repeat-act button {
+	width: 100%;
+	padding: 10px;
+	border-radius: 3px;
+	border: none;
+}
+
+.date-act .attend, .repeat-act .attend {background: #5cb85c;color:white}
+.date-act .attend:hover, .repeat-act .attend:hover {background: #449944;}
+.date-act .attend:active, .repeat-act .attend:active {background: #327a32;}
+
+.date-act .quit, .repeat-act .quit {background: #f9442c;color:white}
+.date-act .quit:hover, .repeat-act .quit:hover {background: #dd351f;}
+.date-act .quit:active, .repeat-act .quit:active {background: #bc2a16;}

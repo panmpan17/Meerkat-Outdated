@@ -1,0 +1,657 @@
+{% extends "base.html" %}
+{% block title %}Admin 活動管理{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="html/css/calendar.css">
+<link rel="stylesheet" href="html/css/datepicker.css">
+<style>
+	.activity.repeat, .activity.date {
+		border-radius: 5px;
+		padding: 5px;
+	}
+	.activity.repeat {border: green 3px solid;}
+	.activity.date {border: blue 3px solid;}
+
+	.activity .title {
+		text-align: center;
+		color: white;
+		font-size: 24px;
+		padding: 5px;
+		margin: -5px;
+	}
+
+	.activity .title small {
+		font-size: 14px;
+		color: gray;
+	}
+
+	.activity.repeat .title {background: green;}
+	.activity.date .title {background: blue;}
+</style>
+{% endblock %}
+{% block content %}
+	<br><br>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+				<ul class="nav nav-pills nav-justified" style="background: rgba(43,142,183,1);">
+					<li role="presentation" class="active" onclick="showpage('calendar', this)"><a href="#">行事曆</a></li>
+					<li role="presentation" onclick="showpage('list', this)"><a href="#">列表</a></li>
+					<li role="presentation" onclick="showpage('present', this)"><a href="#">點名 (只限今天的活動) <span id="today-count" class="badge">3</span></a></li>
+					<li role="presentation" onclick="showpage('newactivity', this)"><a href="#">加新的活動</a></li>
+				</ul>
+				<br><br>
+			</div>
+		</div>
+
+		<!-- 行事曆 -->
+		<div class="row page-view" name="calendar-view">
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+				<div class="calendarshow">
+					<div class="title" id="yeardisplay" style="font-family: fonta;">
+						<div class="g" onclick="today()" style="cursor: pointer;">今天</div>
+						<div class="i" onclick="minusOneMonth()">&#10096;</div>
+						<div class="e" id="yearmonth">a</div>
+						<div class="i" onclick="addOneMonth()">&#10097;</div>
+					</div>
+					<div class="body">
+						<div class="calendar-date">
+							<div class="weekday">一</div>
+							<div class="weekday">二</div>
+							<div class="weekday">三</div>
+							<div class="weekday">四</div>
+							<div class="weekday">五</div>
+							<div class="weekday">六</div>
+							<div class="weekday">日</div>
+						</div>
+						<div class="calendar-date" id="date">
+						</div>
+					</div>
+				</div>
+				<br><br>
+				<center id="activities"></center>
+				<br><br>
+			</div>
+		</div>
+
+		<!-- 列表 -->
+		<div class="row page-view" name="list-view" hidden>
+			<div class="col-md-2"></div>
+			<div class="col-md-8" id="list"></div>
+		</div>
+
+		<!-- 點名 -->
+		<div class="row page-view" name="present-view" hidden>
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+				<div id="present"></div>
+				<div class="text-right">
+					<button class="btn btn-info" onclick="rollcall()">
+						點名
+					</button>
+					<button class="btn btn-success" onclick="givepoint()">
+						加分 (請確定活動結束後再按)
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- 新活動 -->
+		<div class="row page-view" name="newactivity-view" hidden>
+			<div class="col-md-2"></div>
+			<div class="col-md-4">
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon1">名字</span>
+					<input id="name" type="text" class="form-control"><br>
+				</div>
+				<br>
+
+				<div class="clock" style="background: white">
+					<div class="title">開始時間</div>
+					<div class="hourblock">
+						<button class="hourup" id="1">▲</button>
+						<div class="hour" id="hour1">9</div>
+						<button class="hourdown" id="1">▼</button>
+					</div>
+					<div class="minblock">
+						<button class="minup" id="1">▲</button>
+						<div class="min" id="min1">30</div>
+						<button class="mindown" id="1">▼</button>
+					</div>
+					<div class="ampm">
+						<button class="ampmb" id="ampmb1">AM</button>
+					</div>
+				</div>
+				<br><br>
+			</div>
+			<div class="col-md-4">
+				<select id="repeat" class="form-control" onchange="chang_repeat(this)">
+					<option value="0">不重複</option>
+					<option value="1">一</option>
+					<option value="2">二</option>
+					<option value="3">三</option>
+					<option value="4">四</option>
+					<option value="5">五</option>
+					<option value="6">六</option>
+					<option value="7">日</option>
+				</select><br>
+
+				<div class="date-picker" id="datepicker">
+					<div class="input">
+						<div class="result">活動日期: <span id="adate"></span></div>
+						<button><i class="fa fa-calendar"></i></button>
+					</div>
+					<div class="calendar"></div>
+				</div>
+				<br>
+			</div>
+		</div>
+		<div class="row page-view" name="newactivity-view" hidden>
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon1">點數</span>
+					<input id="point" type="number" class="form-control" step="1" value="5" min="0" max="100"/>
+				</div>
+				<br><br>
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon1">地址</span>
+					<input id="addr" type="text" class="form-control">
+				</div>
+				<br>
+
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon1">簡介</span>
+					<textarea id="summary" class="form-control"></textarea>
+				</div>
+				<br>
+				<button class="btn btn-primary btn-block" onclick="new_activity()">&#10010; 加新的活動</button>
+				<br><br>
+			</div>
+		</div>
+
+	</div>
+{% endblock %}
+{% block script %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+<script src="/html/javascript/datepicker.js"></script>
+<script>
+	activities = {}
+	today_activities = []
+	NUM_2_DAY = [
+		"一",
+		"二",
+		"三",
+		"四",
+		"五",
+		"六",
+		"日",
+	]
+	BLANKDAY = `<div class="blankday"><br></div>\n`
+	DAY = `<div class="day" id="{0}-{1}-{2}" onclick="showday(this)">{2}{3}</div>\n`
+	RED_DOT = `<span style="color:blue">&#9679;</span>`
+	GREEN_DOT = `<span style="color:green">&#9679;</span>`
+	DATE_ACTIVITY = `<div class="date-act">
+		<span class="title">{0}</span><br />
+		<span class="time">{1} {2}</span><br />
+		<span class="addr">{3}</span>
+		<div class="summary">{4}</div>
+	</div>`
+	REPEAT_ACTIVITY = `<div class="repeat-act">
+		<span class="title">{0}</span><br />
+		<span class="time">每週{1} {2}</span><br />
+		<span class="addr">{3}</span>
+		<div class="summary">{4}</div>
+	</div>`
+	DATE_ACTIVITY = `<div class="date-act">
+		<span class="title">{0}</span><br />
+		<span class="time">{1} {2}</span><br />
+		<span class="addr">{3}</span>
+		<div class="summary">{4}</div>
+	</div>`
+	BIG_ACTIVITY = `<div class="activity {0}">
+		<div class="title">{1} <small>{3} 點數</small></div><br />
+		{2}
+	</div><br>`
+
+	
+	PRESENT_BUTTON = `<div class="btn-check">
+		<input type="checkbox" autocomplete="off" name="{0}" id="{0}-{1}" {4}>
+		<label class="btn btn-primary" for="{0}-{1}">
+			{2}<br>
+			{3}
+		</label>
+	</div>`
+
+	var currentMonth = new Date().getMonth();
+	var currentYear = new Date().getFullYear();
+
+	function loadactivity() {
+		year = new Date().getFullYear();
+		$.ajax({
+			url: host + "activity/",
+			data: {"key": getCookie("key"), "year": year},
+			success: function (msg) {
+				activities["repeat"] = {}
+				activities["date"] = {}
+
+				$.each(msg["repeat"], function (_, repeat_act) {
+					day = parseInt(repeat_act["repeat"])
+					if (activities["repeat"][day] == undefined) {
+						activities["repeat"][day] = []
+					}
+					activities["repeat"][day].push(repeat_act)
+				})
+
+				$.each(msg["date"], function (_, date_act) {
+					month = parseInt(date_act["date"].match(/[0-9]+/g)[1])
+					if (activities["date"][month] == undefined) {
+						activities["date"][month] = []
+					}
+					activities["date"][month].push(date_act)
+				})
+				loadMonth(currentYear, currentMonth);
+
+				today_date = new Date(2017, 2, 31);
+				if (today_date.getFullYear() == year) {
+					today_count = 0
+					if (activities["repeat"][today_date.getDay()] != undefined) {
+						today_count += activities["repeat"][today_date.getDay()].length
+						today_activities = Array.from(activities["repeat"][today_date.getDay()])
+					}
+
+					month = today_date.getMonth() + 1
+					if (activities["date"][month] != undefined) {
+						$.each(activities["date"][month], function (_, i) {
+							date = parseInt(i["date"].match(/[0-9]+/g)[2])
+							if (date == today_date.getDate()) {
+								today_count ++
+								today_activities.push(i)
+							}
+						})
+					}
+
+					$("#today-count")[0].innerHTML = today_count
+				}
+			},
+			error: function (error) {
+				reload = confirm("請重新登錄")
+				if (reload) {
+					show("login-frame");
+				}
+			}
+		})
+	}
+
+	function loadMonth(year, month) {
+		$("#date")[0].innerHTML = "";
+		$("#yearmonth").html(year + " / " + (month + 1));
+
+		maxdays = new Date(year, month + 1, 0).getDate();
+		first_day = new Date(year, month, 1).getDay();
+		
+		if (first_day > 0) {
+			day = first_day
+			for (i=1;i<first_day;i++) {
+				$("#date")[0].innerHTML += BLANKDAY;
+			}
+		}
+		else {
+			day = 7
+			for (i=1;i<7;i++) {
+				$("#date")[0].innerHTML += BLANKDAY;
+			}
+		}
+
+		for (i=1;i<=maxdays;i++) {
+			if (activities["repeat"][day] != undefined) {
+				$("#date")[0].innerHTML += format(DAY,
+					year,
+					month + 1,
+					i,
+					GREEN_DOT.repeat(activities["repeat"][day].length));
+			}
+			else {
+				$("#date")[0].innerHTML += format(DAY,
+					year,
+					month + 1,
+					i,
+					"");
+			}
+			if (day != 7) {
+				day ++;
+			}
+			else {
+				day = 1;
+			}
+		}
+		$("#date")[0].innerHTML += "<br><br>";
+
+		setTimeout(function () {
+			acts = activities["date"][month + 1]
+			if (acts != undefined) {
+				$.each(acts, function (i) {
+					date = acts[i]["date"].match(/[0-9]+/g)
+					date[1] = parseInt(date[1])
+					date[2] = parseInt(date[2])
+					eid = date.join("-")
+					$("#" + eid)[0].innerHTML += RED_DOT
+				});
+			}
+		}, 500)
+	}
+
+	function addOneMonth() {
+		if (currentMonth + 1 < 11) {
+			currentMonth ++;
+		}
+		else {
+			currentMonth = 0
+			currentYear ++;
+		}
+		loadMonth(currentYear, currentMonth);
+	}
+
+	function minusOneMonth() {
+		if (currentMonth - 1 >= 0) {
+			currentMonth --;
+		}
+		else {
+			currentMonth = 11
+			currentYear --;
+		}
+		loadMonth(currentYear, currentMonth);
+	}
+
+	function today() {
+		var currentMonth = new Date().getMonth();
+		var currentYear = new Date().getFullYear();
+		loadMonth(currentYear, currentMonth);
+	}
+
+	function showday(e) {
+		day = $(e)[0].id.split("-");
+		day[0] = parseInt(day[0]);
+		day[1] = parseInt(day[1]);
+		day[2] = parseInt(day[2]);
+		activities_html = $("#activities")[0];
+		activities_html.innerHTML = "<h3>" + day.join(" / ") + "</h3>";
+
+		d = new Date(day[0], day[1] - 1, day[2]).getDay();
+
+		if (d != 7) {
+			acts = activities["repeat"][d];
+		}
+		else {
+			acts = activities["repeat"][7];
+		}
+		if (acts != undefined) {
+			$.each(acts, function (i) {
+				activities_html.innerHTML += format(REPEAT_ACTIVITY,
+					acts[i]["name"],
+					NUM_2_DAY[acts[i]["repeat"] - 1],
+					acts[i]["time"],
+					acts[i]["addr"],
+					acts[i]["summary"]);
+			})
+		}
+
+		acts = activities["date"][day[1]];
+		if (acts != undefined) {
+			$.each(acts, function (i) {
+				date = acts[i]["date"].match(/[0-9]+/g);
+				if (day[2] == parseInt(date[2])) {
+					activities_html.innerHTML += format(DATE_ACTIVITY,
+						acts[i]["name"],
+						acts[i]["date"],
+						acts[i]["time"],
+						acts[i]["addr"],
+						acts[i]["summary"]);
+				}
+			})
+		}
+		activities_html.scrollIntoView(true);
+	}
+
+	function chang_repeat(e) {
+		if ($(e)[0].value != "0") {
+			$("#datepicker").hide();
+		}
+		else {
+			$("#datepicker").show();
+		}
+	}
+
+	function new_activity() {
+		name = $("#name")[0].value;
+		repeat = $("#repeat")[0].value;
+		addr = $("#addr")[0].value;
+		summary = $("#summary")[0].value;
+		point = $("#point")[0].value;
+		time = gettime("1");
+
+		if (name.length == 0) {
+			alert("名字不可留白")
+			return;
+		}
+
+		if (addr.length == 0) {
+			alert("地址不可留白")
+			return;
+		}
+
+		if (summary.length == 0) {
+			alert("簡介不可留白")
+			return;
+		}
+
+		if (repeat == "0") {
+			adate = $("#adate")[0].textContent;
+			if (adate.length == 0) {
+				alert("活動日期不可留白");
+				return;
+			}
+		}
+		else {
+			adate = "";
+		}
+
+		json = {
+			"key": getCookie("key"),
+			"name": name,
+			"repeat": repeat,
+			"addr": addr,
+			"summary": summary,
+			"time": time,
+			"date": adate,
+			"point": point,
+		}
+		$.ajax({
+			url: host + "activity/",
+			type: "POST",
+			dataType: "json",
+			data: JSON.stringify(json),
+			contentType: "application/json; charset=utf-8",
+			success: function (msg) {
+				$("#name")[0].value = "";
+				$("#addr")[0].value = "";
+				$("#summary")[0].value = "";
+				$("#adate")[0].innerHTML = "";
+				loadactivity();
+				today();
+			},
+			error: function (error) {
+				reload = confirm("請重新登錄")
+				if (reload) {
+					show("login-frame");
+				}
+			}
+		})
+	}
+
+	function showpage(p, e) {
+		$(".page-view").hide()
+		$("[name=" + p + "-view]").show()
+
+		$(".active")[0].classList.remove("active")
+		$(e)[0].classList.add("active")
+
+		if (p == "list") {
+			showlist();
+		}
+		else if (p == "present") {
+			showpresent();
+		}
+	}
+
+	function showlist() {
+		activities_list_html = $("#list")[0]
+		activities_list_html.innerHTML = "<h3>" + currentYear + "</h3>"
+
+		$.each(Object.keys(activities["repeat"]), function (_, i) {
+			$.each(activities["repeat"][i], function (_, e) {
+				activities_list_html.innerHTML += format(REPEAT_ACTIVITY,
+					e["name"],
+					NUM_2_DAY[e["repeat"] - 1],
+					e["time"],
+					e["addr"],
+					e["summary"]);
+			})
+		})
+
+		$.each(Object.keys(activities["date"]), function (_, i) {
+			$.each(activities["date"][i], function (_, e) {
+				activities_list_html.innerHTML += format(DATE_ACTIVITY,
+					e["name"],
+					e["date"],
+					e["time"],
+					e["addr"],
+					e["summary"]);
+			})
+		})
+	}
+
+	function showpresent() {
+		ids = new Set()
+		$.each(today_activities, function (i) {
+			$.each(today_activities[i]["participant"], function (e) {
+				ids.add(today_activities[i]["participant"][e])
+			})
+		})
+
+		json = {
+			"key": getCookie("key"),
+			"nicknames": Array.from(ids).sort(),
+		}
+		$.ajax({
+			url: host + "user/",
+			data: json,
+			success: function (msg) {
+				names = msg
+				present_html = $("#present")[0]
+				present_html.innerHTML = ""
+
+				$.each(today_activities, function (_, i) {
+					buttons = ""
+					$.each(i["participant"], function (_, e) {
+						sid = e
+
+						checked = ""
+						if (i["present"].indexOf(sid) >= 0) {
+							checked = "checked"
+						}
+						buttons += format(PRESENT_BUTTON,
+							i["id"],
+							sid,
+							names[sid][0],
+							names[sid][1],
+							checked)
+					})
+
+					type = 'repeat'
+					if (i["repeat"] != 0) {
+						type = "date"
+					}
+					present_html.innerHTML += format(BIG_ACTIVITY,
+						type,
+						i["name"],
+						buttons,
+						i["point"])
+				})
+			},
+			error: function (error) {
+				reload = confirm("請重新登錄")
+				if (reload) {
+					show("login-frame");
+				}
+			}
+		})
+	}
+
+	function rollcall() {
+		roll_call = {}
+		$.each(today_activities, function (_, i) {
+			roll_call[i["id"]] = []
+			$.each($("[name=" + i["id"] + "]"), function (_, e) {
+				if (e.checked) {
+					sid = e.id.substring(e.id.indexOf("-") + 1)
+					roll_call[i["id"]].push(parseInt(sid))
+				}
+			})
+		})
+
+		json = {
+			"key": getCookie("key"),
+			"present": roll_call,
+		}
+		$.ajax({
+			url: host + "activity/",
+			type: "PUT",
+			dataType: "json",
+			data: JSON.stringify(json),
+			contentType: "application/json; charset=utf-8",
+			error: function (error) {
+				reload = confirm("請重新登錄")
+				if (reload) {
+					show("login-frame");
+				}
+			}
+		})
+	}
+
+	function givepoint() {
+		$.each(today_activities, function (_, act) {
+			presents = []
+			$.each($("[name=" + act["id"] + "]"), function (_, e) {
+				if (e.checked) {
+					sid = e.id.substring(e.id.indexOf("-") + 1)
+					presents.push(parseInt(sid))
+				}
+			})
+
+			console.log(presents)
+			json = {
+				"key": getCookie("key"),
+				"presents": presents,
+				"point": act["point"],
+			}
+			$.ajax({
+				url: host + "activity/",
+				type: "PUT",
+				dataType: "json",
+				data: JSON.stringify(json),
+				contentType: "application/json; charset=utf-8",
+				success: function (msg) {
+					console.log(msg)
+				},
+				error: function (error) {
+					console.log(error.responseText)
+				}
+			})
+		})
+	}
+
+	loadactivity()
+</script>
+{% endblock %}

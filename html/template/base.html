@@ -11,9 +11,9 @@
 	<script src="https://www.google.com/recaptcha/api.js"></script>
 
 	<link href="/html/bootstrap/css/bootstrap.css" rel="stylesheet">
-	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-	<link href="html/slick/slick.css">
-	<link href="html/slick/slick-theme.css">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	<link href="html/slick/slick.css" rel="stylesheet">
+	<link href="html/slick/slick-theme.css" rel="stylesheet">
 	<!-- my js css -->
 	<script src="/html/javascript/loginsignupframe.js"></script>
 	<script src="/html/javascript/base.js"></script>
@@ -62,17 +62,25 @@
 			</a></li>
 		</ul>
 		<div class="dropdown">
-			<div id="linksmenu" hidden>
+			<div id="linksmenu" hidden onmouseenter="$(this).show()" onmouseleave="$(this).hide()">
 				<a href="/about"> 關於 Kids Coding Studio </a>
+				<a href="/mission"> Kids Coding Studio 的使命 </a>
 				<a href="/resource"> 教學資源 </a>
-				<!-- <a> Kids Coding Studio 的使命 </a> -->
-				<!-- <a> 學什麼？如何學？ </a> -->
+				<a onmouseenter="show('how-to-learn')" onmouseleave="hide('how-to-learn')"> 
+					<i class="fa fa-caret-left" aria-hidden="true"></i> 學什麼？如何學？
+				</a>
 				<!-- <a> 教學資源 </a> -->
-				<!-- <a> 出版品 </a> -->
 				<!-- <a> 如何收費 </a> -->
 				<!-- <a> 建議網站 </a> -->
-				<a href="/teacher/advertise">廣告</a>
-				<a href="/teacher/login">教師頁面</a>
+				<a href="/teacher/advertise"> 教師廣告 </a>
+				<a href="/teacher/login"> 教師頁面 </a>
+			</div>
+		</div>
+		<div class="dropdown">
+			<div id="how-to-learn" hidden onmouseenter="$(this).show()" onmouseleave="$(this).hide()">
+				<a href="">1</a>
+				<a href="">1</a>
+				<a href="">1</a>
 			</div>
 		</div>
 	</div>
@@ -194,50 +202,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- classroom frame -->
-	<!-- <div id="classroom-frame" class="loginsignup-frame" hidden>
-		<div class="loginsignup-frame-inside">
-			<a id="closeloginframe" onclick="hide('classroom-frame');" style="">X</a>
-			<br>
-			<div class="frame-content" style="padding-top: 0%;">
-				<center id="classroom-homework"></center>
-			</div>
-		</div>
-	</div>
-	<div id="howuploadhomework-frame" class="loginsignup-frame" hidden>
-		<div class="loginsignup-frame-inside">
-			<a id="closeloginframe" onclick="hide('howuploadhomework-frame');" style="">X</a>
-			<br>
-			<div class="frame-content" style="padding-top: 0%;">
-				<div class="howtoupload text-center" id="howtoupload-scratch_1">
-					<img src="html/images/howtoupload-scratch.png" alt="">
-				</div>
-				<div class="howtoupload text-center" id="howtoupload-python_01">
-					a
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="modal fade" tabindex="-1" role="dialog" id="scratch_project">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="project-title"></h4>
-				</div>
-				<div class="modal-body" style="line-height: 12px;font-size: 12px;text-align: left">
-					<iframe id="scratch_iframe" width="580" height="500" frameborder="0" style="background: white;overflow-y: scroll;"></iframe><div id="file" style="overflow-x: scroll;white-space: wrap"></div><br>
-					<div id="hwcomment"></div>
-				</div>
-				<div class="modal-footer" style="line-height: 12px;">
-					<a target="_blank" id="s_project_page">
-						<button type="button" class="btn btn-warning">看程式</button>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div> -->
 	{% block bcontent %}
 	{% endblock %}
 	<script>
