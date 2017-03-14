@@ -88,6 +88,10 @@ function loadclassroom() {
 
 function showclassroom(cls_id) {
 	classroom = classrooms[cls_id]
+	$("#hw-view").show()
+	$("#activities-type").hide()
+	$("#activity-view").hide()
+	$("#activity-list").hide()
 	$("#classroom-name").html(classroom["name"])
 	$("#classroom-type").html(classroom["type"])
 
@@ -332,6 +336,358 @@ function loadcomment(cls_id) {
 		url: "http://0.0.0.0/rest/1/classroom/comment?cls_id=" + cls_id,
 		success: function (msg) {
 			comments[cls_id] = msg
+		}
+	})
+}
+
+function showactivity() {
+	year = new Date().getFullYear();
+	$("#hw-view").hide()
+	$("#activity-view").show()
+	$("#activities-type").show()
+	$("#activity-list").hide()
+	$.ajax({
+		url: host + "activity/",
+		data: {"key": getCookie("key"), "year": year},
+		success: function (msg) {
+			activities["repeat"] = {}
+			activities["date"] = {}
+
+			$.each(msg["repeat"], function (i) {
+				day = parseInt(msg["repeat"][i]["repeat"])
+				if (activities["repeat"][day] == undefined) {
+					activities["repeat"][day] = []
+				}
+				activities["repeat"][day].push(msg["repeat"][i])
+			})
+
+			$.each(msg["date"], function (i) {
+				month = parseInt(msg["date"][i]["date"].match(/[0-9]+/g)[1])
+				if (activities["date"][month] == undefined) {
+					activities["date"][month] = []
+				}
+				activities["date"][month].push(msg["date"][i])
+			})
+			loadMonth(currentYear, currentMonth);
+		}
+	})
+}
+
+NUM_2_DAY = [
+	"一",
+	"二",
+	"三",
+	"四",
+	"五",
+	"六",
+	"日",
+]
+BLANKDAY = `<div class="blankday"><br></div>\n`
+DAY = `<div class="day" id="{0}-{1}-{2}" onclick="showday(this)">{2}{3}</div>\n`
+RED_DOT = `<span style="color:blue">&#9679;</span>`
+GREEN_DOT = `<span style="color:green">&#9679;</span>`
+DATE_ACTIVITY = `<div class="date-act">
+    <span class="title">{0}</span><br />
+    <span class="time">{1} {2}</span><br />
+    <span class="addr">{3}</span>
+    <div class="summary" onclick="attendquit(this, {6})">{4}</div>
+    {5}
+</div>`
+REPEAT_ACTIVITY = `<div class="repeat-act">
+    <span class="title">{0}</span><br />
+    <span class="time">每週{1} {2}</span><br />
+    <span class="addr">{3}</span>
+    <div class="summary">{4}</div>
+    {5}
+</div>`
+ATTEND_BUTTON = `<button class="attend" onclick="attendquit(this, {0})"> 參加 </button>`
+QUIT_BUTTON = `<button class="quit" onclick="attendquit(this, {0})"> 退出 </button>`
+activities = {}
+
+var currentMonth = new Date().getMonth();
+var currentYear = new Date().getFullYear();
+
+function loadMonth(year, month) {
+	$("#date")[0].innerHTML = ""
+	$("#yearmonth").html(year + " / " + (month + 1))
+
+	maxdays = new Date(year, month + 1, 0).getDate();
+	first_day = new Date(year, month, 1).getDay();
+	
+	if (first_day > 0) {
+		day = first_day
+		for (i=1;i<first_day;i++) {
+			$("#date")[0].innerHTML += BLANKDAY;
+		}
+	}
+	else {
+		day = 7
+		for (i=1;i<7;i++) {
+			$("#date")[0].innerHTML += BLANKDAY;
+		}
+	}
+	
+
+	for (i=1;i<=maxdays;i++) {
+		if (activities["repeat"][day] != undefined) {
+			$("#date")[0].innerHTML += format(DAY,
+				year,
+				month + 1,
+				i,
+				GREEN_DOT.repeat(activities["repeat"][day].length));
+		}
+		else {
+			$("#date")[0].innerHTML += format(DAY,
+				year,
+				month + 1,
+				i,
+				"");
+		}
+		if (day != 7) {
+			day ++
+		}
+		else {
+			day = 1
+		}
+	}
+	$("#date")[0].innerHTML += "<br><br>"
+
+	setTimeout(function () {
+		acts = activities["date"][month + 1]
+		if (acts != undefined) {
+			$.each(acts, function (i) {
+				date = acts[i]["date"].match(/[0-9]+/g)
+				date[1] = parseInt(date[1])
+				date[2] = parseInt(date[2])
+				eid = date.join("-")
+				$("#" + eid)[0].innerHTML += RED_DOT
+			})
+		}
+	}, 500)
+}
+
+function addOneMonth() {
+	if (currentMonth + 1 < 11) {
+		currentMonth ++
+	}
+	else {
+		currentMonth = 0
+		currentYear ++
+	}
+	loadMonth(currentYear, currentMonth)
+}
+
+function minusOneMonth() {
+	if (currentMonth - 1 >= 0) {
+		currentMonth --
+	}
+	else {
+		currentMonth = 11
+		currentYear --
+	}
+	loadMonth(currentYear, currentMonth)
+}
+
+function today() {
+	var currentMonth = new Date().getMonth();
+	var currentYear = new Date().getFullYear();
+	loadMonth(currentYear, currentMonth);
+}
+
+function showday(e) {
+	day = $(e)[0].id.split("-")
+	day[0] = parseInt(day[0])
+	day[1] = parseInt(day[1])
+	day[2] = parseInt(day[2])
+	activities_html = $("#activities")[0]
+	activities_html.innerHTML = "<h3>" + day.join(" / ") + "</h3>";
+
+	d = new Date(day[0], day[1] - 1, day[2]).getDay()
+
+	if (d != 7) {
+		acts = activities["repeat"][d]
+	}
+	else {
+		acts = activities["repeat"][7]
+	}
+	if (acts != undefined) {
+		$.each(acts, function (i) {
+			button = ATTEND_BUTTON
+			if (acts[i]["participant"].indexOf(parseInt(getCookie("id"))) != -1) {
+				button = QUIT_BUTTON
+			}
+			activities_html.innerHTML += format(REPEAT_ACTIVITY,
+				acts[i]["name"],
+				NUM_2_DAY[acts[i]["repeat"] - 1],
+				acts[i]["time"],
+				acts[i]["addr"],
+				acts[i]["summary"],
+				format(button, acts[i]["id"]))
+		})
+	}
+
+	acts = activities["date"][day[1]]
+	if (acts != undefined) {
+		$.each(acts, function (i) {
+			date = acts[i]["date"].match(/[0-9]+/g)
+			if (day[2] == parseInt(date[2])) {
+				button = ATTEND_BUTTON
+				if (acts[i]["participant"].indexOf(parseInt(getCookie("id"))) != -1) {
+					button = QUIT_BUTTON
+				}
+				activities_html.innerHTML += format(DATE_ACTIVITY,
+					acts[i]["name"],
+					acts[i]["date"],
+					acts[i]["time"],
+					acts[i]["addr"],
+					acts[i]["summary"],
+					format(button, acts[i]["id"]))
+			}
+		})
+	}
+	activities_html.scrollIntoView(true)
+}
+
+function attendquit(e, id) {
+	json = {
+		"key": getCookie("key"),
+		"id": id,
+		"participant": "",
+	}
+	$.ajax({
+		url: host + "activity/",
+		type: "PUT",
+		dataType: "json",
+		data: JSON.stringify(json),
+		contentType: "application/json; charset=utf-8",
+		success: function (msg) {
+			type = $(e)[0].classList[0]
+			if (type == "attend") {
+				$(e)[0].classList = ["quit"]
+				$(e)[0].innerHTML = "退出"
+			}
+			else {
+				$(e)[0].classList = ["attend"]
+				$(e)[0].innerHTML = "參加"
+			}
+		},
+		error: function (error) {
+			reload = confirm("請重新登錄");
+			if (reload) {
+				show("login-frame");
+			}
+		}
+	})
+}
+
+function showparticipant(t) {
+	json = {
+		"participant": t,
+		"key": getCookie("key"),
+	}
+	$.ajax({
+		url: host + "activity/",
+		data: json,
+		success: function (msg) {
+			$("#activity-list").show()
+			$("#activity-view").hide()
+			activities_html = $("#activity-list")[0]
+			acts = msg
+
+			if (t == "True") {
+				activities_html.innerHTML = "<h3>參加的課程</h3>";
+			}
+			else {
+				activities_html.innerHTML = "<h3>未參加的課程</h3>";
+			}
+
+			$.each(acts, function (i) {
+				if (acts[i]["repeat"] != 0) {
+					button = ATTEND_BUTTON
+					if (acts[i]["participant"].indexOf(parseInt(getCookie("id"))) != -1) {
+						button = QUIT_BUTTON
+					}
+					activities_html.innerHTML += format(REPEAT_ACTIVITY,
+						acts[i]["name"],
+						NUM_2_DAY[acts[i]["repeat"] - 1],
+						acts[i]["time"],
+						acts[i]["addr"],
+						acts[i]["summary"],
+						format(button, acts[i]["id"]))
+				}
+				else {
+					button = ATTEND_BUTTON
+					if (acts[i]["participant"].indexOf(parseInt(getCookie("id"))) != -1) {
+						button = QUIT_BUTTON
+					}
+					activities_html.innerHTML += format(DATE_ACTIVITY,
+						acts[i]["name"],
+						acts[i]["date"],
+						acts[i]["time"],
+						acts[i]["addr"],
+						acts[i]["summary"],
+						format(button, acts[i]["id"]))
+				}
+			})
+			activities_html.innerHTML += `<div style="clear: left"><br></div>`
+		},
+		error: function (error) {
+			reload = confirm("請重新登錄");
+			if (reload) {
+				show("login-frame");
+			}
+		}
+	})
+}
+
+function showpresent(t) {
+	json = {
+		"present": t,
+		"key": getCookie("key"),
+	}
+	$.ajax({
+		url: host + "activity/",
+		data: json,
+		success: function (msg) {
+			$("#activity-list").show()
+			$("#activity-view").hide()
+			activities_html = $("#activity-list")[0]
+			acts = msg
+
+			if (t == "True") {
+				activities_html.innerHTML = "<h3>到場的課程</h3>";
+			}
+			else {
+				activities_html.innerHTML = "<h3>未到場的課程</h3>";
+			}
+
+			$.each(acts, function (i) {
+				if (acts[i]["repeat"] != 0) {
+					activities_html.innerHTML += format(REPEAT_ACTIVITY,
+						acts[i]["name"],
+						NUM_2_DAY[acts[i]["repeat"] - 1],
+						acts[i]["time"],
+						acts[i]["addr"],
+						acts[i]["summary"],
+						"")
+				}
+				else {
+					activities_html.innerHTML += format(DATE_ACTIVITY,
+						acts[i]["name"],
+						acts[i]["date"],
+						acts[i]["time"],
+						acts[i]["addr"],
+						acts[i]["summary"],
+						"")
+				}
+			})
+			activities_html.innerHTML += `<div style="clear: left"><br></div>`
+		},
+		error: function (error) {
+			reload = confirm("請重新登錄");
+			if (reload) {
+				show("login-frame");
+			}
 		}
 	})
 }

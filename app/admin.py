@@ -24,6 +24,29 @@ class AdminHandler(object):
         }
     link_fmt = """<a href="{url}" target="_blank">{string}</a>"""
 
+    def checkadmin(self):
+        key_mgr = cherrypy.request.key
+        meta, conn = cherrypy.request.db
+        users = meta.tables[User.TABLE_NAME]
+        cookie = cherrypy.request.cookie
+
+        if "key" not in cookie:
+            raise cherrypy.HTTPRedirect("/")
+        key = str(cookie["key"].value)
+
+        key_valid = key_mgr.get_key(key)
+        if not key_valid[0]:
+            raise cherrypy.HTTPRedirect("/")
+
+        ss = select([users.c.admin]).where(and_(
+            users.c.id == key_valid[1],
+            users.c.admin == True))
+        rst = conn.execute(ss)
+        row = rst.fetchone()
+        if not row:
+            raise cherrypy.HTTPRedirect("/")
+        return True
+
     @cherrypy.expose
     def index(self):
         self.checkadmin()
@@ -70,28 +93,11 @@ class AdminHandler(object):
 
         return render("admin/teacher.html")
 
-    def checkadmin(self):
-        key_mgr = cherrypy.request.key
-        meta, conn = cherrypy.request.db
-        users = meta.tables[User.TABLE_NAME]
-        cookie = cherrypy.request.cookie
+    @cherrypy.expose
+    def activity(self):
+        self.checkadmin()
 
-        if "key" not in cookie:
-            raise cherrypy.HTTPRedirect("/")
-        key = str(cookie["key"].value)
-
-        key_valid = key_mgr.get_key(key)
-        if not key_valid[0]:
-            raise cherrypy.HTTPRedirect("/")
-
-        ss = select([users.c.admin]).where(and_(
-            users.c.id == key_valid[1],
-            users.c.admin == True))
-        rst = conn.execute(ss)
-        row = rst.fetchone()
-        if not row:
-            raise cherrypy.HTTPRedirect("/")
-        return True
+        return render("admin/activity.html")
 
 
 

@@ -1,4 +1,4 @@
-div.container-card {
+.container-card {
 	width: 80%;
 	background-color: rgba(245, 245, 245, 1);
 	box-shadow: 0px 0px 10px 0px;
@@ -6,10 +6,45 @@ div.container-card {
 	padding: 20px;
 }
 
-div.card-title {
+.card-title {
 	font-size: 24px;
+	color: CornflowerBlue;
 }
 
 .container-card a {
 	color:orange;
+}
+
+.senond-title {
+	font-size: 18px;
+	color: BlueViolet;
+}
+
+.quote {
+	color: #FF6347;
+}
+
+ol {
+	counter-reset: item;
+	padding-left: 0px;
+}
+ol>li {display: block;}
+ol>li:before {
+    content: counter(item) ". ";
+    counter-increment: item;
+    color: red;
+}
+
+ul.second-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+ul.second-list>li,
+.ident {
+	padding-left: 40px;
+}
+ul.second-list>li:before {
+	content: "• ";
+	color: red;
 }

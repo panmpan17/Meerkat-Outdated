@@ -124,6 +124,8 @@ class App():
             model.Classroom,
             model.AdArea,
             model.AdClass,
+
+            model.Activity,
             ]
 
         sa_plugin = SAPlugin(cherrypy.engine, db_str=db_str, tables=tables)
@@ -177,6 +179,7 @@ class App():
         self.mount(restapi.AdClassRestView, restview_config)
         self.mount(restapi.ClassroomRestView, restview_config)
         self.mount(restapi.FileUploadRestView, restview_config)
+        self.mount(restapi.ActivityRestView, restview_config)
         
         self.mount(render.UserCaseHandler, self.render_config)
         self.mount(render.ClassHandler, self.render_config)

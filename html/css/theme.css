@@ -82,6 +82,7 @@ div.loginsignup-frame {
     height: 100%;
     padding-top: 5%;
     padding-left: 10%;
+    z-index: 100;
 }
 
 div.loginsignup-frame-inside {
@@ -254,4 +255,68 @@ textarea#opinion {
 	border: 3px rgba(0, 0, 0, 1);
 	box-shadow: 0px 1px 8px 0px rgba(0,0,0,0.2);
 	padding-top: 5px;
+}
+
+
+label.btn-primary {
+    color: #fff;
+    background-color: #0275d8;
+    border-color: #0275d8;
+}
+label.btn {
+    display: inline-block;
+    padding: .375rem 1rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
+label {
+    display: inline-block;
+    margin-bottom: .5rem;
+}
+
+.btn-check {
+  position: relative;
+  display: inline-block;
+  margin: 10px;
+}
+.btn-check input[type="checkbox"] {
+  position: absolute;
+  clip: rect(0,0,0,0);            
+}
+
+.btn-check input[type="checkbox"]:checked + .btn {
+    color: #fff;
+    background-color: #025aa5;
+    background-image: none;
+    border-color: #01549b;
+    background-image: none;
+    outline: 0;
+}
+
+.btn-check input[type="checkbox"]:focus + .btn,
+.btn-check input[type="checkbox"]:hover + .btn {
+    outline: thin dotted;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+    color: #fff;
+    background-color: #025aa5;
+    border-color: #01549b;
+}       
+
+.btn-check input[type="checkbox"]:checked:focus + .btn,
+.btn-check input[type="checkbox"]:checked:hover + .btn {
+    color: #fff;
+    background-color: #014682;
+    border-color: #01315a;
 }

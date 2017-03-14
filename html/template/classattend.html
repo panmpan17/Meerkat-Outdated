@@ -3,47 +3,11 @@
 {% block css %}
 <link rel="stylesheet" href="html/slick/slick.css">
 <link rel="stylesheet" href="html/slick/slick-theme.css">
+<link rel="stylesheet" href="html/css/classattend.css">
+<link rel="stylesheet" href="html/css/calendar.css">
 <style>
-	.classroom-card .card-img {
-	  width: 100px;
-	  float:left;
-	}
-
-	.classroom-card {
-		padding: 5px;
-		/*padding-bottom: 100px;*/
-		box-shadow: 0px 0px 3px 1px gray;
-		width: 80%;
-		height: 280px;
-		/*overflow-y: scroll;*/
-		text-align: left;
-	}
-
-	.classroom-card .homework {
-		float:left;
-		max-width: 80%;
-	}
-
-	.homework th,
-	.homework td {
-		text-align: center;
-	}
-
-	.homework td a {
-		color: orange;
-		text-decoration: none;
-	}
-
-	div#scratch_project {
-		position: fixed;
-		width: 100%;
-		height: 100%;
-		top: 0px;
-		left: 0px;
-		z-index: 100001;
-		text-align: center;
-		line-height: 100vh;
-		background-color: rgba(0,0,0,0.7);
+	ul.second-layer {
+		margin-left: 30px;
 	}
 </style>
 {% endblock %}
@@ -55,10 +19,19 @@
 			</div>
 			<div class="col-md-2" style="background: #4472CA;border-bottom-left-radius: 10px; border-top-left-radius: 10px">
 				<br>
-				<ul class="nav nav-pills nav-stacked" id="classroomnames"></ul>
+				<ul class="nav nav-pills nav-stacked" id="classroomnames">
+					<li role="presentation" onclick="showactivity()"><a>活動</a></li>
+					<ul class="nav nav-pills nav-stacked second-layer" id="activities-type">
+						<li role="presentation" onclick="showactivity()"><a>行事曆</a></li>
+						<li role="presentation" onclick="showparticipant('True')"><a>參加的活動</a></li>
+						<li role="presentation" onclick="showparticipant('False')"><a>未參加的活動</a></li>
+						<li role="presentation" onclick="showpresent('True')"><a>到場過的活動</a></li>
+						<li role="presentation" onclick="showpresent('False')"><a>未到場的活動</a></li>
+					</ul>
+				</ul>
 				<br>
 			</div>
-			<div class="col-md-8" style="background: white;border-bottom-right-radius: 10px; border-top-right-radius: 10px">
+			<div class="col-md-8" id="hw-view">
 				<h3>
 					<span id="classroom-name"></span>
 					<small>
@@ -74,6 +47,36 @@
 				</table>
 				<div class="" id="hw-shelf"></div>
 			</div>
+			<div class="col-md-8 text-left" id="activity-view" hidden>
+				<br><br>
+				<div class="calendarshow">
+					<div class="title" id="yeardisplay" style="font-family: fonta;">
+						<div class="g" onclick="today()" style="cursor: pointer;">今天</div>
+						<div class="i" onclick="minusOneMonth()">&#10096;</div>
+						<div class="e" id="yearmonth">a</div>
+						<div class="i" onclick="addOneMonth()">&#10097;</div>
+					</div>
+					<div class="body">
+						<div class="calendar-date">
+							<div class="weekday">一</div>
+							<div class="weekday">二</div>
+							<div class="weekday">三</div>
+							<div class="weekday">四</div>
+							<div class="weekday">五</div>
+							<div class="weekday">六</div>
+							<div class="weekday">日</div>
+						</div>
+						<div class="calendar-date" id="date">
+						</div>
+					</div>
+				</div>
+				<br>
+				<center id="activities"></center>
+				<br>
+			</div>
+			<div class="col-md-8 text-left" id="activity-list" hidden>
+				<br>1
+			</div>
 		</div>
 	</div>
 
@@ -84,8 +87,8 @@
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title" id="project-title"></h4>
 				</div>
-				<div class="modal-body" style="line-height: 12px;font-size: 12px;text-align: left">
-					<iframe id="scratch_iframe" width="580" height="500" frameborder="0" style="background: white;overflow-y: scroll;"></iframe><div id="file" style="overflow-x: scroll;white-space: wrap"></div><br>
+				<div class="modal-body">
+					<iframe id="scratch_iframe" width="580" height="500" frameborder="0"></iframe><div id="file"></div><br>
 					<div id="hwcomment"></div>
 				</div>
 				<div class="modal-footer" style="line-height: 12px;">
