@@ -13,9 +13,15 @@ $(function() {
 	
 	$(".calendar").on("change",function(){
 		var $me = $(this),
-				$selected = $me.val(),
-				$parent = $me.parents('.date-picker');
-		$parent.find('.result').children('span').html($selected);
+			$selected = $me.val(),
+			$parent = $me.parents('.date-picker');
+
+		selected = $selected
+		selected = selected.split("/")
+		selected.reverse()
+		selected = selected.join("/")
+
+		$parent.find('.result').children('span').html(selected);
 	});
 
 
@@ -81,3 +87,10 @@ function gettime(eid) {
   return hour + ":" + min + " " + ampm;
 }
 
+function getdate(eid) {
+	selected = $("#" + eid)[0].textContent;
+	selected = selected.split("/")
+	selected.reverse()
+	selected = selected.join("/")
+	return selected
+}

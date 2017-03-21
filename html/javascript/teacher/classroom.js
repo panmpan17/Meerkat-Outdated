@@ -355,12 +355,12 @@ function parse_file(Text) {
 	maxident = l.length.toString().length
 	Text = ""
 	for (i=0;i<l.length;i++) {
+		Text += `<span class="numline">`
 		Text += (i + 1) + "&nbsp;&nbsp;"
 		Text += "&nbsp;&nbsp;".repeat(maxident - (i + 1).toString().length)
-		Text += "|" + "&nbsp;"
-		Text += l[i] + "<br>"
+		Text += "|" + "</span>&nbsp;"
+		Text += l[i].replace(/ /g, "&nbsp;&nbsp;") + "<br>"
 	}
-	Text = Text.replace(/ /g, "&nbsp;&nbsp;")
 	return Text
 }
 

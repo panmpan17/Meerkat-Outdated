@@ -42,6 +42,10 @@
 		background-color: #dbb20f;
 		cursor: pointer;
 	}
+
+	.ui-state-default {
+		font-size: 24px;
+	}
 </style>
 <link rel="stylesheet" href="html/css/datepicker.css">
 {% endblock %}
@@ -52,55 +56,16 @@
 			<div class="col-lg-2 col-md-1 col-sm-12"></div>
 			<div class="col-lg-4 col-md-5 col-sm-6">
 				<select class="form-control" id="city" onchange="changecity(true)">
-					<option value="">全臺</option>
-					<option value="臺北市" selected>臺北市</option>
-					<option value="新北市">新北市</option>
-					<option value="桃園市">桃園市</option>
-					<option value="臺中市">臺中市</option>
-					<option value="臺南市">臺南市</option>
-					<option value="高雄市">高雄市</option>
-					<option value="基隆市">基隆市</option>
-					<option value="新竹市">新竹市</option>
-					<option value="嘉義市">嘉義市</option>
-					<option value="新竹縣">新竹縣</option>
-					<option value="苗栗縣">苗栗縣</option>
-					<option value="彰化縣">彰化縣</option>
-					<option value="南投縣">南投縣</option>
-					<option value="雲林縣">雲林縣</option>
-					<option value="嘉義縣">嘉義縣</option>
-					<option value="屏東縣">屏東縣</option>
-					<option value="宜蘭縣">宜蘭縣</option>
-					<option value="花蓮縣">花蓮縣</option>
-					<option value="臺東縣">臺東縣</option>
-					<option value="澎湖縣">澎湖縣</option>
-					<option value="金門縣">金門縣</option>
-					<option value="連江縣">連江縣</option>
+					<option value="" selected>全臺</option>
 				</select>
 				<br>
 				<select id="towns" class="form-control">
-					<option value="" selected>全縣市</option>
-					<option value="中正區">中正區</option>
-					<option value="大同區">大同區</option>
-					<option value="中山區">中山區</option>
-					<option value="松山區">松山區</option>
-					<option value="大安區">大安區</option>
-					<option value="萬華區">萬華區</option>
-					<option value="信義區">信義區</option>
-					<option value="士林區">士林區</option>
-					<option value="北投區">北投區</option>
-					<option value="內湖區">內湖區</option>
-					<option value="南港區">南港區</option>
-					<option value="文山區">文山區</option>
 				</select>
 				<br>
 			</div>
 			<div class="col-lg-4 col-md-5 col-sm-6">
 				<select id="classtype" class="form-control">
 					<option value="" selected>所有的課程</option>
-					<option value="python_01">Python 初級</option>
-					<option value="scratch_1">Scratch 初級</option>
-					<option value="hourofcode">Hour of Code</option>
-					<option value="teacher_1">教師訓練</option>
 				</select>
 				<br>
 				<div class="date-picker" style="float: left;">
@@ -120,7 +85,7 @@
 			<div class="col-lg-2 col-md-1 col-sm-12"></div>
 			<div class="col-lg-8 col-md-10 col-sm-12">
 				<button class="btn btn-block btn-info" onclick="loadadverise()">
-					搜尋
+					搜尋 <i class="fa fa-search" aria-hidden="true"></i>
 				</button>
 			</div>
 		</div>
@@ -220,7 +185,7 @@
 			c = $("#city")[0].value
 			t = $("#towns")[0].value
 			classtype = $("#classtype")[0].value;
-			date = $("#classdate")[0].textContent;
+			date = getdate("classdate")
 
 			json = {};
 			if (c !== "") {
@@ -248,35 +213,65 @@
 
 					ads = {}
 					teachers_table.innerHTML = "";
-					$.each(teachers, function (i) {
-						if ($("#teacher-" + teachers[i]["id"])[0] == undefined) {
-							t = city_towns[cities[teachers[i]["city"]]][teachers[i]["town"]]
-							c = cities[teachers[i]["city"]]
 
-							summary = teachers[i]["summary"]
+					types = new Set();
+					cities_set = new Set();
+					towns_set = {}
+					$.each(teachers, function (_, i) {
+						if ($("#teacher-" + i["id"])[0] == undefined) {
+							t = city_towns[cities[i["city"]]][i["town"]]
+							c = cities[i["city"]]
+
+							summary = i["summary"]
 							if (summary == "" || summary == null) {
 								summary = "沒有自我介紹"
 							}
 							teachers_table.innerHTML += format(advertise_format,
-								teachers[i]["name"],
-								teachers[i]["phone"],
+								i["name"],
+								i["phone"],
 								c,
 								t,
 								summary.replace(/\n/g, "<br>"),
-								teachers[i]["id"])
+								i["id"])
 
-							ads[teachers[i]["id"]] = []
+							ads[i["id"]] = []
+							cities_set.add(c)
+
+							if (towns_set[c] == undefined) {
+								towns_set[c] = []
+							}
+							if (!towns_set[c].includes(t)) {
+								towns_set[c].push(t)
+							}
 						}
 
-						ads[teachers[i]["id"]].push({
-							"address": teachers[i]["address"],
-							"type": teachers[i]["type"],
-							"date": teachers[i]["date"],
-							"start_time": teachers[i]["start_time"],
-							"end_time": teachers[i]["end_time"],
-							"weekdays": teachers[i]["weekdays"],
+						ads[i["id"]].push({
+							"address": i["address"],
+							"type": i["type"],
+							"date": i["date"],
+							"start_time": i["start_time"],
+							"end_time": i["end_time"],
+							"weekdays": i["weekdays"],
 							})
+						types.add(i["type"])
 					})
+
+					types_html = `<option value="" selected>所有的課程</option>`
+					$.each(Array.from(types), function (_, type) {
+						types_html += format(`<option value="{0}">{1}</option>`,
+							type,
+							CLASS_TO[type])
+					})
+					$("#classtype").html(types_html)
+
+					cities_html = `<option value="" selected>全臺</option>`
+					$.each(Array.from(cities_set), function (_, city_chose) {
+						cities_html += format(`<option value="{0}">{0}</option>`,
+							city_chose)
+					})
+					$("#city").html(cities_html)
+
+					city_towns = towns_set
 				}
 			});
 		}
@@ -306,7 +301,12 @@
 			})
 		}
 
-		loadadverise()
+		$(document).ready(function () {
+			loadadverise()
+			date = new Date();
+			d = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate()
+			$("#classdate").html(d)
+		})
 	</script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 	<script src="/html/javascript/datepicker.js"></script>

@@ -122,6 +122,10 @@
 			background: #DC6180;
 			cursor: pointer;
 		}
+
+		.numline {
+			color: coral;
+		}
 	</style>
 </head>
 
@@ -237,7 +241,7 @@
 							<small onmouseover="$('#hoverimg').show();" onmouseout="$('#hoverimg').hide();">
 								建議利用 Excel, Number 編輯後再貼上 (?)
 							</small>
-							<img hidden id="hoverimg" src="html/images/teacher_example.png" height="150px" alt="" />
+							<img hidden id="hoverimg" src="html/images/scratch_table.png" height="150px" alt="" />
 						</h3>
 						<textarea class="form-control" rows="10" id="field" onkeyup="remove_blank()"></textarea>
 						<br>
@@ -483,7 +487,8 @@
 					<h4 class="modal-title" id="project-title"></h4>
 				</div>
 				<div class="modal-body">
-					<iframe id="scratch_iframe" width="580" height="500" frameborder="0" style="background: white;overflow-y: scroll;"></iframe><div id="file" style="overflow-x: scroll;white-space: wrap"></div><br>
+					<iframe id="scratch_iframe" width="580" height="500" frameborder="0" style="background: white;overflow-y: scroll;"></iframe>
+					<div id="file" style="line-height:14px;overflow-x: scroll;white-space: wrap"></div><br>
 					<textarea maxlength="100" placeholder="作品評論 (100 字以下)" id="project-comment" cols="30" rows="5" class="form-control"></textarea>
 				</div>
 				<div class="modal-footer">

@@ -567,11 +567,16 @@ function changecity(nolimit=false) {
 		towns_select.appendChild(option)
 	}
 
-	for (town=0;town<city_towns[city].length;town++) {
-		option = document.createElement("option")
-		option.value = city_towns[city][town]
-		option.text = city_towns[city][town]
+	try {
+		for (town=0;town<city_towns[city].length;town++) {
+			option = document.createElement("option")
+			option.value = city_towns[city][town]
+			option.text = city_towns[city][town]
 
-		towns_select.appendChild(option)
+			towns_select.appendChild(option)
+		}
+	}
+	catch (e) {
+		towns_select.innerHTML = ""
 	}
 }

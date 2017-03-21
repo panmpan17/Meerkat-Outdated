@@ -36,6 +36,7 @@ class UserCaseHandler(object):
     @cherrypy.expose
     def question(self, file1=None, file2=None, file3=None, **kwargs):
         if cherrypy.request.method == "POST":
+            key_mgr = cherrypy.request.key
             cookie = cherrypy.request.cookie
             try:
                 key = str(cookie["key"].value)

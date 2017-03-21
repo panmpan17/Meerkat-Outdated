@@ -12,8 +12,8 @@
 
 	<link href="/html/bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-	<link href="html/slick/slick.css" rel="stylesheet">
-	<link href="html/slick/slick-theme.css" rel="stylesheet">
+	<link href="/html/slick/slick.css" rel="stylesheet">
+	<link href="/html/slick/slick-theme.css" rel="stylesheet">
 	<!-- my js css -->
 	<script src="/html/javascript/loginsignupframe.js"></script>
 	<script src="/html/javascript/base.js"></script>
@@ -30,7 +30,7 @@
 	
 	{% block content %}
 	{% endblock %}
-	<div class="opinionframe">
+	<!-- <div class="opinionframe">
 		<img onclick="openopinion()" onmouseover="show('report-frame')" onmouseout="hide('report-frame')" src="/html/images/opinion.png" alt="">
 	</div>
 	<div id="report-frame" class="opinion-label">
@@ -38,7 +38,7 @@
 	</div>
 	<div id="o-notlogin-frame" class="opinion-label" style="bottom: 90px;color:red;font-weight: bold;">
 		請先登錄
-	</div>
+	</div> -->
 	<div class="my-container">
 		<div class="account-logo">
 			<div class="dropdown">
@@ -62,7 +62,7 @@
 			</a></li>
 		</ul>
 		<div class="dropdown">
-			<div id="linksmenu" hidden onmouseenter="$(this).show()" onmouseleave="$(this).hide()">
+			<div id="linksmenu" hidden>
 				<a href="/about"> 關於 Kids Coding Studio </a>
 				<a href="/mission"> Kids Coding Studio 的使命 </a>
 				<a href="/resource"> 教學資源 </a>
@@ -205,80 +205,80 @@
 	{% block bcontent %}
 	{% endblock %}
 	<script>
-function show(eid) {
-	$("#" + eid).show();
-}
-
-function hide(eid) {
-	$("#" + eid).hide();
-}
-
-function toggle(eid) {
-	$("#" + eid).toggle()
-}
-
-if (getCookie("userid") !== "") {
-	$("#account-logo")[0].innerHTML = getCookie("userid");
-}
-
-opinion_fmt = `
-{0} <br />
-{1} | {2}
-<hr />
-`
-
-function sendopinion() {
-	c = $("#opinion")[0];
-	if (c.value == "") {
-		alert("請不要留空")
-		return ;
-	}
-	key = getCookie("key")
-	j = {
-		"key": key,
-		"content": c.value
-		}
-	$.ajax({
-		url: host + "opinion/",
-		type: "POST",
-		dataType: "json",
-		data: JSON.stringify(j),
-		contentType: "application/json; charset=utf-8",
-		success: function (msg) {
-			$("#opinion")[0].value = "";
-			hide("opinion-frame");
-			alert("謝謝你填寫意見!!");
-		},
-		error: function (msg) {
-			reload = confirm("請重新登錄");
-			if (reload) {
-				logout();
-			}
+		function show(eid) {
+			$("#" + eid).show();
 		}
 
-	})
-}
+		function hide(eid) {
+			$("#" + eid).hide();
+		}
 
-function openopinion() {
-	if (getCookie("id")) {
-		show("opinion-frame");
-		$.ajax({
-			url: host + "opinion/",
-			type: "GET",
-			success: function (msg) {
-				a = ""
-				for (i = 0; i < msg.length; i++) {
-					a += format(opinion_fmt, msg[i]["content"].replace(/\n/g, "<br>"), msg[i]["writer"], msg[i]["create_at"])
-				}
-				$("#opinions")[0].innerHTML = a
-			}
+		function toggle(eid) {
+			$("#" + eid).toggle()
+		}
 
-		})
-	}
-	else {
-		toggle("o-notlogin-frame");
-	}
-}
+		if (getCookie("userid") !== "") {
+			$("#account-logo")[0].innerHTML = getCookie("userid");
+		}
+
+		// opinion_fmt = `
+		// {0} <br />
+		// {1} | {2}
+		// <hr />
+		// `
+
+		// function sendopinion() {
+		// 	c = $("#opinion")[0];
+		// 	if (c.value == "") {
+		// 		alert("請不要留空")
+		// 		return ;
+		// 	}
+		// 	key = getCookie("key")
+		// 	j = {
+		// 		"key": key,
+		// 		"content": c.value
+		// 		}
+		// 	$.ajax({
+		// 		url: host + "opinion/",
+		// 		type: "POST",
+		// 		dataType: "json",
+		// 		data: JSON.stringify(j),
+		// 		contentType: "application/json; charset=utf-8",
+		// 		success: function (msg) {
+		// 			$("#opinion")[0].value = "";
+		// 			hide("opinion-frame");
+		// 			alert("謝謝你填寫意見!!");
+		// 		},
+		// 		error: function (msg) {
+		// 			reload = confirm("請重新登錄");
+		// 			if (reload) {
+		// 				logout();
+		// 			}
+		// 		}
+
+		// 	})
+		// }
+
+		// function openopinion() {
+		// 	if (getCookie("id")) {
+		// 		show("opinion-frame");
+		// 		$.ajax({
+		// 			url: host + "opinion/",
+		// 			type: "GET",
+		// 			success: function (msg) {
+		// 				a = ""
+		// 				for (i = 0; i < msg.length; i++) {
+		// 					a += format(opinion_fmt, msg[i]["content"].replace(/\n/g, "<br>"), msg[i]["writer"], msg[i]["create_at"])
+		// 				}
+		// 				$("#opinions")[0].innerHTML = a
+		// 			}
+
+		// 		})
+		// 	}
+		// 	else {
+		// 		toggle("o-notlogin-frame");
+		// 	}
+		// }
 	</script>
 
 	{% block script %}

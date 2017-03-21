@@ -202,13 +202,15 @@
 		<span class="title">{0}</span><br />
 		<span class="time">每週{1} {2}</span><br />
 		<span class="addr">{3}</span>
-		<div class="summary">{4}</div>
+		<div class="summary">{4}</div><br />
+		<span class="people">{5}</span>
 	</div>`
 	DATE_ACTIVITY = `<div class="date-act">
 		<span class="title">{0}</span><br />
 		<span class="time">{1} {2}</span><br />
 		<span class="addr">{3}</span>
-		<div class="summary">{4}</div>
+		<div class="summary">{4}</div><br />
+		<span class="people">{5}</span>
 	</div>`
 	BIG_ACTIVITY = `<div class="activity {0}">
 		<div class="title">{1} <small>{3} 點數</small></div><br />
@@ -387,27 +389,29 @@
 			acts = activities["repeat"][7];
 		}
 		if (acts != undefined) {
-			$.each(acts, function (i) {
+			$.each(acts, function (_, act) {
 				activities_html.innerHTML += format(REPEAT_ACTIVITY,
-					acts[i]["name"],
-					NUM_2_DAY[acts[i]["repeat"] - 1],
-					acts[i]["time"],
-					acts[i]["addr"],
-					acts[i]["summary"]);
+					act["name"],
+					NUM_2_DAY[act["repeat"] - 1],
+					act["time"],
+					act["addr"],
+					act["summary"],
+					act["present"].length + " / " + act["participant"].length);
 			})
 		}
 
 		acts = activities["date"][day[1]];
 		if (acts != undefined) {
-			$.each(acts, function (i) {
-				date = acts[i]["date"].match(/[0-9]+/g);
+			$.each(acts, function (_, act) {
+				date = act["date"].match(/[0-9]+/g);
 				if (day[2] == parseInt(date[2])) {
 					activities_html.innerHTML += format(DATE_ACTIVITY,
-						acts[i]["name"],
-						acts[i]["date"],
-						acts[i]["time"],
-						acts[i]["addr"],
-						acts[i]["summary"]);
+						act["name"],
+						act["date"],
+						act["time"],
+						act["addr"],
+						act["summary"],
+						act["present"].length + " / " + act["participant"].length);
 				}
 			})
 		}
@@ -516,7 +520,8 @@
 					NUM_2_DAY[e["repeat"] - 1],
 					e["time"],
 					e["addr"],
-					e["summary"]);
+					e["summary"],
+					e["present"].length + " / " + e["participant"].length);
 			})
 		})
 
@@ -527,7 +532,8 @@
 					e["date"],
 					e["time"],
 					e["addr"],
-					e["summary"]);
+					e["summary"],
+					e["present"].length + " / " + e["participant"].length);
 			})
 		})
 	}

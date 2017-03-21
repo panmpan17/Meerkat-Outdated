@@ -1,5 +1,7 @@
 document.onkeydown = changeclass;
 
+class_ = null
+
 function changeclass(e) {
     e = e || window.event;
     e = e.keyCode
@@ -31,7 +33,7 @@ var privatevideoblock = `<div class=\"embed-responsive embed-responsive-16by9\">
 var buttonblock = `<a target=\"_blank\" href=\"{1}\">
 <button class=\"btn btn-primary\">{0}</button></a>`
 
-var lessonblock = `<li><a onclick="lesson={0};display_lesson()">{1}</a></li>`
+var lessonblock = `<li><a onclick="loadclass(subject_id, {0})">{1}</a></li>`
 
 var questionblock = `<br /><br />
 <div style="text-align: left;">
@@ -39,24 +41,41 @@ var questionblock = `<br /><br />
 </div>
 `
 
-function loadclass(classname) {
+function loadclass(classname, qlesson=-1) {
 	j = {"class":classname}
 	key = getCookie("key")
 	if (key != "") {
 		j["key"] = key
 	}
+
+	if (class_ != null && qlesson == -1) { return; }
+	if (class_ != null) {
+		if (Object.keys(class_["info"]).includes(qlesson)) { return; }
+		j["lesson"] = qlesson
+	}
+
 	$.ajax({
 		url: host + "classes/",
 		type: "GET",
 		data: j,
 		success: function (msg) {
-			class_ = msg
-			display_lessons()
-			display_lesson()
-			display_description()
+			if (class_ == null) {
+				class_ = msg
+				class_["info"] = {}
+
+				display_lessons()
+				// display_lesson()
+				display_description()
+			}
+			else {
+				class_["info"][qlesson] = msg
+				lesson = qlesson
+				display_lesson()
+			}
 		},
-		error: function (msg) {
-			window.location.pathname = "/classes"
+		error: function (error) {
+			// window.location.pathname = "/classes"
+			console.log(error)
 		}
 	})
 }
@@ -77,7 +96,6 @@ function display_description() {
 }
 
 function display_lessons() {
-	l = class_["info"]
 	if (class_["description-video"] != "") {
 		b = "<li><a onclick=\"display_description()\">課程介紹</a></li>\
 	    <li role=\"separator\" class=\"divider\"></li>"
@@ -85,7 +103,7 @@ function display_lessons() {
 	else {
 		b = ""
 	}
-	for (i=0;i<l.length;i++) {
+	for (i=0;i<class_["length"];i++) {
 		if (class_.hasOwnProperty("titles")) {
 			if (class_["titles"][i] != undefined) {
 				b += format(lessonblock, i, class_["titles"][i]);

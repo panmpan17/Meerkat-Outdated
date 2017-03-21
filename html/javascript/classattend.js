@@ -26,19 +26,6 @@ classroom_homwork_format = `
 <br /><br />
 `
 
-python_upload_html = `
-<div class="close" style="padding-right:10px; color:blue">
-<label for="pythonhomework" style="cursor:pointer">交作業</label>
-<form enctype="multipart/form-data" action="rest/1/upload/homework" method="post" id="homeworkupload" hidden>
-	<input name="homwork" id="pythonhomework" type="file" onchange="upload()" multiple/>
-	<input name="session" type="text" />
-	<input name="type" type="text" value="python_01"/>
-	<input name="clsroomid" type="text" value="{0}"/>
-	<input name="key" type="text"/>
-</form>
-</div>
-`
-
 p_p_f = `\
 <div>
 <a style="cursor: pointer" onclick="show_file('/downloads/{1}/{2}', '{3}')">
@@ -87,22 +74,27 @@ function loadclassroom() {
 }
 
 function showclassroom(cls_id) {
-	classroom = classrooms[cls_id]
-	$("#hw-view").show()
-	$("#activities-type").hide()
-	$("#activity-view").hide()
-	$("#activity-list").hide()
-	$("#classroom-name").html(classroom["name"])
-	$("#classroom-type").html(classroom["type"])
+	classroom = classrooms[cls_id];
+	$("#hw-view").show();
+	$("#activities-type").hide();
+	$("#activity-view").hide();
+	$("#activity-list").hide();
+	$("#classroom-name").html(classroom["name"]);
+	$("#classroom-type").html(classroom["type"]);
 
 	if (classroom["type"].indexOf("scratch") != -1) {
-		t_l = classroom["type"].split("_")
-		s_level = a2z[t_l[1] - 1]
+		$("#fileupload").hide();
 
-		s_projct_match = RegExp("[" + s_level + s_level.toUpperCase() + "][0-9]{1,3}\-")
-		loadscratchhomwork(classroom["student_cid"], cls_id)
+		t_l = classroom["type"].split("_");
+		s_level = a2z[t_l[1] - 1];
+
+		s_projct_match = RegExp("[" + s_level + s_level.toUpperCase() + "][0-9]{1,3}\-");
+		loadscratchhomwork(classroom["student_cid"], cls_id);
 	}
 	else if (classroom["type"].indexOf("python") != -1) {
+		$("#fileupload").show();
+		$("[name=clsroomid]")[0].value = cls_id;
+
 		loadfilehomework(classroom["folder"], cls_id);
 	}
 }
@@ -177,7 +169,7 @@ function loadscratchhomwork(student_id, cls_id) {
 }
 
 function play_scratch_project(project_id, cls_id, hw_s) {
-	$("#project").modal("show");
+	show("project")
 
 	$("#scratch_iframe")[0].src = format(project_embed_fromat, project_id)
 	$("#s_project_page")[0].href = format(project_page_format, project_id)
@@ -202,7 +194,7 @@ function loadfilehomework(folder, cls_id) {
 		success: function (msg) {
 			homework = new Set()
 			projects = []
-			units = []
+			units = new Set()
 			files[cls_id] = {}
 			$.each(msg, function (i) {
 				if (python_homework_re.test(msg[i])) {
@@ -214,13 +206,14 @@ function loadfilehomework(folder, cls_id) {
 					}
 
 					homework.add(hwn)
-					units.push(hwn.substring(0, hwn.indexOf("-")))
+					units.add(hwn.substring(0, hwn.indexOf("-")))
 
 					files[cls_id][hwn] = msg[i]
 					projects.push(hwn)
 				}
 			})
 
+			units = Array.from(units)
 			homeworks[cls_id] = homework
 			if (units.length > 0) {
 				buttonsgroup = `<br><div class="dropdown">
@@ -283,8 +276,6 @@ function howtoupload(type) {
 }
 
 function upload() {
-	lesson = null
-	$("[name=session]")[0].value = lesson
 	$("[name=key]")[0].value = getCookie("key")
 	$("#homeworkupload")[0].submit()
 }
@@ -296,17 +287,17 @@ function parse_file(Text) {
 	maxident = l.length.toString().length
 	Text = ""
 	for (i=0;i<l.length;i++) {
+		Text += `<span class="numline">`
 		Text += (i + 1) + "&nbsp;&nbsp;"
 		Text += "&nbsp;&nbsp;".repeat(maxident - (i + 1).toString().length)
-		Text += "|" + "&nbsp;"
-		Text += l[i] + "<br>"
+		Text += "|" + "</span>&nbsp;"
+		Text += l[i].replace(/ /g, "&nbsp;&nbsp;") + "<br>"
 	}
-	Text = Text.replace(/ /g, "&nbsp;&nbsp;")
 	return Text
 }
 
 function show_file(file, cls_id) {
-	$("#project").modal("show");
+	show("project")
 	$("#file").show();
 	$("#scratch_iframe").hide();
 

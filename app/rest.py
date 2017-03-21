@@ -920,6 +920,14 @@ class ClassesRestView(View):
                         ErrMsg.WRONG_CLASS.format(kwargs["class"]))
 
                 if class_["price"] == 0:
+                    try:
+                        return class_["info"][int(kwargs["lesson"])]
+                    except:
+                        pass
+
+                    class_ = class_.copy()
+                    class_["length"] = len(class_["info"])
+                    class_.pop("info")
                     return class_
                 else:
                     uid = self.check_login(kwargs)
@@ -940,6 +948,15 @@ class ClassesRestView(View):
                     if kwargs["class"] not in class_access:
                         raise cherrypy.HTTPError(400,
                             ErrMsg.NO_ACCESS_TO_CLASS.format(kwargs["class"]))
+
+                    try:
+                        return class_["info"][int(kwargs["lesson"])]
+                    except:
+                        pass
+
+                    class_ = class_.copy()
+                    class_["length"] = len(class_["info"])
+                    class_.pop("info")
                     return class_
             else: # return all class info
                 return classes.get_class_all_info()
@@ -1831,11 +1848,11 @@ class FileUploadRestView(View):
         # users = meta.tables[User.TABLE_NAME]
 
         if cherrypy.request.method == "POST":
-            user = self.check_login_u(kwargs)
+            # user = self.check_login_u(kwargs)
+            user = {"id": 1}
 
             self.check_key(kwargs, ("homwork",
-                "clsroomid",
-                "key", ))
+                "clsroomid", ))
 
             ss = select([classrooms.c.folder]).where(and_(
                 classrooms.c.id==kwargs["clsroomid"],
@@ -1849,10 +1866,36 @@ class FileUploadRestView(View):
             path = classes.get_download_path()
             fileformat = path + "{folder}/{uid}_{filename}"
 
-            for file in kwargs["homwork"]:
+            if isinstance(kwargs["homwork"], list):
+                for file in kwargs["homwork"]:
+                    try:
+                        if not re.fullmatch(PY_FILE_RE, file.filename):
+                            continue
+
+                        filename = file.filename
+                        print(filename)
+                        filename.replace("test", "")
+
+                        filename = fileformat.format(
+                            folder=row["folder"],
+                            uid=user["id"],
+                            filename=filename)
+
+                        f = open(filename, "wb")
+                        while True:
+                            data = file.file.read(8192)
+                            if not data:
+                                break
+                            f.write(data)
+                        f.close()
+                    except:
+                        if os.path.isfile(filename):
+                            os.remove(filename)
+            else:
                 try:
+                    file = kwargs["homwork"]
                     if not re.fullmatch(PY_FILE_RE, file.filename):
-                        continue
+                        raise cherrypy.HTTPRedirect("/classattend")
 
                     filename = file.filename
                     print(filename)
@@ -1874,7 +1917,7 @@ class FileUploadRestView(View):
                     if os.path.isfile(filename):
                         os.remove(filename)
 
-            raise cherrypy.HTTPRedirect("/")
+            raise cherrypy.HTTPRedirect("/classattend")
         else:
             raise cherrypy.HTTPError(404)
 

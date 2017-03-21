@@ -1,5 +1,7 @@
 var question_id = null;
 var filter = {}
+page_f = "<li class=\"paging{1}\" onclick=\"changepage({0})\"><a>{0}</a></li>"
+more_f = "<li class=\"paging\"\"><a>...</a></li>"
 
 // 
 // ASK QUESTION
@@ -89,10 +91,40 @@ function nextpage () {
 	}
 }
 
+function pagging(selection, place) {
+	if (selection.length <= 5) {
+		return selection;
+	}
+	pages = new Set([selection[0], selection[selection.length - 1]]);
+	
+	pages.add(selection[place]);
+	if (place > 1) {
+		pages.add(selection[place - 1]);
+	}
+	if (place < selection.length - 1) {
+		pages.add(selection[place + 1]);
+	}
+
+	pages = Array.from(pages).sort()
+
+	last_page = pages[0] - 1
+	add_more_icon = []
+	$.each(pages, function (i, page) {
+		if (page - last_page != 1) {
+			add_more_icon.push(i + add_more_icon.length)
+		}
+		last_page = page
+	})
+
+	$.each(add_more_icon, function (_, icon) {
+		pages.splice(icon, 0, "...");
+	})
+	return pages
+}
+
 function to_questions(l) {
 	// paging html
 	len_pages = l["pages"]
-	page_f = "<li class=\"paging{1}\" onclick=\"changepage({0})\"><a>{0}</a></li>"
 
 	paging = `
 	<nav>
@@ -109,12 +141,18 @@ function to_questions(l) {
 		paging = format(paging, "")
 	}
 
-	for (i = 1; i <= len_pages; i++) {
-		if (page == i) {
-			paging += format(page_f, i, " press");
+	pages = Array.apply(null, Array(len_pages)).map(function (_, i) {return i + 1;});
+	pages = pagging(pages, page - 1)
+	for (i=0;i<pages.length;i++) {
+		if (pages[i] == page) {
+			paging += format(page_f, pages[i], " press");
 			continue
 		}
-		paging += format(page_f, i, "");
+		if (pages[i] == "...") {
+			paging += more_f
+			continue
+		}
+		paging += format(page_f, pages[i], "");
 	}
 
 	paging += `

@@ -205,12 +205,22 @@ function check_students_python() {
 
 function changeclassroomtype() {
 	type = $("#select-type")[0].value
+
 	if ((type == 'python_01') || (type == "scratch_1") || (type == "teacher_1")) {
 		$("#students_info").show()
+		$("#hoverimg").show()
 		$("#check_students_b")[0].innerHTML = `<i class="fa fa-check" aria-hidden="true"></i> 檢查學生資料`
+
+		if ((type == "scratch_1") || (type == "teacher_1")) {
+			$("#hoverimg")[0].src = "html/images/scratch_table.png"
+		}
+		else {
+			$("#hoverimg")[0].src = "html/images/python_table.png"
+		}
 	}
 	else {
 		$("#students_info").hide()
+		$("#hoverimg").hide()
 		$("#check_students_b")[0].innerHTML = `<i class="fa fa-check" aria-hidden="true"></i> 建立教室`
 	}
 }

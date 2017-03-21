@@ -134,8 +134,9 @@
 .date-picker .ui-datepicker-calendar thead tr th span {
 	display: block;
 	width: 100%;
-	color: #cccccc;
+	color: #EEE;
 	margin-bottom: 5px;
+	margin-left: 10px;
 	font-size: 13px;
 }
 
@@ -144,7 +145,7 @@
 	text-decoration: none;
 	color: #fff;
 	line-height: 40px;
-	font-size: 12px;
+	font-size: 18px;
 }
 
 .date-picker .ui-state-default:hover {
