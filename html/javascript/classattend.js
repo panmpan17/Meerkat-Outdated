@@ -88,6 +88,8 @@ function showclassroom(cls_id) {
 		t_l = classroom["type"].split("_");
 		s_level = a2z[t_l[1] - 1];
 
+		$("#classroom-name").html(classroom["name"] + " (" + s_level.toUpperCase() + ")");
+
 		s_projct_match = RegExp("[" + s_level + s_level.toUpperCase() + "][0-9]{1,3}\-");
 		loadscratchhomwork(classroom["student_cid"], cls_id);
 	}

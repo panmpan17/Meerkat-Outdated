@@ -1848,8 +1848,7 @@ class FileUploadRestView(View):
         # users = meta.tables[User.TABLE_NAME]
 
         if cherrypy.request.method == "POST":
-            # user = self.check_login_u(kwargs)
-            user = {"id": 1}
+            user = self.check_login_u(kwargs)
 
             self.check_key(kwargs, ("homwork",
                 "clsroomid", ))

@@ -1,7 +1,5 @@
 document.onkeydown = changeclass;
 
-class_ = null
-
 function changeclass(e) {
     e = e || window.event;
     e = e.keyCode

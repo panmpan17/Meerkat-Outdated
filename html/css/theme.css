@@ -266,8 +266,7 @@ textarea#opinion {
 
 label.btn-primary {
     color: #fff;
-    background-color: #0275d8;
-    border-color: #0275d8;
+    background-color: #0094ff;
 }
 label.btn {
     display: inline-block;
@@ -303,9 +302,8 @@ label {
 
 .btn-check input[type="checkbox"]:checked + .btn {
     color: #fff;
-    background-color: #025aa5;
+    background-color: #0368b2;
     background-image: none;
-    border-color: #01549b;
     background-image: none;
     outline: 0;
 }
@@ -316,13 +314,11 @@ label {
     outline: 5px auto -webkit-focus-ring-color;
     outline-offset: -2px;
     color: #fff;
-    background-color: #025aa5;
-    border-color: #01549b;
+    background-color: #0079d1;
 }       
 
 .btn-check input[type="checkbox"]:checked:focus + .btn,
 .btn-check input[type="checkbox"]:checked:hover + .btn {
     color: #fff;
-    background-color: #014682;
-    border-color: #01315a;
+    background-color: #0368b2;
 }
