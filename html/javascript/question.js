@@ -379,18 +379,17 @@ function answer() {
 	content = $("#answer-content")[0].value;
 
 	if (content) {
-		key = getCookie("key");
-		uid = getCookie("id");
 		json = {
+			"key": getCookie("key"),
 			"content": content,
-			"writer": uid,
+			"writer": getCookie("id"),
 			"answer_to": question_id,
 		}
 		$.ajax({
 			url: host + "answer/",
 			type: "POST",
 			dataType: "json",
-			data: JSON.stringify({key: key,answer_json: json}),
+			data: JSON.stringify(json),
 			contentType: "application/json; charset=utf-8",
 			success: function (msg) {
 				f1 = $("#f1-a")[0].files[0]

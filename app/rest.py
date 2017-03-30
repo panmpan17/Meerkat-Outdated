@@ -12,6 +12,7 @@ from datetime import datetime, timedelta
 from datetime import date as Date
 from datetime import time as Time
 from requests import get as http_get
+from _thread import start_new_thread
 from requests import post as http_post
 
 from sqlalchemy import desc, not_
@@ -624,7 +625,7 @@ class QuestionRestView(View):
                 row = conn.execute(ss)
 
                 qid = row.first()["id"]
-                title = "新問題: " + data["question_json"]["title"]
+                title = "Coding 4 Fun 討論區 新問題: " + data["question_json"]["title"]
                 content = data["question_json"]["content"]
 
                 params = {
@@ -812,37 +813,48 @@ class AnswerRestView(View):
             data = cherrypy.request.json
             uid = self.check_login(data)
 
-            self.check_key(data, ("answer_json", ))
-            answer_json = data["answer_json"]
-            if not isinstance(answer_json, dict):
-                raise cherrypy.HTTPError(400, ErrMsg.NOT_DICT)
+            self.check_key(data, (
+                "content",
+                "writer",
+                "answer_to", ))
 
-            a = Answer()
-            result = a.validate_json(answer_json)
-            if isinstance(result, Exception):
-                raise (result)
+            # ss = select([users.c.id]).where(
+            #     users.c.id == int(answer_json["writer"]))
+            # rst = conn.execute(ss)
+            # row = rst.fetchone()
+            # if not row:
+            #     raise cherrypy.HTTPError(400,
+            #         ErrMsg.UNKNOWN_ID.format(answer_json["writer"]))
 
-            ss = select([users.c.id]).where(
-                users.c.id == int(answer_json["writer"]))
-            rst = conn.execute(ss)
-            row = rst.fetchone()
-            if not row:
-                raise cherrypy.HTTPError(400,
-                    ErrMsg.UNKNOWN_ID.format(answer_json["writer"]))
-
+            # check question is solved
             ss = select([questions.c.solved]).where(
-                questions.c.id == int(answer_json["answer_to"]))
+                questions.c.id == int(data["answer_to"]))
             rst = conn.execute(ss)
             row = rst.fetchone()
             if not row:
                 raise cherrypy.HTTPError(400,
-                    ErrMsg.UNKNOWN_ID.format(answer_json["answer_to"]))
+                    ErrMsg.UNKNOWN_ID.format(data["answer_to"]))
             elif row["solved"]:
                 raise cherrypy.HTTPError(400, ErrMsg.SOLVED_QUESTION.\
-                    format(answer_json["answer_to"]))
+                    format(data["answer_to"]))
 
+            # send email to relative user
+            j1 = join(users, questions)
+            ss1 = select([users.c.email, users.c.id]).select_from(j1).where(
+                questions.c.id==2).group_by(users.c.id)
+            j2 = join(users, answers)
+            ss2 = select([users.c.email, users.c.id]).select_from(j2).where(
+                answers.c.answer_to==2).group_by(users.c.id)
+
+            ss = ss1.union(ss2)
+            rst = conn.execute(ss)
+            rows = rst.fetchall()
+
+            start_new_thread(self.sendrelative, (rows, data["content"], ))
+
+            data.pop("key")
             ins = answers.insert()
-            rst = conn.execute(ins, answer_json)
+            rst = conn.execute(ins, data)
 
             if rst.is_insert:
                 ss = select([answers.c.id]).order_by(desc(answers.c.id))
@@ -897,6 +909,17 @@ class AnswerRestView(View):
 
         else:
             raise cherrypy.HTTPError(404)
+
+    def sendrelative(self, rows, content):
+        for row in rows:
+            title = "Coding 4 Fun 討論區 新回應"
+
+            params = {
+                "addr": row["email"],
+                "sub": title,
+                "cnt": content
+                }
+            http_post(EMAIL_REST_URL, params=params)
 
 class ClassesRestView(View):
     _cp_config = View._cp_config
