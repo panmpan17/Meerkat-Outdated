@@ -455,6 +455,7 @@ class Teacher(object):
             "city": row["city"],
             "town": row["town"],
 
+            "adclassid": row["adclassid"],
             "address": row["address"],
             "type": row["type"],
             "date": row["date"].strftime("%Y 年 %m 月 %d 日"),

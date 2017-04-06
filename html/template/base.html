@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" manifest="/html/main.appcache">
 <head>
 	<meta charset="UTF-8">
 	<title>{% block title %}{% endblock %}</title>
@@ -40,7 +40,7 @@
 		請先登錄
 	</div> -->
 	<div class="my-container">
-		<div class="account-logo">
+		<div class="account-logo" style="cursor: pointer;">
 			<div class="dropdown">
 				<div id="accountmenu">
 					<a onclick="showinfo();">帳號資訊</a>
@@ -48,16 +48,16 @@
 					<a onclick="logout();">登出</a>
 				</div>
 			</div>
-			<a href="#" onclick="presslogo();" id="account-logo">登入/ 註冊</a>
+			<a id="account-logo" class="unselectable" onclick="presslogo();">登入/ 註冊</a>
 		</div>
 		<a href="/">
 			<img id="navbarlogo" src="/html/images/kidcodingicon.png" alt="">
 		</a>
 		<ul class="navbar">
-			<li class="navtext"><a class="btn-large" href="/news">最新</a></li>
-			<li class="navtext"><a class="btn-large" href="/classes">課程</a></li>
-			<li class="navtext"><a class="btn-large" href="/question">討論區</a></li>
-			<li class="navtext"><a class="btn-large" href="#" onclick="toggle('linksmenu')">
+			<li class="navtext" style="cursor: pointer;"><a class="btn-large" href="/news">最新</a></li>
+			<li class="navtext" style="cursor: pointer;"><a class="btn-large" href="/classes">課程</a></li>
+			<li class="navtext" style="cursor: pointer;"><a class="btn-large" href="/question">討論區</a></li>
+			<li class="navtext unselectable" style="cursor: pointer;" onclick="toggle('linksmenu')"><a class="btn-large">
 				&#9776;
 			</a></li>
 		</ul>
@@ -66,9 +66,9 @@
 				<a href="/about"> 關於 Kids Coding Studio </a>
 				<a href="/mission"> Kids Coding Studio 的使命 </a>
 				<a href="/resource"> 教學資源 </a>
-				<a onmouseenter="show('how-to-learn')" onmouseleave="hide('how-to-learn')"> 
+				<!-- <a onmouseenter="show('how-to-learn')" onmouseleave="hide('how-to-learn')"> 
 					<i class="fa fa-caret-left" aria-hidden="true"></i> 學什麼？如何學？
-				</a>
+				</a> -->
 				<!-- <a> 教學資源 </a> -->
 				<!-- <a> 如何收費 </a> -->
 				<!-- <a> 建議網站 </a> -->
@@ -76,13 +76,13 @@
 				<a href="/teacher/login"> 教師頁面 </a>
 			</div>
 		</div>
-		<div class="dropdown">
+		<!-- <div class="dropdown">
 			<div id="how-to-learn" hidden onmouseenter="$(this).show()" onmouseleave="$(this).hide()">
 				<a href="">1</a>
 				<a href="">1</a>
 				<a href="">1</a>
 			</div>
-		</div>
+		</div> -->
 	</div>
 	<!-- login frame -->
 	<div id="login-frame" class="loginsignup-frame" hidden>

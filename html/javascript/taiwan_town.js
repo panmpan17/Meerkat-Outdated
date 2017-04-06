@@ -563,7 +563,7 @@ function changecity(nolimit=false) {
 	if (nolimit) {
 		option = document.createElement("option")
 		option.value = ""
-		option.text = "無限制 (鄉鎮市)"
+		option.text = "全縣市"
 		towns_select.appendChild(option)
 	}
 

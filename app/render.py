@@ -23,6 +23,8 @@ class UserCaseHandler(object):
         "tools.classestool.on": True,
         "tools.keytool.on": True,
         "tools.emailvalidtool.on": True,
+        # "tools.caching.on": True,
+        # "tools.caching.delay": 3600,
         }
 
     @staticmethod

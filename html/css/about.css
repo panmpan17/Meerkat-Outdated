@@ -8,7 +8,7 @@
 
 .card-title {
 	font-size: 24px;
-	color: CornflowerBlue;
+	color: dodgerblue;
 }
 
 .container-card a {
@@ -32,7 +32,7 @@ ol>li {display: block;}
 ol>li:before {
     content: counter(item) ". ";
     counter-increment: item;
-    color: red;
+    color: cornflowerblue;
 }
 
 ul.second-list {
@@ -46,5 +46,5 @@ ul.second-list>li,
 }
 ul.second-list>li:before {
 	content: "• ";
-	color: red;
+	color: cornflowerblue;
 }

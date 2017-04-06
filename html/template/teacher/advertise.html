@@ -135,6 +135,7 @@
 	<script src="html/javascript/taiwan_town.js"></script>
 	<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 	<script>
+		month_re = new RegExp("[0-9]+ 月")
 		CLASS_TO = {
 			"python_01": "Python 初級",
 			"scratch_1": "Scratch 初級",
@@ -143,11 +144,11 @@
 		}
 
 		advertise_format = `
-		<tr id="teacher-{5}" onclick="showadclass({5})">
+		<tr id="teacher-{3}" onclick="showadclass('{3}')">
 			<td>{0}</td> <!-- Name -->
 			<td>{1}</td> <!-- Phone -->
-			<td>{2} {3}</td> <!-- City Town -->
-			<td>{4}</td>
+			<td id="{3}-area"></td> <!-- City Town -->
+			<td>{2}</td>
 		</tr>
 		`
 
@@ -180,7 +181,8 @@
 			"teacher_1": "教師訓練",
 		}
 
-		ads = {}
+		teachers = null;
+		ads = {};
 		function loadadverise() {
 			c = $("#city")[0].value
 			t = $("#towns")[0].value
@@ -203,12 +205,122 @@
 				json["date"] = date;
 			}
 
+			jsonkeys = Object.keys(json)
+				
+			teachers_table = $("#teachers")[0]
 
+			ads = {}
+			teachers_table.innerHTML = "";
+			exist_city_town = {}
+			$.each(teachers, function (_, i) {
+				if (jsonkeys.includes("type")) {
+					if (json["type"] != i["type"]) {
+						return true;
+					}
+				}
+				if (jsonkeys.includes("city")) {
+					if (json["city"] != i["city"]) {
+						return true;
+					}
+				}
+				if (jsonkeys.includes("town")) {
+					if (json["town"] != i["town"]) {
+						return true;
+					}
+				}
+				if (jsonkeys.includes("date")) {
+					date = json["date"].split("/")
+					month = date[1]
+					year = date[2]
+
+					if (!i["date"].startsWith(year)) {
+						return true;
+					}
+
+					m = month_re.exec(i["date"])[0]
+					if (!m.startsWith(month)) {
+						return true;
+					}
+				}
+
+				if ($("#teacher-" + i["id"])[0] == undefined) {
+					t = city_towns[cities[i["city"]]][i["town"]]
+					c = cities[i["city"]]
+
+					summary = i["summary"]
+					if (summary == "" || summary == null) {
+						summary = "沒有自我介紹"
+					}
+					teachers_table.innerHTML += format(advertise_format,
+						i["name"],
+						i["phone"],
+						summary.replace(/\n/g, "<br>"),
+						i["id"])
+
+					ads[i["id"]] = []
+				}
+
+				if (exist_city_town[i["id"]] == undefined) {
+					exist_city_town[i["id"]] = []
+				}
+
+				city_town_id = i["city"] + "-" + i["town"]
+				if (!exist_city_town[i["id"]].includes(city_town_id)) {
+					exist_city_town[i["id"]].push(city_town_id)
+					t = city_towns[cities[i["city"]]][i["town"]]
+					c = cities[i["city"]]
+					$("#" + i["id"] + "-area")[0].innerHTML += c + " " + t + "<br>"
+				}
+
+				ads[i["id"]].push({
+					"address": i["address"],
+					"type": i["type"],
+					"date": i["date"],
+					"start_time": i["start_time"],
+					"end_time": i["end_time"],
+					"weekdays": i["weekdays"],
+					"id": i["adclassid"],
+					})
+				types.add(i["type"])
+			})
+		}
+
+		function showadclass(tid) {
+			show("adclass-frame");
+
+			$("#adclasses")[0].innerHTML = ""
+			repeat = []
+			$.each(ads[tid], function (_, ad) {
+				if (repeat.includes(ad["id"])) {
+					return true;
+				}
+				c_weekdays = []
+				$.each(ad["weekdays"], function (i) {
+					c_weekdays.push(
+						chinese_weekday[
+							ad["weekdays"][i]
+							])
+				})
+
+				$("#adclasses")[0].innerHTML += format(
+					adclass_format,
+					ad["address"],
+					CLASS_TO[ad["type"]],
+					ad["date"],
+					ad["start_time"],
+					ad["end_time"],
+					c_weekdays);
+				repeat.push(ad["id"])
+			})
+		}
+
+		$(document).ready(function () {
 			$.ajax({
 				url: host + "adarea/",
 				type: "GET",
-				data: json,
-				success: function (teachers) {
+				data: {},
+				success: function (msg) {
+					teachers = msg
 					teachers_table = $("#teachers")[0]
 
 					ads = {}
@@ -217,6 +329,7 @@
 					types = new Set();
 					cities_set = new Set();
 					towns_set = {}
+					exist_city_town = {}
 					$.each(teachers, function (_, i) {
 						if ($("#teacher-" + i["id"])[0] == undefined) {
 							t = city_towns[cities[i["city"]]][i["town"]]
@@ -229,20 +342,30 @@
 							teachers_table.innerHTML += format(advertise_format,
 								i["name"],
 								i["phone"],
-								c,
-								t,
 								summary.replace(/\n/g, "<br>"),
 								i["id"])
 
 							ads[i["id"]] = []
-							cities_set.add(c)
+						}
+						cities_set.add(c)
 
-							if (towns_set[c] == undefined) {
-								towns_set[c] = []
-							}
-							if (!towns_set[c].includes(t)) {
-								towns_set[c].push(t)
-							}
+						if (towns_set[c] == undefined) {
+							towns_set[c] = []
+						}
+						if (!towns_set[c].includes(t)) {
+							towns_set[c].push(t)
+						}
+
+						if (exist_city_town[i["id"]] == undefined) {
+							exist_city_town[i["id"]] = []
+						}
+
+						city_town_id = i["city"] + "-" + i["town"]
+						if (!exist_city_town[i["id"]].includes(city_town_id)) {
+							exist_city_town[i["id"]].push(city_town_id)
+							t = city_towns[cities[i["city"]]][i["town"]]
+							c = cities[i["city"]]
+							$("#" + i["id"] + "-area")[0].innerHTML += c + " " + t + "<br>"
 						}
 
 						ads[i["id"]].push({
@@ -252,6 +375,7 @@
 							"start_time": i["start_time"],
 							"end_time": i["end_time"],
 							"weekdays": i["weekdays"],
+							"id": i["adclassid"],
 							})
 						types.add(i["type"])
 					})
@@ -271,40 +395,28 @@
 					})
 					$("#city").html(cities_html)
 
+					$.each(teachers, function (_, i) {
+						c = cities[i["city"]]
+						t = i["town"]
+						t = city_towns[c][t]
+						index = towns_set[c].indexOf(t)
+						i["town"] = index
+					})
+
 					city_towns = towns_set
 				}
 			});
-		}
 
-		function showadclass(tid) {
-			show("adclass-frame");
-
-			$("#adclasses")[0].innerHTML = ""
-			$.each(ads[tid], function (a) {
-				c_weekdays = []
-				$.each(ads[tid][a]["weekdays"], function (i) {
-					c_weekdays.push(
-						chinese_weekday[
-							ads[tid][a]["weekdays"][i]
-							])
-				})
-
-				$("#adclasses")[0].innerHTML += format(
-					adclass_format,
-					ads[tid][a]["address"],
-					CLASS_TO[ads[tid][a]["type"]],
-					ads[tid][a]["date"],
-					ads[tid][a]["start_time"],
-					ads[tid][a]["end_time"],
-					c_weekdays,
-					ads[tid][a]["id"]);
-			})
-		}
-
-		$(document).ready(function () {
-			loadadverise()
 			date = new Date();
-			d = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate()
+			m = date.getMonth() + 1
+			d = date.getDate()
+			if (m < 10) {
+				m = "0" + m
+			}
+			if (d < 10) {
+				d = "0" + d
+			}
+			d = date.getFullYear() + "/" + m + "/" + d
 			$("#classdate").html(d)
 		})
 	</script>

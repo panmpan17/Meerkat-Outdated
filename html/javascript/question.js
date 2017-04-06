@@ -539,4 +539,6 @@ function addfilter(t, v) {
 	getallquestion(select_type, select_values);
 }
 
-getallquestion(select_type, select_values);
+$(document).ready(function () {
+	getallquestion(select_type, select_values);
+})

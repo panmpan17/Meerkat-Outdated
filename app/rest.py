@@ -12,8 +12,8 @@ from datetime import datetime, timedelta
 from datetime import date as Date
 from datetime import time as Time
 from requests import get as http_get
-from _thread import start_new_thread
 from requests import post as http_post
+from _thread import start_new_thread
 
 from sqlalchemy import desc, not_
 from sqlalchemy.sql import select, update, and_, join, or_
@@ -1475,6 +1475,7 @@ class AdAreaRestView(View):
                     adareas.c.city,
                     adareas.c.town,
 
+                    adclasses.c.id.label("adclassid"),
                     adclasses.c.address,
                     adclasses.c.type,
                     adclasses.c.date,
@@ -1482,43 +1483,6 @@ class AdAreaRestView(View):
                     adclasses.c.end_time,
                     adclasses.c.weekdays,
                     ])
-
-                if "city" in kwargs:
-                    try:
-                        city = int(kwargs["city"])
-                    except:
-                        raise cherrypy.HTTPError(400,
-                            ErrMsg.NOT_INT.format("city"))
-
-                    ss = ss.where(
-                        adareas.c.city==city)
-
-                    if "town" in kwargs:
-                        try:
-                            town = int(kwargs["town"])
-                        except:
-                            raise cherrypy.HTTPError(400,
-                                ErrMsg.NOT_INT.format("town"))
-
-                        ss = ss.where(
-                            adareas.c.town==town)
-                if "type" in kwargs:
-                    ss = ss.where(adclasses.c.type==kwargs["type"])
-                if "date" in kwargs:
-                    date_ = self.parsedate(kwargs["date"])
-                    if date_:
-                        y = date_.year
-                        m = date_.month + 1
-                        if m == 13:
-                            y += 1
-                            m = 1
-                        next_month_start = Date(
-                            year=y,
-                            month=m,
-                            day=1)
-                        ss = ss.where(and_(
-                            adclasses.c.date>=date_,
-                            adclasses.c.date<next_month_start))
 
                 j1 = teachers.join(
                     adareas, teachers.c.id==adareas.c.teacher).join(

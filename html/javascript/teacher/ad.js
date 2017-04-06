@@ -24,7 +24,7 @@ chinese_weekday = [
 function newadclass() {
 	address = $("#class-address")[0].value;
 	type = $("#class-type")[0].value;
-	date = $("#classdate")[0].textContent;
+	date = getdate("classdate");
 	start_time = gettime(1);
 	end_time = gettime(2);
 
