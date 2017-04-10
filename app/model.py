@@ -11,7 +11,7 @@ def GMT(t):
     # G = timezone("GMT")
     # utc = t.utcnow()
     t += timedelta(hours=8)
-    fmt = '%Y.%m.%d %H:%M'
+    fmt = '%Y / %m / %d %H:%M'
     return t.strftime(fmt)
 
 def hash(v):

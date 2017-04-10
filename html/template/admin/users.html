@@ -76,19 +76,16 @@
 	</nav>
 	<br>
 	<table id="userstable">
-		<tbody id="users">
+		<thead>
 			<tr>
 				<th>Id</th>
-				<th>Userid</th>
+				<th>帳號</th>
 				<th>Email</th>
-				<th>Birth Year</th>
-				<th>Nickname</th>
-				<th>Admin</th>
-				<th>Job</th>
-				<th>Point</th>
-				<th>Create At</th>
+				<th>暱稱</th>
+				<th>註冊日期</th>
 			</tr>
-		</tbody>
+		</thead>
+		<tbody id="users"></tbody>
 	</table>
 	<br><br>
 </div>
@@ -184,7 +181,7 @@ function loaduser(alpha) {
 		type: "GET",
 		data: {"key": getCookie("key"), "userid": alpha},
 		success: function (msg) {
-			html = "<tr><th>Id</th><th>Userid</th><th>Email</th><th>Nickname</th><th>Create At</th></tr>"
+			html = "";
 			for (i=0; i<msg.length; i++) {
 				user = format(user_format, msg[i]["id"],
 					msg[i]["userid"],

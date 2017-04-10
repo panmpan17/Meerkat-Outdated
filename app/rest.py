@@ -4,6 +4,7 @@ import os
 import re
 import json
 
+from app.email_html import Email
 from app.model import ErrMsg, User, Question, Answer, Post, Opinion
 from app.model import ClassManage, Teacher, AdArea, Classroom, AdClass
 from app.model import Activity
@@ -22,42 +23,8 @@ from sqlalchemy.exc import IntegrityError
 PY_FILE_RE = r"(test|hw)1?[0-9]-[0-9]{1,2}\.py"
 
 ADVERTISE_LIMIT = 5
-EMAIL_REST_URL = "http://restemailserver.appspot.com"
 RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify"
 RECAPTCHA_SERCRET = "6LcSMwoUAAAAAEIO6z5s2FO4QNjz0pZqeD0mZqRZ"
-
-EMAIL_VALID = """
-<html><head>
-<style>
-div \{
-font-size: 24px;
-}
-div#c4f \{
-top: 0px;
-left: 0px;
-position: absolute;
-width:100%;
-font-size:36px;
-color: white;
-background-color:rgb(43,142,183);}
-button \{
-width:300px;
-height:  100px;
-font-size: 24px;
-color: white;
-background-color:rgb(43,142,183);
-border: 0px;}
-button:hover \{
-background-color: rgb(30,105,138);
-}</style></head><body>
-<center>
-<div id="c4f">Codinf For Fun  Email 認證</div><br /><br /><br />
-<div>
-按下面的按鈕, 來啟動你的帳戶: <br /><br />
-<a href="url"><button>啟動我的帳戶</button></a><br /><br />
-或使用以下網址:<br><a href="url">url</a></div></body></center></html>
-"""
-
 
 un = "cd4fun_u"
 pwd = "mlmlml"
@@ -80,8 +47,8 @@ def find_host(url):
 
 def send_email_valid(key, addr):
     url = find_host(cherrypy.url()) + "/active/" + key
-    cnt = EMAIL_VALID.replace("url", url)
-    http_post(EMAIL_REST_URL, params={
+    cnt = Email.REGIST_VALID.replace("url", url)
+    http_post(Email.URL, params={
         "addr": addr,
         "sub": "Email 認證",
         "cnt": cnt})
@@ -139,6 +106,8 @@ class View(object):
         rst = conn.execute(ss)
         row = rst.fetchone()
 
+        if not row:
+            raise cherrypy.HTTPError(401)
         if row["disabled"]:
             raise cherrypy.HTTPError(401)
         return row["id"]
@@ -285,6 +254,7 @@ class UserRestView(View):
     def index(self, *args, **kwargs):
         meta, conn = cherrypy.request.db
         key_mgr = cherrypy.request.key
+        email_valid = cherrypy.request.email_valid
         users = meta.tables[User.TABLE_NAME]
         classmanages = meta.tables[ClassManage.TABLE_NAME]
 
@@ -382,7 +352,7 @@ class UserRestView(View):
                 if isinstance(result, Exception):
                     raise(result)
 
-            ins = users.insert()
+            ins = users.insert().returning(users.c.id)
             try:
                 rst = conn.execute(ins, usersjson)
             except IntegrityError:
@@ -391,14 +361,17 @@ class UserRestView(View):
             if rst.is_insert:
                 cherrypy.response.status = 201
                 key = str(uuid())
-                uid = rst.lastrowid
-                key_mgr.update_key(key, rst.lastrowid)
+                uid = rst.fetchone()["id"]
 
-                ekey = cherrypy.request.email_valid.new_mail(uid)
+                key_mgr.update_key(key, uid)
+                ekey = email_valid.new_mail(uid)
                 send_email_valid(ekey, usersjson[0]["email"])
 
-                return {"key": key, "lastrowid": rst.lastrowid,
-                    "userid": usersjson[-1]["userid"]}
+                return {
+                    "key": key,
+                    "lastrowid": uid,
+                    "userid": usersjson[-1]["userid"]
+                    }
             else:
                 raise cherrypy.HTTPError(503) 
         #  update user attributes
@@ -458,7 +431,7 @@ class UserRestView(View):
 
             r = email_valid.check_mail(user["id"], data["ekey"])
             if not r:
-                raise cherrypy.HTTPRedirect("/")
+                raise cherrypy.HTTPError(400)
 
             stmt = update(users).where(
                 users.c.id == user["id"]).values(
@@ -615,16 +588,13 @@ class QuestionRestView(View):
                 raise cherrypy.HTTPError(400,
                     ErrMsg.UNKNOWN_ID.format(question_json["writer"]))
 
-            ins = questions.insert()
+            ins = questions.insert().returning(questions.c.id)
             rst = conn.execute(ins, question_json)
 
             if rst.is_insert:
                 cherrypy.response.status = 201
 
-                ss = select([questions.c.id]).order_by(desc(questions.c.id))
-                row = conn.execute(ss)
-
-                qid = row.first()["id"]
+                qid = rst.fetchone()["id"]
                 title = "Coding 4 Fun 討論區 新問題: " + data["question_json"]["title"]
                 content = data["question_json"]["content"]
 
@@ -633,10 +603,10 @@ class QuestionRestView(View):
                     "sub": title,
                     "cnt": content
                     }
-                http_post(EMAIL_REST_URL,
+                http_post(Email.URL,
                     params=params)
                 params["addr"] = "shalley.tsay@gmail.com"
-                http_post(EMAIL_REST_URL,
+                http_post(Email.URL,
                     params=params)
 
                 return {"question_id": qid}
@@ -853,15 +823,12 @@ class AnswerRestView(View):
             start_new_thread(self.sendrelative, (rows, data["content"], ))
 
             data.pop("key")
-            ins = answers.insert()
+            ins = answers.insert().returning(answers.c.id)
             rst = conn.execute(ins, data)
 
             if rst.is_insert:
-                ss = select([answers.c.id]).order_by(desc(answers.c.id))
-                row = conn.execute(ss)
-
                 cherrypy.response.status = 201
-                return {"answer_id": row.first()["id"]}
+                return {"answer_id": rst.fetchone()["id"]}
             else:
                 raise cherrypy.HTTPError(503)
         else:
@@ -876,7 +843,7 @@ class AnswerRestView(View):
             data = cherrypy.request.json
             uid = self.check_login(data)
 
-            self.check_login(data, ("filepath", ))
+            self.check_key(data, ("filepath", ))
             try:
                 aid = int(data["aid"])
             except:
@@ -919,7 +886,7 @@ class AnswerRestView(View):
                 "sub": title,
                 "cnt": content
                 }
-            http_post(EMAIL_REST_URL, params=params)
+            http_post(Email.URL, params=params)
 
 class ClassesRestView(View):
     _cp_config = View._cp_config

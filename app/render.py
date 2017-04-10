@@ -63,8 +63,6 @@ class UserCaseHandler(object):
                 filename = fileformat.format(id=id_, filename=file1.filename)
                 filesname.append(filename)
 
-                print("1", file1.filename)
-
                 f = open(filename, "wb")
                 while True:
                     data = file1.file.read(8192)
@@ -83,8 +81,6 @@ class UserCaseHandler(object):
                 filename = fileformat.format(id=id_, filename=file2.filename)
                 filesname.append(filename)
 
-                print("2", file2.filename)
-
                 f2 = open(filename, "wb")
                 while True:
                     data = file2.file.read(8192)
@@ -102,8 +98,6 @@ class UserCaseHandler(object):
                 id_ = str(uuid())
                 filename = fileformat.format(id=id_, filename=file3.filename)
                 filesname.append(filename)
-
-                print("3", file3.filename)
 
                 f3 = open(filename, "wb")
                 while True:
