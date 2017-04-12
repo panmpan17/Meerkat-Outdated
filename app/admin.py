@@ -99,6 +99,12 @@ class AdminHandler(object):
 
         return render("admin/activity.html")
 
+    @cherrypy.expose
+    def report(self):
+        self.checkadmin()
+
+        return render("admin/report.html")
+
 
 
 

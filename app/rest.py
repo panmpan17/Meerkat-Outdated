@@ -7,7 +7,7 @@ import json
 from app.email_html import Email
 from app.model import ErrMsg, User, Question, Answer, Post, Opinion
 from app.model import ClassManage, Teacher, AdArea, Classroom, AdClass
-from app.model import Activity
+from app.model import Activity, Report
 from uuid import uuid1 as uuid
 from datetime import datetime, timedelta
 from datetime import date as Date
@@ -1165,49 +1165,49 @@ class PostRestView(View):
             t_s_s = string.find("[#", t_l_e + 2)
         return string
 
-class OpinionRestView(View):
-    _root = rest_config["url_root"] + "opinion/"
+# class OpinionRestView(View):
+#     _root = rest_config["url_root"] + "opinion/"
 
-    @cherrypy.expose
-    def index(self, *args, **kwargs):
-        meta, conn = cherrypy.request.db
-        opinions = meta.tables[Opinion.TABLE_NAME]
-        users = meta.tables[User.TABLE_NAME]
+#     @cherrypy.expose
+#     def index(self, *args, **kwargs):
+#         meta, conn = cherrypy.request.db
+#         opinions = meta.tables[Opinion.TABLE_NAME]
+#         users = meta.tables[User.TABLE_NAME]
 
-        if cherrypy.request.method == "GET":
-            ss = select([opinions]).order_by(desc(opinions.c.create_at))
-            rst = conn.execute(ss)
-            rows = rst.fetchall()
+#         if cherrypy.request.method == "GET":
+#             ss = select([opinions]).order_by(desc(opinions.c.create_at))
+#             rst = conn.execute(ss)
+#             rows = rst.fetchall()
 
-            return [Opinion.mk_dict(i) for i in rows]
-        elif cherrypy.request.method == "POST":
-            data = cherrypy.request.json
-            uid = self.check_login(data)
+#             return [Opinion.mk_dict(i) for i in rows]
+#         elif cherrypy.request.method == "POST":
+#             data = cherrypy.request.json
+#             uid = self.check_login(data)
 
-            self.check_key(data, ("content", ))
+#             self.check_key(data, ("content", ))
 
-            ss = select([users.c.id]).where(users.c.id == uid)
-            rst = conn.execute(ss)
-            row = rst.fetchone()
-            if len(row) <= 0:
-                raise cherrypy.HTTPError(400,
-                    ErrMsg.UNKNOWN_ID.format(question_json["writer"]))
+#             ss = select([users.c.id]).where(users.c.id == uid)
+#             rst = conn.execute(ss)
+#             row = rst.fetchone()
+#             if len(row) <= 0:
+#                 raise cherrypy.HTTPError(400,
+#                     ErrMsg.UNKNOWN_ID.format(question_json["writer"]))
 
-            ins = opinions.insert()
-            rst = conn.execute(ins, {"writer":uid, "content":data["content"]})
+#             ins = opinions.insert()
+#             rst = conn.execute(ins, {"writer":uid, "content":data["content"]})
 
-            if rst.is_insert:
-                cherrypy.response.status = 201
+#             if rst.is_insert:
+#                 cherrypy.response.status = 201
 
-                ss = select([opinions.c.id]).order_by(desc(opinions.c.id))
-                row = conn.execute(ss)
+#                 ss = select([opinions.c.id]).order_by(desc(opinions.c.id))
+#                 row = conn.execute(ss)
 
-                return {"opinions_id": row.fetchone()["id"]}
-            else:
-                raise cherrypy.HTTPError(503)
+#                 return {"opinions_id": row.fetchone()["id"]}
+#             else:
+#                 raise cherrypy.HTTPError(503)
 
-        else:
-            raise cherrypy.HTTPError(404)
+#         else:
+#             raise cherrypy.HTTPError(404)
 
 class TeacherRestView(View):
     _root = rest_config["url_root"] + "teacher/"
@@ -1851,7 +1851,6 @@ class FileUploadRestView(View):
                         raise cherrypy.HTTPRedirect("/classattend")
 
                     filename = file.filename
-                    print(filename)
                     filename.replace("test", "")
 
                     filename = fileformat.format(
@@ -1873,6 +1872,73 @@ class FileUploadRestView(View):
             raise cherrypy.HTTPRedirect("/classattend")
         else:
             raise cherrypy.HTTPError(404)
+
+    @cherrypy.expose
+    def report(self, *args, **kwargs):
+        meta, conn = cherrypy.request.db
+        reports = meta.tables[Report.TABLE_NAME]
+        classes = cherrypy.request.classes
+
+        if cherrypy.request.method == "POST":
+            user = self.check_login_u(kwargs)
+
+            self.check_key(kwargs, (
+                "file",
+                "rid",
+                ))
+            print(kwargs)
+
+            try:
+                rid = int(kwargs["rid"])
+            except:
+                raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("rid"))
+
+            ss = select([reports.c.id]).where(reports.c.id==kwargs["rid"])
+            rst = conn.execute(ss)
+            row = rst.fetchone()
+
+            if not row:
+                raise cherrypy.HTTPError(400)
+
+            path = classes.get_download_path()
+            fileformat = "report/{rid}.{filetype}"
+
+            try:
+                file = kwargs["file"]
+
+                filename = file.filename
+                filetype = filename[filename.find(".") + 1:]
+                print(filetype)
+
+                filename = fileformat.format(
+                    rid=row["id"],
+                    filetype=filetype)
+
+                f = open(path + filename, "wb")
+                while True:
+                    data = file.file.read(8192)
+                    if not data:
+                        break
+                    f.write(data)
+                f.close()
+            except:
+                if os.path.isfile(path + filename):
+                    os.remove(path + filename)
+                raise cherrypy.HTTPError(400)
+
+            stmt = update(reports).where(and_(
+                reports.c.id == rid,
+                reports.c.writer == user["id"]
+                )).values(file="downloads/" + filename)
+            ins = conn.execute(stmt)
+
+            if ins.rowcount != 0:
+                cherrypy.response.status = 201
+                raise cherrypy.HTTPRedirect("/report")
+            else:
+                raise cherrypy.HTTPError(400,
+                    ErrMsg.WRONG_WRITER.format(str(uid)))
+
 
 class ActivityRestView(View):
     _root = rest_config["url_root"] + "activity/"
@@ -2058,5 +2124,92 @@ class ActivityRestView(View):
                 return {"sccuess": True}
             else:
                 raise cherrypy.HTTPError(400)
+        else:
+            raise cherrypy.HTTPError(404)
+
+class ReportRestView(View):
+    _root = rest_config["url_root"] + "report/"
+
+    @cherrypy.expose
+    def index(self, *args, **kwargs):
+        meta, conn = cherrypy.request.db
+        reports = meta.tables[Report.TABLE_NAME]
+        users = meta.tables[User.TABLE_NAME]
+
+        if cherrypy.request.method == "GET":
+            j = join(reports, users)
+            ss = select([reports, users.c.nickname]).select_from(j)
+            rst = conn.execute(ss)
+            rows = rst.fetchall()
+
+            return [Report.mk_dict(row) for row in rows]
+        elif cherrypy.request.method == "POST":
+            data = cherrypy.request.json
+            user = self.check_login_u(data)
+            print(data)
+
+            self.check_key(data,(
+                "title",
+                "summary",
+                ))
+
+            json = {
+                "title": data["title"],
+                "summary": data["summary"],
+                "writer": user["id"],
+                }
+            ins = reports.insert().returning(reports.c.id)
+            rst = conn.execute(ins, json)
+
+            if rst.is_insert:
+                cherrypy.response.status = 201
+
+                return {"success": True, "rid": rst.fetchone()["id"]}
+            else:
+                 raise cherrypy.HTTPError(503)
+        elif cherrypy.request.method == "PUT":
+            data = cherrypy.request.json
+            user = self.check_login(data)
+
+            if not user["admin"]:
+                raise cherrypy.HTTPError(401)
+        else:
+            raise cherrypy.HTTPError(404)
+
+    @cherrypy.expose
+    def fileattach(self, *args, **kwargs):
+        meta, conn = cherrypy.request.db
+        reports = meta.tables[Report.TABLE_NAME]
+
+        if cherrypy.request.method == "PUT":
+            data = cherrypy.request.json
+            user = self.check_login_u(data)
+
+            self.check_key(data, (
+                "rid",
+                "file",
+                ))
+
+            try:
+                rid = int(data["rid"])
+            except:
+                raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("qid"))
+
+            # TODO: if file exist then the file upload THIS TIME will be delete
+
+            # TODO: check file exist
+
+            stmt = update(reports).where(and_(
+                reports.c.id == rid,
+                reports.c.writer == user["id"]
+                )).values(file=data["file"])
+            ins = conn.execute(stmt)
+
+            if ins.rowcount != 0:
+                cherrypy.response.status = 201
+                return {"success": True}
+            else:
+                raise cherrypy.HTTPError(400,
+                    ErrMsg.WRONG_WRITER.format(str(uid)))
         else:
             raise cherrypy.HTTPError(404)

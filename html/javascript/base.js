@@ -42,6 +42,33 @@ function getCookie(cname) {
     return "";
 }
 
-function deleteCookie(cname) {
+function deleteCookie (cname) {
     document.cookie = cname + "=; path=/";
+}
+
+function selectfile (e) {
+    accept = e.accept.split(",")
+    filename = e.files[0]["name"]
+
+    $("#" + e.id + "-filename")[0].innerText = ""
+    breaked = false;
+    $.each(accept, function (_, i) {
+        if (filename.endsWith(i)) {
+            $("#" + e.id + "-filename")[0].innerText = filename;
+            breaked = true;
+            return false;
+        } 
+    })
+    if (!breaked) {
+        alert("檔案格式不合")
+    }
+}
+
+function checkfile (eid) {
+    if ($("#" + eid + "-filename")[0].textContent != "") {
+        return true;
+    }
+    else {
+        return false;
+    }
 }

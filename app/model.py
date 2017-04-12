@@ -647,3 +647,38 @@ class Activity(object):
             "disabled": row["disabled"],
             "point": row["point"],
             }
+
+class Report(object):
+    TABLE_NAME = "tb_report"
+    report_t = None
+
+    @classmethod
+    def create_schema(cls, db_engine, db_meta):
+        cls.report_t = Table(cls.TABLE_NAME, db_meta,
+            Column("id", Integer, primary_key=True, autoincrement=True),
+            Column("title", String, nullable=False, autoincrement=False),
+            Column("summary", Text, nullable=False, autoincrement=False),
+            Column("file", String, nullable=True, autoincrement=False),
+            Column("writer", Integer, ForeignKey("tb_user.id"),
+                nullable=False, autoincrement=False),
+            Column("status", Integer, nullable=True, default=0, autoincrement=True),
+            Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
+            Column("reply", Text, nullable=True, default="", autoincrement=True),
+            )
+        cls.report_t.create(db_engine, checkfirst=True)
+        return cls.report_t
+
+    @classmethod
+    def mk_dict(cls, row):
+        return {
+            "id": row["id"],
+            "title": row["title"],
+            "summary": row["summary"],
+            "file": row["file"],
+            "writer": row["writer"],
+            "nickname": row["nickname"],
+            "status": row["status"],
+            "create_at": GMT(row["create_at"]),
+            "reply": row["reply"],
+            }
+

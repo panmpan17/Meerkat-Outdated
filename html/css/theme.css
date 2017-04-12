@@ -330,3 +330,20 @@ label {
 	-webkit-user-select: none;
 	-o-user-select: none;
 }
+
+label.file-button {
+	border-radius: 5px;
+	text-align: left;
+	width: 200px;
+	height: 30px;
+	font-size: 14px;
+	border: 3px rgba(0,0,0,0.2);
+	box-shadow: 0px 1px 8px 0px rgba(0,0,0,0.2);
+	background: white;
+	cursor: pointer;
+	overflow-y: hidden;
+}
+
+label.file-button:hover {
+	background: #DDD;
+}

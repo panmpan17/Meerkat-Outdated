@@ -27,6 +27,8 @@ var q_typelist = [
 	"Python",
 	"Other",
 ]
+
+
 function changetype(type) {
 	q_type = type;
 	q_text.innerHTML = q_typelist[type];
@@ -43,6 +45,14 @@ changetype(0);
 // CHANGE QUESTION INTO HTML
 // 
 var link_fmt = `<a href="{0}" target="_blank">{1}</a>`
+var IMAGE_TYPE = [
+	".png",
+	".gif",
+	".jpeg",
+	".jpg",
+]
+file_format = `<a target="_blank" class="file-link" download href="{0}">- 檔案 {1} - {2} </a><br`
+image_fromat = `<img src="{0}" onclick="displayimg(this)" style="width: 300px;cursor: zoom-in;" />`
 
 function turn_url(string) {
 	t_s_s = string.indexOf("[#")
@@ -91,7 +101,7 @@ function nextpage () {
 	}
 }
 
-function pagging(selection, place) {
+function pagging (selection, place) {
 	if (selection.length <= 5) {
 		return selection;
 	}
@@ -122,7 +132,7 @@ function pagging(selection, place) {
 	return pages
 }
 
-function to_questions(l) {
+function to_questions (l) {
 	// paging html
 	len_pages = l["pages"]
 
@@ -225,6 +235,25 @@ function to_questions(l) {
 
 	$("#cards")[0].innerHTML = cards;
 }
+
+function displayimg (e) {
+	show("image-frame");
+	$("#image-frame-image")[0].src = e.src;
+}
+
+function displayfile (filename, fileseq) {
+	breaked = false
+	$.each(IMAGE_TYPE, function (_, type) {
+		if (filename.endsWith(type)) {
+			breaked = true
+			return false;
+		}
+	})
+	if (breaked) {
+		return format(image_fromat, filename)
+	}
+	return format(file_format, filename, fileseq, changefilename(filename))
+}
 // 
 // SHOW SIGNLE QUESTION
 // 
@@ -248,16 +277,15 @@ function getanswer(qid) {
 				answers += format(answer_format, m["content"].replace(/\n/g, "<br>"),
 					m["writer"], m["create_at"]);
 
-				file_format = '<a target="_blank" class="file-link" download href="{0}">- 檔案 {1} - {2} </a><br>'
-
 				file_display = "<div style=\"padding-left:30px\">"
 				if (m["file1"] != "") {
-					file_display += format(file_format, m["file1"], "1", changefilename(m["file1"]))
+					file_display += displayfile(m["file1"], "1")
+
 					if (m["file2"] != "") {
-						file_display += format(file_format, m["file2"], "2", changefilename(m["file2"]))
-						if (m["file3"] != "") {
-							file_display += format(file_format, m["file3"], "3", changefilename(m["file3"]))
-						}
+						file_display += displayfile(m["file2"], "2")
+					}
+					if (m["file3"] != "") {
+						file_display += displayfile(m["file3"], "3")
 					}
 					answers += file_display + "</div></div>";
 				}
@@ -322,12 +350,12 @@ function showquestion(qid) {
 
 			file_display = ""
 			if (msg["file1"] != "") {
-				file_display += format(file_format, msg["file1"], "1", changefilename(msg["file1"]))
+				file_display += displayfile(msg["file1"], "1")
 				if (msg["file2"] != "") {
-					file_display += format(file_format, msg["file2"], "2", changefilename(msg["file2"]))
-					if (msg["file3"] != "") {
-						file_display += format(file_format, msg["file3"], "3", changefilename(msg["file3"]))
-					}
+					file_display += displayfile(msg["file2"], "2")
+				}
+				if (msg["file3"] != "") {
+					file_display += displayfile(msg["file3"], "3")
 				}
 				$("#files")[0].innerHTML = file_display;
 			}
@@ -392,10 +420,10 @@ function answer() {
 			data: JSON.stringify(json),
 			contentType: "application/json; charset=utf-8",
 			success: function (msg) {
-				f1 = $("#f1-a")[0].files[0]
-				f2 = $("#f2-a")[0].files[0]
-				f3 = $("#f3-a")[0].files[0]
-				if ((f1 != undefined) || (f2 != undefined) || (f3 != undefined)) {
+				f1 = checkfile("f1-a");
+				f2 = checkfile("f2-a");
+				f3 = checkfile("f3-a");
+				if (f1 || f2 || f3) {
 					$("#answerkey")[0].value = msg["answer_id"]
 					$("#answerform")[0].submit()
 				}
@@ -439,10 +467,10 @@ function ask() {
 			data: JSON.stringify({key: key,question_json: json}),
 			contentType: "application/json; charset=utf-8",
 			success: function (msg) {
-				f1 = $("#f1-q")[0].files[0];
-				f2 = $("#f2-q")[0].files[0];
-				f3 = $("#f3-q")[0].files[0];
-				if ((f1 != undefined) || (f2 != undefined) || (f3 != undefined)) {
+				f1 = checkfile("f1-q");
+				f2 = checkfile("f2-q");
+				f3 = checkfile("f3-q");
+				if (f1 || f2 || f3) {
 					$("#questionkey")[0].value = msg["question_id"];
 					$("#questionform")[0].submit();
 				}

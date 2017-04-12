@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><!--  manifest="/html/main.appcache"> -->
+<html lang="en" manifest="/html/main.appcache">
 <head>
 	<meta charset="UTF-8">
 	<title>{% block title %}{% endblock %}</title>
@@ -29,22 +29,13 @@
 
 	
 	{% block content %}
-	{% endblock %}
-	<!-- <div class="opinionframe">
-		<img onclick="openopinion()" onmouseover="show('report-frame')" onmouseout="hide('report-frame')" src="/html/images/opinion.png" alt="">
-	</div>
-	<div id="report-frame" class="opinion-label">
-		回報問題
-	</div>
-	<div id="o-notlogin-frame" class="opinion-label" style="bottom: 90px;color:red;font-weight: bold;">
-		請先登錄
-	</div> -->
-	<div class="my-container">
+	{% endblock %}	<div class="my-container">
 		<div class="account-logo" style="cursor: pointer;">
 			<div class="dropdown">
 				<div id="accountmenu">
 					<a onclick="showinfo();">帳號資訊</a>
 					<a href="/classattend">參加課程</a>
+					<a href="/report" style="color:red">回報問題</a>
 					<a onclick="logout();">登出</a>
 				</div>
 			</div>
