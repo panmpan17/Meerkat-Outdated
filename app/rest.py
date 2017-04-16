@@ -45,12 +45,11 @@ def count_page(r):
 def find_host(url):
     return url[:url.find("/", 10)]
 
-def send_email_valid(key, addr):
-    url = find_host(cherrypy.url()) + "/active/" + key
-    cnt = Email.REGIST_VALID.replace("url", url)
+def send_email_valid(key, addr, userid):
+    cnt = Email.REGIST_VALID.format(key)
     http_post(Email.URL, params={
         "addr": addr,
-        "sub": "Email 認證",
+        "sub": "Email 認證 - " + userid,
         "cnt": cnt})
 
 class ErrMsg(ErrMsg):
@@ -365,7 +364,7 @@ class UserRestView(View):
 
                 key_mgr.update_key(key, uid)
                 ekey = email_valid.new_mail(uid)
-                send_email_valid(ekey, usersjson[0]["email"])
+                send_email_valid(ekey, usersjson[0]["email"], usersjson[0]["userid"])
 
                 return {
                     "key": key,
@@ -419,7 +418,7 @@ class UserRestView(View):
             row = rst.fetchone()
 
             ekey = email_valid.new_mail(user["id"])
-            send_email_valid(ekey, row["email"])
+            send_email_valid(ekey, row["email"], user["userid"])
 
             cherrypy.response.status = 201
             return {"success": True}
@@ -1132,7 +1131,7 @@ class PostRestView(View):
             if not admin:
                 raise cherrypy.HTTPError(401)
 
-            self.check_key(data, ("id", ))
+            self.check_key(kwargs, ("id", ))
 
             # delete post
             ds = posts.delete().where(posts.c.id == kwargs["id"])
@@ -2213,3 +2212,28 @@ class ReportRestView(View):
                     ErrMsg.WRONG_WRITER.format(str(uid)))
         else:
             raise cherrypy.HTTPError(404)
+
+class PresentationRestView(View):
+    _root = rest_config["url_root"] + "presentation/"
+
+    @cherrypy.expose
+    def index(self, *args, **kwargs):
+        classes = cherrypy.request.classes
+
+        if cherrypy.request.method == "GET":
+            success = classes.read_file("presentation.html")
+            return {"success": success}
+        elif cherrypy.request.method == "POST":
+            data = cherrypy.request.json
+            user = self.check_login_u(data)
+
+            if not user["admin"]:
+                raise cherrypy.HTTPError(401)
+
+            self.check_key(data, ("presentation", ))
+
+            success = classes.write_file("presentation.html", data["presentation"])
+            return {"success": success}
+        else:
+            raise cherrypy.HTTPError(400)
+

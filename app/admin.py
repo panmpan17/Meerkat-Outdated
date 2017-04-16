@@ -105,6 +105,12 @@ class AdminHandler(object):
 
         return render("admin/report.html")
 
+    @cherrypy.expose
+    def presentation(self):
+        self.checkadmin()
+
+        return render("admin/presentation.html")
+
 
 
 

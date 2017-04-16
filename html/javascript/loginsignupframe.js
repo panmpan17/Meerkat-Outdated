@@ -1,5 +1,5 @@
 // this one check user's userid password
-id_pass_re = new RegExp("[a-zA-Z0-9@\.]{8,16}");
+id_pass_re = new RegExp("[a-zA-Z0-9@\.]{8,32}");
 // file_re = new RegExp("[0-9]+_[0-9]+")
 email_re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -130,6 +130,7 @@ function signup(){
 			storeCookie("id", msg["lastrowid"]);
 			storeCookie("userid", msg["userid"]);
 			storeCookie("key", msg["key"]);
+			alert("請檢查 Email")
 			location.reload();
 		},
 		error: function (error) {
@@ -283,4 +284,14 @@ function changepassword() {
 			}
 		}
 	})
+}
+
+function checkenumber () {
+	code = $("#code")[0].value;
+	if (code == "") {
+		alert("不可留白");
+	}
+	else {
+		location.pathname = "/active/" + code
+	}
 }

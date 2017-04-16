@@ -54,6 +54,22 @@ class ClassesPlugin(plugins.SimplePlugin):
 			classes_json.append(j)
 		return classes_json
 
+	def write_file(self, filename, data):
+		try:
+			with open(filename, "w") as file:
+				file.write(data)
+			return True
+		except:
+			return False
+
+	def read_file(self, filename):
+		try:
+			with open(filename, "r") as file:
+				read = file.read()
+			return read
+		except:
+			return False
+
 	def get_classes_name(self):
 		return self.classes.keys()
 

@@ -32,9 +32,9 @@ class User(object):
         # require attributesf
         self.userid = None
         self.password = None
-        self.email = None
         self.birth_year = None
         self.nickname = None
+        self.email = None
         # nullable attributes
         self.job = ""
 
@@ -156,7 +156,7 @@ class User(object):
             return httperror(400, ErrMsg.NOT_DICT)
         for attr, val in json.items():
             if hasattr(self, attr):
-                self.__setattr__(attr,val)
+                self.__setattr__(attr, val)
             else:
                 return httperror(400, ErrMsg.UNKNOWN_PARAM.format(attr))
         for col in User.user_t.columns:

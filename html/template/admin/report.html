@@ -1,16 +1,188 @@
 {% extends "base.html" %}
 {% block title %}Admin 老師管理{% endblock %}
 {% block css %}
+<style>
+	div.title-block {
+		background: white;
+		cursor: pointer;
+		font-size: 16px;
+		margin: 3px;
+	}
 
+	div.title-block:hover {
+		background: gray;
+	}
+
+	span#status {
+		border-radius: 10px;
+		/*background: orangered;*/
+		padding: 5px;
+		color: white;
+		cursor: pointer;
+	}
+
+	div#summary {
+		border-left: 2px gray solid;
+		margin-left: 10px;
+		padding-left: 15px;
+	}
+
+	span#writer {
+		vertical-align: top;
+		font-size: 16px;
+	}
+
+	textarea {
+		border-radius: 5px;
+		width: 90%;
+		max-width: 90%;
+		font-size: 14px;
+		border:3px rgba(0,0,0,0.2);
+		box-shadow: 0px 1px 8px 0px rgba(0,0,0,0.2);
+		padding-top: 5px;
+	}
+</style>
 {% endblock %}
 {% block content %}
-	<br><br>
-	<a href="/admin/" style="padding-left: 14%"><button id="submit">< 回去</button></a>
-	<br><br>
-	
+<br><br>
+<a href="/admin/" style="padding-left: 14%"><button id="submit">< 回去</button></a>
+<br><br>
+<div class="container" style="margin-top: 40px;">
+	<div class="row">
+		<div id="bar" class="col-md-3" style="background: white;border-right: 2px black solid;"></div>
+		<div id="new-page" class="col-md-9" style="background: white">
+			<br>
+			<center>
+				<input name="title" placeholder="簡單敘述">
+				<br><br>
+				<textarea name="summary" placeholder="簡單敘述" cols="30" rows="10"></textarea>
+				<br><br>
+				<label for="img"  class="file-button" style="width: 300px">
+					上傳檔案 (圖片) <span id="img-filename"></span>
+				</label>
+				<form id="attachfile" action="/rest/1/upload/report" method="post" enctype="multipart/form-data" hidden>
+					<input name="key">
+					<input name="rid">
+					<input id="img" name="file" accept=".png,.gif,.jpeg,.jpg" type="file" onchange="selectfile(this)" />
+				</form>
+				<br><br>
+				<button id="submit" onclick="newreport()">回報</button>
+			</center>
+			<br><br>
+		</div>
+		<div id="report-page" class="col-md-9" style="background: white" hidden>
+			<h3 id="title"></h3>
+			<div class="text-right">
+				<span id="status"></span>
+			</div>
+			<div id="summary"></div>
+			<br>
+			<img id="picture" src="/html/images/howtoupload-scratch.png" style="width: 60%" alt="">
+			<span id="writer"></span>
+			<br>
+			<h4>回應</h4>
+			<div id="reply"></div>
+			<br>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block bcontent %}
+
 {% endblock %}
 {% block script %}
 <script>
-	
+	reports = {}
+	STATUS_COLOR = [
+		"orangered",
+		"gold",
+		"royalblue",
+		"seagreen",
+	]
+	STATUS_TEXT = [
+		"等待中",
+		"操作問題",
+		"修復中",
+		"已解決",
+	]
+	BAR_ITEM_FORMAT = `<div class="title-block" onclick="showreport({0})">{1}</div>`
+
+	function showreport (rid) {
+		$("#new-page").hide()
+		$("#report-page").show()
+
+		report = reports[rid]
+		$("#title")[0].innerHTML = report["title"]
+		$("#status")[0].style.backgroundColor = STATUS_COLOR[report["status"]]
+		$("#status")[0].innerHTML = STATUS_TEXT[report["status"]]
+		$("#summary")[0].innerHTML = report["summary"].replace(/\n/g, "<br>")
+		$("#writer")[0].innerHTML = "回報者: " + report["nickname"]
+
+		if (report["file"] != null) {
+			$("#picture").show()
+			$("#picture")[0].src = report["file"]
+		}
+		else {
+			$("#picture").hide()
+		}
+
+		if (report["reply"] != "") {
+			$("#reply")[0].innerHTML = report["reply"]
+		}
+		else {
+			$("#reply")[0].innerHTML = "尚未回應"
+		}
+	}
+
+	function newreport () {
+		title = $("[name=title]")[0].value
+		summary = $("[name=summary]")[0].value
+		json = {
+			"key": getCookie("key"),
+			"title": title,
+			"summary": summary,
+		}
+		$.ajax({
+			url: host + "report/",
+			type: "POST",
+			dataType: "json",
+			data: JSON.stringify(json),
+			contentType: "application/json; charset=utf-8",
+			success: function (msg) {
+				loadreports();
+				if (checkfile("img")) {
+					$("[name=rid]")[0].value = msg["rid"]
+					$("[name=key]")[0].value = getCookie("key")
+					console.log(msg["rid"])
+					$("#attachfile")[0].submit()
+				}
+			},
+			error: function (error) {
+				console.log(error)
+			}
+		})
+	}
+
+	function loadreports () {
+		$.ajax({
+			url: host + "report/",
+			success: function (msg) {
+				bar = `<div class="title-block" onclick="$('#new-page').show();$('#report-page').hide()">+ 新回報</div>`
+				$.each(msg, function (_, i) {
+					reports[i["id"]] = i
+					bar += format(BAR_ITEM_FORMAT,
+						i["id"],
+						i["title"]
+						)
+				})
+				$("#bar")[0].innerHTML = bar;
+				showreport(msg[0]["id"])
+			}
+		})
+	}
+
+	$(document).ready(function () {
+		loadreports();
+	})
 </script>
 {% endblock %}

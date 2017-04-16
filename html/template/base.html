@@ -62,7 +62,7 @@
 				</a> -->
 				<!-- <a> 教學資源 </a> -->
 				<!-- <a> 如何收費 </a> -->
-				<!-- <a> 建議網站 </a> -->
+				<a href="/presentation"> 授權說明會 </a>
 				<a href="/teacher/advertise"> 教師廣告 </a>
 				<a href="/teacher/login"> 教師頁面 </a>
 			</div>
@@ -99,12 +99,12 @@
 			<a id="closeloginframe" onclick="hide('signup-frame');" style="">X</a><br>
 			<div class="frame-content" style="padding-top: 5%;">
 				<center>
-					<input placeholder="帳號 8-16 (英文字母, 數字, @.)" name="signup-userid" type="text"><br><br>
-					<input placeholder="密碼 8-16 (英文字母, 數字, @.)" name="signup-password" type="password"><br><br>
+					<input placeholder="帳號 8-32 (英文字母, 數字, @.)" name="signup-userid" type="text"><br><br>
+					<input placeholder="密碼 8-32 (英文字母, 數字, @.)" name="signup-password" type="password"><br><br>
 					<input placeholder="確認密碼" name="signup-repassword" type="password"><br><br>
 					<input placeholder="Email" name="signup-email" type="text"><br><br>
 					<input placeholder="暱稱 (請勿用真實姓名)" name="signup-nickname" type="text"><br><br>
-					<input value=2005 max=2010 min=1950 id="number" placeholder="出生年" name="signup-birth_year" type="number"><br><br>
+					<input max=2010 min=1950 id="number" placeholder="出生年" name="signup-birth_year" type="number"><br><br>
 					<input placeholder="Job (可不填)" name="signup-job" type="text"><br><br>
 					<div class="g-recaptcha" data-sitekey="6LcSMwoUAAAAAJoZ5gXYx0b6Qv9Ag75o9rn3qpMw"></div>
 					<div id="signup-errormsg" class="login-errorms">
@@ -166,7 +166,9 @@
 					<tr id="info-active">
 						<td>Email 認證</td>
 						<td>
-							<button class="btn btn-success btn-lg" onclick="resentmail()">重送 Email</button>
+							<input type="text" placeholder="驗證碼" id="code" style="width: 100px">
+							<button class="btn btn-success" onclick="checkenumber()">檢查驗證碼</button>
+							<button class="btn btn-info" onclick="resentmail()">重送 Email</button>
 						</td>
 					</tr>
 					<tr id="info-admin">
@@ -174,6 +176,7 @@
 						<td><a href="/admin" style="color: Coral">管理員頁面</a></td>		
 					</tr>
 				</table>
+				<br><br>
 			</div>
 		</div>
 	</div>
@@ -211,65 +214,6 @@
 		if (getCookie("userid") !== "") {
 			$("#account-logo")[0].innerHTML = getCookie("userid");
 		}
-
-		// opinion_fmt = `
-		// {0} <br />
-		// {1} | {2}
-		// <hr />
-		// `
-
-		// function sendopinion() {
-		// 	c = $("#opinion")[0];
-		// 	if (c.value == "") {
-		// 		alert("請不要留空")
-		// 		return ;
-		// 	}
-		// 	key = getCookie("key")
-		// 	j = {
-		// 		"key": key,
-		// 		"content": c.value
-		// 		}
-		// 	$.ajax({
-		// 		url: host + "opinion/",
-		// 		type: "POST",
-		// 		dataType: "json",
-		// 		data: JSON.stringify(j),
-		// 		contentType: "application/json; charset=utf-8",
-		// 		success: function (msg) {
-		// 			$("#opinion")[0].value = "";
-		// 			hide("opinion-frame");
-		// 			alert("謝謝你填寫意見!!");
-		// 		},
-		// 		error: function (msg) {
-		// 			reload = confirm("請重新登錄");
-		// 			if (reload) {
-		// 				logout();
-		// 			}
-		// 		}
-
-		// 	})
-		// }
-
-		// function openopinion() {
-		// 	if (getCookie("id")) {
-		// 		show("opinion-frame");
-		// 		$.ajax({
-		// 			url: host + "opinion/",
-		// 			type: "GET",
-		// 			success: function (msg) {
-		// 				a = ""
-		// 				for (i = 0; i < msg.length; i++) {
-		// 					a += format(opinion_fmt, msg[i]["content"].replace(/\n/g, "<br>"), msg[i]["writer"], msg[i]["create_at"])
-		// 				}
-		// 				$("#opinions")[0].innerHTML = a
-		// 			}
-
-		// 		})
-		// 	}
-		// 	else {
-		// 		toggle("o-notlogin-frame");
-		// 	}
-		// }
 	</script>
 
 	{% block script %}

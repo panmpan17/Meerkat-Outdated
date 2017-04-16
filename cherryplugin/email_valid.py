@@ -1,12 +1,22 @@
 import cherrypy
+import re
 from cherrypy.process import plugins
 from datetime import datetime
-from uuid import uuid1
+from uuid import uuid1 as uuid
 
 MINUTE = 60
 HOUR = 60
 DAY = 24
 KEYTIMEOUT = 2 * DAY * HOUR * MINUTE
+
+def generate_code():
+	code = str(uuid())
+	code_pat = code.split("-")
+	code = ""
+	for i in code_pat:
+		numbers = re.findall("[0-9]", i)
+		code += str(len(numbers))
+	return str(code)
 
 class EmailValidPlugin(plugins.SimplePlugin):
 	def __init__(self, bus):
@@ -19,7 +29,7 @@ class EmailValidPlugin(plugins.SimplePlugin):
 		pass
 
 	def new_mail(self, uid):
-		key = str(uuid1())
+		key = generate_code()
 		self.validdict[uid] = {
 			"key": key,
 			"datetime": datetime.now(),

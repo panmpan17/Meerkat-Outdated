@@ -1,19 +1,13 @@
 var host = "http://" + window.location.host + "/rest/1/"
 
 document.onkeydown = checkKey;
-window_ = ["info-frame", "signup-frame", "login-frame", "opinion-frame", "ask-frame", "question-frame"]
 
 function checkKey(e) {
     e = e || window.event;
     e = e.keyCode
 
     if (e == 27) {
-        for (var i = window_.length - 1; i >= 0; i--) {
-            try {
-                hide(window_[i])
-            }
-            catch(err) {}
-        }
+        $(".loginsignup-frame").hide()
     }
 }
 

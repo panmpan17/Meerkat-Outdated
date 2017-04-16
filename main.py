@@ -182,6 +182,7 @@ class App():
         self.mount(restapi.FileUploadRestView, restview_config)
         self.mount(restapi.ActivityRestView, restview_config)
         self.mount(restapi.ReportRestView, restview_config)
+        self.mount(restapi.PresentationRestView, restview_config)
         
         self.mount(render.UserCaseHandler, self.render_config)
         self.mount(render.ClassHandler, self.render_config)
