@@ -1,12 +1,12 @@
 .calendarshow {
-	border: 5px #ff3385 solid;
+	border: 5px #479ee5 solid;
 	padding-bottom: 10px;
 	border-radius: 5px;
 	text-align: left;
 }
 
 .calendarshow .title {
-	background: #ff3385;
+	background: #479ee5;
 	padding-top: 15px;
 	padding-bottom: 20px;
 }
@@ -46,7 +46,7 @@
 .calendarshow .day {
 	margin-top: 5px;
 	width:13%;
-	background: #ff3385;
+	background: #479ee5;
 	color: white;
 	padding: 5px;
 	height: 80px;
@@ -82,8 +82,8 @@
 .date-act,
 .repeat-act {
 	width: 45%;
-	border: blue 2px solid;
-	border-top: blue 5px solid;
+	border: yellow 2px solid;
+	border-top: yellow 5px solid;
 	border-radius: 5px;
 	padding: 5px;
 	text-align: left;
@@ -94,8 +94,8 @@
 }
 
 .repeat-act {
-	border: green 2px solid;
-	border-top: green 5px solid;
+	border: orange 2px solid;
+	border-top: orange 5px solid;
 }
 
 .date-act .title,

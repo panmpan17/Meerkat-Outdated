@@ -8,8 +8,8 @@
 		border-radius: 5px;
 		padding: 5px;
 	}
-	.activity.repeat {border: green 3px solid;}
-	.activity.date {border: blue 3px solid;}
+	.activity.repeat {border: orange 3px solid;}
+	.activity.date {border: yellow 3px solid;}
 
 	.activity .title {
 		text-align: center;
@@ -24,11 +24,13 @@
 		color: gray;
 	}
 
-	.activity.repeat .title {background: green;}
-	.activity.date .title {background: blue;}
+	.activity.repeat .title {background: orange;}
+	.activity.date .title {background: yellow;}
 </style>
 {% endblock %}
 {% block content %}
+	<br><br>
+	<a href="/admin/"><button id="submit">< 回去</button></a>
 	<br><br>
 	<div class="container">
 		<div class="row">
@@ -37,7 +39,7 @@
 				<ul class="nav nav-pills nav-justified" style="background: rgba(43,142,183,1);">
 					<li role="presentation" class="active" onclick="showpage('calendar', this)"><a href="#">行事曆</a></li>
 					<li role="presentation" onclick="showpage('list', this)"><a href="#">列表</a></li>
-					<li role="presentation" onclick="showpage('present', this)"><a href="#">點名 (只限今天的活動) <span id="today-count" class="badge">3</span></a></li>
+					<li role="presentation" onclick="showpage('present', this)"><a href="#">今天 點名 <span id="today-count" class="badge">3</span></a></li>
 					<li role="presentation" onclick="showpage('newactivity', this)"><a href="#">加新的活動</a></li>
 				</ul>
 				<br><br>
@@ -102,7 +104,7 @@
 			<div class="col-md-2"></div>
 			<div class="col-md-4">
 				<div class="input-group">
-					<span class="input-group-addon" id="basic-addon1">名字</span>
+					<span class="input-group-addon" id="basic-addon1">活動名稱</span>
 					<input id="name" type="text" class="form-control"><br>
 				</div>
 				<br>
@@ -190,8 +192,8 @@
 	]
 	BLANKDAY = `<div class="blankday"><br></div>\n`
 	DAY = `<div class="day" id="{0}-{1}-{2}" onclick="showday(this)">{2}{3}</div>\n`
-	RED_DOT = `<span style="color:blue">&#9679;</span>`
-	GREEN_DOT = `<span style="color:green">&#9679;</span>`
+	RED_DOT = `<span style="color:yellow">&#9679;</span>`
+	GREEN_DOT = `<span style="color:orange">&#9679;</span>`
 	DATE_ACTIVITY = `<div class="date-act">
 		<span class="title">{0}</span><br />
 		<span class="time">{1} {2}</span><br />
@@ -255,7 +257,7 @@
 				})
 				loadMonth(currentYear, currentMonth);
 
-				today_date = new Date(2017, 2, 31);
+				today_date = new Date();
 				if (today_date.getFullYear() == year) {
 					today_count = 0
 					if (activities["repeat"][today_date.getDay()] != undefined) {
@@ -395,7 +397,7 @@
 					NUM_2_DAY[act["repeat"] - 1],
 					act["time"],
 					act["addr"],
-					act["summary"],
+					act["summary"].replace(/\n/g, "<br>"),
 					act["present"].length + " / " + act["participant"].length);
 			})
 		}
@@ -410,7 +412,7 @@
 						act["date"],
 						act["time"],
 						act["addr"],
-						act["summary"],
+						act["summary"].replace(/\n/g, "<br>"),
 						act["present"].length + " / " + act["participant"].length);
 				}
 			})
@@ -451,7 +453,7 @@
 		}
 
 		if (repeat == "0") {
-			adate = $("#adate")[0].textContent;
+			adate = getdate("adate");
 			if (adate.length == 0) {
 				alert("活動日期不可留白");
 				return;
@@ -486,6 +488,7 @@
 				today();
 			},
 			error: function (error) {
+				console.log(error)
 				reload = confirm("請重新登錄")
 				if (reload) {
 					show("login-frame");
@@ -520,7 +523,7 @@
 					NUM_2_DAY[e["repeat"] - 1],
 					e["time"],
 					e["addr"],
-					e["summary"],
+					e["summary"].replace(/\n/g, "<br>"),
 					e["present"].length + " / " + e["participant"].length);
 			})
 		})
@@ -532,7 +535,7 @@
 					e["date"],
 					e["time"],
 					e["addr"],
-					e["summary"],
+					e["summary"].replace(/\n/g, "<br>"),
 					e["present"].length + " / " + e["participant"].length);
 			})
 		})

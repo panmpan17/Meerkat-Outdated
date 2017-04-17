@@ -88,8 +88,8 @@ function check_students_scratch() {
 		data: {"tkey": getCookie("teacher-key"), "users": cids},
 		success: function (msg) {
 			for (i=0;i<msg["none"].length;i++) {
-				$("#cid-" + msg["none"][i])[0].classList.remove("bg-success")
-				$("#cid-" + msg["none"][i])[0].classList.add("bg-danger")
+				document.getElementById("cid-" + msg["none"][i]).classList.remove("bg-success")
+				document.getElementById("cid-" + msg["none"][i]).classList.add("bg-danger")
 			}
 		}
 	})
@@ -102,10 +102,10 @@ function check_students_scratch() {
 		$.each(sid_colors, function (k,v) {
 			k = k.toLowerCase()
 			if (v) {
-				$("#sid-" + k)[0].classList.add("bg-success")
+				document.getElementById("sid-" + k).classList.add("bg-success")
 			}
 			else {
-				$("#sid-" + k)[0].classList.add("bg-danger")
+				document.getElementById("sid-" + k).classList.add("bg-danger")
 			}
 		})
 		$("#bg").hide();
@@ -167,8 +167,8 @@ function check_students_python() {
 		data: {"tkey": getCookie("teacher-key"), "users": cids},
 		success: function (msg) {
 			for (i=0;i<msg["none"].length;i++) {
-				$("#cid-" + msg["none"][i])[0].classList.remove("bg-success")
-				$("#cid-" + msg["none"][i])[0].classList.add("bg-danger")
+				document.getElementById("cid-" + msg["none"][i]).classList.remove("bg-success")
+				document.getElementById("cid-" + msg["none"][i]).classList.add("bg-danger")
 			}
 		}
 	})

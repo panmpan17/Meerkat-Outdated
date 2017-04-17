@@ -228,8 +228,7 @@
 						disabled,
 						5 + teachers[i]["ext_area"],
 						teachers[i]["whole_city"],
-						p,
-						)
+						p);
 
 					teachers_table.innerHTML += user
 				}
@@ -244,7 +243,7 @@
 				$("#classlist")[0].innerHTML += format(classs_format,
 					listcount,
 					msg["paid"][i],
-					msg["paid"][i],)
+					msg["paid"][i])
 
 				listcount ++
 			}
@@ -252,7 +251,7 @@
 				$("#classlist")[0].innerHTML += format(classs_format,
 					listcount,
 					msg["free"][i],
-					CLASS_TO[msg["free"][i]],)
+					CLASS_TO[msg["free"][i]])
 
 				listcount ++
 			}

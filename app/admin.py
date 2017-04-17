@@ -73,11 +73,17 @@ class AdminHandler(object):
         if cherrypy.request.method == "POST":
             os.remove(classes.get_download_path() + file)
 
-        files = []
-        for *_, fs in os.walk(classes.get_download_path()):
-            for f in fs:
-                if f.find(".") != 0:
-                    files.append(f)
+        files = {}
+        path = os.getcwd()
+        for i, e, g in os.walk(path):
+            if ".git" in i:
+                continue
+            if "__pycache__" in i:
+                continue
+            filepath = i.replace(path, "")
+            files[filepath] = {}
+            files[filepath]["dir"] = e
+            files[filepath]["files"] = g
 
         return render("admin/files.html", {"files": files})
 

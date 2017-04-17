@@ -61,7 +61,10 @@ function loadclassroom() {
 			})
 
 			if (msg.length > 0) {
-				showclassroom(msg[0]["id"])
+				showclassroom(msg[0]["id"]);
+			}
+			else {
+				showactivity();
 			}
 		},
 		error: function (msg) {
@@ -377,8 +380,8 @@ NUM_2_DAY = [
 ]
 BLANKDAY = `<div class="blankday"><br></div>\n`
 DAY = `<div class="day" id="{0}-{1}-{2}" onclick="showday(this)">{2}{3}</div>\n`
-RED_DOT = `<span style="color:blue">&#9679;</span>`
-GREEN_DOT = `<span style="color:green">&#9679;</span>`
+RED_DOT = `<span style="color:yellow">&#9679;</span>`
+GREEN_DOT = `<span style="color:orange">&#9679;</span>`
 DATE_ACTIVITY = `<div class="date-act">
     <span class="title">{0}</span><br />
     <span class="time">{1} {2}</span><br />
@@ -514,7 +517,7 @@ function showday(e) {
 				NUM_2_DAY[acts[i]["repeat"] - 1],
 				acts[i]["time"],
 				acts[i]["addr"],
-				acts[i]["summary"],
+				acts[i]["summary"].replace(/\n/g, "<br>"),
 				format(button, acts[i]["id"]))
 		})
 	}
@@ -533,7 +536,7 @@ function showday(e) {
 					acts[i]["date"],
 					acts[i]["time"],
 					acts[i]["addr"],
-					acts[i]["summary"],
+					acts[i]["summary"].replace(/\n/g, "<br>"),
 					format(button, acts[i]["id"]))
 			}
 		})
@@ -605,7 +608,7 @@ function showparticipant(t) {
 						NUM_2_DAY[acts[i]["repeat"] - 1],
 						acts[i]["time"],
 						acts[i]["addr"],
-						acts[i]["summary"],
+						acts[i]["summary"].replace(/\n/g, "<br>"),
 						format(button, acts[i]["id"]))
 				}
 				else {
@@ -618,7 +621,7 @@ function showparticipant(t) {
 						acts[i]["date"],
 						acts[i]["time"],
 						acts[i]["addr"],
-						acts[i]["summary"],
+						acts[i]["summary"].replace(/\n/g, "<br>"),
 						format(button, acts[i]["id"]))
 				}
 			})
@@ -661,7 +664,7 @@ function showpresent(t) {
 						NUM_2_DAY[acts[i]["repeat"] - 1],
 						acts[i]["time"],
 						acts[i]["addr"],
-						acts[i]["summary"],
+						acts[i]["summary"].replace(/\n/g, "<br>"),
 						"")
 				}
 				else {
@@ -670,7 +673,7 @@ function showpresent(t) {
 						acts[i]["date"],
 						acts[i]["time"],
 						acts[i]["addr"],
-						acts[i]["summary"],
+						acts[i]["summary"].replace(/\n/g, "<br>"),
 						"")
 				}
 			})
@@ -685,4 +688,6 @@ function showpresent(t) {
 	})
 }
 
-loadclassroom();
+$(document).ready(function () {
+	loadclassroom();
+})

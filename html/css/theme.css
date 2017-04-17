@@ -301,8 +301,8 @@ label {
 }
 
 .btn-check input[type="checkbox"]:checked + .btn {
-	color: #fff;
-	background-color: #0368b2;
+	color: #ffa10a;
+	background-color: #015796;
 	background-image: none;
 	background-image: none;
 	outline: 0;
@@ -314,13 +314,13 @@ label {
 	outline: 5px auto -webkit-focus-ring-color;
 	outline-offset: -2px;
 	color: #fff;
-	background-color: #0079d1;
+	background-color: #0086e8;
 }       
 
 .btn-check input[type="checkbox"]:checked:focus + .btn,
 .btn-check input[type="checkbox"]:checked:hover + .btn {
-	color: #fff;
-	background-color: #0368b2;
+	color: #ffa10a;
+	background-color: #015796;
 }
 
 .unselectable {

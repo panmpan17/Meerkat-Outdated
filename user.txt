@@ -14,14 +14,6 @@ nickname=Shalley
 job=Coding for Fun 老師
 admin=True
 [\SPLIT/]
-userid=admin
-password=admin1234
-email=joanie0610@gmail.com
-birth_year=2000
-nickname=Joannie
-job=Coding for Fun 老師
-admin=True
-[\SPLIT/]
 userid=testuser
 password=testuser
 email=testuser@gmail.com

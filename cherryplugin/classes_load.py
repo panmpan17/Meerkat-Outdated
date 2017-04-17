@@ -56,7 +56,7 @@ class ClassesPlugin(plugins.SimplePlugin):
 
 	def write_file(self, filename, data):
 		try:
-			with open(filename, "w") as file:
+			with open(self.dl_path + filename, "w") as file:
 				file.write(data)
 			return True
 		except:
@@ -64,7 +64,7 @@ class ClassesPlugin(plugins.SimplePlugin):
 
 	def read_file(self, filename):
 		try:
-			with open(filename, "r") as file:
+			with open(self.dl_path + filename, "r") as file:
 				read = file.read()
 			return read
 		except:

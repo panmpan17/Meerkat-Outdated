@@ -25,23 +25,28 @@
 
 	#advertisetable tbody tr:nth-child(even),
 	#adclasstable tbody tr:nth-child(even) {
-		background-color: #F39C12;
+		background-color: #a9e8e7;
+		/*color: white;*/
 	}
 	#advertisetable tbody tr:nth-child(odd),
 	#adclasstable tbody tr:nth-child(odd) {
-		background-color: #F1C40F;
+		background-color: #8fdeef;
+		/*color: white;*/
 	}
 
 
 	#advertisetable tbody tr:hover:nth-child(even) {
-		background-color: #e2900d;
+		background-color: #358db2;
 		cursor: pointer;
 	}
 
 	#advertisetable tbody tr:hover:nth-child(odd) {
-		background-color: #dbb20f;
+		background-color: #0f90c4;
 		cursor: pointer;
 	}
+
+	td {
+		font-family: Courier;}
 
 	.ui-state-default {
 		font-size: 24px;
@@ -113,18 +118,18 @@
 	<div class="loginsignup-frame-inside">
 		<a id="closeloginframe" onclick="hide('adclass-frame');" style="">X</a>
 		<br>
-		<div class="frame-content" style="padding-top: 0%;">
+		<div class="frame-content" style="padding: 15px;padding-top: 0%;">
 			<table id="adclasstable">
-				<thead>
+				<!-- <thead>
 					<tr>
-						<th>地址</th>
 						<th>課程種類</th>
 						<th>開課日期</th>
 						<th>上課時間</th>
 						<th>下課時間</th>
 						<th>上課日</th>
+						<th>地址</th>
 					</tr>
-				</thead>
+				</thead> -->
 				<tbody id="adclasses"></tbody>
 			</table>
 		</div>
@@ -165,13 +170,13 @@
 
 		chinese_weekday = [
 			"",
-			"一",
-			"二",
-			"三",
-			"四",
-			"五",
-			"六",
-			"日",
+			"星期一",
+			"星期二",
+			"星期三",
+			"星期四",
+			"星期五",
+			"星期六",
+			"星期日",
 		]
 
 		CLASS_TO = {
@@ -304,12 +309,12 @@
 
 				$("#adclasses")[0].innerHTML += format(
 					adclass_format,
-					ad["address"],
 					CLASS_TO[ad["type"]],
 					ad["date"],
+					c_weekdays,
 					ad["start_time"],
 					ad["end_time"],
-					c_weekdays);
+					ad["address"]);
 				repeat.push(ad["id"])
 			})
 		}

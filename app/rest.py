@@ -46,7 +46,10 @@ def find_host(url):
     return url[:url.find("/", 10)]
 
 def send_email_valid(key, addr, userid):
-    cnt = Email.REGIST_VALID.format(key)
+    url = cherrypy.url()
+    url = url[url.find("//") + 2:]
+    url = url[:url.find("/")]
+    cnt = Email.REGIST_VALID.format(url, key)
     http_post(Email.URL, params={
         "addr": addr,
         "sub": "Email 認證 - " + userid,
@@ -1261,7 +1264,8 @@ class TeacherRestView(View):
                 "password": data["password"],
                 "name": data["name"],
                 "phone": data["phone"],
-                "class_permission": data["class_permission"]
+                "class_permission": data["class_permission"],
+                "summary": "",
                 }
             ins = teachers.insert()
             rst = conn.execute(ins, j)
@@ -1890,19 +1894,22 @@ class FileUploadRestView(View):
             try:
                 rid = int(kwargs["rid"])
             except:
-                raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("rid"))
+                raise cherrypy.HTTPRedirect("/report")
 
             ss = select([reports.c.id]).where(reports.c.id==kwargs["rid"])
             rst = conn.execute(ss)
             row = rst.fetchone()
 
             if not row:
-                raise cherrypy.HTTPError(400)
+                raise cherrypy.HTTPRedirect("/report")
 
             path = classes.get_download_path()
             fileformat = "report/{rid}.{filetype}"
 
             try:
+                reportdir = os.getcwd()
+                if "report" not in os.listdir(path):
+                    os.mkdir(os.path.join(path, "reaport/"))
                 file = kwargs["file"]
 
                 filename = file.filename
@@ -1923,7 +1930,7 @@ class FileUploadRestView(View):
             except:
                 if os.path.isfile(path + filename):
                     os.remove(path + filename)
-                raise cherrypy.HTTPError(400)
+                raise cherrypy.HTTPRedirect("/report")
 
             stmt = update(reports).where(and_(
                 reports.c.id == rid,
@@ -1935,8 +1942,7 @@ class FileUploadRestView(View):
                 cherrypy.response.status = 201
                 raise cherrypy.HTTPRedirect("/report")
             else:
-                raise cherrypy.HTTPError(400,
-                    ErrMsg.WRONG_WRITER.format(str(uid)))
+                raise cherrypy.HTTPRedirect("/report")
 
 
 class ActivityRestView(View):
