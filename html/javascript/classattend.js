@@ -329,7 +329,7 @@ function show_file(file, cls_id) {
 
 function loadcomment(cls_id) {
 	$.ajax({
-		url: "http://0.0.0.0/rest/1/classroom/comment?cls_id=" + cls_id,
+		url: host + "classroom/comment?cls_id=" + cls_id,
 		success: function (msg) {
 			comments[cls_id] = msg
 		}

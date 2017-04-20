@@ -6,6 +6,7 @@ class ClassesPlugin(plugins.SimplePlugin):
 		plugins.SimplePlugin.__init__(self, bus)
 		self.classes = {}
 		self.videos = {}
+		self.files = {}
 		self.dl_path = downloadpath
 
 	def start(self):
@@ -58,15 +59,20 @@ class ClassesPlugin(plugins.SimplePlugin):
 		try:
 			with open(self.dl_path + filename, "w") as file:
 				file.write(data)
+			self.files[filename] = data
 			return True
 		except:
 			return False
 
 	def read_file(self, filename):
 		try:
-			with open(self.dl_path + filename, "r") as file:
-				read = file.read()
-			return read
+			if filename not in self.files:
+				with open(self.dl_path + filename, "r") as file:
+					read = file.read()
+				self.files[filename] = read
+				return read
+			else:
+				return self.files[filename]
 		except:
 			return False
 
