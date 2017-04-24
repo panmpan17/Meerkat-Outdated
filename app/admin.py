@@ -31,12 +31,12 @@ class AdminHandler(object):
         cookie = cherrypy.request.cookie
 
         if "key" not in cookie:
-            raise cherrypy.HTTPRedirect("/")
+            return False
         key = str(cookie["key"].value)
 
         key_valid = key_mgr.get_key(key)
         if not key_valid[0]:
-            raise cherrypy.HTTPRedirect("/")
+            return False
 
         ss = select([users.c.admin]).where(and_(
             users.c.id == key_valid[1],
@@ -44,31 +44,39 @@ class AdminHandler(object):
         rst = conn.execute(ss)
         row = rst.fetchone()
         if not row:
-            raise cherrypy.HTTPRedirect("/")
+            return False
         return True
 
     @cherrypy.expose
     def index(self):
-        self.checkadmin()
+        a = self.checkadmin()
+        if not a:
+            raise cherrypy.HTTPRedirect("/")
 
         return render("admin/admin.html")
 
     @cherrypy.expose
     def news(self, title=None, html=None):
-        self.checkadmin()
+        a = self.checkadmin()
+        if not a:
+            raise cherrypy.HTTPRedirect("/")
 
         return render("admin/adminnews.html")
 
     @cherrypy.expose
     def questions(self):
-        self.checkadmin()
+        a = self.checkadmin()
+        if not a:
+            raise cherrypy.HTTPRedirect("/")
             
         return render("admin/questions.html")
 
     @cherrypy.expose
     def files(self, file=None):
         classes = cherrypy.request.classes
-        self.checkadmin()
+        a = self.checkadmin()
+        if not a:
+            raise cherrypy.HTTPRedirect("/")
 
         if cherrypy.request.method == "POST":
             os.remove(classes.get_download_path() + file)
@@ -89,31 +97,41 @@ class AdminHandler(object):
 
     @cherrypy.expose
     def users(self):
-        self.checkadmin()
+        a = self.checkadmin()
+        if not a:
+            raise cherrypy.HTTPRedirect("/")
 
         return render("admin/users.html")
 
     @cherrypy.expose
     def teacher(self):
-        self.checkadmin()
+        a = self.checkadmin()
+        if not a:
+            raise cherrypy.HTTPRedirect("/")
 
         return render("admin/teacher.html")
 
     @cherrypy.expose
     def activity(self):
-        self.checkadmin()
+        a = self.checkadmin()
+        if not a:
+            raise cherrypy.HTTPRedirect("/")
 
         return render("admin/activity.html")
 
     @cherrypy.expose
     def report(self):
-        self.checkadmin()
+        a = self.checkadmin()
+        if not a:
+            raise cherrypy.HTTPRedirect("/")
 
         return render("admin/report.html")
 
     @cherrypy.expose
     def presentation(self):
-        self.checkadmin()
+        a = self.checkadmin()
+        if not a:
+            raise cherrypy.HTTPRedirect("/")
 
         return render("admin/presentation.html")
 

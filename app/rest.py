@@ -1637,6 +1637,17 @@ class ClassroomRestView(View):
             if "tkey" in kwargs:
                 teacher = self.check_login_teacher(kwargs)
 
+                if "ids[]" in kwargs:
+                    ss = select([users.c.userid, users.c.id]).where(
+                        users.c.id.in_(kwargs["ids[]"]))
+                    rst = conn.execute(ss)
+                    rows = rst.fetchall()
+
+                    userids = {}
+                    for row in rows:
+                        userids[row["id"]] = row["userid"]
+                    return userids
+
                 ss = select([classrooms]).where(
                     classrooms.c.teacher==teacher["id"])
                 rst = conn.execute(ss)
@@ -1677,8 +1688,8 @@ class ClassroomRestView(View):
             rows = rst.fetchall()
 
             for row in rows:
-                userid = data["students_cid"].index(row.userid)
-                data["students_cid"][userid] = row.id
+                userid = data["students_cid"].index(row["userid"])
+                data["students_cid"][userid] = row["id"]
 
             json = {
                 "teacher": teacher["id"],
@@ -1703,6 +1714,55 @@ class ClassroomRestView(View):
                 return {"success": True}
             else:
                 raise cherrypy.HTTPError(503)
+        elif cherrypy.request.method == "PUT":
+            data = cherrypy.request.json
+            teacher = self.check_login_teacher(data)
+
+            self.check_key(data, ("clsid",
+                "students_name",
+                "students_cid",
+                "students_sid",
+                ))
+
+            if not isinstance(data["students_name"], list):
+                raise ErrMsg.NOT_LIST.format("students_name")
+            if not isinstance(data["students_cid"], list):
+                raise ErrMsg.NOT_LIST.format("students_cid")
+            if not isinstance(data["students_sid"], list):
+                raise ErrMsg.NOT_LIST.format("students_sid")
+
+            ss = select([users.c.id, users.c.userid]).where(
+                users.c.userid.in_(data["students_cid"]))
+            rst = conn.execute(ss)
+            rows = rst.fetchall()
+
+            for row in rows:
+                userid = data["students_cid"].index(row["userid"])
+                data["students_cid"][userid] = row["id"]
+
+            json = {
+                "students_name": data["students_name"],
+                "students_cid": data["students_cid"],
+                "students_sid": data["students_sid"],
+                }
+
+            stmt = update(classrooms).where(and_(
+                classrooms.c.id == data["clsid"],
+                classrooms.c.teacher == teacher["id"])).values(json)
+            rst = conn.execute(stmt)
+
+            if rst.rowcount > 0:
+                return {"success": True}
+            else:
+                raise cherrypy.HTTPError(400)
+        elif cherrypy.request.method == "DELETE":
+            teacher = self.check_login_teacher(kwargs)
+            self.check_key(kwargs, ("clsid", ))
+
+            ds = classrooms.delete().where(classrooms.c.id == kwargs["clsid"])
+            rst = conn.execute(ds)
+
+            return {"success": True}
         else:
             raise cherrypy.HTTPError(404)
 

@@ -134,7 +134,7 @@ function check_students_scratch() {
 				})
 			}
 		}
-	}, (2000 * Object.keys(sid_colors).length));
+	}, (1000 * Object.keys(sid_colors).length));
 }
 
 function check_students_python() {

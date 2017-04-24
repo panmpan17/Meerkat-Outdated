@@ -468,6 +468,10 @@
 						<div id="homewrok"></div>
 						<hr>
 						<div id="porjects"></div>
+						<br><br>
+						<button style="padding: 10px 15px" onclick="change_classroom()">&#9998;</button>
+						<button style="padding: 10px 15px" onclick="delete_classroom()">&#10006;</button>
+						<br>
 					</div>
 				</div>
 			</div>
@@ -500,6 +504,25 @@
 					<a target="_blank" id="s_project_page">
 						<button type="button" class="btn btn-warning">看程式</button>
 					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" tabindex="-1" role="dialog" id="change-student">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="change-student-title"></h4>
+				</div>
+				<div class="modal-body" id="change-student-table">
+					
+				</div>
+				<div class="modal-footer">
+					<span style="color: grey">如果要刪除學生, 就把他的資料通通清空</span>
+					<button type="button" class="btn btn-info" data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-warning" onclick="check_change_student()">更改</button>
 				</div>
 			</div>
 		</div>
