@@ -61,3 +61,16 @@ iframe#scratch_iframe {
 	background: white;
 	overflow-y: scroll;
 }
+
+div.py_file_hw {
+	display: inline-block;
+	/*background: #366f9e;*/
+	width: 100px;
+	border-radius: 10px;
+	padding: 5px;
+	text-align: center;
+	color: rgb(43, 142, 183);
+	border: 2px solid rgb(43, 142, 183);
+	margin: 5px;
+	cursor: pointer;
+}

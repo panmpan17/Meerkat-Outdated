@@ -2,8 +2,7 @@
 id_pass_re = new RegExp("[a-zA-Z0-9@\.]{8,32}");
 // file_re = new RegExp("[0-9]+_[0-9]+")
 email_re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-
+CHANGE_E_BTN = `&nbsp;<a href="/newemail"><button class="btn btn-danger">更改</button></a>`
 function matchRE(r, text) {
 	match = r.exec(text);
 	if (match == null) {
@@ -15,7 +14,7 @@ function matchRE(r, text) {
 	return true;
 }
 
-function presslogo() {
+function presslogo () {
 	cookie = getCookie("id");
 	if (cookie == "") {
 		show("login-frame");
@@ -25,8 +24,7 @@ function presslogo() {
 		toggle("accountmenu");
 	}
 }
-
-function login() {
+function login () {
 	errormsg = $("#login-errormsg")[0]
 
 	userid = $("[name=login-userid]")[0].value;
@@ -65,7 +63,7 @@ function login() {
 	}
 }
 
-function signup(){
+function signup () {
 	errormsg = $("#signup-errormsg")[0]
 
 	userid = $("[name=signup-userid]")[0].value;
@@ -149,18 +147,18 @@ function signup(){
 	})
 }
 
-function logout() {
+function logout () {
 	deleteCookie("id");
 	deleteCookie("userid");
 	deleteCookie("key");
 	location.reload();
 }
 
-function to_html(dict) {
+function to_html (dict) {
 	$("#info-userid")[0].innerHTML = dict["userid"];
 	$("#info-point")[0].innerHTML = dict["point"];
 	$("#info-nick")[0].innerHTML = dict["nickname"];
-	$("#info-email")[0].innerHTML = dict["email"];
+	$("#info-email")[0].innerHTML = dict["email"] + CHANGE_E_BTN;
 	$("#info-birth")[0].innerHTML = dict["birth_year"];
 	$("#info-job")[0].innerHTML = dict["job"];
 
@@ -187,7 +185,7 @@ function to_html(dict) {
 	}
 }
 
-function showinfo() {
+function showinfo () {
 	hide('accountmenu');
 
 	key = getCookie("key");
@@ -212,7 +210,7 @@ function showinfo() {
 	})
 }
 
-function resentmail() {
+function resentmail () {
 	$.ajax({
 		url: host + "user/emailvalid",
 		type: "POST",
@@ -233,7 +231,7 @@ function resentmail() {
 	})
 }
 
-function changepassword() {
+function changepassword () {
 	password = $("#change_password")[0].value
 	newpassword = $("#change_newpassword")[0].value
 	check_password = $("#change_check_password")[0].value

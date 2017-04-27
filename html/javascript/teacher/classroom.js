@@ -184,15 +184,17 @@ function changeclassroom (cls_id) {
 					}
 				})
 
-				units = Array.from(units)
+				units = Array.from(units).sort()
 				if (units.length > 0) {
 					buttonsgroup = `<br><div class="dropdown">
 						<button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						課程 <span id="lessonbtn"></span></button>
 						<ul class="dropdown-menu">`
-					$.each(units, function (i) {
+					$.each(units, function (_, i) {
+						unit = i.replace("test", "課程 ")
+						unit = unit.replace("hw", "功課 ")
 						f = `<li style="cursor:pointer"><a onclick="changefileunit('{0}')">{0}</a></li>`
-						buttonsgroup += format(f, units[i])
+						buttonsgroup += format(f, unit)
 					})
 					buttonsgroup += `</ul></div><br>`
 					$("#buttonsgroup").html(buttonsgroup)

@@ -26,20 +26,22 @@ classroom_homwork_format = `
 <br /><br />
 `
 
-p_p_f = `\
-<div>
-<a style="cursor: pointer" onclick="show_file('/downloads/{1}/{2}', '{3}')">
-	<img src="http://placehold.it/144x108/366f9e/fed958/?text={0}" style="border: 1px rgba(50, 50, 50, 0.5) solid;"/>
-</a>
-</div>
-`
-
 picture_fromat = `\
 <div>
 <a style="cursor: pointer" onclick="play_scratch_project('{0}', '{1}', '{2}')">
 	<img src="//cdn2.scratch.mit.edu/get_image/project/{0}_144x108.png" style="border: 1px rgba(50, 50, 50, 0.5) solid;"/>
 </a>
 </div>`
+
+ PY_FILE_HW = `<div class="py_file_hw" onclick="show_file('/downloads/{1}/{2}', '{3}')">
+	{0}
+</div>`
+
+PY_UNIT_BTN = `<br><div class="dropdown">
+	<button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	課程 <span id="lessonbtn"></span> <i class="fa fa-sort" aria-hidden="true"></i>
+</button>
+<ul class="dropdown-menu">`
 
 project_embed_fromat = "//scratch.mit.edu/projects/embed/{0}/?autostart=false"
 python_homework_re = new RegExp("(test|hw)1?[0-9]-[0-9]{1,2}\.py")
@@ -218,21 +220,18 @@ function loadfilehomework(folder, cls_id) {
 				}
 			})
 
-			units = Array.from(units)
+			units = Array.from(units).sort()
 			homeworks[cls_id] = homework
 			if (units.length > 0) {
-				buttonsgroup = `<br><div class="dropdown">
-					<button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					課程 <span id="lessonbtn"></span></button>
-					<ul class="dropdown-menu">`
-				$.each(units, function (i) {
-					unit = units[i].replace("test", "課程 ")
+				buttonsgroup = PY_UNIT_BTN
+				$.each(units, function (_, i) {
+					unit = i.replace("test", "課程 ")
 					unit = unit.replace("hw", "功課 ")
 					f = `<li style="cursor:pointer">\
 						<a onclick="changefileunit('{0}','{1}','{2}')">{3}</a></li>`
 					buttonsgroup += format(f,
 						folder,
-						units[i],
+						i,
 						cls_id,
 						unit)
 				})
@@ -257,9 +256,7 @@ function changefileunit(folder, unit, cls_id) {
 			if (slide == "") {
 				slide = `<section style="clear: both; padding:10px;">`
 			}
-			slide += format(`<div style="display: inline-block;background: #366f9e;width: 100px;border-radius: 10px;\
-				padding: 5px;text-align: center;color: #fed958;margin: 5px;cursor: pointer"\
-				onclick="show_file('/downloads/{1}/{2}', '{3}')">{0}</div>`,
+			slide += format(PY_FILE_HW,
 				homework[i],
 				folder,
 				files[cls_id][homework[i]],

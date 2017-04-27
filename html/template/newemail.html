@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}帳戶已啟動{% endblock %}
+{% block css %}
+<style type="text/css">
+	div.activeframe {
+		width: 70%;
+		background: white;
+	}
+
+	.step-by-step {
+		margin: 0 auto;
+		max-width: 1000px;
+	}
+
+	.step-by-step ul {
+		margin-right: 35px;
+		list-style: none;
+		background: none;
+		position: relative;
+		right: 10px;
+	}
+
+	.step-by-step ul li {
+		position: relative;
+		float: left;
+		width: 33.3%;
+		height: 36px;
+		background: url("/html/images/step_by_step.png") no-repeat left -108px;
+	}
+
+	.step-by-step ul li.first-step {
+		background-position: left 0;
+	}
+
+	.step-by-step ul li.last-step {
+		position: absolute;
+		right: -35px;
+		top: 0;
+		width: 36px;
+		background-position: right 0;
+	}
+
+	.step-by-step ul li.step-current {
+		background-position: left -144px;
+	}
+
+	.step-by-step ul li.step-current.first-step {
+		background-position: left -36px;
+	}
+
+	.step-by-step ul li.step-current.last-step {
+		background-position: right -36px;
+	}
+
+	.step-by-step ul li.step-ok {
+		background-position: left -180px;
+	}
+
+	.step-by-step ul li.step-ok.first-step {
+		background-position: left -72px;
+	}
+
+	.step-by-step ul li.step-ok.last-step {
+		background-position: right -72px;
+	}
+
+	.step-by-step ul li span {
+		position: absolute;
+		left: -40px;
+		top: 45px;
+		width: 120px;
+		font-weight: bold;
+		text-align: center;
+		line-height: 1.1;
+		color: #b1b8bf;
+	}
+
+	.step-by-step ul li.step-current span {
+		color: #4C5B6A;
+	}
+
+	.step-by-step ul li.step-ok span {
+		color: #999FA5;
+		text-decoration: line-through;
+	}
+</style>
+{% endblock %}
+{% block content %}
+	<br><br><br>
+	<center>
+		<div class="activeframe">
+			<br><br>
+			<div class="step-by-step">
+				<ul class="unstyled clearfix">
+					<li class="first-step step-ok"><span>檢查舊 Email</span></li>
+					<li class="step-ok"><span>輸入新 Email</span></li>
+					<li class="step-current"><span>輸入新驗證碼</span></li>
+					<li class="last-step"><span>完成</span></li>
+				</ul>
+			</div>
+			<br><br>
+			<br><br>
+		</div>
+	</center>
+{% endblock %}

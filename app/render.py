@@ -246,6 +246,10 @@ class UserCaseHandler(object):
     def presentation(self):
         return render("presentation.html")
 
+    @cherrypy.expose
+    def newemail(self):
+        return render("newemail.html")
+
 class ClassHandler(object):
     _root = "/class/"
     _cp_config = {
