@@ -18,10 +18,21 @@ def generate_code():
 		code += str(len(numbers))
 	return str(code)
 
+class ChangeEmail:
+	def __init__(self, old):
+		self.old = old
+		self.code = generate_code()
+		self.new = None
+		self.stage = 1
+
+	def newcode(self):
+		self.code = generate_code()
+
 class EmailValidPlugin(plugins.SimplePlugin):
 	def __init__(self, bus):
 		plugins.SimplePlugin.__init__(self, bus)
 		self.validdict = {}
+		self.changeemails = {}
 
 	def start(self):
 		pass
@@ -44,9 +55,15 @@ class EmailValidPlugin(plugins.SimplePlugin):
 				self.validdict.pop(uid)
 				if timedelta.seconds < KEYTIMEOUT:
 					return True
-		else:
-			pass
 		return False
+
+	def new_change(self, uid, email):
+		self.changeemails[uid] = ChangeEmail(email)
+
+		return self.changeemails[uid].code
+
+	def delete_change(self, uid):
+		self.changeemails.pop(uid)
 
 class EmailValidTool(cherrypy.Tool):
 	def __init__(self, email_valid_plugin):

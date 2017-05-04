@@ -69,7 +69,7 @@ class ErrMsg(ErrMsg):
 
     WRONG_WRITER = "Question's writer id is not '{}'"
     A_WRONG_WRITER = "Answer's writer id is not '{}'"
-    SOLVED_QUESTION = "Question '{}' alredy solved"
+    SOLVED_QUESTION = "Question '{}' already solved"
 
     NEED_ADMIN = "User '{}' is not admin"
 
@@ -470,6 +470,77 @@ class UserRestView(View):
                 return {"success": True}
             else:
                 raise cherrypy.HTTPError(400, ErrMsg.WRONG_PASSWORD)
+        else:
+            raise cherrypy.HTTPError(404)
+
+    @cherrypy.expose
+    def changemail(self, *args, **kwargs):
+        meta, conn = cherrypy.request.db
+        emailvalid = cherrypy.request.email_valid
+        users = meta.tables[User.TABLE_NAME]
+        changeemails = emailvalid.changeemails
+
+        if cherrypy.request.method == "GET":
+            user = self.check_login_u(kwargs)
+
+            if user["id"] not in changeemails:
+                raise cherrypy.HTTPError(400)
+
+            return {"stage": changeemails[user["id"]].stage}
+        elif cherrypy.request.method == "POST":
+            data = cherrypy.request.json
+            user = self.check_login_u(data)
+
+            if user["id"] not in changeemails:
+                code = emailvalid.new_change(user["id"], user["email"])
+
+                send_email_valid(code, user["email"], user["userid"])
+
+            return {"stage": changeemails[user["id"]].stage}
+        elif cherrypy.request.method == "PUT":
+            data = cherrypy.request.json
+            user = self.check_login_u(data)
+
+            if user["id"] not in changeemails:
+                raise cherrypy.HTTPError(400)
+
+            if "code" in data:
+                if data["code"] != changeemails[user["id"]].code:
+                    raise cherrypy.HTTPError(400)
+
+                if changeemails[user["id"]].new != None:
+                    new_email = changeemails[user["id"]].new
+
+                    stmt = update(users).where(users.c.id==user["id"]).values(
+                        {"email": new_email})
+                    rst = conn.execute(stmt)
+
+                    if rst.rowcount != 0:
+                        changeemails.pop(user["id"])
+
+                        return {"passed": True}
+                    else:
+                        raise cherrypy.HTTPError(503)
+                else:
+                    changeemails[user["id"]].stage = 2
+                    return {"passed": False,
+                        "stage": changeemails[user["id"]].stage}
+            elif "email" in data:
+                if changeemails[user["id"]].new != None:
+                    raise cherrypy.HTTPError(400)
+
+                changeemails[user["id"]].new = data["email"]
+                changeemails[user["id"]].newcode()
+
+                changeemails[user["id"]].stage = 3
+
+                send_email_valid(
+                    changeemails[user["id"]].code,
+                    changeemails[user["id"]].new,
+                    user["userid"])
+                return {"passed": False, "stage": changeemails[user["id"]].stage}
+            else:
+                raise cherrypy.HTTPError(400)
         else:
             raise cherrypy.HTTPError(404)
 
@@ -1889,7 +1960,6 @@ class FileUploadRestView(View):
                             continue
 
                         filename = file.filename
-                        print(filename)
                         filename.replace("test", "")
 
                         filename = fileformat.format(
@@ -1949,7 +2019,6 @@ class FileUploadRestView(View):
                 "file",
                 "rid",
                 ))
-            print(kwargs)
 
             try:
                 rid = int(kwargs["rid"])
@@ -1974,7 +2043,6 @@ class FileUploadRestView(View):
 
                 filename = file.filename
                 filetype = filename[filename.find(".") + 1:]
-                print(filetype)
 
                 filename = fileformat.format(
                     rid=row["id"],
@@ -2211,7 +2279,6 @@ class ReportRestView(View):
         elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
             user = self.check_login_u(data)
-            print(data)
 
             self.check_key(data,(
                 "title",

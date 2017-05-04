@@ -7,81 +7,18 @@
 		background: white;
 	}
 
-	.step-by-step {
-		margin: 0 auto;
-		max-width: 1000px;
+	div.step {
+		box-shadow: 0px 5px 5px 1px lightgray;
+		background: white;
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 5px;
+		border-top: 5px solid rgba(43,142,183,1);
+		
+		padding: 25px;
 	}
 
-	.step-by-step ul {
-		margin-right: 35px;
-		list-style: none;
-		background: none;
-		position: relative;
-		right: 10px;
-	}
-
-	.step-by-step ul li {
-		position: relative;
-		float: left;
-		width: 33.3%;
-		height: 36px;
-		background: url("/html/images/step_by_step.png") no-repeat left -108px;
-	}
-
-	.step-by-step ul li.first-step {
-		background-position: left 0;
-	}
-
-	.step-by-step ul li.last-step {
-		position: absolute;
-		right: -35px;
-		top: 0;
-		width: 36px;
-		background-position: right 0;
-	}
-
-	.step-by-step ul li.step-current {
-		background-position: left -144px;
-	}
-
-	.step-by-step ul li.step-current.first-step {
-		background-position: left -36px;
-	}
-
-	.step-by-step ul li.step-current.last-step {
-		background-position: right -36px;
-	}
-
-	.step-by-step ul li.step-ok {
-		background-position: left -180px;
-	}
-
-	.step-by-step ul li.step-ok.first-step {
-		background-position: left -72px;
-	}
-
-	.step-by-step ul li.step-ok.last-step {
-		background-position: right -72px;
-	}
-
-	.step-by-step ul li span {
-		position: absolute;
-		left: -40px;
-		top: 45px;
-		width: 120px;
-		font-weight: bold;
-		text-align: center;
-		line-height: 1.1;
-		color: #b1b8bf;
-	}
-
-	.step-by-step ul li.step-current span {
-		color: #4C5B6A;
-	}
-
-	.step-by-step ul li.step-ok span {
-		color: #999FA5;
-		text-decoration: line-through;
+	div.step.disable {
+		background: #ccc;
 	}
 </style>
 {% endblock %}
@@ -90,16 +27,168 @@
 	<center>
 		<div class="activeframe">
 			<br><br>
-			<div class="step-by-step">
-				<ul class="unstyled clearfix">
-					<li class="first-step step-ok"><span>檢查舊 Email</span></li>
-					<li class="step-ok"><span>輸入新 Email</span></li>
-					<li class="step-current"><span>輸入新驗證碼</span></li>
-					<li class="last-step"><span>完成</span></li>
-				</ul>
+			<div class="row">
+				<div class="col-sm-4" style="padding: 5px">
+					<div id="step-1" class="step">
+						<h4>檢查 Email</h4>
+					</div>
+				</div>
+				<div class="col-sm-4" style="padding: 5px">
+					<div id="step-2" class="step">
+						<h4>輸入新 Email</h4>
+					</div>
+				</div>
+				<div class="col-sm-4" style="padding: 5px">
+					<div id="step-3" class="step">
+						<h4>輸入驗證碼</h4>
+					</div>
+				</div>
 			</div>
-			<br><br>
+			<br>
+			<center id="description-1">
+				<h5>
+					1 <br>
+					請檢查舊 Email <br>
+					並把信裡的檢查碼貼到下面的輸入欄
+				</h5>
+				<br>
+				<input id="code-1" type="text" style="text-align: center" placeholder="檢查碼">
+				<br><br>
+				<button id="submit" onclick="submitcode('1')">檢查</button>
+			</center>
+			<center id="description-2">
+				<h5>
+					2 <br>
+					請輸入新的 Email <br>
+				</h5>
+				<br>
+				<input id="newemail" type="text" style="text-align: center" placeholder="新 Email">
+				<br><br>
+				<button id="submit" onclick="submitemail()">送出</button>
+			</center>
+			<center id="description-3">
+				<h5>
+					3 <br>
+					請檢查新的 Email <br>
+					並把信裡的檢查碼貼到下面的輸入欄
+				</h5>
+				<br>
+				<input id="code-2" type="text" style="text-align: center" placeholder="檢查碼">
+				<br><br>
+				<button id="submit" onclick="submitcode('2')">檢查</button>
+			</center>
 			<br><br>
 		</div>
 	</center>
+{% endblock %}
+{% block script %}
+<script>
+	function submitcode(e) {
+		e = $("#code-" + e)[0]
+		if (e.value == "") {
+			alert("不可留白")
+			return ;
+		}
+		$.ajax({
+			url: host + "user/changemail",
+			type: "PUT",
+			dataType: "json",
+			data: JSON.stringify({"key": getCookie("key"), "code": e.value}),
+			contentType: "application/json; charset=utf-8",
+			success: function (msg) {
+				if (msg["passed"]) {
+					alert("Email 更改成功");
+					location.pathname = "/"
+				}
+				else {
+					displayStage(msg["stage"])
+				}
+			},
+			error: function (msg) {
+				console.log(msg)
+				if (msg.status == 401) {
+					reload = confirm("請重新登錄");
+					if (reload) {
+						show("login-frame");
+					}
+				}
+				else if (msg.status == 400) {
+					alert("驗證碼錯誤")
+				}
+			}
+		})
+	}
+
+	function submitemail() {
+		e = $("#newemail")[0]
+		if (e.value == "") {
+			alert("不可留白")
+			return ;
+		}
+		$.ajax({
+			url: host + "user/changemail",
+			type: "PUT",
+			dataType: "json",
+			data: JSON.stringify({"key": getCookie("key"), "email": e.value}),
+			contentType: "application/json; charset=utf-8",
+			success: function (msg) {
+				displayStage(msg["stage"])
+			},
+			error: function (msg) {
+				if (msg.status == 401) {
+					reload = confirm("請重新登錄");
+					if (reload) {
+						show("login-frame");
+					}
+				}
+			}
+		})
+	}
+
+	function displayStage(stage) {
+		$("#step-1")[0].classList.add("disable")
+		$("#step-2")[0].classList.add("disable")
+		$("#step-3")[0].classList.add("disable")
+
+		$("#description-1").hide()
+		$("#description-2").hide()
+		$("#description-3").hide()
+		if (stage == 1) {
+			$("#step-1")[0].classList.remove("disable")
+
+			$("#description-1").show()
+		}
+		else if (stage == 2) {
+			$("#step-2")[0].classList.remove("disable")
+
+			$("#description-2").show()
+		}
+		else if (stage == 3) {
+			$("#step-3")[0].classList.remove("disable")
+
+			$("#description-3").show()
+		}
+	}
+
+	$(document).ready(function () {
+		$.ajax({
+			url: host + "user/changemail",
+			type: "POST",
+			dataType: "json",
+			data: JSON.stringify({"key": getCookie("key")}),
+			contentType: "application/json; charset=utf-8",
+			success: function (msg) {
+				displayStage(msg["stage"])
+			},
+			error: function (error) {
+				if (msg.status == 401) {
+					reload = confirm("請重新登錄");
+					if (reload) {
+						show("login-frame");
+					}
+				}
+			}
+		})
+	})
+</script>
 {% endblock %}

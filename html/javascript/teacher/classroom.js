@@ -193,8 +193,10 @@ function changeclassroom (cls_id) {
 					$.each(units, function (_, i) {
 						unit = i.replace("test", "課程 ")
 						unit = unit.replace("hw", "功課 ")
-						f = `<li style="cursor:pointer"><a onclick="changefileunit('{0}')">{0}</a></li>`
-						buttonsgroup += format(f, unit)
+						f = `<li style="cursor:pointer"><a onclick="changefileunit('{1}')">{0}</a></li>`
+						buttonsgroup += format(f,
+							unit,
+							i)
 					})
 					buttonsgroup += `</ul></div><br>`
 					$("#buttonsgroup").html(buttonsgroup)
