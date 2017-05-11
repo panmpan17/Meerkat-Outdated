@@ -129,6 +129,7 @@
 
 		.hover {cursor: pointer;}
 		.hover:hover {background: #ccc;}
+
 	</style>
 </head>
 
@@ -349,18 +350,33 @@
 						<select id="class-type" class="form-control" name="class_permission"></select>
 						<br>
 					</div>
-					<div class="col-md-4 col-sm-6">
+					<div class="col-sm-6">
+						<h5>開課日期</h5>
 						<div class="date-picker">
 							<div class="input">
-								<div class="result">開課日期: <span id="classdate"></span></div>
+								<div class="result"><span id="classdate"></span></div>
 								<button><i class="fa fa-calendar"></i></button>
 							</div>
 							<div class="calendar"></div>
 						</div>
 						<br>
+						<h5>結束日期 (可留空)</h5>
+						<div class="date-picker" style="float: left">
+							<div class="input">
+								<div class="result"><span id="classenddate"></span></div>
+								<button><i class="fa fa-calendar"></i></button>
+							</div>
+							<div class="calendar"></div>
+						</div>
+						<div class="date-picker-cancel" onclick="$('#classenddate')[0].textContent = ''" style="width: 20px;padding: 0px 4px">
+							&#10006;
+						</div>
+						<br>
+						<br>
+						<br>
 					</div>
-					<div class="col-md-4 col-sm-6">
-						<dl class="check-list-right" id="classlist">
+					<div class="col-sm-6">
+						<dl class="check-list-right" id="classlist" style="clear: left">
 							<dt>上課日</dt>
 							<dd>
 								<input name="weekdays" type="checkbox" id="weekdays-1" value="1">
@@ -392,9 +408,9 @@
 							</dd>
 						</dl>
 					</div>
-					<div class="col-md-4 col-sm-6">
+					<div class="col-sm-6">
 						<div class="clock">
-							<div class="title">開始時間</div>
+							<div class="title"></div>
 							<div class="hourblock">
 								<button class="hourup" id="1">▲</button>
 								<div class="hour" id="hour1">9</div>
@@ -434,12 +450,13 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th>地址</th>
 									<th>課程種類</th>
 									<th>開課日期</th>
+									<th>結束日期</th>
+									<th>上課日</th>
 									<th>上課時間</th>
 									<th>下課時間</th>
-									<th>上課日</th>
+									<th>地址</th>
 								</tr>
 							</thead>
 							<tbody id="tadclass"></tbody>
@@ -486,11 +503,11 @@
 		</svg>
 	</div>
 
-	<div class="modal fade" tabindex="-1" role="dialog" id="scratch_project">
+	<div class="modal fade" tabindex="-1" role="dialog" id="project_viewer">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" onclick="$('#scratch_iframe')[0].src = ''">&times;</span></button>
 					<h4 class="modal-title" id="project-title"></h4>
 				</div>
 				<div class="modal-body">

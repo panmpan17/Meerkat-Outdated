@@ -741,7 +741,7 @@ function check_change_student () {
 }
 
 function play_scratch_project (project_id, hw_s, student_id) {
-	$("#scratch_project").modal("show");
+	$("#project_viewer").modal("show");
 	$("#copycode").hide();
 	$("#file").hide();
 	$("#scratch_iframe").show();
@@ -779,6 +779,7 @@ function play_scratch_project (project_id, hw_s, student_id) {
 			contentType: "application/json; charset=utf-8",
 			success: function (msg) {
 				reloadcomment(classroom["id"]);
+				alert("修改成功")
 			},
 			error: function (error) {
 				console.log(error)
@@ -804,7 +805,7 @@ function parse_file (Text) {
 }
 
 function show_file (file, hw_s, student_id) {
-	$("#scratch_project").modal("show");
+	$("#project_viewer").modal("show");
 	$("#copycode").show();
 	$("#file").show();
 	$("#scratch_iframe").hide();
@@ -850,6 +851,7 @@ function show_file (file, hw_s, student_id) {
 			contentType: "application/json; charset=utf-8",
 			success: function (msg) {
 				reloadcomment(classroom["id"]);
+				alert("修改成功")
 			},
 			error: function (error) {
 				console.log(error)

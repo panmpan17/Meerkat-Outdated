@@ -1,35 +1,29 @@
 {% extends "base.html" %}
-{% block title %}廣告{% endblock %}
+{% block title %}教師廣告{% endblock %}
 {% block css %}
 <style>
-	#advertisetable,
-	#adclasstable {
+	#advertisetable {
 		width: 100%;
 	}
 
 	#advertisetable td,
-	#advertisetable th,
-	#adclasstable td,
-	#adclasstable th {
+	#advertisetable th {
 		border: 1px solid #dddddd;
 		text-align: left;
 		padding: 8px;
 		font-size: 18px;
 	}
 
-	#advertisetable thead tr,
-	#adclasstable thead tr {
+	#advertisetable thead tr {
 		background-color: white;
 	}
 
 
-	#advertisetable tbody tr:nth-child(even),
-	#adclasstable tbody tr:nth-child(even) {
+	#advertisetable tbody tr:nth-child(even) {
 		background-color: #a9e8e7;
 		/*color: white;*/
 	}
-	#advertisetable tbody tr:nth-child(odd),
-	#adclasstable tbody tr:nth-child(odd) {
+	#advertisetable tbody tr:nth-child(odd) {
 		background-color: #8fdeef;
 		/*color: white;*/
 	}
@@ -45,17 +39,146 @@
 		cursor: pointer;
 	}
 
-	td {
-		font-family: Courier;}
+	td {font-family: Courier;}
 
 	.ui-state-default {
 		font-size: 24px;
 	}
+
+	.top-bar {
+		display: flex;
+		width: 90%;
+		line-height: 20px;
+		top: 0;
+		background: #2181bc;
+		border-radius: 10px;
+		padding: 6px;
+	}
+
+	.open {
+		z-index: 2;
+		cursor: pointer;
+		flex: 1;
+		position: relative;
+		color: #eee;
+		font-size: 20px;
+		text-align: left;
+	}
+
+	.open table td {
+		 text-align: left;
+	}
+
+	.open #type {
+		color: #eeff55;
+		font-size:24px;
+		position: static;
+	}
+
+	.open #start {
+		color: white;
+		font-size:12px;
+	}
+
+	.open #detail {
+		text-align: right;
+		font-size: 13px;
+	}
+
+	.open table td {
+		font-size: 16px;
+		line-height: 22px;
+		color: #144ee2;
+		font-weight: 700;
+	}
+
+	.open input {
+		display: none;
+	}
+
+	.open ul {
+		display : inline-block;
+		width: 100%;
+		margin-top: 5px;
+		margin-bottom: -5px;
+	}
+
+	.open ul li {
+		display : inline-block;
+		width: 48%;
+		height: 35px;
+	}
+
+	.open ul li:before {
+		content: "○ ";
+	}
+
+	.fix-content {
+		height: 0px;
+	}
+
+	.open .content {
+		z-index: 2;
+		display: block;
+		position: absolute;
+		width: calc(100% + 13.5px);
+		left: -6px;
+		background-color: #89d2ff;
+		padding: 15px;
+		box-sizing: border-box;
+		border-bottom-left-radius: 10px;
+		border-bottom-right-radius: 10px;
+	}
+
+	.open.slide-down .content {
+		opacity: 0;
+		transform: translate3d(0, -100%, 0);
+		transition: transform 0.5s, opacity 0.5s;
+	}
+
+	.open.slide-down input:checked ~ .content {
+		transform: translate3d(0, 0, 0);
+		opacity: 1;
+	}
+
+	.open.pop-in .content {
+		opacity: 0;
+		transform-origin: center top;
+		transform: scale3d(0, 0, 0);
+		transition: transform 0.5s, opacity 0.5s;
+	}
+
+	.open.pop-in input:checked ~ .content {
+		transform: scale3d(1, 1, 1);
+		opacity: 1;
+	}
+
+	.open.flip-down {
+		perspective-origin: center, top;
+		perspective: 400px;
+	}
+
+	.open.flip-down .content {
+		opacity: 0;
+		transform-origin: top center;
+		transform: rotate3d(1, 0, 0, 90deg) translate3d(0, 10%, 0);
+		transition: transform 0.5s, opacity 0.5s;
+	}
+
+	.open.flip-down input:checked ~ .content {
+		transform: rotate3d(1, 0, 0, 0deg);
+		opacity: 1;
+	}
+
+	.open.flip-down.flip-back .content {
+		transform: rotate3d(1, 0, 0, -90deg) translate3d(0, 10%, 0);
+	}
 </style>
-<link rel="stylesheet" href="html/css/datepicker.css">
+<link href="/html/css/datepicker.css" rel="stylesheet">
 {% endblock %}
 {% block content %}
 	<br><br><br>
+	
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-2 col-md-1 col-sm-12"></div>
@@ -119,26 +242,18 @@
 		<a id="closeloginframe" onclick="hide('adclass-frame');" style="">X</a>
 		<br>
 		<div class="frame-content" style="padding: 15px;padding-top: 0%;">
-			<table id="adclasstable">
-				<!-- <thead>
-					<tr>
-						<th>課程種類</th>
-						<th>開課日期</th>
-						<th>上課時間</th>
-						<th>下課時間</th>
-						<th>上課日</th>
-						<th>地址</th>
-					</tr>
-				</thead> -->
-				<tbody id="adclasses"></tbody>
-			</table>
+			<center id="adclasses" >
+			</center>
 		</div>
 	</div>
 </div>
 {% endblock %}
 {% block script %}
-	<script src="html/javascript/taiwan_town.js"></script>
 	<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+	<script src="/html/javascript/datepicker.js"></script>
+	<script src="/html/javascript/taiwan_town.js"></script>
+	<script src="/html/javascript/teacher/advertise.js" type="text/javascript" charset="utf-8"></script>
 	<script>
 		month_re = new RegExp("[0-9]+ 月")
 		CLASS_TO = {
@@ -158,14 +273,44 @@
 		`
 
 		adclass_format = `
-		<tr>
-			<td>{0}</td>
-			<td>{1}</td>
-			<td>{2}</td>
-			<td>{3}</td>
-			<td>{4}</td>
-			<td>{5}</td>
-		</tr>
+		<div class="top-bar-contain">
+			<div class="top-bar">
+				<label class="open flip-down">
+					<span id="type">{0}</span><br />
+					<span id="start">{1} 開課</span>
+
+					<div id="detail"></div>
+					<input type="checkbox" onclick="togglecontent(this)">
+					<div class="content">
+						<table>
+							<tr>
+								<td>{1} 開課</td>
+							</tr>
+							<tr>
+								<td>{2}</td>
+							</tr>
+							<tr>
+								<td>
+									<br />
+									上課日:
+									<ul>
+										{3}
+									</ul>
+								</td>
+							</tr>
+							<tr>
+								<td>時間: {4} ~ {5}</td>
+							</tr>
+							<tr>
+								<td>地址: {6}</td>
+							</tr>
+						</table>
+					</div>
+				</label>
+			</div>
+			<div class="fix-content"></div>
+		</div>
+		<br />
 		`
 
 		chinese_weekday = [
@@ -281,6 +426,7 @@
 					"address": i["address"],
 					"type": i["type"],
 					"date": i["date"],
+					"enddate": i["enddate"],
 					"start_time": i["start_time"],
 					"end_time": i["end_time"],
 					"weekdays": i["weekdays"],
@@ -299,24 +445,56 @@
 				if (repeat.includes(ad["id"])) {
 					return true;
 				}
-				c_weekdays = []
+				c_weekdays = ""
 				$.each(ad["weekdays"], function (i) {
-					c_weekdays.push(
-						chinese_weekday[
-							ad["weekdays"][i]
-							])
+					c_weekdays += format(`<li>{0}</li>`, chinese_weekday[ad["weekdays"][i]])
 				})
+
+				enddate = "老師沒有指定結束日期"
+				if (ad["enddate"] != null) {
+					enddate = ad["enddate"] + " 結束"
+				}
 
 				$("#adclasses")[0].innerHTML += format(
 					adclass_format,
 					CLASS_TO[ad["type"]],
 					ad["date"],
+					enddate,
 					c_weekdays,
 					ad["start_time"],
 					ad["end_time"],
 					ad["address"]);
 				repeat.push(ad["id"])
 			})
+			$.each($(".open input[type=checkbox]"), function (_, i) {
+				togglecontent(i)
+			})
+		}
+
+		function togglecontent(e) {
+			if (e.checked) {
+				$(e).parents(".top-bar").animate({
+					borderBottomLeftRadius: "0px",
+					borderBottomRightRadius: "0px",
+				});
+				$(e).parent().children("#detail")[0].innerHTML = `詳情 <i class="fa fa-caret-up" aria-hidden="true"></i>`
+				
+				$(e).parents(".top-bar-contain").children(".fix-content").css({
+					height: "240px"
+				})
+			}
+			else {
+				$(e).parents(".top-bar").animate({
+					borderBottomLeftRadius: "10px",
+					borderBottomRightRadius: "10px",
+				});
+				$(e).parent().children("#detail")[0].innerHTML = `詳情 <i class="fa fa-caret-down" aria-hidden="true"></i>`
+				
+				
+				$(e).parents(".top-bar-contain").children(".fix-content").css({
+					height: "0px"
+				})
+			}
 		}
 
 		$(document).ready(function () {
@@ -377,6 +555,7 @@
 							"address": i["address"],
 							"type": i["type"],
 							"date": i["date"],
+							"enddate": i["enddate"],
 							"start_time": i["start_time"],
 							"end_time": i["end_time"],
 							"weekdays": i["weekdays"],
@@ -425,6 +604,4 @@
 			$("#classdate").html(d)
 		})
 	</script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-	<script src="/html/javascript/datepicker.js"></script>
 {% endblock %}

@@ -446,6 +446,9 @@ class Teacher(object):
 
     @classmethod
     def mk_dict_adarea_adclass(cls, row):
+        enddate = row["enddate"]
+        if enddate != None:
+            enddate = row["enddate"].strftime("%Y 年 %m 月 %d 日")
         return {
             "id": row["id"],
             "name": row["name"],
@@ -459,6 +462,7 @@ class Teacher(object):
             "address": row["address"],
             "type": row["type"],
             "date": row["date"].strftime("%Y 年 %m 月 %d 日"),
+            "enddate": enddate,
             "start_time": row["start_time"].strftime("%I:%M %p"),
             "end_time": row["end_time"].strftime("%I:%M %p"),
             "weekdays": row["weekdays"],
@@ -570,6 +574,7 @@ class AdClass(object):
             Column("address", String, nullable=False, autoincrement=False),
             Column("type", String, nullable=False, autoincrement=False),
             Column("date", Date, nullable=False, autoincrement=False),
+            Column("enddate", Date, nullable=False, autoincrement=False),
             Column("start_time", Time, nullable=False, autoincrement=False),
             Column("end_time", Time, nullable=False, autoincrement=False),
             Column("weekdays", ARRAY(Integer), nullable=False, autoincrement=False)
@@ -579,11 +584,15 @@ class AdClass(object):
 
     @classmethod
     def mk_dict(cls, row):
+        enddate = row["enddate"]
+        if enddate != None:
+            enddate = row["enddate"].strftime("%Y 年 %m 月 %d 日")
         return {
             "id": row["id"],
             "address": row["address"],
             "type": row["type"],
             "date": row["date"].strftime("%Y 年 %m 月 %d 日"),
+            "enddate": enddate,
             "start_time": row["start_time"].strftime("%I:%M %p"),
             "end_time": row["end_time"].strftime("%I:%M %p"),
             "weekdays": row["weekdays"],

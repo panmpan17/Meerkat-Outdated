@@ -6,7 +6,8 @@ adclass_format = `
 	<td>{3}</td>
 	<td>{4}</td>
 	<td>{5}</td>
-	<td class="b-close" onclick="deleteadclass('{6}')"><i class="fa fa-times"></i></td>
+	<td>{6}</td>
+	<td class="b-close" onclick="deleteadclass('{7}')"><i class="fa fa-times"></i></td>
 </tr>
 `
 
@@ -25,6 +26,7 @@ function newadclass() {
 	address = $("#class-address")[0].value;
 	type = $("#class-type")[0].value;
 	date = getdate("classdate");
+	enddate = getdate("classenddate");
 	start_time = gettime(1);
 	end_time = gettime(2);
 
@@ -36,6 +38,14 @@ function newadclass() {
 		}
 	})
 
+	if (address == "") {
+		alert("地址不能留空");
+		return
+	}
+	if (date == "") {
+		alert("開始日期必須選");
+		return
+	}
 	if (weekdays.lenth == 0) {
 		alert("上課日至少要有一個");
 		return
@@ -46,6 +56,7 @@ function newadclass() {
 	    "address": address,
 	    "type": type,
 	    "date": date,
+	    "enddate": enddate,
 	    "start_time": start_time,
 	    "end_time": end_time,
 	    "weekdays": weekdays,
@@ -100,14 +111,20 @@ function loadadclass() {
 							])
 				})
 
+				enddate = ""
+				if (adclasses[a]["enddate"]) {
+					enddate = adclasses[a]["enddate"]
+				}
+
 				$("#tadclass")[0].innerHTML += format(
 					adclass_format,
-					adclasses[a]["address"],
 					CLASS_TO[adclasses[a]["type"]],
 					adclasses[a]["date"],
+					enddate,
+					c_weekdays,
 					adclasses[a]["start_time"],
 					adclasses[a]["end_time"],
-					c_weekdays,
+					adclasses[a]["address"],
 					adclasses[a]["id"]);
 			}
 		}

@@ -1520,6 +1520,7 @@ class AdAreaRestView(View):
                     adclasses.c.address,
                     adclasses.c.type,
                     adclasses.c.date,
+                    adclasses.c.enddate,
                     adclasses.c.start_time,
                     adclasses.c.end_time,
                     adclasses.c.weekdays,
@@ -1622,7 +1623,7 @@ class AdClassRestView(View):
                     "adclasses": [AdClass.mk_dict(row) for row in rows],
                     }
                 return json
-        if cherrypy.request.method == "POST":
+        elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
             teacher = self.check_login_teacher(data)
 
@@ -1630,14 +1631,18 @@ class AdClassRestView(View):
                 "address",
                 "type",
                 "date",
+                "enddate",
                 "start_time",
                 "end_time",
                 "weekdays",))
 
             date_ = self.parsedate(data["date"])
+            enddate = self.parsedate(data["enddate"])
 
             if not date_:
                 raise cherrypy.HTTPError(400, "Date format wrong")
+            if not enddate:
+                enddate = None
 
             start_time = self.parsetime(data["start_time"])
             end_time = self.parsetime(data["end_time"])
@@ -1655,6 +1660,7 @@ class AdClassRestView(View):
                 "address": data["address"],
                 "type": data["type"],
                 "date": date_,
+                "enddate": enddate,
                 "start_time": start_time,
                 "end_time": end_time,
                 "weekdays": data["weekdays"],
@@ -1674,7 +1680,7 @@ class AdClassRestView(View):
             try:
                 aid = int(kwargs["aid"])
             except:
-                raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format(aid))
+                raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("aid"))
 
             # delete answer
             ds = adclasses.delete().where(and_(
