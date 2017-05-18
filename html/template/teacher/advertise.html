@@ -133,7 +133,7 @@
 	.open.slide-down .content {
 		opacity: 0;
 		transform: translate3d(0, -100%, 0);
-		transition: transform 0.5s, opacity 0.5s;
+		transition: transform 1.3s, opacity 1s;
 	}
 
 	.open.slide-down input:checked ~ .content {
@@ -145,7 +145,7 @@
 		opacity: 0;
 		transform-origin: center top;
 		transform: scale3d(0, 0, 0);
-		transition: transform 0.5s, opacity 0.5s;
+		transition: transform 1.3s, opacity 1s;
 	}
 
 	.open.pop-in input:checked ~ .content {
@@ -162,7 +162,7 @@
 		opacity: 0;
 		transform-origin: top center;
 		transform: rotate3d(1, 0, 0, 90deg) translate3d(0, 10%, 0);
-		transition: transform 0.5s, opacity 0.5s;
+		transition: transform 1.3s, opacity 1s;
 	}
 
 	.open.flip-down input:checked ~ .content {
@@ -479,9 +479,9 @@
 				});
 				$(e).parent().children("#detail")[0].innerHTML = `詳情 <i class="fa fa-caret-up" aria-hidden="true"></i>`
 				
-				$(e).parents(".top-bar-contain").children(".fix-content").css({
+				$(e).parents(".top-bar-contain").children(".fix-content").animate({
 					height: "240px"
-				})
+				}, 1200)
 			}
 			else {
 				$(e).parents(".top-bar").animate({
@@ -491,9 +491,9 @@
 				$(e).parent().children("#detail")[0].innerHTML = `詳情 <i class="fa fa-caret-down" aria-hidden="true"></i>`
 				
 				
-				$(e).parents(".top-bar-contain").children(".fix-content").css({
+				$(e).parents(".top-bar-contain").children(".fix-content").animate({
 					height: "0px"
-				})
+				}, 1200)
 			}
 		}
 
