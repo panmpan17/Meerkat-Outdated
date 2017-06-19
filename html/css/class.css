@@ -11,6 +11,10 @@ div.class_block {
 	color: white;
 }
 
+div.class_block.active {
+	background: rgba(43,142,183,1);
+}
+
 div#video {
 	width:80%;
 }

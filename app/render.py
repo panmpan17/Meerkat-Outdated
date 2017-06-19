@@ -250,6 +250,16 @@ class UserCaseHandler(object):
     def newemail(self):
         return render("newemail.html")
 
+    @cherrypy.expose
+    def downloadfile(self, *args):
+        classes = cherrypy.request.classes
+        path = classes.get_download_path() + "/".join(args)
+        print(path)
+        if os.path.isfile(path):
+            return cherrypy.lib.static.serve_file(path, "application/octet-stream", "")
+        else:
+            raise cherrypy.HTTPError(404)
+
 class ClassHandler(object):
     _root = "/class/"
     _cp_config = {

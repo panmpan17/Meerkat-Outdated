@@ -3,6 +3,12 @@ a2z = "abcdefghijklmnopqrstuvwxyz"
 classroom_format = `<li id="button-classroom-{1}">
 	<a onclick="changeclassroom('{1}')">{0}</a>
 </li>`
+classroom_main_format = `<hr />
+<div class="hover" onclick="changeclassroom('{3}')">
+<h4 style="color:royalblue">{0}</h4>
+人數: {1}<br>
+<span style="color:darkgray">開始時間:</spawn> {2}
+</div>`
 projects_fromat = "https://scratch.mit.edu/users/{0}/projects/"
 
 picture_fromat = `\
@@ -53,6 +59,11 @@ function loadallclassroom () {
 				$("#classrooms")[0].innerHTML += format(classroom_format,
 					msg[i]["name"],
 					msg[i]["id"]);
+				$("#classroom-main")[0].innerHTML += format(classroom_main_format,
+					msg[i]["name"],
+					Object.keys(msg[i]["students"]).length,
+					msg[i]["create_at"],
+					msg[i]["id"])
 				classrooms[msg[i]["id"]] = msg[i]
 			}
 		}
@@ -77,6 +88,9 @@ function changeclassroom (cls_id) {
 	$("#refreshclassroom")[0].onclick = function () {
 		changeclassroom(cls_id);
 	}
+	// $("#uploadfile")[0].onclick = function () {
+	// 	alert("1")
+	// }
 
 	homework = new Set();
 	students_project = {};
@@ -155,12 +169,19 @@ function changeclassroom (cls_id) {
 		$("#student-num")[0].innerHTML = Object.keys(classroom["students"]).length;
 		$.ajax({
 			url: host + "classroom/check_folder",
-			data: {"folder": classroom["folder"]},
+			data: {
+				"folder": classroom["folder"],
+				"tkey": getCookie("teacher-key"),
+				"student": true},
 			success: function (msg) {
+				console.log(file_re, msg)
 				files = {}
 				units = new Set()
-				$.each(msg, function (i) {
-					cid_hwn = file_re.exec(msg[i])[0]
+				$.each(msg, function (_, i) {
+					if (i == "teacher") {
+						return true;
+					}
+					cid_hwn = file_re.exec(i)[0]
 					cid_hwn = cid_hwn.split("_")
 					cid = cid_hwn[0]
 					hwn = cid_hwn[1]
@@ -174,7 +195,7 @@ function changeclassroom (cls_id) {
 						students_project[cid] = []
 						files[cid] = {}
 					}
-					files[cid][hwn] = msg[i]
+					files[cid][hwn] = i
 					students_project[cid].push(hwn)
 				})
 
@@ -208,8 +229,22 @@ function changeclassroom (cls_id) {
 				}
 			}
 		})
-		
 	}
+
+	$.ajax({
+		url: host + "classroom/check_folder",
+		data: {
+			"folder": classroom["folder"],
+			"tkey": getCookie("teacher-key")},
+		success: function (msg) {
+			$("#filelist")[0].innerHTML = ""
+			$.each(msg, function (_, i) {
+				$("#filelist")[0].innerHTML += format(
+					`<li class='filelist'><a href="/downloadfile/{0}/teacher/{1}" target="_blank">{1}</a></li>`,
+					classroom["folder"],
+					i)
+			})
+		}})
 }
 
 function changefileunit (unit) {
@@ -811,7 +846,7 @@ function show_file (file, hw_s, student_id) {
 	$("#scratch_iframe").hide();
 
 	$("#scratch_iframe")[0].src = ""
-	$("#s_project_page")[0].href = file
+	$("#s_project_page")[0].href = "/downloadfile" + file.replace("/downloads", "")
 	$("#project-title")[0].innerHTML = hw_s
 
 	$("#project-comment")[0].value = ""

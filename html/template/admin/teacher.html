@@ -83,6 +83,7 @@
 					<th>電話</th>
 					<th>停用</th>
 					<th style="width: 200px;">額外的廣告數量</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody id="teachers">
@@ -107,6 +108,9 @@
 			整縣市: <i class="fa fa-minus" onclick="change_city('{0}', -1)"></i>
 			{6}
 			<i class="fa fa-plus" onclick="change_city('{0}', 1)"></i>
+		</td>
+		<td>
+			<span style="color:red;cursor:pointer" onclick="delete_teacher({0})">X</span>
 		</td>
 	</tr>`
 
@@ -257,6 +261,23 @@
 			}
 		})
 	}
+
+	function delete_teacher(tid) {
+		c = prompt("你確定要刪除這個問題?\n如果是的話請輸入: "+ tid)
+		if (c != tid) {
+			alert("輸入失敗")
+			return ;
+		}
+		url = window.location.origin + "/rest/1/teacher/?tid={0}&key={1}"
+		$.ajax({
+			url: format(url, tid, getCookie("key")),
+			type: 'DELETE',
+			success: function(msg) {
+				load_teachers();
+			}
+		});
+	}
+
 	load_class();
 	load_teachers();
 </script>

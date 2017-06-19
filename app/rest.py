@@ -1311,7 +1311,7 @@ class TeacherRestView(View):
                 if not admin:
                     raise cherrypy.HTTPError(401)
 
-                ss = select([teachers])
+                ss = select([teachers]).order_by(teachers.c.id)
                 rst = conn.execute(ss)
                 rows = rst.fetchall()
 
@@ -1395,6 +1395,35 @@ class TeacherRestView(View):
                 return {"success": True}
             else:
                 raise cherrypy.HTTPError(404)
+        elif cherrypy.request.method == "DELETE":
+            user = self.check_login_u(kwargs)
+
+            if not user["admin"]:
+                raise cherrypy.HTTPError(401)
+
+            ss = select([teachers.c.id]).where(teachers.c.id==kwargs["tid"])
+            rst = conn.execute(ss)
+            teacher_id = rst.fetchone()
+
+            if not teacher_id:
+                raise cherrypy.HTTPError(400, f"Teacher id {kwargs['tid']} don't exist")
+
+            adareas = meta.tables[AdArea.TABLE_NAME]
+            adclasses = meta.tables[AdClass.TABLE_NAME]
+            classrooms = meta.tables[Classroom.TABLE_NAME]
+
+            # delete every model use teacher's id
+            ds = adareas.delete().where(adareas.c.teacher==kwargs["tid"])
+            conn.execute(ds)
+            ds = adclasses.delete().where(adclasses.c.teacher==kwargs["tid"])
+            conn.execute(ds)
+            ds = classrooms.delete().where(classrooms.c.teacher==kwargs["tid"])
+            conn.execute(ds)
+
+            ds = teachers.delete().where(teachers.c.id==kwargs["tid"])
+            conn.execute(ds)
+
+            return {"success": True}
         else:
             raise cherrypy.HTTPError(404)
 
@@ -1776,12 +1805,17 @@ class ClassroomRestView(View):
                 "students_sid": data["students_sid"],
                 "type": data["type"],
                 }
-            if json["type"] == "python_01":
-                classes = cherrypy.request.classes
+                
+            classes = cherrypy.request.classes
 
-                folder = uuid()
-                os.mkdir(classes.get_download_path() + "/" + str(folder))
-                json["folder"] = folder
+            folder = uuid()
+
+            clsrm_folder = os.path.join(
+                classes.get_download_path(),
+                str(folder))
+            os.mkdir(clsrm_folder)
+            os.mkdir(os.path.join(clsrm_folder, "teacher"))
+            json["folder"] = folder
 
             ins = classrooms.insert()
             rst = conn.execute(ins, json)
@@ -1833,6 +1867,8 @@ class ClassroomRestView(View):
             else:
                 raise cherrypy.HTTPError(400)
         elif cherrypy.request.method == "DELETE":
+            classes = cherrypy.request.classes
+
             teacher = self.check_login_teacher(kwargs)
             self.check_key(kwargs, ("clsid", ))
 
@@ -1847,22 +1883,28 @@ class ClassroomRestView(View):
     def check_folder(self, *args, **kwargs):
         classes = cherrypy.request.classes
         if cherrypy.request.method == "GET":
+            try:
+                self.check_login_u(kwargs)
+            except:
+                self.check_login_teacher(kwargs)
+
             self.check_key(kwargs, ("folder", ))
 
-            path = classes.get_download_path() + "/" + kwargs["folder"]
+            path = classes.get_download_path() + kwargs["folder"]
+            print(path)
 
-            files = []
-            if "cid" in kwargs:
-                for *_, fs in os.walk(path):
-                    for f in fs:
-                        if f.startswith(kwargs["cid"]):
-                            files.append(f)
+            if "student" in kwargs:
+                files = []
+                if "cid" in kwargs:
+                    for file in os.listdir(path):
+                        if file.startswith(kwargs["cid"]):
+                            files.append(file)
+                else:
+                    for file in os.listdir(path):
+                        files.append(file)
+                return files
             else:
-                for *_, fs in os.walk(path):
-                    for f in fs:
-                        files.append(f)
-
-            return files
+                return os.listdir(path + "/teacher")
         else:
             raise cherrypy.HTTPError(404)
 
@@ -2042,7 +2084,6 @@ class FileUploadRestView(View):
             fileformat = "report/{rid}.{filetype}"
 
             try:
-                reportdir = os.getcwd()
                 if "report" not in os.listdir(path):
                     os.mkdir(os.path.join(path, "reaport/"))
                 file = kwargs["file"]
@@ -2078,6 +2119,59 @@ class FileUploadRestView(View):
             else:
                 raise cherrypy.HTTPRedirect("/report")
 
+    @cherrypy.expose
+    def teacherfile(self, *args, **kwargs):
+        meta, conn = cherrypy.request.db
+        classrooms = meta.tables[Classroom.TABLE_NAME]
+        classes = cherrypy.request.classes
+
+        if cherrypy.request.method == "POST":
+            teacher = self.check_login_teacher(kwargs)
+
+            self.check_key(kwargs, (
+                "annoce",
+                "clsrid",
+                ))
+            
+            try:
+                clsrid = int(kwargs["clsrid"])
+            except:
+                raise cherrypy.HTTPError(404)
+
+            ss = select([classrooms.c.folder]).where(and_(
+                classrooms.c.id==clsrid,
+                classrooms.c.teacher==teacher["id"]))
+            rst = conn.execute(ss)
+            row = rst.fetchone()
+
+            if not row:
+                raise cherrypy.HTTPError(404)
+
+            path = os.path.join(
+                classes.get_download_path(),
+                row["folder"],
+                "teacher"
+                )
+
+            try:
+                if not os.path.exists(path):
+                    os.mkdir(path)
+
+                f = open(path + "/" + kwargs["annoce"].filename, "wb")
+                while True:
+                    data = kwargs["annoce"].file.read(8192)
+                    if not data:
+                        break
+                    f.write(data)
+                f.close()
+            except:
+                if os.path.isfile(path + filename):
+                    os.remove(path + filename)
+                raise cherrypy.HTTPRedirect("/report")
+
+            raise cherrypy.HTTPRedirect("/teacher")
+        else:
+            raise cherrypy.HTTPError(404)
 
 class ActivityRestView(View):
     _root = rest_config["url_root"] + "activity/"

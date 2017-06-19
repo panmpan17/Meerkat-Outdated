@@ -175,12 +175,34 @@
 
 	</div>
 {% endblock %}
+{% block bcontent %}
+	<div id="moreinfo-frame" class="loginsignup-frame" hidden>
+		<div class="loginsignup-frame-inside">
+			<a id="closeloginframe" onclick="hide('moreinfo-frame');" style="">X</a><br>
+			<div class="frame-content" style="padding-top: 0%;padding-left: 30px;padding-right: 30px">
+				<center>
+					<table style="width: 80%">
+						<thead>
+							<tr>
+								<th style="text-align: center">Userid</th>
+								<th style="text-align: center">Nickname</th>
+							</tr>
+						</thead>
+						<tbody id="moreinfo">
+						</tbody>
+					</table>
+				</center>
+			</div>
+		</div>
+	</div>
+{% endblock %}
 {% block script %}
 <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 <script src="/html/javascript/datepicker.js"></script>
 <script>
 	activities = {}
 	today_activities = []
+	names = {}
 	NUM_2_DAY = [
 		"一",
 		"二",
@@ -194,25 +216,21 @@
 	DAY = `<div class="day" id="{0}-{1}-{2}" onclick="showday(this)">{2}{3}</div>\n`
 	RED_DOT = `<span style="color:yellow">&#9679;</span>`
 	GREEN_DOT = `<span style="color:orange">&#9679;</span>`
-	DATE_ACTIVITY = `<div class="date-act">
-		<span class="title">{0}</span><br />
-		<span class="time">{1} {2}</span><br />
-		<span class="addr">{3}</span>
-		<div class="summary">{4}</div>
-	</div>`
 	REPEAT_ACTIVITY = `<div class="repeat-act">
 		<span class="title">{0}</span><br />
 		<span class="time">每週{1} {2}</span><br />
 		<span class="addr">{3}</span>
 		<div class="summary">{4}</div><br />
-		<span class="people">{5}</span>
+		<span class="people">{5}</span><br /><br />
+		<button class="attend" style="background: #18cece" onclick="showparticipant(6)"> 參加的人 </button>
 	</div>`
 	DATE_ACTIVITY = `<div class="date-act">
 		<span class="title">{0}</span><br />
 		<span class="time">{1} {2}</span><br />
 		<span class="addr">{3}</span>
 		<div class="summary">{4}</div><br />
-		<span class="people">{5}</span>
+		<span class="people">{5}</span><br /><br />
+		<button class="attend" style="background: #18cece" onclick="showparticipant(6)"> 參加的人 </button>
 	</div>`
 	BIG_ACTIVITY = `<div class="activity {0}">
 		<div class="title">{1} <small>{3} 點數</small></div><br />
@@ -398,7 +416,8 @@
 					act["time"],
 					act["addr"],
 					act["summary"].replace(/\n/g, "<br>"),
-					act["present"].length + " / " + act["participant"].length);
+					act["present"].length + " / " + act["participant"].length,
+					act["id"]);
 			})
 		}
 
@@ -413,7 +432,8 @@
 						act["time"],
 						act["addr"],
 						act["summary"].replace(/\n/g, "<br>"),
-						act["present"].length + " / " + act["participant"].length);
+						act["present"].length + " / " + act["participant"].length,
+						act["id"]);
 				}
 			})
 		}
@@ -524,7 +544,8 @@
 					e["time"],
 					e["addr"],
 					e["summary"].replace(/\n/g, "<br>"),
-					e["present"].length + " / " + e["participant"].length);
+					e["present"].length + " / " + e["participant"].length,
+					e["id"]);
 			})
 		})
 
@@ -536,18 +557,48 @@
 					e["time"],
 					e["addr"],
 					e["summary"].replace(/\n/g, "<br>"),
-					e["present"].length + " / " + e["participant"].length);
+					e["present"].length + " / " + e["participant"].length,
+					e["id"]);
 			})
 		})
 	}
 
-	function showpresent() {
+	function showparticipant(aid) {
 		ids = new Set()
-		$.each(today_activities, function (i) {
-			$.each(today_activities[i]["participant"], function (e) {
-				ids.add(today_activities[i]["participant"][e])
+
+		participant =  null
+		$.each(activities["date"], function (_, i) {
+			$.each(i, function (_, e) {
+				if (e["id"] = aid) {
+					participant = e["participant"]
+					return false
+				}
 			})
 		})
+		$.each(activities["repeat"], function (_, i) {
+			$.each(i, function (_, e) {
+				if (e["id"] = aid) {
+					participant = e["participant"]
+					return false
+				}
+			})
+		})
+		$.each(participant, function (_, i) {
+			if (names[i] == undefined) {
+				ids.add(i)
+			}
+		})
+
+		if (Array.from(ids).length == 0) {
+			// show list immedietly
+			show("moreinfo-frame")
+
+			$("#moreinfo")[0].innerHTML = ""
+			$.each(participant, function (_, i) {
+				$("#moreinfo")[0].innerHTML += format("<tr><td>{0}</td><td>{1}</td></tr>", names[i][0], names[i][1])
+			})
+			return
+		}
 
 		json = {
 			"key": getCookie("key"),
@@ -557,7 +608,82 @@
 			url: host + "user/",
 			data: json,
 			success: function (msg) {
-				names = msg
+				$.each(msg, function (k, v) {
+					names[k] = v
+				})
+
+				show("moreinfo-frame")
+
+				$("#moreinfo")[0].innerHTML = ""
+				$.each(participant, function (_, i) {
+					console.log(i)
+					$("#moreinfo")[0].innerHTML += format("<tr><td>{0}</td><td>{1}</td></tr>", names[i][0], names[i][1])
+				})
+				
+			},
+			error: function (error) {
+				reload = confirm("請重新登錄")
+				if (reload) {
+					show("login-frame");
+				}
+			}
+		})
+	}
+
+	function showpresent() {
+		ids = new Set()
+		$.each(today_activities, function (_, i) {
+			$.each(i["participant"], function (_, e) {
+				if (names[e] == undefined) {
+					ids.add(e)
+				}
+			})
+		})
+		if (Array.from(ids).length == 0) {
+			present_html = $("#present")[0]
+			present_html.innerHTML = ""
+
+			$.each(today_activities, function (_, i) {
+				buttons = ""
+				$.each(i["participant"], function (_, e) {
+					sid = e
+
+					checked = ""
+					if (i["present"].indexOf(sid) >= 0) {
+						checked = "checked"
+					}
+					buttons += format(PRESENT_BUTTON,
+						i["id"],
+						sid,
+						names[sid][0],
+						names[sid][1],
+						checked)
+				})
+
+				type = 'repeat'
+				if (i["repeat"] != 0) {
+					type = "date"
+				}
+				present_html.innerHTML += format(BIG_ACTIVITY,
+					type,
+					i["name"],
+					buttons,
+					i["point"])
+			})
+			return
+		}
+
+		json = {
+			"key": getCookie("key"),
+			"nicknames": Array.from(ids).sort(),
+		}
+		$.ajax({
+			url: host + "user/",
+			data: json,
+			success: function (msg) {
+				$.each(msg, function (k, v) {
+					names[k] = v
+				})
 				present_html = $("#present")[0]
 				present_html.innerHTML = ""
 

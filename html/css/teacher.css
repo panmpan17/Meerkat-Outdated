@@ -1,0 +1,129 @@
+textarea {
+	max-width: 100%;
+	resize: none;
+
+}
+
+ul.side-nav > li > a {
+	cursor: pointer;
+}
+
+.b-close {
+	color: red;
+	width: 30px;
+	cursor: pointer;
+	background-color: white;
+}
+.b-close:hover {
+	background-color: #DDD;
+}
+
+img#hoverimg {
+	position: absolute;
+	/*left: 0px;
+	top: 0px;*/
+	border-radius: 5px;
+	border: 2px solid gray;
+}
+
+h3> small {
+  cursor: pointer;
+}
+
+@media (max-width: 1000px) {
+	img#hoverimg {
+		left: 0px;
+		top: 30px;
+	}
+}
+
+ul#classrooms > li {
+	cursor: pointer;
+}
+ul#classrooms > li.active {
+	background: #000;
+}
+
+dl {
+	box-shadow: 0px 1px 8px 0px rgba(0,0,0,0.2);
+	padding: 5px 5px;
+}
+
+div.close {
+	color: white;
+}
+
+table.homework {
+  max-width: 90%;
+}
+
+.homework th,
+.homework td{
+  max-width: 50px;
+  text-align: left;
+}
+
+span.spanbutton {
+	padding-top: 8px;
+	padding-bottom: 8px;
+	padding-left: 15px;
+	padding-right: 15px;
+	font-size: 20px;
+	background-color: rgb(244, 191, 66);
+	color: white;
+	border-radius: 4px;
+}
+
+div#changepasswordframe {
+	border-left: none;
+}
+@media (min-width: 992px) {
+	div#changepasswordframe {
+		border-left: 1px rgb(200, 200, 200) solid;
+	}
+}
+
+button {
+	border-radius: 50px;
+	padding: 10px 50px;
+	border: 2px solid #DC6180;
+	color: #DC6180;
+	font-size: 18px;
+	background-color: white;
+}
+
+button:hover {
+	color: white;
+	background: #DC6180;
+	cursor: pointer;
+}
+
+.numline {
+	color: rgb(43,142,183);
+}
+
+.hover {
+	cursor: pointer;
+	opacity: 0.7;
+	font-weight: 400;
+}
+.hover:hover {
+	opacity: 1;
+	font-weight: 900;
+}
+
+li.filelist {
+	padding: 5px;
+	list-style-type: none;
+	font-size: 16px;
+	font-weight: 700;
+	margin: -1px;
+	text-decoration: none;
+	border-bottom: 1px solid lightslategray;
+	border-top: 1px solid lightslategray;
+}
+li.filelist:hover {
+	background-color: lightgray;
+	text-decoration: underline;
+	cursor: pointer;
+}

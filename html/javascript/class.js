@@ -18,7 +18,7 @@ var lesson = 0
 var video = 0
 
 var classblock = `<div class="class_block"\
- style="width:{0}%" onclick="video_jump({3})">{1}<div id="answer" style="display: {4}"></div></div>`;
+ style="width:{0}%" onclick="video_jump({3})" id="class_block-{3}">{1}<div id="answer" style="display: {4}"></div></div>`;
 
 var videoblock = `<div class=\"embed-responsive embed-responsive-16by9\">
 <iframe id="videoframe" src=\"{0}&amp;showinfo=0\" frameborder=\"0\" allowfullscreen></iframe>
@@ -48,9 +48,14 @@ function loadclass(classname, qlesson=-1) {
 
 	if (class_ != null && qlesson == -1) { return; }
 	if (class_ != null) {
-		if (Object.keys(class_["info"]).includes(qlesson)) { return; }
+		if (class_["info"][qlesson] != undefined) {
+			lesson = qlesson
+			display_lesson()
+			return;
+		}
 		j["lesson"] = qlesson
 	}
+
 
 	$.ajax({
 		url: host + "classes/",
@@ -143,6 +148,8 @@ function display_lesson() {
 
 	video = 0
 	display_video()
+
+	$("#class_block-0")[0].classList.add("active")
 }
 
 function display_video() {
@@ -169,6 +176,10 @@ function display_video() {
 }
 
 function video_jump(classnumber) {
+	if ($(".class_block.active").length > 0) {
+		$(".class_block.active")[0].classList.remove("active")
+	}
+	$("#class_block-" + classnumber)[0].classList.add("active")
 	video = classnumber;
 	display_video();
 }

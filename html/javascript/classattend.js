@@ -104,6 +104,21 @@ function showclassroom(cls_id) {
 
 		loadfilehomework(classroom["folder"], cls_id);
 	}
+
+	$.ajax({
+		url: host + "classroom/check_folder",
+		data: {
+			"folder": classroom["folder"],
+			"tkey": getCookie("teacher-key")},
+		success: function (msg) {
+			$("#filelist")[0].innerHTML = ""
+			$.each(msg, function (_, i) {
+				$("#filelist")[0].innerHTML += format(
+					`<li class='filelist'><a href="/downloadfile/{0}/teacher/{1}" style="color:black" target="_blank">{1}</a></li>`,
+					classroom["folder"],
+					i)
+			})
+		}})
 }
 
 function loadscratchhomwork(student_id, cls_id) {
@@ -177,6 +192,8 @@ function loadscratchhomwork(student_id, cls_id) {
 
 function play_scratch_project(project_id, cls_id, hw_s) {
 	show("project")
+	$("#scratch_iframe").show();
+	$("#file").hide();
 
 	$("#scratch_iframe")[0].src = format(project_embed_fromat, project_id)
 	$("#s_project_page")[0].href = format(project_page_format, project_id)
@@ -196,8 +213,11 @@ function loadfilehomework(folder, cls_id) {
 	$("#hw-tbody").html("")
 	$.ajax({
 		url: host + "classroom/check_folder",
-		data: {"folder": folder,
-			"cid": getCookie("id")},
+		data: {
+			"folder": folder,
+			"student": true,
+			"cid": getCookie("id"),
+			"key": getCookie("key")},
 		success: function (msg) {
 			homework = new Set()
 			projects = []
@@ -249,17 +269,17 @@ function loadfilehomework(folder, cls_id) {
 
 function changefileunit(folder, unit, cls_id) {
 	homework = Array.from(homeworks[cls_id]).sort();
-
+	reg = new RegExp(unit + "-")
 	slide = ""
-	$.each(homework, function (i) {
-		if (homework[i].startsWith(unit)) {
+	$.each(homework, function (_, i) {
+		if (reg.test(i)) {
 			if (slide == "") {
 				slide = `<section style="clear: both; padding:10px;">`
 			}
 			slide += format(PY_FILE_HW,
-				homework[i],
+				i,
 				folder,
-				files[cls_id][homework[i]],
+				files[cls_id][i],
 				cls_id)
 		}
 	})
@@ -304,7 +324,7 @@ function show_file(file, cls_id) {
 	$("#scratch_iframe").hide();
 
 	$("#scratch_iframe")[0].src = ""
-	$("#s_project_page")[0].href = file
+	$("#s_project_page")[0].href = "/downloadfile" + file.replace("/downloads", "")
 	$("#hwcomment")[0].innerHTML = ""
 
 	$.ajax({

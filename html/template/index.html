@@ -31,6 +31,7 @@
 		<div class="info-bottom">
 			<center>
 				<a href="https://www.facebook.com/kidscodingtw" target="_blank"><img src="html/images/facebook.png" width="36" alt=""></a>
+				<div class="fb-like" style="top: 5px" data-href="https://www.facebook.com/kidscodingtw/?fref=ts" data-layout="button_count" data-action="like" data-size="large" data-show-faces="false"></div>
 				<a href="http://www.kidscoding.tw" target="_blank"><img src="html/images/blog.png" width="36" alt=""></a><br>
 				<span style="color:white">&copy; 2017 由樂學科技股份有限公司維護網站<span>
 			</center>
@@ -62,4 +63,19 @@
 	</div>
 </div> -->
 
+{% endblock %}
+{% block script %}
+<!-- <script src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.9&appId=167727563701655"></script> -->
+<script id="facebook-jssdk" src="//connect.facebook.net/en_US/sdk.js"></script>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1926987694209598',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v2.8'
+    });
+    FB.AppEvents.logPageView();   
+  };
+</script>
 {% endblock %}
