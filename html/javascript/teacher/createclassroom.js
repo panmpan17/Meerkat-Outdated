@@ -15,6 +15,7 @@ student_field_python_format = `\
 
 sid_colors = {};
 function remove_blank() {
+	$("#create_classroom_b")[0].disabled = true
 	f = $("#field")[0]
 	f.value = f.value.replace(/\t/g, ",")
 	f.value = f.value.replace(/     /g, ",")
@@ -25,11 +26,6 @@ function remove_blank() {
 }
 
 function check_students() {
-	classroom_name = $("#classroom-name")[0].value;
-	if (classroom_name == "") {
-		alert("教室名稱不能留白");
-		return;
-	}
 	f = $("#field")[0]
 	if (f.value == "") {
 		alert("學生資料欄位不能留空");
@@ -48,8 +44,11 @@ function check_students() {
 	}
 }
 
+names = null
+cids = null
+sids = null
+
 function check_students_scratch() {
-	classroom_name = $("#classroom-name")[0].value;
 	data = f.value.split("\n")
 
 	students_table = $("#students")[0];
@@ -58,6 +57,7 @@ function check_students_scratch() {
 	names = [];
 	cids = [];
 	sids = [];
+	sid_colors = {};
 	for (i=0;i<data.length;i++) {
 		student = data[i].split(",")
 		if (student.length < 3) {
@@ -73,6 +73,8 @@ function check_students_scratch() {
 
 		sid = sid.toLowerCase();
 		sid_colors[sid] = false;
+
+		// check scratch user exist
 		$.ajax("https://scratch.mit.edu/users/" + sid).done(function (msg) {
 			sname = msg.substring(msg.indexOf("<title>") + 7, msg.indexOf(" on Scratch</title>"));
 			sname = sname.toLowerCase();
@@ -83,6 +85,8 @@ function check_students_scratch() {
 			cid,
 			sid)
 	}
+
+	// check userid exist
 	$.ajax({
 		url: host + "teacher/user",
 		data: {"tkey": getCookie("teacher-key"), "users": cids},
@@ -98,6 +102,7 @@ function check_students_scratch() {
 	$("#s-students-table").show()
 	$("#bg").show()
 
+	// change input colr if scratch id not exist
 	setTimeout(function () {
 		$.each(sid_colors, function (k,v) {
 			k = k.toLowerCase()
@@ -111,34 +116,18 @@ function check_students_scratch() {
 		$("#bg").hide();
 
 		if ($(".bg-danger").length == 0) {
-			c = confirm("創建教室");
-			if (c) {
-				json = {
-					"tkey": getCookie("teacher-key"),
-					"students_name": names,
-					"students_cid": cids,
-					"students_sid": sids,
-					"type": $("#select-type")[0].value,
-					"name": classroom_name,
-				}
-
-				$.ajax({
-					url: host + "classroom/",
-					type: "POST",
-					dataType: "json",
-					data: JSON.stringify(json),
-					contentType: "application/json; charset=utf-8",
-					success: function (msg) {
-						location.reload();
-					}
-				})
-			}
+			$("#create_classroom_b")[0].disabled = false
+		}
+		else {
+			$("#create_classroom_b")[0].disabled = true
+			names = null
+			cids = null
+			sids = null
 		}
 	}, (1000 * Object.keys(sid_colors).length));
 }
 
 function check_students_python() {
-	classroom_name = $("#classroom-name")[0].value;
 	data = f.value.split("\n")
 
 	students_table = $("#students")[0];
@@ -146,6 +135,7 @@ function check_students_python() {
 
 	names = [];
 	cids = [];
+	sids = []
 	for (i=0;i<data.length;i++) {
 		student = data[i].split(",")
 		if (student.length < 2) {
@@ -162,6 +152,8 @@ function check_students_python() {
 			name,
 			cid)
 	}
+
+	// check student id exist
 	$.ajax({
 		url: host + "teacher/user",
 		data: {"tkey": getCookie("teacher-key"), "users": cids},
@@ -177,31 +169,48 @@ function check_students_python() {
 	$("#s-students-table").show()
 
 	if ($(".bg-danger").length == 0) {
-		c = confirm("創建教室");
-		if (c) {
-			json = {
-				"tkey": getCookie("teacher-key"),
-				"students_name": names,
-				"students_cid": cids,
-				"students_sid": [],
-				"type": $("#select-type")[0].value,
-				"name": classroom_name,
-			}
-
-			$.ajax({
-				url: host + "classroom/",
-				type: "POST",
-				dataType: "json",
-				data: JSON.stringify(json),
-				contentType: "application/json; charset=utf-8",
-				success: function (msg) {
-					location.reload();
-				}
-			})
+		if ($(".bg-danger").length == 0) {
+			$("#create_classroom_b")[0].disabled = false
+		}
+		else {
+			$("#create_classroom_b")[0].disabled = true
+			names = null
+			cids = null
+			sids = null
 		}
 	}
 }
 
+function create_classroom() {
+	classroom_name = $("#classroom-name")[0].value;
+	if (classroom_name == "") {
+		alert("教室名稱不能留白");
+		return;
+	}
+
+	c = confirm("創建教室");
+	if (c) {
+		json = {
+			"tkey": getCookie("teacher-key"),
+			"students_name": names,
+			"students_cid": cids,
+			"students_sid": sids,
+			"type": $("#select-type")[0].value,
+			"name": classroom_name,
+		}
+
+		$.ajax({
+			url: host + "classroom/",
+			type: "POST",
+			dataType: "json",
+			data: JSON.stringify(json),
+			contentType: "application/json; charset=utf-8",
+			success: function (msg) {
+				location.reload();
+			}
+		})
+	}
+}
 
 function changeclassroomtype() {
 	type = $("#select-type")[0].value
@@ -209,7 +218,6 @@ function changeclassroomtype() {
 	if ((type == 'python_01') || (type == "scratch_1") || (type == "teacher_1")) {
 		$("#students_info").show()
 		$("#hoverimg").show()
-		$("#check_students_b")[0].innerHTML = `<i class="fa fa-check" aria-hidden="true"></i> 檢查學生資料`
 
 		if ((type == "scratch_1") || (type == "teacher_1")) {
 			$("#hoverimg")[0].src = "html/images/scratch_table.png"
@@ -217,10 +225,5 @@ function changeclassroomtype() {
 		else {
 			$("#hoverimg")[0].src = "html/images/python_table.png"
 		}
-	}
-	else {
-		$("#students_info").hide()
-		$("#hoverimg").hide()
-		$("#check_students_b")[0].innerHTML = `<i class="fa fa-check" aria-hidden="true"></i> 建立教室`
 	}
 }

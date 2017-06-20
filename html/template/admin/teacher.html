@@ -41,6 +41,7 @@
 
 	td> ul {
 		margin: 2px;
+		list-style: none;
 	}
 
 	td> ul> li:before {
@@ -49,7 +50,7 @@
 	}
 
 	td> ul> li {
-		display:inline;
+		/*display:inline;*/
 		padding-right: 15px;
 	}
 </style>
@@ -92,6 +93,34 @@
 	</div>
 	<br><br><br><br><br>
 {% endblock %}
+{% block bcontent %}
+<div id="change-frame" class="loginsignup-frame" hidden>
+	<div class="loginsignup-frame-inside">
+		<a id="closeloginframe" onclick="hide('change-frame');" style="">X</a>
+		<br>
+		<div class="frame-content" style="padding: 15px;padding-top: 0px">
+			<h3>變更教師設定</h3><br>
+			<input type="text" name="change-teacher-id" hidden>
+			<input type="text" name="change-userid" placeholder="帳號">
+			<br><br>
+			<input type="text" name="change-password" placeholder="密碼">
+			<br>
+			<span class="hint">* 密碼如果不改就請留空</span><br>
+			<br>
+			<input type="text" name="change-name" placeholder="名字">
+			<br><br>
+			<input type="text" name="change-phone" placeholder="電話">
+			<br><br>
+			<dl class="check-list-right" id="change_classlist">
+				<dt>教學課程權限</dt>
+			</dl>
+			<div id="signup-errormsg" class="login-errorms">
+			</div>
+			<button id="submit" onclick="change_teacher()">更改</button>
+		</div>
+	</div>
+</div>
+{% endblock %}
 {% block script %}
 <script>
 	teacher_format = `\
@@ -110,14 +139,19 @@
 			<i class="fa fa-plus" onclick="change_city('{0}', 1)"></i>
 		</td>
 		<td>
-			<span style="color:red;cursor:pointer" onclick="delete_teacher({0})">X</span>
+			<span class="hover" style="color:red" onclick="delete_teacher({0})">
+				<i class="fa fa-times" aria-hidden="true"></i>
+			</span><br>
+			<span class="hover" onclick="show_change_teacher({0})">
+				<i class="fa fa-pencil" aria-hidden="true"></i>
+			</span>
 		</td>
 	</tr>`
 
 	classs_format = `\
 	<dd>
-		<input name="class_permission" type="checkbox" id="cid-{0}" value="{1}">
-		<label for="cid-{0}">{2}</label>
+		<input name="{2}class_permission" type="checkbox" id="{2}cid-{0}" value="{1}">
+		<label for="{2}cid-{0}">{1}</label>
 	</dd>
 	`
 	CLASS_TO = {
@@ -210,55 +244,54 @@
 			data: {"key": getCookie("key")},
 			success: function (msg) {
 				teachers_table.innerHTML = "";
-				teachers = msg["teachers"]
-				for (i=0; i<teachers.length; i++) {
+				teachers = {}
+				$.each(msg["teachers"], function (_, i) {
+					teachers[i["id"]] = i
+				})
+
+				$.each(teachers, function(_, i) {
 					disabled = ""
-					if (teachers[i]["disabled"]) {
+					if (i["disabled"]) {
 						disabled = "disabled"
 					}
 
 					p = "<ul>"
-					permissions = teachers[i]["class_permission"]
+					permissions = i["class_permission"]
 					for (e=0;e<permissions.length;e++) {
 						p += "<li>" + permissions[e] + "</li>"
 					}
 					p += "</ul>"
 
 					user = format(teacher_format,
-						teachers[i]["id"],
-						teachers[i]["userid"],
-						teachers[i]["name"],
-						teachers[i]["phone"],
+						i["id"],
+						i["userid"],
+						i["name"],
+						i["phone"],
 						disabled,
-						5 + teachers[i]["ext_area"],
-						teachers[i]["whole_city"],
+						5 + i["ext_area"],
+						i["whole_city"],
 						p);
 
 					teachers_table.innerHTML += user
-				}
+				})
 			}
 		})
 	}
 
 	function load_class() {
-		$.ajax(host+"classes/price").success(function (msg) {
+		$.ajax(host + "classes/id").success(function (msg) {
 			listcount = 1
-			for (i=0;i<msg["paid"].length;i++) {
+			$.each(msg["classes_id"], function (_, i) {
 				$("#classlist")[0].innerHTML += format(classs_format,
 					listcount,
-					msg["paid"][i],
-					msg["paid"][i])
-
-				listcount ++
-			}
-			for (i=0;i<msg["free"].length;i++) {
-				$("#classlist")[0].innerHTML += format(classs_format,
+					i,
+					"")
+				$("#change_classlist")[0].innerHTML += format(classs_format,
 					listcount,
-					msg["free"][i],
-					CLASS_TO[msg["free"][i]])
-
+					i,
+					"change_")
 				listcount ++
-			}
+			})
 		})
 	}
 
@@ -276,6 +309,74 @@
 				load_teachers();
 			}
 		});
+	}
+
+	function show_change_teacher(tid) {
+		teacher = teachers[tid]
+		$("[name=change-teacher-id]")[0].value = tid
+		$("[name=change-userid]")[0].value = teacher["userid"]
+		$("[name=change-password]")[0].value = ""
+		$("[name=change-name]")[0].value = teacher["name"]
+		$("[name=change-phone]")[0].value = teacher["phone"]
+
+		if (teacher["class_permission"].includes("scratch_1")) {
+			$("[name=change_class_permission][value=scratch_1]")[0].checked = true
+		}
+		if (teacher["class_permission"].includes("teacher_1")) {
+			$("[name=change_class_permission][value=teacher_1]")[0].checked = true
+		}
+		if (teacher["class_permission"].includes("python_01")) {
+			$("[name=change_class_permission][value=python_01]")[0].checked = true
+		}
+		show("change-frame");
+	}
+
+	function change_teacher() {
+		tid = $("[name=change-teacher-id]")[0].value
+		userid = $("[name=change-userid]")[0].value
+		password = $("[name=change-password]")[0].value
+		name = $("[name=change-name]")[0].value
+		phone = $("[name=change-phone]")[0].value
+
+		checked_list = [];
+		c = $("[name=change_class_permission]")
+		for (i=0;i<c.length;i++) {
+			if (c[i].checked) {
+				checked_list.push(c[i].value);
+			}
+		}
+
+		json = {
+			"key": getCookie("key"),
+			"tid": tid,
+			"userid": userid,
+			"name": name,
+			"phone": phone,
+			"class_permission": checked_list,
+			}
+
+		if (password != "") {
+			c = confirm("更改教師密碼?")
+			if (!c) {
+				return
+			}
+			json["password"] = sha256(password)
+		}
+
+		$.ajax({
+			url: host + "teacher/",
+			type: "PUT",
+			dataType: "json",
+			data: JSON.stringify(json),
+			contentType: "application/json; charset=utf-8",
+			success: function (msg) {
+				hide("change-frame")
+				load_teachers();
+			},
+			error: function (error) {
+				console.log(error)
+			}
+		})
 	}
 
 	load_class();

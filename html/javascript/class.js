@@ -77,8 +77,8 @@ function loadclass(classname, qlesson=-1) {
 			}
 		},
 		error: function (error) {
-			// window.location.pathname = "/classes"
-			console.log(error)
+			window.location.pathname = "/classes"
+			// console.log(error)
 		}
 	})
 }

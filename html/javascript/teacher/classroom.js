@@ -536,6 +536,7 @@ wrong_field = false
 
 function change_classroom () {
 	$("#change-student").modal("show")
+	$("#change_classroom_name")[0].value = classroom["name"]
 
 	seqs = {}
 	json = {
@@ -643,6 +644,7 @@ function check_change_student () {
 						}
 					}
 					json = {
+						"name": $("#change_classroom_name")[0].value,
 						"clsid": classroom["id"],
 						"students_name": names,
 						"students_cid": cids,

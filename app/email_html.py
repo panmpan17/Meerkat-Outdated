@@ -1,5 +1,6 @@
 class Email:
 	URL = "http://restemailserver.appspot.com"
+	# URL = "http://localhost:8080"
 
 	REGIST_VALID = """
 	<html>

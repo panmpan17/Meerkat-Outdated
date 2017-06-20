@@ -258,7 +258,6 @@ class UserRestView(View):
         key_mgr = cherrypy.request.key
         email_valid = cherrypy.request.email_valid
         users = meta.tables[User.TABLE_NAME]
-        classmanages = meta.tables[ClassManage.TABLE_NAME]
 
         # get user info
         if cherrypy.request.method == "GET":
@@ -272,26 +271,12 @@ class UserRestView(View):
                         ErrMsg.NOT_INT.format(kwargs["id"]))
 
                 # get user info and class manager
-                j = join(users, classmanages)
-                ss = select([users, classmanages.c.class_access]).where(
-                    users.c.id == q_uid
-                    ).select_from(j)
+                ss = select([users]).where(users.c.id == q_uid)
                 rst = conn.execute(ss)
                 row = rst.fetchone()
 
                 if not row:
-                    # if no match and check user exist
-                    ss = select([users]).where(users.c.id == q_uid)
-                    rst = conn.execute(ss)
-                    row = rst.fetchone()
-
-                    if not row:
-                        raise cherrypy.HTTPError(400,
-                            ErrMsg.UNKNOWN_ID.format(q_uid))
-                    else:
-                        # if user exist then create class manager
-                        ins = classmanages.insert()
-                        rst = conn.execute(ins, dict(uid=q_uid))
+                    raise cherrypy.HTTPError(400)
 
                 # user who asking info is same user or admin return all info
                 if q_uid == user["id"] or user["admin"]:
@@ -306,7 +291,10 @@ class UserRestView(View):
                 if not user["admin"]:
                     raise cherrypy.HTTPError(401)
 
-                ss = select([users.c.id, users.c.nickname, users.c.userid]).where(
+                ss = select([
+                    users.c.id,
+                    users.c.nickname,
+                    users.c.userid]).where(
                     users.c.id.in_(kwargs["nicknames[]"]))
                 rst = conn.execute(ss)
                 rows = rst.fetchall()
@@ -367,7 +355,8 @@ class UserRestView(View):
 
                 key_mgr.update_key(key, uid)
                 ekey = email_valid.new_mail(uid)
-                send_email_valid(ekey, usersjson[0]["email"], usersjson[0]["userid"])
+                send_email_valid(ekey,
+                    usersjson[0]["email"], usersjson[0]["userid"])
 
                 return {
                     "key": key,
@@ -538,7 +527,9 @@ class UserRestView(View):
                     changeemails[user["id"]].code,
                     changeemails[user["id"]].new,
                     user["userid"])
-                return {"passed": False, "stage": changeemails[user["id"]].stage}
+                return {
+                    "passed": False,
+                    "stage": changeemails[user["id"]].stage}
             else:
                 raise cherrypy.HTTPError(400)
         else:
@@ -668,19 +659,21 @@ class QuestionRestView(View):
                 cherrypy.response.status = 201
 
                 qid = rst.fetchone()["id"]
-                title = "Coding 4 Fun 討論區 新問題: " + data["question_json"]["title"]
+                title = ("Coding 4 Fun 討論區 新問題: " +
+                    data["question_json"]["title"])
                 content = data["question_json"]["content"]
 
                 params = {
-                    "addr":"panmpan@gmail.com",
+                    "addrs": [
+                        "panmpan@gmail.com",
+                        "shalley.tsay@gmail.com",
+                        "joanie0610@gmail.com",
+                        "jskblack@gmail.com"
+                        ],
                     "sub": title,
                     "cnt": content
                     }
-                http_post(Email.URL,
-                    params=params)
-                params["addr"] = "shalley.tsay@gmail.com"
-                http_post(Email.URL,
-                    params=params)
+                http_post(Email.URL, params=params)
 
                 return {"question_id": qid}
             else:
@@ -970,8 +963,8 @@ class ClassesRestView(View):
     def index(self, *args, **kwargs):
         classes = cherrypy.request.classes
         meta, conn = cherrypy.request.db
-        classmanages = meta.tables[ClassManage.TABLE_NAME]
         users = meta.tables[User.TABLE_NAME]
+        classrooms = meta.tables[Classroom.TABLE_NAME]
 
         if cherrypy.request.method == "GET":
             if len(kwargs) > 0:
@@ -993,22 +986,15 @@ class ClassesRestView(View):
                     class_.pop("info")
                     return class_
                 else:
-                    uid = self.check_login(kwargs)
+                    user = self.check_login_u(kwargs)
 
-                    ss = select([classmanages.c.class_access]).where(
-                        classmanages.c.uid == uid)
+                    ss = select([classrooms.c.id]).where(and_(
+                        classrooms.c.students_cid.any(user["id"]),
+                        classrooms.c.type==kwargs["class"]
+                        ))
                     rst = conn.execute(ss)
                     row = rst.fetchone()
-
-                    # if user don't have class manage then create one
                     if not row:
-                        ins = classmanages.insert()
-                        rst = conn.execute(ins, dict(uid=uid))
-                        raise cherrypy.HTTPError(400,
-                            ErrMsg.NO_ACCESS_TO_CLASS.format(kwargs["class"]))
-                    class_access = row["class_access"]
-
-                    if kwargs["class"] not in class_access:
                         raise cherrypy.HTTPError(400,
                             ErrMsg.NO_ACCESS_TO_CLASS.format(kwargs["class"]))
 
@@ -1023,65 +1009,17 @@ class ClassesRestView(View):
                     return class_
             else: # return all class info
                 return classes.get_class_all_info()
-        elif cherrypy.request.method == "POST":
-            data = cherrypy.request.json
-            uid = self.check_login(data)
-            admin = self.check_admin(uid)
-            if not admin:
-                raise cherrypy.HTTPError(401)
+        else:
+            raise cherrypy.HTTPError(404)
 
-            self.check_key(data, ("class", "uid", ))
-
-            ss = select([classmanages.c.class_access]).where(
-                classmanages.c.uid == data["uid"])
-            rst = conn.execute(ss)
-            row = rst.fetchone()
-
-            if not row:
-                raise cherrypy.HTTPError(400,
-                    ErrMsg.UNKNOWN_ID.format(data["uid"]))
-            class_access = row["class_access"]
-
-            if data["class"] not in class_access:
-                class_access.append(data["class"])
-
-                stmt = update(classmanages).where(
-                    classmanages.c.uid == data["uid"]).values(
-                    {"class_access": class_access})
-                ins = conn.execute(stmt)
-
-                cherrypy.response.status = 201
-                return {"success": True}
-            return {}
-        elif cherrypy.request.method == "DELETE":
-            uid = self.check_login(kwargs)
-            admin = self.check_admin(uid)
-            if not admin:
-                raise cherrypy.HTTPError(401)
-
-            self.check_key(kwargs, ("class", "uid", ))
-
-            ss = select([classmanages.c.class_access]).where(
-                classmanages.c.uid == kwargs["uid"])
-            rst = conn.execute(ss)
-            row = rst.fetchone()
-
-            if not row:
-                raise cherrypy.HTTPError(400,
-                    ErrMsg.UNKNOWN_ID.format(kwargs["uid"]))
-            class_access = row["class_access"]
-
-            if kwargs["class"] in class_access:
-                class_access.remove(kwargs["class"])
-
-                stmt = update(classmanages).where(
-                    classmanages.c.uid == kwargs["uid"]).values(
-                    {"class_access": class_access})
-                ins = conn.execute(stmt)
-
-                cherrypy.response.status = 201
-                return {"success": True}
-            return {}
+    @cherrypy.expose
+    def id(self, *args, **kwargs):
+        classes = cherrypy.request.classes
+        if cherrypy.request.method == "GET":
+            classes_id = []
+            for c in classes.classes.values():
+                classes_id.append(c["id"])
+            return {"classes_id": classes_id}
         else:
             raise cherrypy.HTTPError(404)
 
@@ -1097,64 +1035,6 @@ class ClassesRestView(View):
                 else:
                     paid_class.append(c["id"])
             return {"paid": paid_class, "free": free_class}
-        else:
-            raise cherrypy.HTTPError(404)
-
-    @cherrypy.expose
-    def record(self, *args, **kwargs):
-        classes = cherrypy.request.classes
-        meta, conn = cherrypy.request.db
-        classmanages = meta.tables[ClassManage.TABLE_NAME]
-
-        if len(args) > 0:
-                raise cherrypy.HTTPError(404)
-
-        if cherrypy.request.method == "GET":
-            uid = self.check_login(kwargs)
-
-            ss = select([classmanages.c.class_record]).where(and_(
-                classmanages.c.uid == uid))
-            rst = conn.execute(ss)
-            row = rst.fetchone()
-
-            if not row:
-                raise cherrypy.HTTPError(400, ErrMsg.UNKNOWN_ID.format(uid))
-            return row["class_record"]
-
-        elif cherrypy.request.method == "PUT":
-            data = cherrypy.request.json
-            uid = self.check_login(data)
-
-            self.check_key(data, ("video", ))
-            video = data["video"]
-
-            class_name, class_id = classes.video_find_class(video)
-            if not class_name:
-                raise cherrypy.HTTPError(400, ErrMsg.WRONG_VIDEO.format(video))
-
-            ss = select([classmanages.c.class_record]).where(
-                classmanages.c.uid == uid)
-            rst = conn.execute(ss)
-            row = rst.fetchone()
-
-            if not row:
-                raise cherrypy.HTTPError(400, ErrMsg.UNKNOWN_ID.format(uid))
-            class_record = row["class_record"]
-
-            if class_id not in class_record:
-                class_record[class_id] = {}
-
-            if class_name not in class_record[class_id]:
-                class_record[class_id][class_name] = 1
-            else:
-                class_record[class_id][class_name] += 1
-
-            stmt = update(classmanages).where(classmanages.c.uid == uid).\
-                values({"class_record": class_record})
-            ins = conn.execute(stmt)
-
-            cherrypy.response.status = 201
-            return {"success": True}
         else:
             raise cherrypy.HTTPError(404)
 
@@ -1237,50 +1117,6 @@ class PostRestView(View):
 
             t_s_s = string.find("[#", t_l_e + 2)
         return string
-
-# class OpinionRestView(View):
-#     _root = rest_config["url_root"] + "opinion/"
-
-#     @cherrypy.expose
-#     def index(self, *args, **kwargs):
-#         meta, conn = cherrypy.request.db
-#         opinions = meta.tables[Opinion.TABLE_NAME]
-#         users = meta.tables[User.TABLE_NAME]
-
-#         if cherrypy.request.method == "GET":
-#             ss = select([opinions]).order_by(desc(opinions.c.create_at))
-#             rst = conn.execute(ss)
-#             rows = rst.fetchall()
-
-#             return [Opinion.mk_dict(i) for i in rows]
-#         elif cherrypy.request.method == "POST":
-#             data = cherrypy.request.json
-#             uid = self.check_login(data)
-
-#             self.check_key(data, ("content", ))
-
-#             ss = select([users.c.id]).where(users.c.id == uid)
-#             rst = conn.execute(ss)
-#             row = rst.fetchone()
-#             if len(row) <= 0:
-#                 raise cherrypy.HTTPError(400,
-#                     ErrMsg.UNKNOWN_ID.format(question_json["writer"]))
-
-#             ins = opinions.insert()
-#             rst = conn.execute(ins, {"writer":uid, "content":data["content"]})
-
-#             if rst.is_insert:
-#                 cherrypy.response.status = 201
-
-#                 ss = select([opinions.c.id]).order_by(desc(opinions.c.id))
-#                 row = conn.execute(ss)
-
-#                 return {"opinions_id": row.fetchone()["id"]}
-#             else:
-#                 raise cherrypy.HTTPError(503)
-
-#         else:
-#             raise cherrypy.HTTPError(404)
 
 class TeacherRestView(View):
     _root = rest_config["url_root"] + "teacher/"
@@ -1394,7 +1230,32 @@ class TeacherRestView(View):
                 conn.execute(stmt)
                 return {"success": True}
             else:
-                raise cherrypy.HTTPError(404)
+                user = self.check_login_u(data)
+                if not user["admin"]:
+                    raise cherrypy.HTTPError(401)
+
+                self.check_key(data, (
+                    "userid",
+                    "name",
+                    "phone",
+                    "class_permission",
+                    ))
+
+                json = {
+                    "userid": data["userid"],
+                    "name": data["name"],
+                    "phone": data["phone"],
+                    "class_permission": data["class_permission"],
+                    }
+
+                if "password" in data:
+                    json["password"] = data["password"]
+
+                stmt = teachers.update().where(
+                    teachers.c.id==data["tid"]).values(json)
+                conn.execute(stmt)
+
+                return {"success": True}
         elif cherrypy.request.method == "DELETE":
             user = self.check_login_u(kwargs)
 
@@ -1406,7 +1267,8 @@ class TeacherRestView(View):
             teacher_id = rst.fetchone()
 
             if not teacher_id:
-                raise cherrypy.HTTPError(400, f"Teacher id {kwargs['tid']} don't exist")
+                raise cherrypy.HTTPError(400,
+                    f"Teacher id {kwargs['tid']} don't exist")
 
             adareas = meta.tables[AdArea.TABLE_NAME]
             adclasses = meta.tables[AdClass.TABLE_NAME]
@@ -1829,7 +1691,9 @@ class ClassroomRestView(View):
             data = cherrypy.request.json
             teacher = self.check_login_teacher(data)
 
-            self.check_key(data, ("clsid",
+            self.check_key(data, (
+                "clsid",
+                "name",
                 "students_name",
                 "students_cid",
                 "students_sid",
@@ -1852,6 +1716,7 @@ class ClassroomRestView(View):
                 data["students_cid"][userid] = row["id"]
 
             json = {
+                "name": data["name"],
                 "students_name": data["students_name"],
                 "students_cid": data["students_cid"],
                 "students_sid": data["students_sid"],
@@ -1876,6 +1741,29 @@ class ClassroomRestView(View):
             rst = conn.execute(ds)
 
             return {"success": True}
+        else:
+            raise cherrypy.HTTPError(404)
+
+    @cherrypy.expose
+    def student_permission(self, *args, **kwargs):
+        meta, conn = cherrypy.request.db
+        classrooms = meta.tables[Classroom.TABLE_NAME]
+        classes = cherrypy.request.classes
+
+        if cherrypy.request.method == "GET":
+            user = self.check_login_u(kwargs)
+            self.check_key(kwargs, ("class", ))
+
+            ss = select([classrooms.c.id]).where(and_(
+                classrooms.c.students_cid.any(user["id"]),
+                classrooms.c.type==kwargs["class"]
+                ))
+            rst = conn.execute(ss)
+            rows = rst.fetchall()
+            if not rows:
+                raise cherrypy.HTTPError(400)
+
+            return [row["id"] for row in rows]
         else:
             raise cherrypy.HTTPError(404)
 
@@ -2157,7 +2045,8 @@ class FileUploadRestView(View):
                 if not os.path.exists(path):
                     os.mkdir(path)
 
-                f = open(path + "/" + kwargs["annoce"].filename, "wb")
+                filename = path + "/" + kwargs["annoce"].filename
+                f = open(filename, "wb")
                 while True:
                     data = kwargs["annoce"].file.read(8192)
                     if not data:
@@ -2165,8 +2054,8 @@ class FileUploadRestView(View):
                     f.write(data)
                 f.close()
             except:
-                if os.path.isfile(path + filename):
-                    os.remove(path + filename)
+                if os.path.isfile(filename):
+                    os.remove(filename)
                 raise cherrypy.HTTPRedirect("/report")
 
             raise cherrypy.HTTPRedirect("/teacher")
@@ -2205,7 +2094,8 @@ class ActivityRestView(View):
                 else:
                     ss = """SELECT * FROM tb_activity
                         WHERE id = ANY(participant)
-                        AND NOT id = ANY(present);""".replace("id", str(user["id"]))
+                        AND NOT id = ANY(present);""".replace("id",
+                            str(user["id"]))
 
                 rst = conn.execute(ss)
                 rows = rst.fetchall()
@@ -2465,7 +2355,8 @@ class PresentationRestView(View):
 
             self.check_key(data, ("presentation", ))
 
-            success = classes.write_file("presentation.html", data["presentation"])
+            success = classes.write_file("presentation.html",
+                data["presentation"])
             return {"success": success}
         else:
             raise cherrypy.HTTPError(400)

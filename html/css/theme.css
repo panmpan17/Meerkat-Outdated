@@ -1,3 +1,13 @@
+@font-face {
+	font-family: fonta;
+	src: url("/html/font/1.ttf");
+}
+
+a:hover {
+	cursor: pointer;
+	text-decoration: none;
+}
+
 body {
 	background-color: rgb(219, 238, 252);
 }
@@ -346,4 +356,19 @@ label.file-button {
 
 label.file-button:hover {
 	background: #DDD;
+}
+
+.hover {
+	cursor: pointer;
+	opacity: 0.7;
+	font-weight: 400;
+}
+.hover:hover {
+	opacity: 1;
+	font-weight: 900;
+}
+
+.hint {
+	color: gray;
+	font-size: 10px;
 }
