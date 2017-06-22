@@ -2,7 +2,32 @@ import cherrypy
 import os
 import jinja2
 from uuid import uuid1 as uuid
+from app.model import Classroom, Teacher
+from sqlalchemy.sql import select, and_
 import requests
+
+
+access_deny = """
+<head>
+    <title>Access Deny</title>
+    <style>
+        body, html {width: 100%;height: 100%}
+        .wrapper {width: 100%;height: 100%;text-align: center}
+        .wrapper:after {content: "";height: 100%;
+        vertical-align: middle;display: inline-block;margin-right: -10px}
+        .container {vertical-align: middle;display: inline-block}
+        h1 {font-size: 2.618em;color:white}
+    </style>
+</head>
+<body bgcolor="black">
+    <section class="wrapper">
+        <div class="container">
+            <h1>Access Deny</h1>
+        </div>
+    </section>
+</body>
+</html>
+"""
 
 # template_dir = os.path.join(os.path.dirname(__file__), 'template')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader("html/template"))
@@ -23,6 +48,7 @@ class UserCaseHandler(object):
         "tools.classestool.on": True,
         "tools.keytool.on": True,
         "tools.emailvalidtool.on": True,
+        "tools.dbtool.on": True,
         # "tools.caching.on": True,
         # "tools.caching.delay": 3600,
         }
@@ -182,34 +208,11 @@ class UserCaseHandler(object):
 
     @cherrypy.expose
     def video(self, key, video=None, file="", nextvid="", button="看答案", nextbutton="看問題"):
-        access_deny = """
-        <head>
-            <title>Access Deny</title>
-            <style>
-                body, html {width: 100%;height: 100%}
-                .wrapper {width: 100%;height: 100%;text-align: center}
-                .wrapper:after {content: "";height: 100%;
-                vertical-align: middle;display: inline-block;margin-right: -10px}
-                .container {vertical-align: middle;display: inline-block}
-                h1 {font-size: 2.618em;color:white}
-            </style>
-        </head>
-        <body bgcolor="black">
-            <section class="wrapper">
-                <div class="container">
-                    <h1>Access Deny</h1>
-                </div>
-            </section>
-        </body>
-        </html>
-        """
 
         key_mgr = cherrypy.request.key
 
-        key_valid = key_mgr.get_key(key)
-        if not key_valid[0]:
+        if not key_mgr.get_cls_per_key(key):
             return access_deny
-        uid = key_valid[1]
 
         return render("video.html", {
             "video": video,

@@ -56,6 +56,9 @@ function loadclass(classname, qlesson=-1) {
 		j["lesson"] = qlesson
 	}
 
+	if (getCookie("teacher-key") != "") {
+		j["tkey"] = getCookie("teacher-key")
+	}
 
 	$.ajax({
 		url: host + "classes/",
@@ -78,13 +81,13 @@ function loadclass(classname, qlesson=-1) {
 		},
 		error: function (error) {
 			window.location.pathname = "/classes"
-			// console.log(error)
 		}
 	})
 }
 
 function display_description() {
 	if (class_["description-video"] == "") {
+		loadclass(subject_id, 0)
 		return ;
 	}
 
@@ -158,10 +161,11 @@ function display_video() {
 		a = format(videoblock, classvideo["video"])
 	}
 	else {
-		a = format(privatevideoblock, window.location.host, getCookie("key"), classvideo["video"], "")
+		a = format(privatevideoblock, window.location.host, class_["key"], classvideo["video"], "")
 		if (classvideo["answer"] != "") {
-			a = format(privatevideoblock, window.location.host, getCookie("key"), classvideo["video"], classvideo["answer"])
+			a = format(privatevideoblock, window.location.host, class_["key"], classvideo["video"], classvideo["answer"])
 		}
+
 	}
 
 	$("#video")[0].innerHTML = a;

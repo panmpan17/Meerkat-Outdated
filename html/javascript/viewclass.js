@@ -53,14 +53,16 @@ function goclass(id) {
 
 function leadtoclass(id, price) {
     if (price != 0) {
+        json = {"class": id, "key": getCookie("key")}
+        if (getCookie("teacher-key") != "") {
+            json["tkey"] = getCookie("teacher-key")
+        }
         $.ajax({
             url: host + "classroom/student_permission",
             type: "GET",
-            data: {"class": id, "key": getCookie("key")},
+            data: json,
             success: function (msg) {
-                if (msg.length == 1) {
-                    window.location.href = "/class/c/" + id;
-                }
+                window.location.href = "/class/c/" + id;
             },
             error: function (error) {
                 if (error.status == 401) {
@@ -71,7 +73,7 @@ function leadtoclass(id, price) {
                     return null;
                 }
                 else if (error.status == 400) {
-                    alert("你沒有參加 Python 的課程\n可以去 '教師廣告' 尋找老師")
+                    alert("您不是 Python 學員，無法進入")
                 }
             }
         })

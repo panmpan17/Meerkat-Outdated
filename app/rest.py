@@ -986,26 +986,49 @@ class ClassesRestView(View):
                     class_.pop("info")
                     return class_
                 else:
-                    user = self.check_login_u(kwargs)
+                    user = None
+                    try:
+                        user = self.check_login_u(kwargs)
+                    except:
+                        teacher = self.check_login_teacher(kwargs)
 
-                    ss = select([classrooms.c.id]).where(and_(
-                        classrooms.c.students_cid.any(user["id"]),
-                        classrooms.c.type==kwargs["class"]
-                        ))
-                    rst = conn.execute(ss)
-                    row = rst.fetchone()
-                    if not row:
-                        raise cherrypy.HTTPError(400,
-                            ErrMsg.NO_ACCESS_TO_CLASS.format(kwargs["class"]))
+                    if user:
+                        ss = select([classrooms.c.id]).where(and_(
+                            classrooms.c.students_cid.any(user["id"]),
+                            classrooms.c.type==kwargs["class"]
+                            ))
+                        rst = conn.execute(ss)
+                        row = rst.fetchone()
+                        if not row:
+                            raise cherrypy.HTTPError(400,
+                                ErrMsg.NO_ACCESS_TO_CLASS.format(
+                                    kwargs["class"]))
+                    else:
+                        teachers = meta.tables[Teacher.TABLE_NAME]
+                        ss = select([teachers.c.id]).where(and_(
+                            teachers.c.id==teacher["id"],
+                            teachers.c.class_permission.any(kwargs["class"])
+                            ))
+                        rst = conn.execute(ss)
+                        row = rst.fetchone()
+
+                        if not row:
+                            raise cherrypy.HTTPError(400)
 
                     try:
                         return class_["info"][int(kwargs["lesson"])]
                     except:
                         pass
 
+                    key = str(uuid())
+                    key_mgr = cherrypy.request.key
+
+                    key_mgr.update_cls_per_key(key)
+
                     class_ = class_.copy()
                     class_["length"] = len(class_["info"])
                     class_.pop("info")
+                    class_["key"] = key
                     return class_
             else: # return all class info
                 return classes.get_class_all_info()
@@ -1751,19 +1774,38 @@ class ClassroomRestView(View):
         classes = cherrypy.request.classes
 
         if cherrypy.request.method == "GET":
-            user = self.check_login_u(kwargs)
+            user = None
+            teacher = None
+            try:
+                user = self.check_login_u(kwargs)
+            except:
+                teacher = self.check_login_teacher(kwargs)
+
             self.check_key(kwargs, ("class", ))
 
-            ss = select([classrooms.c.id]).where(and_(
-                classrooms.c.students_cid.any(user["id"]),
-                classrooms.c.type==kwargs["class"]
-                ))
-            rst = conn.execute(ss)
-            rows = rst.fetchall()
-            if not rows:
-                raise cherrypy.HTTPError(400)
+            if user:
+                ss = select([classrooms.c.id]).where(and_(
+                    classrooms.c.students_cid.any(user["id"]),
+                    classrooms.c.type==kwargs["class"]
+                    ))
+                rst = conn.execute(ss)
+                rows = rst.fetchall()
+                if not rows:
+                    raise cherrypy.HTTPError(400)
 
-            return [row["id"] for row in rows]
+                return [row["id"] for row in rows]
+            else:
+                teachers = meta.tables[Teacher.TABLE_NAME]
+
+                ss = select([teachers.c.class_permission]).where(
+                    teachers.c.id==teacher["id"])
+                rst = conn.execute(ss)
+                row = rst.fetchone()
+
+                if kwargs["class"] not in row["class_permission"]:
+                    raise cherrypy.HTTPError(400)
+
+                return row["class_permission"]
         else:
             raise cherrypy.HTTPError(404)
 

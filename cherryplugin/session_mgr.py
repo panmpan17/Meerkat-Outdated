@@ -15,6 +15,9 @@ class KeyMgrPlugin(plugins.SimplePlugin):
 		plugins.SimplePlugin.__init__(self, bus)
 		self.keydict = {}
 
+		self.cls_per = {}
+		self.cls_per_key = self.cls_per.keys()
+
 	def start(self):
 		pass
 	def stop(self):
@@ -39,11 +42,13 @@ class KeyMgrPlugin(plugins.SimplePlugin):
 			"requester": requester,
 			}
 
-	def pop(self, key):
-		try:
-			self.pop(key)
-		except:
-			pass
+	def get_cls_per_key(self, key):
+		print(self.cls_per_key)
+		return key in self.cls_per_key
+
+	def update_cls_per_key(self, key):
+		self.cls_per[key] = datetime.now()
+		print(self.cls_per_key)
 
 class KeyMgrTool(cherrypy.Tool):
 	def __init__(self, key_plugin):
@@ -61,17 +66,27 @@ class KeyMgrTool(cherrypy.Tool):
 	def delete_key(self):
 		while True:
 			sleep(DAY)
+			print('start key cleaning')
 			keys = []
 			now = datetime.now()
-			for i in self.key_plugin.keydict:
-				timedelta = now - self.key_plugin.keydict[i]["datetime"]
+			for k, i in self.key_plugin.keydict.items():
+				timedelta = now - i["datetime"]
 
 				if timedelta.seconds > KEYTIMEOUT:
-					keys.append(i)
+					keys.append(k)
 
-			if keys == []:
-				print("No key been delete")
-			else:
-				for i in keys:
-					self.key_plugin.keydict.pop(i)
-					print("Key '{}' been delete".format(i))
+			for i in keys:
+				print(self.key_plugin.keydict)
+				self.key_plugin.keydict.pop(i)
+				print(f"Key {i} been delete")
+
+			keys = []
+			for k, i in self.key_plugin.cls_per.items():
+				timedelta = now - i
+
+				if timedelta.seconds > KEYTIMEOUT:
+					keys.append(k)
+
+			for i in keys:
+				self.key_plugin.cls_per.pop(i)
+				print(f"Class Permission Key {i} been delete")
