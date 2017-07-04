@@ -17,6 +17,10 @@ class ClassesPlugin(plugins.SimplePlugin):
 
 	def new_class(self, class_id, classinfo):
 		self.classes[class_id] = classinfo
+		self.classes[class_id]["lesson_length"] = {}
+		for i, lesson in enumerate(classinfo["info"]):
+			self.classes[class_id]["lesson_length"][i] = len(lesson)
+
 		self.videos[class_id] = {}
 		for lesson in classinfo["info"]:
 			for class_ in lesson:

@@ -117,7 +117,6 @@ class App():
             model.Question,
             model.Answer,
             model.Post,
-            model.Opinion,
             model.ClassManage,
 
             model.Teacher,

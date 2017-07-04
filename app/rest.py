@@ -5,7 +5,7 @@ import re
 import json
 
 from app.email_html import Email
-from app.model import ErrMsg, User, Question, Answer, Post, Opinion
+from app.model import ErrMsg, User, Question, Answer, Post
 from app.model import ClassManage, Teacher, AdArea, Classroom, AdClass
 from app.model import Activity, Report
 from uuid import uuid1 as uuid
@@ -965,6 +965,7 @@ class ClassesRestView(View):
         meta, conn = cherrypy.request.db
         users = meta.tables[User.TABLE_NAME]
         classrooms = meta.tables[Classroom.TABLE_NAME]
+        key_mgr = cherrypy.request.key
 
         if cherrypy.request.method == "GET":
             if len(kwargs) > 0:
@@ -986,49 +987,59 @@ class ClassesRestView(View):
                     class_.pop("info")
                     return class_
                 else:
-                    user = None
-                    try:
-                        user = self.check_login_u(kwargs)
-                    except:
-                        teacher = self.check_login_teacher(kwargs)
-
-                    if user:
-                        ss = select([classrooms.c.id]).where(and_(
-                            classrooms.c.students_cid.any(user["id"]),
-                            classrooms.c.type==kwargs["class"]
-                            ))
-                        rst = conn.execute(ss)
-                        row = rst.fetchone()
-                        if not row:
-                            raise cherrypy.HTTPError(400,
-                                ErrMsg.NO_ACCESS_TO_CLASS.format(
-                                    kwargs["class"]))
-                    else:
-                        teachers = meta.tables[Teacher.TABLE_NAME]
-                        ss = select([teachers.c.id]).where(and_(
-                            teachers.c.id==teacher["id"],
-                            teachers.c.class_permission.any(kwargs["class"])
-                            ))
-                        rst = conn.execute(ss)
-                        row = rst.fetchone()
-
-                        if not row:
+                    progress = None
+                    if "cls_per_key" in kwargs:
+                        key = kwargs["cls_per_key"]
+                        if not key_mgr.get_cls_per_key(kwargs["cls_per_key"]):
                             raise cherrypy.HTTPError(400)
+                    else:
+                        clsr_id = None
+                        key_type = None
+                        try:
+                            user = self.check_login_u(kwargs)
+                            ss = select([classrooms.c.id,
+                                classrooms.c.progress]).where(and_(
+                                classrooms.c.students_cid.any(user["id"]),
+                                classrooms.c.type==kwargs["class"]
+                                ))
+                            rst = conn.execute(ss)
+                            row = rst.fetchone()
+                            if not row:
+                                raise cherrypy.HTTPError(400,
+                                    ErrMsg.NO_ACCESS_TO_CLASS.format(
+                                        kwargs["class"]))
+                            key_type = "user"
+                            clsr_id = row["id"]
+                            progress = row["progress"]
+                        except:
+                            teacher = self.check_login_teacher(kwargs)
+                            teachers = meta.tables[Teacher.TABLE_NAME]
+                            ss = select([teachers.c.id]).where(and_(
+                                teachers.c.id==teacher["id"],
+                                teachers.c.class_permission.any(kwargs["class"])
+                                ))
+                            rst = conn.execute(ss)
+                            row = rst.fetchone()
+
+                            if not row:
+                                raise cherrypy.HTTPError(400)
+
+                            key_type = "teacher"
+                        key = str(uuid())
+
+                        key_mgr = cherrypy.request.key
+                        key_mgr.update_cls_per_key(key, key_type, clsr_id)
 
                     try:
                         return class_["info"][int(kwargs["lesson"])]
                     except:
                         pass
 
-                    key = str(uuid())
-                    key_mgr = cherrypy.request.key
-
-                    key_mgr.update_cls_per_key(key)
-
                     class_ = class_.copy()
                     class_["length"] = len(class_["info"])
                     class_.pop("info")
                     class_["key"] = key
+                    class_["progress"] = progress
                     return class_
             else: # return all class info
                 return classes.get_class_all_info()
@@ -1774,16 +1785,12 @@ class ClassroomRestView(View):
         classes = cherrypy.request.classes
 
         if cherrypy.request.method == "GET":
-            user = None
-            teacher = None
+            self.check_key(kwargs, ("class", ))
+            usererror = 1
+            clsr_id = None
             try:
                 user = self.check_login_u(kwargs)
-            except:
-                teacher = self.check_login_teacher(kwargs)
 
-            self.check_key(kwargs, ("class", ))
-
-            if user:
                 ss = select([classrooms.c.id]).where(and_(
                     classrooms.c.students_cid.any(user["id"]),
                     classrooms.c.type==kwargs["class"]
@@ -1791,10 +1798,18 @@ class ClassroomRestView(View):
                 rst = conn.execute(ss)
                 rows = rst.fetchall()
                 if not rows:
+                    usererror = 2
                     raise cherrypy.HTTPError(400)
 
                 return [row["id"] for row in rows]
-            else:
+            except:
+                try:
+                    teacher = self.check_login_teacher(kwargs)
+                except:
+                    if usererror == 1:
+                        raise cherrypy.HTTPError(401)
+                    else:
+                        raise cherrypy.HTTPError(400)
                 teachers = meta.tables[Teacher.TABLE_NAME]
 
                 ss = select([teachers.c.class_permission]).where(
@@ -1806,6 +1821,31 @@ class ClassroomRestView(View):
                     raise cherrypy.HTTPError(400)
 
                 return row["class_permission"]
+
+        else:
+            raise cherrypy.HTTPError(404)
+
+    @cherrypy.expose
+    def progress(self, *args, **kwargs):
+        meta, conn = cherrypy.request.db
+        classrooms = meta.tables[Classroom.TABLE_NAME]
+        key_mgr = cherrypy.request.key
+
+        if cherrypy.request.method == "GET":
+            cls_per_key = kwargs["cls_per_key"]
+            if not key_mgr.get_cls_per_key(cls_per_key):
+                raise cherrypy.HTTPError(400)
+
+            type_ = key_mgr.cls_per[cls_per_key]["type"]
+            if type_ == "user":
+                clsr_id = key_mgr.cls_per[cls_per_key]["clsr_id"]
+                ss = select([classrooms.c.progress]).where(
+                    classrooms.c.id==clsr_id)
+                rst = conn.execute(ss)
+                row = rst.fetchone()
+                return row["progress"]
+            return None
+
         else:
             raise cherrypy.HTTPError(404)
 

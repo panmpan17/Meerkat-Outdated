@@ -60,6 +60,10 @@ function loadclass(classname, qlesson=-1) {
 		j["tkey"] = getCookie("teacher-key")
 	}
 
+	if (class_ != null) {
+		j["cls_per_key"] = class_["key"]
+	}
+
 	$.ajax({
 		url: host + "classes/",
 		type: "GET",
@@ -70,8 +74,22 @@ function loadclass(classname, qlesson=-1) {
 				class_["info"] = {}
 
 				display_lessons()
-				// display_lesson()
 				display_description()
+
+				limit = class_["progress"]
+				if (limit == undefined) {
+					return;
+				}
+				lesson = 1
+				$.each(class_["lesson_length"], function (_, i) {
+					if (limit > i) {
+						limit -= i
+					}
+					else {
+						return false;
+					}
+					lesson ++
+				})
 			}
 			else {
 				class_["info"][qlesson] = msg
@@ -81,6 +99,7 @@ function loadclass(classname, qlesson=-1) {
 		},
 		error: function (error) {
 			window.location.pathname = "/classes"
+			// console.log(error)
 		}
 	})
 }

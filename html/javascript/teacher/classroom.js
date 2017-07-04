@@ -534,7 +534,7 @@ field_num_2_cid = {}
 field_num_2_sid = {}
 wrong_field = false
 
-function change_classroom () {
+function show_change_classroom () {
 	$("#change-student").modal("show")
 	$("#change_classroom_name")[0].value = classroom["name"]
 
@@ -727,6 +727,7 @@ function check_change_student () {
 								}
 							}
 							json = {
+								"name": $("#change_classroom_name")[0].value,
 								"clsid": classroom["id"],
 								"students_name": names,
 								"students_cid": cids,
@@ -744,6 +745,7 @@ function check_change_student () {
 									location.reload()
 								},
 								error: function (error) {
+									console.log(error)
 								}
 							})
 						}

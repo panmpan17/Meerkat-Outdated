@@ -87,7 +87,7 @@
 						<div id="classroom-main"></div>
 						<hr>
 						<center>
-							<a target="_blank" href="https://www.google.com.tw/chrome/browser/desktop/">
+							<a id="suggest_chrome" target="_blank" href="https://www.google.com.tw/chrome/browser/desktop/">
 								<h4>建議使用 Google Chrome 操作</h4>
 								<img width="150" src="https://www.google.com.tw/chrome/assets/common/images/chrome_logo_2x.png?mmfb=a5234ae3c4265f687c7fffae2760a907" alt="">
 							</a>
@@ -409,7 +409,7 @@
 						<hr>
 						<div id="porjects"></div>
 						<br><br>
-						<button style="padding: 10px 15px" onclick="change_classroom()">&#9998;</button>
+						<button style="padding: 10px 15px" onclick="show_change_classroom()">&#9998;</button>
 						<button style="padding: 10px 15px" onclick="delete_classroom()">&#10006;</button>
 						<br>
 					</div>
@@ -715,6 +715,15 @@
 				$("#annoceform")[0].submit();
 			}
 		}
+
+		$(document).ready(function () {
+			try {
+				if (!!window.chrome & !!window.chrome.webstore) {
+					$("#suggest_chrome").hide()
+				}
+			}
+			catch (err) {}
+		})
 	</script>
 
 	<script src="html/javascript/teacher/classroom.js" type="text/javascript" charset="utf-8"></script>

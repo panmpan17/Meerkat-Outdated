@@ -173,7 +173,7 @@ function loadscratchhomwork(student_id, cls_id) {
 				slide += "</section><br>"
 			}
 
-			$("#hw-thead").html(thead)
+			$("#hw-thead")[0].innerHTML = thead
 			$("#hw-tbody").html(tbody)
 			$("#hw-shelf").html(format(slide, cls_id))
 			homeworks[cls_id] = homework
@@ -192,8 +192,8 @@ function loadscratchhomwork(student_id, cls_id) {
 
 function play_scratch_project(project_id, cls_id, hw_s) {
 	show("project")
-	$("#scratch_iframe").show();
-	$("#file").hide();
+	show("scratch_iframe")
+	hide("file")
 
 	$("#scratch_iframe")[0].src = format(project_embed_fromat, project_id)
 	$("#s_project_page")[0].href = format(project_page_format, project_id)
@@ -257,11 +257,13 @@ function loadfilehomework(folder, cls_id) {
 				})
 				buttonsgroup += `</ul></div><br>`
 
-				$("#hw-thead").html(buttonsgroup)
+				$("#hw-thead")[0].innerHTML = buttonsgroup
 				changefileunit(folder, units[0], cls_id)
 			}
 			else {
-				// No file uploaded
+				$("#hw-thead")[0].innerHTML = ""
+				$("#hw-tbody")[0].innerHTML = "<h5>還沒有上傳任何功課</h5>"
+				$("#hw-shelf")[0].innerHTML = ""
 			}
 		}
 	})

@@ -556,7 +556,7 @@ function getallquestion(t, v) {
 function addfilter(t, v) {
 	if (v == null) {
 		delete filter[t]
-		$("type-filter").innerHTML = "問題種類"
+		$("#type-filter")[0].innerHTML = "問題種類"
 		getallquestion(select_type, select_values);
 		return;
 	}

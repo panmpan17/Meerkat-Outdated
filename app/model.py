@@ -369,31 +369,6 @@ class Post(object):
             "create_at": GMT(row["create_at"]),
             }
 
-class Opinion(object):
-    TABLE_NAME = "tb_opinion"
-    opinion_t = None
-
-    @classmethod
-    def create_schema(cls, db_engine, db_meta):
-        cls.opinion_t = Table(cls.TABLE_NAME, db_meta,
-            Column("id", Integer, primary_key=True, autoincrement=True),
-            Column("content", Text, nullable=False, autoincrement=False),
-            Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
-            Column("writer", Integer, ForeignKey("tb_user.id"),
-                nullable=False, autoincrement=False),
-            )
-        cls.opinion_t.create(db_engine, checkfirst=True)
-        return cls.opinion_t
-
-    @classmethod
-    def mk_dict(cls, row):
-        return {
-            "id": row["id"],
-            "content": row["content"],
-            "writer": row["writer"],
-            "create_at": GMT(row["create_at"]),
-            }
-
 class ClassManage(object):
     TABLE_NAME = "tb_classmanage"
     classmanage_t = None
@@ -483,6 +458,7 @@ class Classroom(object):
             Column("students_sid", ARRAY(String), nullable=False, autoincrement=False),
             Column("folder", String, nullable=True, autoincrement=True, default=""),
             Column("comment", JSON, nullable=True, default={}, autoincrement=True),
+            Column("progress", Integer, nullable=False, default=10, autoincrement=True),
             Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
             Column("type", String, nullable=True, autoincrement=False),
             )
