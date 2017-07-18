@@ -42,6 +42,9 @@ class KeyMgrPlugin(plugins.SimplePlugin):
 			"requester": requester,
 			}
 
+	def drop_key(self, key):
+		self.keydict.pop(key)
+
 	def get_cls_per_key(self, key):
 		return key in self.cls_per_key
 

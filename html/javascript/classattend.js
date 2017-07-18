@@ -8,9 +8,6 @@ classroom_homwork_format = `
 <div class="classroom-card">
 <b>{0}</b>
 {3}
-<div class="close" style="padding-right:10px; color: gray" onclick="howtoupload('{1}')">
-如何繳交作業
-</div>
 <br />
 <img class="card-img" src="/html/images/class/{1}.png" alt="" />
 <table class="table homework">
@@ -109,7 +106,7 @@ function showclassroom(cls_id) {
 		url: host + "classroom/check_folder",
 		data: {
 			"folder": classroom["folder"],
-			"tkey": getCookie("teacher-key")},
+			"key": getCookie("key")},
 		success: function (msg) {
 			$("#filelist")[0].innerHTML = ""
 			$.each(msg, function (_, i) {
@@ -202,7 +199,8 @@ function play_scratch_project(project_id, cls_id, hw_s) {
 	if (comments[cls_id] != undefined) {
 		if (comments[cls_id][getCookie("id")]) {
 			if (comments[cls_id][getCookie("id")][hw_s] != undefined) {
-				$("#hwcomment")[0].innerHTML = comments[cls_id][getCookie("id")][hw_s]
+				comment = comments[cls_id][getCookie("id")][hw_s]
+				$("#hwcomment")[0].innerHTML = comment.replace(/\n/g, "<br>")
 			}
 		}
 	}
@@ -340,7 +338,8 @@ function show_file(file, cls_id) {
 	if (comments[cls_id] != undefined) {
 		if (comments[cls_id][getCookie("id")]) {
 			if (comments[cls_id][getCookie("id")][hw_s] != undefined) {
-				$("#hwcomment")[0].innerHTML = comments[cls_id][getCookie("id")][hw_s]
+				comment = comments[cls_id][getCookie("id")][hw_s]
+				$("#hwcomment")[0].innerHTML = comment.replace(/\n/g, "<br>")
 			}
 		}
 	}

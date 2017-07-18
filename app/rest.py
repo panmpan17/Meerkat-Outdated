@@ -132,7 +132,11 @@ class View(object):
         rst = conn.execute(ss)
         row = rst.fetchone()
 
+        if not row:
+            key_mgr.drop_key(json["tkey"])
+            raise cherrypy.HTTPError(401)
         if row["disabled"]:
+            key_mgr.drop_key(json["tkey"])
             raise cherrypy.HTTPError(401)
         return User.mk_dict(row)
 
@@ -153,7 +157,11 @@ class View(object):
         rst = conn.execute(ss)
         row = rst.fetchone()
 
+        if not row:
+            key_mgr.drop_key(json["tkey"])
+            raise cherrypy.HTTPError(401)
         if row["disabled"]:
+            key_mgr.drop_key(json["tkey"])
             raise cherrypy.HTTPError(401)
         return Teacher.mk_dict(row)
 
@@ -1725,36 +1733,50 @@ class ClassroomRestView(View):
             data = cherrypy.request.json
             teacher = self.check_login_teacher(data)
 
-            self.check_key(data, (
-                "clsid",
-                "name",
-                "students_name",
-                "students_cid",
-                "students_sid",
-                ))
+            self.check_key(data, ("clsid", ))
+                # "name",
+                # "students_name",
+                # "students_cid",
+                # "students_sid",
 
-            if not isinstance(data["students_name"], list):
-                raise ErrMsg.NOT_LIST.format("students_name")
-            if not isinstance(data["students_cid"], list):
-                raise ErrMsg.NOT_LIST.format("students_cid")
-            if not isinstance(data["students_sid"], list):
-                raise ErrMsg.NOT_LIST.format("students_sid")
+            json = {}
 
-            ss = select([users.c.id, users.c.userid]).where(
-                users.c.userid.in_(data["students_cid"]))
-            rst = conn.execute(ss)
-            rows = rst.fetchall()
+            if "name" in data:
+                json["name"] = data["name"]
+            if "students_name" in data:
+                self.check_key(data, ("students_cid", "students_sid", ))
 
-            for row in rows:
-                userid = data["students_cid"].index(row["userid"])
-                data["students_cid"][userid] = row["id"]
+                if not isinstance(data["students_name"], list):
+                    raise charrypy.HTTPError(400,
+                        ErrMsg.NOT_LIST.format("students_name"))
+                if not isinstance(data["students_cid"], list):
+                    raise charrypy.HTTPError(400,
+                        ErrMsg.NOT_LIST.format("students_cid"))
+                if not isinstance(data["students_sid"], list):
+                    raise charrypy.HTTPError(400,
+                        ErrMsg.NOT_LIST.format("students_sid"))
 
-            json = {
-                "name": data["name"],
-                "students_name": data["students_name"],
-                "students_cid": data["students_cid"],
-                "students_sid": data["students_sid"],
-                }
+                ss = select([users.c.id, users.c.userid]).where(
+                    users.c.userid.in_(data["students_cid"]))
+                rst = conn.execute(ss)
+                rows = rst.fetchall()
+
+                for row in rows:
+                    userid = data["students_cid"].index(row["userid"])
+                    data["students_cid"][userid] = row["id"]
+
+                json["students_name"] = data["students_name"],
+                json["students_cid"] = data["students_cid"],
+                json["students_sid"] = data["students_sid"],
+            if "links" in data:
+                if not isinstance(data["links"], list):
+                    raise charrypy.HTTPError(400,
+                        ErrMsg.NOT_LIST.format("links"))
+
+                json["links"] = data["links"]
+
+            if len(json) == 0:
+                return {"success": None}
 
             stmt = update(classrooms).where(and_(
                 classrooms.c.id == data["clsid"],
@@ -1762,7 +1784,7 @@ class ClassroomRestView(View):
             rst = conn.execute(stmt)
 
             if rst.rowcount > 0:
-                return {"success": True}
+                return {"success": json}
             else:
                 raise cherrypy.HTTPError(400)
         elif cherrypy.request.method == "DELETE":

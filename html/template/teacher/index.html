@@ -37,7 +37,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/">&#8592; 回首頁</a>
+				<a class="navbar-brand" href="/"><i class="fa fa-chevron-circle-left" aria-hidden="true"></i> 回首頁</a>
 			</div>
 			<!-- Top Menu Items -->
 			<ul class="nav navbar-right top-nav">
@@ -278,7 +278,7 @@
 							<div class="calendar"></div>
 						</div>
 						<div class="date-picker-cancel" onclick="$('#classenddate')[0].textContent = ''" style="width: 20px;padding: 0px 4px">
-							&#10006;
+							<i class="fa fa-times" aria-hidden="true"></i>
 						</div>
 						<br>
 						<br>
@@ -403,14 +403,20 @@
 						<ul id="filelist"></ul>
 
 						<hr>
+						<h4>連結</h4>
+						<span id="links" style="display: inline;"></span>
+						<button style="padding: 9px 10px" onclick="new_links_field()"><i class="fa fa-fw fa-plus"></i></button>
+						<button style="padding: 9px 30px" onclick="save_links()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
+
+						<hr>
 						<h4>功課</h4>
 						<div id="buttonsgroup"></div>
 						<div id="homewrok"></div>
 						<hr>
 						<div id="porjects"></div>
 						<br><br>
-						<button style="padding: 10px 15px" onclick="show_change_classroom()">&#9998;</button>
-						<button style="padding: 10px 15px" onclick="delete_classroom()">&#10006;</button>
+						<button style="padding: 9px 10px" onclick="show_change_classroom()"><i class="fa fa-fw fa-pencil"></i></button>
+						<button style="padding: 9px 10px" onclick="delete_classroom()"><i class="fa fa-fw fa-times"></i></button>
 						<br>
 					</div>
 				</div>

@@ -84,6 +84,7 @@ function changeclassroom (cls_id) {
 
 	$("#porjects")[0].innerHTML = "";
 	$("#homewrok")[0].innerHTML = "";
+	$("#links")[0].innerHTML = "";
 	$("#buttonsgroup").html("")
 	$("#refreshclassroom")[0].onclick = function () {
 		changeclassroom(cls_id);
@@ -98,7 +99,7 @@ function changeclassroom (cls_id) {
 		t_l = classroom["type"].split("_")
 		s_level = a2z[t_l[1] - 1]
 
-		timesout = 1000
+		timesout = 5000
 		s_projct_match = RegExp("[" + s_level + s_level.toUpperCase() + "][0-9]{1,3}\-")
 		$.each(classroom["students"], function (i, s) {
 			loadscratchhomwork(
@@ -110,12 +111,12 @@ function changeclassroom (cls_id) {
 
 		countdown = setInterval(function () {
 			timesout -= 100
-			if (timesout == 0) {
+			if (timesout <= 0) {
 				clearInterval(countdown);
-				homework = Array.from(homework).sort();
+				homeworks = Array.from(homework).sort();
 
 				thead = "<thead><tr><th>學生 \\ 功課</th>";
-				$.each(homework, function (_, i) {
+				$.each(homeworks, function (_, i) {
 					thead += format(SC_HW_UNIT_TB_TITLE_F,
 						i)
 				})
@@ -133,7 +134,7 @@ function changeclassroom (cls_id) {
 					if (classroom["comment"][s[1]] != undefined) {
 						comments_keys = Object.keys(classroom["comment"][s[1]])
 					}
-					$.each(homework, function (_, i) {
+					$.each(homeworks, function (_, i) {
 						h = v[i];
 						if (h != undefined) {
 							if (comments_keys.includes(i)) {
@@ -174,7 +175,6 @@ function changeclassroom (cls_id) {
 				"tkey": getCookie("teacher-key"),
 				"student": true},
 			success: function (msg) {
-				console.log(file_re, msg)
 				files = {}
 				units = new Set()
 				$.each(msg, function (_, i) {
@@ -231,6 +231,13 @@ function changeclassroom (cls_id) {
 		})
 	}
 
+	// display links
+	$.each(classroom["links"], function (_, i) {
+		$('#links').append($(format(`<input name="links" value="{0}" class="form-control" style="width: 80%"><br>`,
+			i)))
+	})
+
+	// load teacher's file
 	$.ajax({
 		url: host + "classroom/check_folder",
 		data: {
@@ -252,10 +259,10 @@ function changefileunit (unit) {
 	$("#porjects")[0].innerHTML = "";
 	$("#homewrok")[0].innerHTML = "";
 
-	homework = Array.from(homework).sort();
+	homeworks = Array.from(homework).sort();
 
 	thead = "<thead><tr><th>學生 \\ 功課</th>";
-	$.each(homework, function (_, i) {
+	$.each(homeworks, function (_, i) {
 		if (i.startsWith(unit)) {
 			filename_seq = i.substring(i.indexOf("-") + 1)
 			thead +=  format(PY_HW_UNIT_TB_TITLE_F,
@@ -279,7 +286,7 @@ function changefileunit (unit) {
 		if (classroom["comment"][k] != undefined) {
 			comments_keys = Object.keys(classroom["comment"][k])
 		}
-		$.each(homework, function (_, i) {
+		$.each(homeworks, function (_, i) {
 			if (i.startsWith(unit)) {
 				if (v.includes(i)) {
 					if (comments_keys.includes(i)) {
@@ -316,10 +323,11 @@ function changefileunit (unit) {
 }
 
 function loadscratchhomwork (student_name, cid, student_id, seq) {
+	var ajaxTime = new Date().getTime();
 	$.ajax({
 		url: format(projects_fromat, student_id),
 		success: function (msg) {
-			timesout = 1000
+			timesout = new Date().getTime() - ajaxTime;
 			text = msg;
 			find = text.indexOf(`<span class="title">`);
 
@@ -589,15 +597,19 @@ function show_change_classroom () {
 }
 
 function new_field () {
-	html = "<tr>"
+	html = $("<tr>")
 	if (classroom["type"].startsWith("python")) {
-		html += format(FIELD, field_num) + format(FIELD, field_num)
+		field = $(format(FIELD, field_num))
+		html.append($(format(FIELD, field_num)))
+		html.append($(format(FIELD, field_num)))
 	}
 	else {
-		html += format(FIELD, field_num) + format(FIELD, field_num) + format(FIELD, field_num)
+		field = $(format(FIELD, field_num))
+		html.append($(format(FIELD, field_num)))
+		html.append($(format(FIELD, field_num)))
+		html.append($(format(FIELD, field_num)))
 	}
-	html += "</tr>"
-	$("#change-student-field")[0].innerHTML += html
+	$("#change-student-field").append(html)
 	field_num ++
 }
 
@@ -644,8 +656,8 @@ function check_change_student () {
 						}
 					}
 					json = {
-						"name": $("#change_classroom_name")[0].value,
 						"clsid": classroom["id"],
+						"name": $("#change_classroom_name")[0].value,
 						"students_name": names,
 						"students_cid": cids,
 						"students_sid": [],
@@ -766,7 +778,6 @@ function check_change_student () {
 			url: host + "teacher/user",
 			data: {"tkey": getCookie("teacher-key"), "users": cids},
 			success: function (msg) {
-				console.log
 				$.each(msg["none"], function (_, i) {
 					h = $("[name=" + field_num_2_cid[i] + "]")
 					if (h[0].value != "" || h[1].value != "" || h[2].value != "") {
@@ -924,6 +935,34 @@ function reloadcomment (clsr_id) {
 		success: function (msg) {
 			classrooms[clsr_id]["comment"] = msg
 			classroom["comment"] = msg
+		}
+	})
+}
+
+function new_links_field() {
+	$('#links').append($(`<input name="links" class="form-control" style="width: 80%"><br>`))
+}
+
+function save_links() {
+	links = []
+	$.each($("[name=links]"), function (_, i) {
+		links.push(i.value)
+	})
+	json = {
+		"clsid": classroom["id"],
+		"links": links,
+		"tkey": getCookie("teacher-key")
+	}
+	$.ajax({
+		url: host + "classroom/",
+		type: "PUT",
+		dataType: "json",
+		data: JSON.stringify(json),
+		contentType: "application/json; charset=utf-8",
+		success: function (msg) {
+			alert("更改成功");
+		},
+		error: function (error) {
 		}
 	})
 }

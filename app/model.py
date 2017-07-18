@@ -459,6 +459,7 @@ class Classroom(object):
             Column("folder", String, nullable=True, autoincrement=True, default=""),
             Column("comment", JSON, nullable=True, default={}, autoincrement=True),
             Column("progress", Integer, nullable=False, default=10, autoincrement=True),
+            Column("links", ARRAY(String), nullable=True, default=[], autoincrement=True),
             Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
             Column("type", String, nullable=True, autoincrement=False),
             )
@@ -477,17 +478,19 @@ class Classroom(object):
                 "create_at": GMT(row["create_at"]),
                 "comment": row["comment"],
                 "folder": row["folder"],
+                "links": row["links"],
                 "type": row["type"],
                 }
         students = list(zip(row["students_name"], row["students_cid"], row["students_sid"]))
         return {
             "id": row["id"],
-            "students": students,
-            "teacher": row["teacher"],
-            "comment": row["comment"],
             "name": row["name"],
+            "teacher": row["teacher"],
+            "students": students,
             "create_at": GMT(row["create_at"]),
+            "comment": row["comment"],
             "folder": row["folder"],
+            "links": row["links"],
             "type": row["type"],
             }
 
@@ -500,6 +503,7 @@ class Classroom(object):
                 "teacher": row["teacher"],
                 "create_at": GMT(row["create_at"]),
                 "folder": row["folder"],
+                "links": row["links"],
                 "type": row["type"],
                 }
         students = dict(zip(row["students_cid"], row["students_sid"]))
@@ -510,6 +514,7 @@ class Classroom(object):
             "student_cid": students[sid],
             "create_at": GMT(row["create_at"]),
             "folder": row["folder"],
+            "links": row["links"],
             "type": row["type"],
             }
 
