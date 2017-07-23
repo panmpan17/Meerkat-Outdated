@@ -11,3 +11,14 @@ class Email:
 	</body>
 	</html>
 	"""
+
+	NEWQUESTION = """
+	<html>
+	<body>
+		<h3>{title}</h3>
+		<div>{content}</div>
+		<br>
+		<a href="{url}" style="color:coral">問題</a>
+	</body>
+	</html>
+	"""

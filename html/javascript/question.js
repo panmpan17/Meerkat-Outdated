@@ -303,6 +303,8 @@ function getanswer(qid) {
 
 function showquestion(qid) {
 	string_param = {"id":qid}
+
+	window.history.pushState({}, "", "question?q=" + qid)
 	$.ajax({
 		url: host + "question/",
 		type: "GET",
@@ -365,6 +367,9 @@ function showquestion(qid) {
 
 			getanswer(qid);
 			question_id = qid;
+		},
+		error: function (msg) {
+			hide("question-frame")
 		}
 	})
 }
@@ -567,6 +572,27 @@ function addfilter(t, v) {
 	getallquestion(select_type, select_values);
 }
 
+function hidequestion() {
+	hide('question-frame');
+	window.history.pushState({}, "", "question")
+}
+
+
 $(document).ready(function () {
 	getallquestion(select_type, select_values);
+
+	try {
+		params = location.search.replace("?", "")
+		qstart = params.indexOf("q=")
+		qend = params.indexOf("&", qstart)
+		if (qend == -1) {
+			qend = params.length
+		}
+		num = params.substring(qstart + 2, qend)
+		if (num != "") {
+			num = parseInt(num)
+			openquestion(num)
+		}
+	}
+	catch (error) {}
 })

@@ -51,7 +51,7 @@ def send_email_valid(key, addr, userid):
     url = url[:url.find("/")]
     cnt = Email.REGIST_VALID.format(url, key)
     http_post(Email.URL, params={
-        "addr": addr,
+        "addrs": [addr],
         "sub": "Email 認證 - " + userid,
         "cnt": cnt})
 
@@ -547,6 +547,20 @@ class QuestionRestView(View):
     _root = rest_config["url_root"] + "question/"
     _cp_config = View._cp_config
 
+    def send_new_question_email(self, addrs, qid, title, content):
+        title = "Coding 4 Fun 討論區 新問題: " + title
+        
+        url = "http://coding4fun.tw/question?q=" + str(qid)
+        content = Email.NEWQUESTION.format(title=title,
+            content=content,
+            url=url)
+        r = http_post(Email.URL, params={
+            "addrs": addrs,
+            "sub": title,
+            "cnt": content})
+        print(r.status_code)
+        print(r.text)
+
     @cherrypy.expose
     def index(self, *args, **kwargs):
         meta, conn = cherrypy.request.db
@@ -667,21 +681,17 @@ class QuestionRestView(View):
                 cherrypy.response.status = 201
 
                 qid = rst.fetchone()["id"]
-                title = ("Coding 4 Fun 討論區 新問題: " +
-                    data["question_json"]["title"])
+                title = data["question_json"]["title"]
                 content = data["question_json"]["content"]
 
-                params = {
-                    "addrs": [
-                        "panmpan@gmail.com",
-                        "shalley.tsay@gmail.com",
-                        "joanie0610@gmail.com",
-                        "jskblack@gmail.com"
-                        ],
-                    "sub": title,
-                    "cnt": content
-                    }
-                http_post(Email.URL, params=params)
+                addrs = [
+                    "panmpan@gmail.com",
+                    "shalley.tsay@gmail.com",
+                    "joanie0610@gmail.com",
+                    "jskblack@gmail.com"
+                    ]
+
+                self.send_new_question_email(addrs, qid, title, content)
 
                 return {"question_id": qid}
             else:
@@ -956,7 +966,7 @@ class AnswerRestView(View):
             title = "Coding 4 Fun 討論區 新回應"
 
             params = {
-                "addr": row["email"],
+                "addrs": row["email"],
                 "sub": title,
                 "cnt": content
                 }

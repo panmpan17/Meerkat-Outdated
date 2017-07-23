@@ -636,6 +636,7 @@ function check_change_student () {
 			}
 		}
 
+		$("#bg").show()
 		$.ajax({
 			url: host + "teacher/user",
 			data: {"tkey": getCookie("teacher-key"), "users": cids},
@@ -663,6 +664,7 @@ function check_change_student () {
 						"students_sid": [],
 						"tkey": getCookie("teacher-key")
 					}
+					$("#bg").hide()
 					$.ajax({
 						url: host + "classroom/",
 						type: "PUT",
@@ -723,6 +725,7 @@ function check_change_student () {
 			}
 		}
 
+		$("#bg").show()
 		quest_id = 0
 		$.each(sids, function (_, sid) {
 			$.ajax({
@@ -730,6 +733,7 @@ function check_change_student () {
 				success: function (msg) {
 					quest_id ++
 					if (sids.length == quest_id) {
+						$("#bg").hide()
 						if (!wrong_field) {
 							names = []
 							for (i=0;i<field_num;i++) {
@@ -764,11 +768,15 @@ function check_change_student () {
 					}
 				},
 				error: function (error) {
+					quest_id ++
 					h = $("[name=" + field_num_2_sid[sid] + "]")
 					wrong_field = true
 					if (h[0].value != "" || h[1].value != "" || h[2].value != "") {
 						h[2].style.border = "red 2px solid"
 						wrong_field = true
+					}
+					if (sids.length == quest_id) {
+						$("#bg").hide()
 					}
 				}
 			})
@@ -798,7 +806,7 @@ function play_scratch_project (project_id, hw_s, student_id) {
 
 	$("#scratch_iframe")[0].src = format(project_embed_fromat, project_id)
 	$("#s_project_page")[0].href = format(project_page_format, project_id)
-	$("#project-title")[0].innerHTML = hw_s
+	$("#project-title")[0].innerHTML = classroom["students"][student_id][0] + " - " + hw_s
 
 	$("#project-comment")[0].value = ""
 	if (classroom["comment"][student_id] != undefined) {
@@ -862,7 +870,7 @@ function show_file (file, hw_s, student_id) {
 
 	$("#scratch_iframe")[0].src = ""
 	$("#s_project_page")[0].href = "/downloadfile" + file.replace("/downloads", "")
-	$("#project-title")[0].innerHTML = hw_s
+	$("#project-title")[0].innerHTML = classroom["students"][student_id] + " - " + hw_s
 
 	$("#project-comment")[0].value = ""
 	if (classroom["comment"][student_id] != undefined) {
