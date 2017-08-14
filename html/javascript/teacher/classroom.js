@@ -33,7 +33,7 @@ SC_HW_UNIT_TB_TITLE_F = `<th class="hover" onclick="displayScUnit('{0}')">
 SC_HW_S_TB_SIDE_F = `<tr><td class="hover" onclick="displayScId('{0}')">{1}</td>`
 
 
-PYTHON_HW_TB_F = `<td class="hover" onclick="show_file('/downloads/{1}/{2}', '{3}', {4})">
+PYTHON_HW_TB_F = `<td class="hover" onclick="show_file('{1}', '{2}', {3})">
 	<i class="fa fa-check" style="{0}" aria-hidden="true"></i>
 </td>`
 PY_HW_UNIT_TB_TITLE_F = `<th class="hover" onclick="displayPyUnit('{0}')">
@@ -41,7 +41,11 @@ PY_HW_UNIT_TB_TITLE_F = `<th class="hover" onclick="displayPyUnit('{0}')">
 </th>`
 PY_HW_S_TB_SIDE_F = `<tr><td class="hover" onclick="displayPyId('{0}','{1}')">{2}</td>`
 
+record_format = "上傳次數: {0}<br>更新上傳時間: {1}"
+
 file_text = ""
+files = {}
+files_records = {}
 
 function loadallclassroom () {
 	$.ajax({
@@ -175,13 +179,13 @@ function changeclassroom (cls_id) {
 				"tkey": getCookie("teacher-key"),
 				"student": true},
 			success: function (msg) {
+				files_records = msg
 				files = {}
 				units = new Set()
-				$.each(msg, function (_, i) {
-					if (i == "teacher") {
-						return true;
-					}
-					cid_hwn = file_re.exec(i)[0]
+				$.each(msg, function (k, v) {
+					if (k.indexOf("teacher") != -1) { return true; }
+
+					cid_hwn = file_re.exec(k)[0]
 					cid_hwn = cid_hwn.split("_")
 					cid = cid_hwn[0]
 					hwn = cid_hwn[1]
@@ -195,7 +199,7 @@ function changeclassroom (cls_id) {
 						students_project[cid] = []
 						files[cid] = {}
 					}
-					files[cid][hwn] = i
+					files[cid][hwn] = k
 					students_project[cid].push(hwn)
 				})
 
@@ -292,7 +296,6 @@ function changefileunit (unit) {
 					if (comments_keys.includes(i)) {
 						tbody += format(PYTHON_HW_TB_F,
 							"color: cornflowerblue",
-							classroom["folder"],
 							files[k][i],
 							i,
 							k
@@ -301,7 +304,6 @@ function changefileunit (unit) {
 					else {
 						tbody += format(PYTHON_HW_TB_F,
 							"",
-							classroom["folder"],
 							files[k][i],
 							i,
 							k
@@ -360,7 +362,7 @@ function loadscratchhomwork (student_name, cid, student_id, seq) {
 }
 
 function displayPyUnit (unit) {
-	f = `<button class="hwbtn" onclick="show_file('/downloads/{1}/{2}','{3}','{4}')">{0}</button>`
+	f = `<button class="hwbtn" onclick="show_file('{1}','{2}','{3}')">{0}</button>`
 	projects_html = $("#porjects")[0]
 	projects_html.innerHTML = ""
 	slide = ""
@@ -370,7 +372,6 @@ function displayPyUnit (unit) {
 			filename = i[i.indexOf(unit)]
 			slide += format(f,
 				classroom["students"][s],
-				classroom["folder"],
 				files[s][filename],
 				filename,
 				s)
@@ -385,7 +386,7 @@ function displayPyUnit (unit) {
 }
 
 function displayPyId (sid, hwstr) {
-	f = `<button class="hwbtn" onclick="show_file('/downloads/{1}/{2}','{3}','{4}')">{0}</button>`
+	f = `<button class="hwbtn" onclick="show_file('{1}','{2}','{3}')">{0}</button>`
 	projects_html = $("#porjects")[0]
 	projects_html.innerHTML = ""
 	slide = ""
@@ -394,7 +395,6 @@ function displayPyId (sid, hwstr) {
 		if (i.startsWith(hwstr)) {
 			slide += format(f,
 				i.substring(i.indexOf("-") + 1),
-				classroom["folder"],
 				files[sid][i],
 				i,
 				sid)
@@ -869,7 +869,22 @@ function show_file (file, hw_s, student_id) {
 	$("#scratch_iframe").hide();
 
 	$("#scratch_iframe")[0].src = ""
-	$("#s_project_page")[0].href = "/downloadfile" + file.replace("/downloads", "")
+
+	updated_time = files_records[file]["updated_time"]
+	if (updated_time == null) { updated_time = "無紀錄" }
+
+	lastupdate = files_records[file]["lastupdate"]
+	if (lastupdate == null) { lastupdate = "無紀錄" }
+
+	record = format(record_format,
+		updated_time,
+		lastupdate,
+		)
+	$("#hwinfo")[0].innerHTML = record
+
+	find1 = file.indexOf("/downloads")
+	file = file.substring(find1 + 10)
+	$("#s_project_page")[0].href = "/downloadfile" + file
 	$("#project-title")[0].innerHTML = classroom["students"][student_id] + " - " + hw_s
 
 	$("#project-comment")[0].value = ""
@@ -881,7 +896,7 @@ function show_file (file, hw_s, student_id) {
 	}
 
 	$.ajax({
-		url: file,
+		url: "downloads/" + file,
 		success: function (msg) {
 			$("#file")[0].innerHTML = parse_file(msg)
 			file_text = msg

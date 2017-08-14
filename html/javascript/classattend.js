@@ -1,6 +1,7 @@
 comments = {}
 classrooms = {}
 homeworks = {}
+file_record = {}
 classroomnames = $("#classroomnames")[0]
 
 a2z = "abcdefghijklmnopqrstuvwxyz"
@@ -30,7 +31,7 @@ picture_fromat = `\
 </a>
 </div>`
 
- PY_FILE_HW = `<div class="py_file_hw" onclick="show_file('/downloads/{1}/{2}', '{3}')">
+PY_FILE_HW = `<div class="py_file_hw" onclick="show_file('{1}', '{2}')">
 	{0}
 </div>`
 
@@ -217,13 +218,14 @@ function loadfilehomework(folder, cls_id) {
 			"cid": getCookie("id"),
 			"key": getCookie("key")},
 		success: function (msg) {
+			file_record = msg
 			homework = new Set()
 			projects = []
 			units = new Set()
 			files[cls_id] = {}
-			$.each(msg, function (i) {
-				if (python_homework_re.test(msg[i])) {
-					cid_hwn = msg[i].split("_")
+			$.each(msg, function (k, v) {
+				if (python_homework_re.test(k)) {
+					cid_hwn = k.split("_")
 					cid = cid_hwn[0]
 					hwn = cid_hwn[1]
 					if (hwn.indexOf(".") != -1) {
@@ -233,7 +235,7 @@ function loadfilehomework(folder, cls_id) {
 					homework.add(hwn)
 					units.add(hwn.substring(0, hwn.indexOf("-")))
 
-					files[cls_id][hwn] = msg[i]
+					files[cls_id][hwn] = k
 					projects.push(hwn)
 				}
 			})
@@ -278,7 +280,6 @@ function changefileunit(folder, unit, cls_id) {
 			}
 			slide += format(PY_FILE_HW,
 				i,
-				folder,
 				files[cls_id][i],
 				cls_id)
 		}
@@ -318,17 +319,33 @@ function parse_file(Text) {
 	return Text
 }
 
+record_format = "上傳次數: {0}<br>更新上傳時間: {1}"
 function show_file(file, cls_id) {
 	show("project")
 	$("#file").show();
 	$("#scratch_iframe").hide();
 
 	$("#scratch_iframe")[0].src = ""
-	$("#s_project_page")[0].href = "/downloadfile" + file.replace("/downloads", "")
+
+	updated_time = file_record[file]["updated_time"]
+	if (updated_time == null) { updated_time = "無紀錄" }
+
+	lastupdate = file_record[file]["lastupdate"]
+	if (lastupdate == null) { lastupdate = "無紀錄" }
+
+	record = format(record_format,
+		updated_time,
+		lastupdate,
+		)
+	$("#hwinfo")[0].innerHTML = record
+
+	find1 = file.indexOf("/downloads")
+	file = file.substring(find1 + 10)
+	$("#s_project_page")[0].href = "/downloadfile" + file
 	$("#hwcomment")[0].innerHTML = ""
 
 	$.ajax({
-		url: file,
+		url: "downloads/" + file,
 		success: function (msg) {
 			$("#file")[0].innerHTML = parse_file(msg)
 		}

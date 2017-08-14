@@ -20,7 +20,7 @@ class AdminHandler(object):
     _cp_config = {
         "tools.keytool.on": True,
         "tools.dbtool.on": True,
-        "tools.classestool.on": True,
+        "tools.filetool.on": True,
         }
     link_fmt = """<a href="{url}" target="_blank">{string}</a>"""
 
@@ -73,13 +73,13 @@ class AdminHandler(object):
 
     @cherrypy.expose
     def files(self, file=None):
-        classes = cherrypy.request.classes
+        file_mgr = cherrypy.request.file_mgr
         a = self.checkadmin()
         if not a:
             raise cherrypy.HTTPRedirect("/")
 
         if cherrypy.request.method == "POST":
-            os.remove(classes.get_download_path() + file)
+            os.remove(file_mgr.get_download_path() + file)
 
         files = {}
         path = os.getcwd()

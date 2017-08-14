@@ -45,7 +45,7 @@ render_config = {
 class UserCaseHandler(object):
     _root = "/"
     _cp_config = {
-        "tools.classestool.on": True,
+        "tools.filetool.on": True,
         "tools.keytool.on": True,
         "tools.emailvalidtool.on": True,
         "tools.dbtool.on": True,
@@ -78,8 +78,7 @@ class UserCaseHandler(object):
             if (not file1) and (not file2) and (not file3):
                 raise cherrypy.HTTPRedirect("/question")
 
-            classes = cherrypy.request.classes
-            path = classes.get_download_path()
+            path = cherrypy.request.file_mgr.get_download_path()
             size = 0
             fileformat = path + "{id}_{filename}"
 
@@ -255,8 +254,8 @@ class UserCaseHandler(object):
 
     @cherrypy.expose
     def downloadfile(self, *args):
-        classes = cherrypy.request.classes
-        path = classes.get_download_path() + "/".join(args)
+        path = path = cherrypy.request.file_mgr.get_download_path()
+        path += "/".join(args)
         print(path)
         if os.path.isfile(path):
             return cherrypy.lib.static.serve_file(path, "application/octet-stream", "")
@@ -280,7 +279,6 @@ class ClassHandler(object):
 class TeacherHandler(object):
     _root = "/teacher/"
     _cp_config = {
-        "tools.classestool.on": True,
         "tools.keytool.on": True,
         }
 

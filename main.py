@@ -109,6 +109,7 @@ class App():
         from cherryplugin.session_mgr import KeyMgrPlugin, KeyMgrTool
         from cherryplugin.classes_load import ClassesTool
         from cherryplugin.email_valid import EmailValidPlugin, EmailValidTool
+        from cherryplugin.file_mgr import FilePlugin, FileTool
 
         import app.model as model
 
@@ -130,20 +131,25 @@ class App():
 
         sa_plugin = SAPlugin(cherrypy.engine, db_str=db_str, tables=tables)
         sa_plugin.subscribe()
-        cherrypy.tools.dbtool = SATool(sa_plugin)
 
         key_plugin = KeyMgrPlugin(cherrypy.engine)
         key_plugin.subscribe()
-        cherrypy.tools.keytool = KeyMgrTool(key_plugin)
-        cherrypy.engine.log("Start remove key remove threading")
 
-        classes_plugin = App.loadClasses(path)
+        classes_plugin = App.loadClasses()
         classes_plugin.subscribe()
-        cherrypy.tools.classestool = ClassesTool(classes_plugin)
 
         email_valid_plugin = EmailValidPlugin(cherrypy.engine)
         email_valid_plugin.subscribe()
+
+        file_plugin = FilePlugin(cherrypy.engine, path)
+        file_plugin.subscribe()
+
+        cherrypy.tools.keytool = KeyMgrTool(key_plugin)
+        cherrypy.tools.classestool = ClassesTool(classes_plugin)
+        cherrypy.tools.dbtool = SATool(sa_plugin)
         cherrypy.tools.emailvalidtool = EmailValidTool(email_valid_plugin)
+        cherrypy.tools.filetool = FileTool(file_plugin)
+        cherrypy.engine.log("Start remove key remove threading")
 
     def mount(self, handler, config):
         cherrypy.tree.mount(
@@ -198,10 +204,10 @@ class App():
         cherrypy.engine.block()
 
     @classmethod
-    def loadClasses(cls, path):
+    def loadClasses(cls):
         from cherryplugin.classes_load import ClassesPlugin
 
-        classes = ClassesPlugin(cherrypy.engine, path)
+        classes = ClassesPlugin(cherrypy.engine)
 
         dirname = "classes"
         files = ["scratch_1.json", "teacher_1.json", "python_01.json"]

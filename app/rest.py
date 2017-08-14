@@ -55,6 +55,9 @@ def send_email_valid(key, addr, userid):
         "sub": "Email 認證 - " + userid,
         "cnt": cnt})
 
+def path_join(path1, path2):
+    return os.path.join(path1, path2)
+
 class ErrMsg(ErrMsg):
     NOT_LIST = "'{}' must be a list"
     NOT_BOOL = "'{}' must be Boolen"
@@ -88,6 +91,7 @@ class View(object):
         "tools.dbtool.on": True,
         "tools.keytool.on": True,
         "tools.encode.on": True,
+        "tools.filetool.on": True,
         "tools.encode.encoding": "utf-8"
         }
 
@@ -257,7 +261,7 @@ class SessionKeyRestView(View):
 
 class UserRestView(View):
     _root = rest_config["url_root"] + "user/"
-    _cp_config = View._cp_config
+    _cp_config = View._cp_config.copy()
     _cp_config["tools.emailvalidtool.on"] = True
 
     @cherrypy.expose
@@ -558,8 +562,6 @@ class QuestionRestView(View):
             "addrs": addrs,
             "sub": title,
             "cnt": content})
-        print(r.status_code)
-        print(r.text)
 
     @cherrypy.expose
     def index(self, *args, **kwargs):
@@ -973,7 +975,7 @@ class AnswerRestView(View):
             http_post(Email.URL, params=params)
 
 class ClassesRestView(View):
-    _cp_config = View._cp_config
+    _cp_config = View._cp_config.copy()
     _cp_config["tools.classestool.on"] = True
     _root = rest_config["url_root"] + "classes/"
 
@@ -1645,6 +1647,7 @@ class ClassroomRestView(View):
         "tools.encode.on": True,
         "tools.encode.encoding": "utf-8",
         "tools.classestool.on": True,
+        "tools.filetool.on": True,
         }
 
     @cherrypy.expose
@@ -1719,16 +1722,14 @@ class ClassroomRestView(View):
                 "students_sid": data["students_sid"],
                 "type": data["type"],
                 }
-                
-            classes = cherrypy.request.classes
 
             folder = uuid()
 
             clsrm_folder = os.path.join(
-                classes.get_download_path(),
+                cherrypy.request.file_mgr.get_download_path(),
                 str(folder))
             os.mkdir(clsrm_folder)
-            os.mkdir(os.path.join(clsrm_folder, "teacher"))
+            os.mkdir(path_join(clsrm_folder, "teacher"))
             json["folder"] = folder
 
             ins = classrooms.insert()
@@ -1798,8 +1799,6 @@ class ClassroomRestView(View):
             else:
                 raise cherrypy.HTTPError(400)
         elif cherrypy.request.method == "DELETE":
-            classes = cherrypy.request.classes
-
             teacher = self.check_login_teacher(kwargs)
             self.check_key(kwargs, ("clsid", ))
 
@@ -1814,7 +1813,6 @@ class ClassroomRestView(View):
     def student_permission(self, *args, **kwargs):
         meta, conn = cherrypy.request.db
         classrooms = meta.tables[Classroom.TABLE_NAME]
-        classes = cherrypy.request.classes
 
         if cherrypy.request.method == "GET":
             self.check_key(kwargs, ("class", ))
@@ -1883,7 +1881,8 @@ class ClassroomRestView(View):
 
     @cherrypy.expose
     def check_folder(self, *args, **kwargs):
-        classes = cherrypy.request.classes
+        file_mgr = cherrypy.request.file_mgr
+
         if cherrypy.request.method == "GET":
             try:
                 self.check_login_u(kwargs)
@@ -1892,18 +1891,32 @@ class ClassroomRestView(View):
 
             self.check_key(kwargs, ("folder", ))
 
-            path = classes.get_download_path() + kwargs["folder"]
-            print(path)
+            path = cherrypy.request.file_mgr.get_download_path()
+            path += kwargs["folder"]
 
             if "student" in kwargs:
-                files = []
+                files = {}
                 if "cid" in kwargs:
                     for file in os.listdir(path):
                         if file.startswith(kwargs["cid"]):
-                            files.append(file)
+                            filename = path_join(path, file)
+                            try:
+                                files[filename] = file_mgr[filename]
+                            except:
+                                files[filename] = {
+                                    "updated_time": None,
+                                    "lastupdate": None,
+                                    }
                 else:
                     for file in os.listdir(path):
-                        files.append(file)
+                        filename = path_join(path, file)
+                        try:
+                            files[filename] = file_mgr[filename]
+                        except:
+                            files[filename] = {
+                                "updated_time": None,
+                                "lastupdate": None,
+                                }
                 return files
             else:
                 return os.listdir(path + "/teacher")
@@ -1976,13 +1989,14 @@ class FileUploadRestView(View):
         "tools.encode.on": True,
         "tools.encode.encoding": "utf-8",
         "tools.classestool.on": True,
+        "tools.filetool.on": True,
         }
 
     @cherrypy.expose
     def homework(self, *args, **kwargs):
         meta, conn = cherrypy.request.db
         classrooms = meta.tables[Classroom.TABLE_NAME]
-        classes = cherrypy.request.classes
+        file_mgr = cherrypy.request.file_mgr
         # users = meta.tables[User.TABLE_NAME]
 
         if cherrypy.request.method == "POST":
@@ -2000,38 +2014,17 @@ class FileUploadRestView(View):
             if not row:
                 raise cherrypy.HTTPError(400)
 
-            path = classes.get_download_path()
+            path = file_mgr.get_download_path()
             fileformat = path + "{folder}/{uid}_{filename}"
 
-            if isinstance(kwargs["homwork"], list):
-                for file in kwargs["homwork"]:
-                    try:
-                        if not re.fullmatch(PY_FILE_RE, file.filename):
-                            continue
+            homework = kwargs["homwork"]
+            if not isinstance(homework, list):
+                homework = [homework]
 
-                        filename = file.filename
-                        filename.replace("test", "")
-
-                        filename = fileformat.format(
-                            folder=row["folder"],
-                            uid=user["id"],
-                            filename=filename)
-
-                        f = open(filename, "wb")
-                        while True:
-                            data = file.file.read(8192)
-                            if not data:
-                                break
-                            f.write(data)
-                        f.close()
-                    except:
-                        if os.path.isfile(filename):
-                            os.remove(filename)
-            else:
+            for file in homework:
                 try:
-                    file = kwargs["homwork"]
                     if not re.fullmatch(PY_FILE_RE, file.filename):
-                        raise cherrypy.HTTPRedirect("/classattend")
+                        continue
 
                     filename = file.filename
                     filename.replace("test", "")
@@ -2041,13 +2034,7 @@ class FileUploadRestView(View):
                         uid=user["id"],
                         filename=filename)
 
-                    f = open(filename, "wb")
-                    while True:
-                        data = file.file.read(8192)
-                        if not data:
-                            break
-                        f.write(data)
-                    f.close()
+                    file_mgr.write_file_from_file(filename, file)
                 except:
                     if os.path.isfile(filename):
                         os.remove(filename)
@@ -2060,7 +2047,7 @@ class FileUploadRestView(View):
     def report(self, *args, **kwargs):
         meta, conn = cherrypy.request.db
         reports = meta.tables[Report.TABLE_NAME]
-        classes = cherrypy.request.classes
+        file_mgr = cherrypy.request.file_mgr
 
         if cherrypy.request.method == "POST":
             user = self.check_login_u(kwargs)
@@ -2082,12 +2069,12 @@ class FileUploadRestView(View):
             if not row:
                 raise cherrypy.HTTPRedirect("/report")
 
-            path = classes.get_download_path()
+            path = file_mgr.get_download_path()
             fileformat = "report/{rid}.{filetype}"
 
             try:
                 if "report" not in os.listdir(path):
-                    os.mkdir(os.path.join(path, "reaport/"))
+                    os.mkdir(path_join(path, "reaport/"))
                 file = kwargs["file"]
 
                 filename = file.filename
@@ -2097,13 +2084,7 @@ class FileUploadRestView(View):
                     rid=row["id"],
                     filetype=filetype)
 
-                f = open(path + filename, "wb")
-                while True:
-                    data = file.file.read(8192)
-                    if not data:
-                        break
-                    f.write(data)
-                f.close()
+                file_mgr.write_file_from_file(filename, file)
             except:
                 if os.path.isfile(path + filename):
                     os.remove(path + filename)
@@ -2125,7 +2106,7 @@ class FileUploadRestView(View):
     def teacherfile(self, *args, **kwargs):
         meta, conn = cherrypy.request.db
         classrooms = meta.tables[Classroom.TABLE_NAME]
-        classes = cherrypy.request.classes
+        file_mgr = cherrypy.request.file_mgr
 
         if cherrypy.request.method == "POST":
             teacher = self.check_login_teacher(kwargs)
@@ -2150,7 +2131,7 @@ class FileUploadRestView(View):
                 raise cherrypy.HTTPError(404)
 
             path = os.path.join(
-                classes.get_download_path(),
+                file_mgr.get_download_path(),
                 row["folder"],
                 "teacher"
                 )
@@ -2160,13 +2141,7 @@ class FileUploadRestView(View):
                     os.mkdir(path)
 
                 filename = path + "/" + kwargs["annoce"].filename
-                f = open(filename, "wb")
-                while True:
-                    data = kwargs["annoce"].file.read(8192)
-                    if not data:
-                        break
-                    f.write(data)
-                f.close()
+                file_mgr.write_file_from_file(filename, kwargs["annoce"])
             except:
                 if os.path.isfile(filename):
                     os.remove(filename)
@@ -2455,10 +2430,10 @@ class PresentationRestView(View):
 
     @cherrypy.expose
     def index(self, *args, **kwargs):
-        classes = cherrypy.request.classes
+        file_mgr = cherrypy.request.file_mgr
 
         if cherrypy.request.method == "GET":
-            success = classes.read_file("presentation.html")
+            success = file_mgr.read_sys_file("presentation.html")
             return {"success": success}
         elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
@@ -2469,7 +2444,7 @@ class PresentationRestView(View):
 
             self.check_key(data, ("presentation", ))
 
-            success = classes.write_file("presentation.html",
+            success = file_mgr.write_sys_file("presentation.html",
                 data["presentation"])
             return {"success": success}
         else:

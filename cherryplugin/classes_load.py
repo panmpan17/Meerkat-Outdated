@@ -2,12 +2,11 @@ import cherrypy
 from cherrypy.process import plugins
 
 class ClassesPlugin(plugins.SimplePlugin):
-	def __init__(self, bus, downloadpath):
+	def __init__(self, bus):
 		plugins.SimplePlugin.__init__(self, bus)
 		self.classes = {}
 		self.videos = {}
 		self.files = {}
-		self.dl_path = downloadpath
 
 	def start(self):
 		pass
@@ -59,32 +58,8 @@ class ClassesPlugin(plugins.SimplePlugin):
 			classes_json.append(j)
 		return classes_json
 
-	def write_file(self, filename, data):
-		try:
-			with open(self.dl_path + filename, "w") as file:
-				file.write(data)
-			self.files[filename] = data
-			return True
-		except:
-			return False
-
-	def read_file(self, filename):
-		try:
-			if filename not in self.files:
-				with open(self.dl_path + filename, "r") as file:
-					read = file.read()
-				self.files[filename] = read
-				return read
-			else:
-				return self.files[filename]
-		except:
-			return False
-
 	def get_classes_name(self):
 		return self.classes.keys()
-
-	def get_download_path(self):
-		return self.dl_path
 
 class ClassesTool(cherrypy.Tool):
 	def __init__(self, classes_plugin):
