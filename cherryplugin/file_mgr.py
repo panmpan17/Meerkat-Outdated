@@ -1,4 +1,5 @@
 import cherrypy
+import os.path as path
 from datetime import datetime, timedelta
 from cherrypy.process import plugins
 
@@ -14,13 +15,16 @@ class FilePlugin(plugins.SimplePlugin):
         plugins.SimplePlugin.__init__(self, bus)
         self.files = {}
         self.users_files = {}
-        self.dl_path = downloadpath
+        self.path = downloadpath
 
     def __getitem__(self, i):
         return self.users_files[i]
 
     def start(self):
-        with open("file_record.txt") as file:
+        if not path.isfile(self.path + "file_record.txt"):
+            return
+
+        with open(self.path + "file_record.txt") as file:
             files = file.read().split("\n")
         for file in files:
             if file == "":
@@ -33,7 +37,7 @@ class FilePlugin(plugins.SimplePlugin):
                 }
 
     def stop(self):
-        with open("file_record.txt", "w") as file:
+        with open(self.path + "file_record.txt", "w") as file:
             for filename, fileinfo in self.users_files.items():
                 txt = f"{filename},{fileinfo['updated_time']},{fileinfo['lastupdate']}"
                 file.write(txt)
@@ -77,7 +81,7 @@ class FilePlugin(plugins.SimplePlugin):
             return False
 
     def get_download_path(self):
-        return self.dl_path
+        return self.path
 
 class FileTool(cherrypy.Tool):
     def __init__(self, fileplugin):

@@ -175,6 +175,12 @@ function display_lesson() {
 }
 
 function display_video() {
+	if ($(".class_block.active").length > 0) {
+		$(".class_block.active")[0].classList.remove("active")
+	}
+	$("#class_block-" + video)[0].classList.add("active")
+
+
 	classvideo = class_["info"][lesson][video]
 	if (classvideo["video"].indexOf("youtube") > -1) {
 		a = format(videoblock, classvideo["video"])
@@ -199,10 +205,6 @@ function display_video() {
 }
 
 function video_jump(classnumber) {
-	if ($(".class_block.active").length > 0) {
-		$(".class_block.active")[0].classList.remove("active")
-	}
-	$("#class_block-" + classnumber)[0].classList.add("active")
 	video = classnumber;
 	display_video();
 }
