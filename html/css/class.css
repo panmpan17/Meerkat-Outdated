@@ -94,3 +94,103 @@ div#answer {
   height: 5px;
   background-color: #ead141;
 }
+
+#test {
+	background: white;
+	text-align: left;
+}
+
+#test button.submit {
+	cursor: pointer;
+	color: #FFF;
+	width: 100px;
+	height: 30px;
+	border-radius: 5px;
+    border: none;
+	background-color: cornflowerblue;
+	margin: 10px;
+}
+
+#test button.submit:hover {
+	color: #EEE;
+	background-color: #4981e5;
+}
+#test button.submit:active {
+	color: #CCC;
+}
+
+#test button.answer {
+	cursor: pointer;
+	color: #FFF;
+	width: 100px;
+	height: 30px;
+	border-radius: 5px;
+    border: none;
+	background-color: tomato;
+	margin: 10px;
+}
+
+#test button.answer:hover {
+	color: #EEE;
+	background-color: #dd4b30;
+}
+#test button.answer:active {
+	color: #CCC;
+}
+
+.question {
+	padding: 20px;
+	border-radius: 10px;
+}
+
+.question .title {
+	font-size: 24px;
+	/*color: cornflowerblue;*/
+}
+
+.question label {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: pointer;
+
+	font-size: 20px;
+	vertical-align: top;
+}
+
+.question input[type=checkbox] {
+	display: none;
+}
+
+.question .checkbox {
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	border: 3px cornflowerblue solid;
+	background: white;
+	border-radius: 3px;
+	margin-right: 10px;
+}
+
+.question input[type=checkbox]:checked + label > div {
+	background: cornflowerblue;
+}
+
+.question input[type=radio] {
+	display: none;
+}
+
+.question .radio {
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	border: 3px cornflowerblue solid;
+	background: white;
+	border-radius: 10px;
+	margin-right: 10px;
+}
+
+.question input[type=radio]:checked + label > div {
+	background: cornflowerblue;
+}

@@ -23,7 +23,8 @@ class ClassesPlugin(plugins.SimplePlugin):
 		self.videos[class_id] = {}
 		for lesson in classinfo["info"]:
 			for class_ in lesson:
-				self.videos[class_id][class_["video"]] = class_["class_name"]
+				if class_["type"] == "video":
+					self.videos[class_id][class_["video"]] = class_["class_name"]
 
 	def video_find_class(self, videourl):
 		for class_id in self.videos:

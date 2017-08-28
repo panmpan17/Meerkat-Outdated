@@ -33,7 +33,7 @@ SC_HW_UNIT_TB_TITLE_F = `<th class="hover" onclick="displayScUnit('{0}')">
 SC_HW_S_TB_SIDE_F = `<tr><td class="hover" onclick="displayScId('{0}')">{1}</td>`
 
 
-PYTHON_HW_TB_F = `<td class="hover" onclick="show_file('{1}', '{2}', {3})">
+PY_HW_TB_F = `<td class="hover" onclick="show_file('{1}', {2})">
 	<i class="fa fa-check" style="{0}" aria-hidden="true"></i>
 </td>`
 PY_HW_UNIT_TB_TITLE_F = `<th class="hover" onclick="displayPyUnit('{0}')">
@@ -277,7 +277,7 @@ function changefileunit (unit) {
 	thead += "</tr></thead>";
 
 	tbody = "<tbody>"
-	$.each(students_project, function (k,v) {
+	$.each(students_project, function (k, v) {
 		tbody += format(PY_HW_S_TB_SIDE_F,
 			k,
 			unit,
@@ -294,17 +294,15 @@ function changefileunit (unit) {
 			if (i.startsWith(unit)) {
 				if (v.includes(i)) {
 					if (comments_keys.includes(i)) {
-						tbody += format(PYTHON_HW_TB_F,
+						tbody += format(PY_HW_TB_F,
 							"color: cornflowerblue",
-							files[k][i],
 							i,
 							k
 							)
 					}
 					else {
-						tbody += format(PYTHON_HW_TB_F,
+						tbody += format(PY_HW_TB_F,
 							"",
-							files[k][i],
 							i,
 							k
 							)
@@ -862,7 +860,7 @@ function parse_file (Text) {
 	return Text
 }
 
-function show_file (file, hw_s, student_id) {
+function show_file (file, student_id) {
 	$("#project_viewer").modal("show");
 	$("#copycode").show();
 	$("#file").show();
@@ -870,10 +868,11 @@ function show_file (file, hw_s, student_id) {
 
 	$("#scratch_iframe")[0].src = ""
 
-	updated_time = files_records[file]["updated_time"]
+	filepath = files[student_id][file]
+	updated_time = files_records[filepath]["updated_time"]
 	if (updated_time == null) { updated_time = "無紀錄" }
 
-	lastupdate = files_records[file]["lastupdate"]
+	lastupdate = files_records[filepath]["lastupdate"]
 	if (lastupdate == null) { lastupdate = "無紀錄" }
 
 	record = format(record_format,
@@ -882,21 +881,24 @@ function show_file (file, hw_s, student_id) {
 		)
 	$("#hwinfo")[0].innerHTML = record
 
-	find1 = file.indexOf("/downloads")
-	file = file.substring(find1 + 10)
-	$("#s_project_page")[0].href = "/downloadfile" + file
-	$("#project-title")[0].innerHTML = classroom["students"][student_id] + " - " + hw_s
+	filname = format("{0}/{1}_{2}.py",
+		classroom["folder"],
+		student_id,
+		file)
+	$("#s_project_page")[0].href = "/downloadfile/" + filname
+	$("#project-title")[0].innerHTML = classroom["students"][student_id] + " - " + file
 
 	$("#project-comment")[0].value = ""
 	if (classroom["comment"][student_id] != undefined) {
-		comment = classroom["comment"][student_id][hw_s]
+		comment = classroom["comment"][student_id][file]
 		if (comment != undefined) {
 			$("#project-comment")[0].value = comment
 		}
 	}
 
 	$.ajax({
-		url: "downloads/" + file,
+		url: "downloads/" + filname,
+		cache: false,
 		success: function (msg) {
 			$("#file")[0].innerHTML = parse_file(msg)
 			file_text = msg

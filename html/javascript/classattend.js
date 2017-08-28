@@ -31,7 +31,7 @@ picture_fromat = `\
 </a>
 </div>`
 
-PY_FILE_HW = `<div class="py_file_hw" onclick="show_file('{1}', '{2}')">
+PY_FILE_HW = `<div class="py_file_hw" onclick="show_file('{0}')">
 	{0}
 </div>`
 
@@ -279,9 +279,7 @@ function changefileunit(folder, unit, cls_id) {
 				slide = `<section style="clear: both; padding:10px;">`
 			}
 			slide += format(PY_FILE_HW,
-				i,
-				files[cls_id][i],
-				cls_id)
+				i)
 		}
 	})
 	if (slide != "") {
@@ -320,17 +318,18 @@ function parse_file(Text) {
 }
 
 record_format = "上傳次數: {0}<br>更新上傳時間: {1}"
-function show_file(file, cls_id) {
+function show_file(file) {
 	show("project")
 	$("#file").show();
 	$("#scratch_iframe").hide();
 
 	$("#scratch_iframe")[0].src = ""
 
-	updated_time = file_record[file]["updated_time"]
+	filepath = files[classroom["id"]][file]
+	updated_time = file_record[filepath]["updated_time"]
 	if (updated_time == null) { updated_time = "無紀錄" }
 
-	lastupdate = file_record[file]["lastupdate"]
+	lastupdate = file_record[filepath]["lastupdate"]
 	if (lastupdate == null) { lastupdate = "無紀錄" }
 
 	record = format(record_format,
@@ -339,23 +338,26 @@ function show_file(file, cls_id) {
 		)
 	$("#hwinfo")[0].innerHTML = record
 
-	find1 = file.indexOf("/downloads")
-	file = file.substring(find1 + 10)
-	$("#s_project_page")[0].href = "/downloadfile" + file
+	
+	filname = format("{0}/{1}_{2}.py",
+		classroom["folder"],
+		getCookie("id"),
+		file)
+	$("#s_project_page")[0].href = "/downloadfile/" + filname
 	$("#hwcomment")[0].innerHTML = ""
 
 	$.ajax({
-		url: "downloads/" + file,
+		url: "downloads/" + filname,
+		cache: false,
 		success: function (msg) {
 			$("#file")[0].innerHTML = parse_file(msg)
 		}
 	})
 
-	hw_s = file.substring(file.indexOf("_") + 1, file.indexOf("."))
 	if (comments[cls_id] != undefined) {
 		if (comments[cls_id][getCookie("id")]) {
-			if (comments[cls_id][getCookie("id")][hw_s] != undefined) {
-				comment = comments[cls_id][getCookie("id")][hw_s]
+			if (comments[cls_id][getCookie("id")][file] != undefined) {
+				comment = comments[cls_id][getCookie("id")][file]
 				$("#hwcomment")[0].innerHTML = comment.replace(/\n/g, "<br>")
 			}
 		}

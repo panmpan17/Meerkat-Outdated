@@ -5,5 +5,4 @@ GRANT ALL PRIVILEGES ON DATABASE coding4fun_db TO cd4fun_u;
 ALTER TABLE tb_classroom ADD links varchar[] DEFAULT array[]::varchar[];
 DROP TABLE tb_opinion;
 
-# ALTER TABLE tb_classroom REMOVE progress;
 c4fpmlpnmcbkpo
