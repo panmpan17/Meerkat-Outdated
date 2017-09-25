@@ -690,7 +690,8 @@ class QuestionRestView(View):
                     "panmpan@gmail.com",
                     "shalley.tsay@gmail.com",
                     "joanie0610@gmail.com",
-                    "jskblack@gmail.com"
+                    "jskblack@gmail.com",
+                    "chienhsiang.chang@gmail.com",
                     ]
 
                 self.send_new_question_email(addrs, qid, title, content)
