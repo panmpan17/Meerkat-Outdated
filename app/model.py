@@ -518,6 +518,20 @@ class Classroom(object):
             "type": row["type"],
             }
 
+class SingleClass(object):
+    TABLE_NAME = "tb_singleclass"
+    singleclass = None
+
+    @classmethod
+    def create_schema(cls, db_engine, db_meta):
+        cls.singleclass = Table(cls.TABLE_NAME, db_meta,
+            Column("id", Integer, primary_key=True, autoincrement=True),
+            Column("students", ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
+            Column("process", String, nullable=True, autoincrement=True, default=""),
+            Column("dead_line", Date, nullable=False, autoincrement=False),
+            )
+        cls.singleclass.create(db_engine, checkfirst=True)
+        return cls.singleclass
 
 class AdArea(object):
     TABLE_NAME = "tb_adarea"

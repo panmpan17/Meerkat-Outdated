@@ -68,6 +68,7 @@ function loadclass(classname, qlesson=-1) {
 
 	$.ajax({
 		url: host + "classes/",
+		cache: false,
 		type: "GET",
 		data: j,
 		success: function (msg) {
@@ -355,3 +356,7 @@ function check_evaluation_answer() {
 		})
 	}
 }
+
+
+subject_id = $("#subject_id")[0].textContent
+loadclass(subject_id)

@@ -50,6 +50,7 @@ function loadclassroom() {
 	files = {}
 	$.ajax({
 		url: host + "classroom/",
+		cache: false,
 		type: "GET",
 		data: {"key": getCookie("key")},
 		success: function (msg) {
@@ -105,6 +106,7 @@ function showclassroom(cls_id) {
 
 	$.ajax({
 		url: host + "classroom/check_folder",
+		cache: false,
 		data: {
 			"folder": classroom["folder"],
 			"key": getCookie("key")},
@@ -123,6 +125,7 @@ function loadscratchhomwork(student_id, cls_id) {
 	loadcomment(cls_id)
 	$.ajax({
 		url: "https://scratch.mit.edu/users/" + student_id + "/projects/",
+		cache: false,
 		success: function (msg) {
 			homework = new Set();
 			text = msg;
@@ -212,6 +215,7 @@ function loadfilehomework(folder, cls_id) {
 	$("#hw-tbody").html("")
 	$.ajax({
 		url: host + "classroom/check_folder",
+		cache: false,
 		data: {
 			"folder": folder,
 			"student": true,
@@ -367,6 +371,7 @@ function show_file(file) {
 function loadcomment(cls_id) {
 	$.ajax({
 		url: host + "classroom/comment?cls_id=" + cls_id,
+		cache: false,
 		success: function (msg) {
 			comments[cls_id] = msg
 		}
@@ -381,6 +386,7 @@ function showactivity() {
 	$("#activity-list").hide()
 	$.ajax({
 		url: host + "activity/",
+		cache: false,
 		data: {"key": getCookie("key"), "year": year},
 		success: function (msg) {
 			activities["repeat"] = {}
@@ -589,6 +595,7 @@ function attendquit(e, id) {
 	}
 	$.ajax({
 		url: host + "activity/",
+		cache: false,
 		type: "PUT",
 		dataType: "json",
 		data: JSON.stringify(json),
@@ -620,6 +627,7 @@ function showparticipant(t) {
 	}
 	$.ajax({
 		url: host + "activity/",
+		cache: false,
 		data: json,
 		success: function (msg) {
 			$("#activity-list").show()
@@ -680,6 +688,7 @@ function showpresent(t) {
 	}
 	$.ajax({
 		url: host + "activity/",
+		cache: false,
 		data: json,
 		success: function (msg) {
 			$("#activity-list").show()
