@@ -261,7 +261,6 @@ function getanswer(qid) {
 	string_param = {"qid": qid}
 	$.ajax({
 		url: host + "answer/",
-		cache: false,
 		type: "GET",
 		data: string_param,
 		success: function (msg) {
@@ -308,7 +307,6 @@ function showquestion(qid) {
 	window.history.pushState({}, "", "question?q=" + qid)
 	$.ajax({
 		url: host + "question/",
-		cache: false,
 		type: "GET",
 		data: string_param,
 		success: function (msg) {
@@ -392,7 +390,6 @@ function closequestion (v) {
 	}
 	$.ajax({
 		url: host + "question/",
-		cache: false,
 		type: "PUT",
 		dataType: "json",
 		data: JSON.stringify(json),
@@ -423,7 +420,6 @@ function answer() {
 		}
 		$.ajax({
 			url: host + "answer/",
-			cache: false,
 			type: "POST",
 			dataType: "json",
 			data: JSON.stringify(json),
@@ -471,7 +467,6 @@ function ask() {
 		}
 		$.ajax({
 			url: host + "question/",
-			cache: false,
 			type: "POST",
 			dataType: "json",
 			data: JSON.stringify({key: key,question_json: json}),
@@ -541,7 +536,6 @@ function getallquestion(t, v) {
 	string_param[t] = select_values
 	$.ajax({
 		url: host + "question/",
-		cache: false,
 		type: "GET",
 		data: jQuery.extend(string_param, filter),
 		success: function (msg) {

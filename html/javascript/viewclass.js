@@ -59,7 +59,6 @@ function leadtoclass(id, price) {
         }
         $.ajax({
             url: host + "classroom/student_permission",
-            cache: false,
             type: "GET",
             data: json,
             success: function (msg) {

@@ -68,7 +68,6 @@ function loadclass(classname, qlesson=-1) {
 
 	$.ajax({
 		url: host + "classes/",
-		cache: false,
 		type: "GET",
 		data: j,
 		success: function (msg) {
