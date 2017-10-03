@@ -915,7 +915,7 @@ function show_file (file, student_id) {
 			"tkey": getCookie("teacher-key"),
 			"cls_id": classroom["id"],
 			"student": student_id,
-			"hw": hw_s,
+			"hw": file,
 			"comment": comment,
 		}
 		$.ajax({
