@@ -8,6 +8,7 @@ CACHE MANIFEST
 /html/slick/slick.js
 /html/javascript/loginsignupframe.js
 /html/javascript/base.js
+/html/javascript/class.js
 /html/bootstrap/css/bootstrap.css
 /html/slick/slick.css
 /html/slick/slick-theme.css
@@ -15,4 +16,4 @@ CACHE MANIFEST
 http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css
 NETWORK:
 *
-#awdwawdawd
+#2.4.1

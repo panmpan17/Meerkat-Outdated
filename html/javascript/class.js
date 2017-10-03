@@ -118,7 +118,7 @@ function display_description() {
 	$("#buttons")[0].innerHTML = ""
 	lesson = -1
 
-	a = videoblock.format(class_["description-video"])
+	a = format(videoblock, class_["description-video"])
 	$("#video")[0].innerHTML = a;
 	$("#classname-now")[0].innerHTML = "";
 }
@@ -135,11 +135,11 @@ function display_lessons() {
 	for (i=0;i<class_["length"];i++) {
 		if (class_.hasOwnProperty("titles")) {
 			if (class_["titles"][i] != undefined) {
-				b += lessonblock.format(i, class_["titles"][i]);
+				b += format(lessonblock, i, class_["titles"][i]);
 				continue
 			}
 		}
-		b += lessonblock.format(i, "課程" + (i + 1));
+		b += format(lessonblock, i, "課程" + (i + 1));
 	}
 	$("#lessons")[0].innerHTML = b;
 }
@@ -152,10 +152,10 @@ function display_lesson() {
 	b = "";
 	for (i=0;i<l.length;i++) {
 		if (l[i]["answer"] != "") {
-			b += classblock.format(oneblock, i + 1, l[i]["class_name"], i, "block");
+			b += format(classblock, oneblock, i + 1, l[i]["class_name"], i, "block");
 			continue
 		}
-		b += classblock.format(oneblock, i + 1, l[i]["class_name"], i, "none");
+		b += format(classblock, oneblock, i + 1, l[i]["class_name"], i, "none");
 	}
 	$("#a")[0].innerHTML = b;
 	if (class_.hasOwnProperty("titles")){
@@ -191,14 +191,14 @@ function display_video() {
 
 	if (classvideo["type"] == "video") {
 		if (classvideo["video"].indexOf("youtube") > -1) {
-			a = videoblock.format(classvideo["video"])
+			a = format(videoblock, classvideo["video"])
 		}
 		else {
 			if (classvideo["answer"] != "") {
-				a = privatevideoblock.format(window.location.host, class_["key"], classvideo["video"], classvideo["answer"])
+				a = format(privatevideoblock, window.location.host, class_["key"], classvideo["video"], classvideo["answer"])
 			}
 			else {
-				a = privatevideoblock.format(window.location.host, class_["key"], classvideo["video"], "")
+				a = format(privatevideoblock, window.location.host, class_["key"], classvideo["video"], "")
 			}
 
 		}
@@ -207,7 +207,7 @@ function display_video() {
 		buttons = ""
 		button = classvideo["buttons"]
 		for (i=0; i<button.length; i++) {
-			buttons += buttonblock.format(button[i][0], button[i][1])
+			buttons += format(buttonblock, button[i][0], button[i][1])
 		}
 		$("#buttons")[0].innerHTML = buttons
 	}
@@ -242,13 +242,13 @@ function showanswer(classnumber) {
 
 	link = class_["info"][lesson][video]["answer"]
 	if (link.indexOf("youtube") > -1) {
-		a = videoblock.format(link)
+		a = format(videoblock, link)
 	}
 	else {
-		a = privatevideoblock.format(window.location.host, getCookie("key"), link)
+		a = format(privatevideoblock, window.location.host, getCookie("key"), link)
 	}
 
-	a += questionblock.format(video)
+	a += format(questionblock, video)
 
 	$("#video")[0].innerHTML = a;
 	$("#classname-now")[0].innerHTML = class_["info"][lesson][video]["class_name"] + " 解答";
@@ -284,18 +284,19 @@ function evaluation_html(questions) {
 			choice_html = choice_html.replace(/</, "&lt;")
 			choice_html = choice_html.replace(/>/, "&gt;")
 			if (question["answer"].length > 1) {
-				choices += checkbox_format.format(i + 1,
+				choices += format(checkbox_format,
+					i + 1,
 					e,
 					choice_html)
 			}
 			else {
-				choices += radio_format.format(i + 1,
+				choices += format(radio_format, i + 1,
 					e,
 					choice_html)
 			}
 		})
 
-		test_html += question_format.format((i + 1) + ". " + question["question"],
+		test_html += format(question_format, (i + 1) + ". " + question["question"],
 			choices,
 			i + 1)
 	})
@@ -347,11 +348,11 @@ function check_evaluation_answer() {
 		}
 
 		$.each(right, function (_, i) {
-			$("#q-{0}".format(i + 1))[0].style.background = "white"
+			$(format("#q-{0}", i + 1))[0].style.background = "white"
 		})
 
 		$.each(wrong, function (_, i) {
-			$("#q-{0}".format(i + 1))[0].style.background = "rgba(255, 117, 91, 0.3)"
+			$(format("#q-{0}", i + 1))[0].style.background = "rgba(255, 117, 91, 0.3)"
 		})
 	}
 }

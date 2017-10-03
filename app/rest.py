@@ -547,6 +547,21 @@ class UserRestView(View):
         else:
             raise cherrypy.HTTPError(404)
 
+    @cherrypy.expose
+    def forget(self, *args, **kwargs):
+        meta, conn = cherrypy.request.db
+        emailvalid = cherrypy.request.email_valid
+        users = meta.tables[User.TABLE_NAME]
+
+        if cherrypy.request.method == "POST":
+            # new forget password
+            pass
+        elif cherrypy.request.method == "PUT":
+            # comfirm code
+            pass
+        else:
+            raise cherrypy.HTTPError(404)
+
 class QuestionRestView(View):
     _root = rest_config["url_root"] + "question/"
     _cp_config = View._cp_config
