@@ -2037,12 +2037,19 @@ class FileUploadRestView(View):
             if not isinstance(homework, list):
                 homework = [homework]
 
+            sections = {None: 0}
             for file in homework:
                 try:
                     if not re.fullmatch(PY_FILE_RE, file.filename):
                         continue
 
                     filename = file.filename
+                    section = filename[:filename.find("-")]
+                    try:
+                        sections[section] += 1
+                    except:
+                        sections[section] = 1
+
                     filename.replace("test", "")
 
                     filename = fileformat.format(
@@ -2055,7 +2062,13 @@ class FileUploadRestView(View):
                     if os.path.isfile(filename):
                         os.remove(filename)
 
-            raise cherrypy.HTTPRedirect("/classattend")
+            biggest = None
+            print(sections)
+            for section, value in sections.items():
+                if value > sections[biggest]:
+                    biggest = section
+                
+            raise cherrypy.HTTPRedirect(f"/classattend?class={kwargs['clsroomid']}&section={biggest}")
         else:
             raise cherrypy.HTTPError(404)
 

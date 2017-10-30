@@ -46,36 +46,6 @@ python_homework_re = new RegExp("(test|hw)1?[0-9]-[0-9]{1,2}\.py")
 project_page_format = "https://scratch.mit.edu/projects/{0}/"
 nav_format = `<li role="presentation" onclick="showclassroom('{1}')"><a>{0}</a></li>`
 
-function loadclassroom() {
-	files = {}
-	$.ajax({
-		url: host + "classroom/",
-		type: "GET",
-		data: {"key": getCookie("key")},
-		success: function (msg) {
-			$.each(msg, function (i) {
-				classroomnames.innerHTML += format(nav_format,
-					msg[i]["name"],
-					msg[i]["id"])
-				classrooms[msg[i]["id"]] = msg[i]
-			})
-
-			if (msg.length > 0) {
-				showclassroom(msg[0]["id"]);
-			}
-			else {
-				showactivity();
-			}
-		},
-		error: function (msg) {
-			reload = confirm("請重新登錄");
-			if (reload) {
-				show("login-frame");
-			}
-		}
-	})
-}
-
 function showclassroom(cls_id) {
 	classroom = classrooms[cls_id];
 	$("#hw-view").show();
@@ -258,6 +228,13 @@ function loadfilehomework(folder, cls_id) {
 				buttonsgroup += `</ul></div><br>`
 
 				$("#hw-thead")[0].innerHTML = buttonsgroup
+
+				if (dict.hasOwnProperty("section")) {
+					if (units.includes(dict["section"])) {
+						changefileunit(folder, dict["section"], cls_id)
+						return
+					}
+				}
 				changefileunit(folder, units[0], cls_id)
 			}
 			else {
@@ -353,6 +330,8 @@ function show_file(file) {
 			$("#file")[0].innerHTML = parse_file(msg)
 		}
 	})
+
+	cls_id = classroom["id"]
 
 	if (comments[cls_id] != undefined) {
 		if (comments[cls_id][getCookie("id")]) {
@@ -726,5 +705,55 @@ function showpresent(t) {
 }
 
 $(document).ready(function () {
-	loadclassroom();
+	files = {}
+	$.ajax({
+		url: host + "classroom/",
+		type: "GET",
+		data: {"key": getCookie("key")},
+		success: function (msg) {
+			$.each(msg, function (i) {
+				classroomnames.innerHTML += format(nav_format,
+					msg[i]["name"],
+					msg[i]["id"])
+				classrooms[msg[i]["id"]] = msg[i]
+			})
+
+			if (msg.length > 0) {
+				try {
+					params = location.search.replace("?", "")
+					params = params.split("&")
+
+					dict = {}
+					for (i=0;i<params.length;i++) {
+						index = params[i].indexOf("=")
+						key = params[i].substring(0, index)
+						value = params[i].substring(index + 1)
+						dict[key] = value
+					}
+
+					if (dict.hasOwnProperty("class")) {
+						dict["class"] = parseInt(dict["class"])
+						if (classrooms.hasOwnProperty(dict["class"])) {
+							showclassroom(dict["class"]);
+							return
+						}
+					}
+				}
+				catch (error) {
+					console.log(error)
+				}
+
+				showclassroom(msg[0]["id"]);
+			}
+			else {
+				showactivity();
+			}
+		},
+		error: function (msg) {
+			reload = confirm("請重新登錄");
+			if (reload) {
+				show("login-frame");
+			}
+		}
+	})
 })

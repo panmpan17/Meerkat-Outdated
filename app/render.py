@@ -202,7 +202,7 @@ class UserCaseHandler(object):
         return render("resource.html")
 
     @cherrypy.expose
-    def classattend(self):
+    def classattend(self, *args, **kwargs):
         return render("classattend.html")
 
     @cherrypy.expose
