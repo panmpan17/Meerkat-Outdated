@@ -206,20 +206,14 @@ class UserCaseHandler(object):
         return render("classattend.html")
 
     @cherrypy.expose
-    def video(self, key, video=None, file="", nextvid="", button="看答案", nextbutton="看問題"):
+    def video(self, key, video=None):
 
         key_mgr = cherrypy.request.key
 
         if not key_mgr.get_cls_per_key(key):
             return access_deny
 
-        return render("video.html", {
-            "video": video,
-            "file": file.split(";"),
-            "next": nextvid,
-            "button": button,
-            "nextbutton": nextbutton,
-            })
+        return render("video.html", {"video": video})
 
     @cherrypy.expose
     def active(self, ekey):

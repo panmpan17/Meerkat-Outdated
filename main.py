@@ -210,14 +210,14 @@ class App():
         classes = ClassesPlugin(cherrypy.engine)
 
         dirname = "classes"
-        files = ["scratch_1.json", "teacher_1.json", "python_01.json"]
+        files = ["scratch_1_update.json", "teacher_1_update.json", "python_01_update.json"]
 
         for f in files:
             file = open(dirname + "/" + f, "r")
             read = file.read()
             file.close()
 
-            read = read.replace("'", "\"")
+            # read = read.replace("'", "\"")
 
             class_ = json.loads(read)
             classes.new_class(class_["id"], class_)

@@ -17,14 +17,16 @@ class ClassesPlugin(plugins.SimplePlugin):
 	def new_class(self, class_id, classinfo):
 		self.classes[class_id] = classinfo
 		self.classes[class_id]["lesson_length"] = {}
-		for i, lesson in enumerate(classinfo["info"]):
-			self.classes[class_id]["lesson_length"][i] = len(lesson)
+		self.classes[class_id]["title"] = []
+		for i, lesson in enumerate(classinfo["lessons"]):
+			self.classes[class_id]["lesson_length"][i] = len(lesson["content"])
+			self.classes[class_id]["title"].append(lesson["title"])
 
-		self.videos[class_id] = {}
-		for lesson in classinfo["info"]:
-			for class_ in lesson:
-				if class_["type"] == "video":
-					self.videos[class_id][class_["video"]] = class_["class_name"]
+		# self.videos[class_id] = {}
+		# for lesson in classinfo["info"]:
+		# 	for class_ in lesson:
+		# 		if class_["type"] == "video":
+		# 			self.videos[class_id][class_["video"]] = class_["class_name"]
 
 	def video_find_class(self, videourl):
 		for class_id in self.videos:

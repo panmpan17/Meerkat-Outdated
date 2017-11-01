@@ -8,6 +8,7 @@
 	<style>
 		html, body {
 			background-color: black;
+			z-index: 5;
 			position: fixed;
 			left: 0;
 			top: 0;
@@ -22,6 +23,15 @@
 		    -ms-user-select: none;
 		    user-select: none;
 		}
+		#shield {
+			position: fixed;
+			background: transparent;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+		}
+
 		#playercontainer {
 			padding-top: 0px;
 			width: 100%;
@@ -35,6 +45,7 @@
 		}
 		#controls {
 			position: relative;
+			z-index: 10;
 			bottom: 62px;
 			padding-top: 12px;
 			padding-left: 15px;
@@ -58,6 +69,7 @@
 		}
 		#progress {
 			position: relative;
+			z-index: 10;
 			bottom: 5px;
 			height: 5px;
 			border-radius: 4px;
@@ -69,6 +81,7 @@
 		}
 		#progressorb {
 			position: relative;
+			z-index: 10;
 			bottom: 14px;
 			width: 14px;
 			height: 14px;
@@ -87,6 +100,7 @@
 		}
 		#progresstime {
 			position: relative;
+			z-index: 10;
 			right: 10px;
 			font-size: 10pt;
 			color: #fff;
@@ -143,23 +157,7 @@
 			<div id="progresstime">-:-- / -:--</div>
 		</div>
 	</div>
-	{% if next %}
-	<div id="next" class="next">
-		<!-- {{ next }} -->
-		<div class="left" onclick="nextvid()">
-			<center>
-				<img id="icon" width="200" src="/html/images/answer.png" alt=""><br>
-				<span style="color:white;font-size: 20px">{{ button }}</span>
-			</center>
-		</div>
-		<div class="right" onclick="replay()">
-			<center>
-				<img id="icon" width="200" src="/html/images/replay.png" alt=""><br>
-				<span style="color:white;font-size:20px">重播</span>
-			</center>
-		</div>
-	</div>
-	{% endif %}
+	<div id="shield" onclick="toggleVideo()"></div>
 	<script>
 		var host = window.location.host + "/rest/1/"
 		var player = $("#player")[0];
@@ -170,7 +168,6 @@
 		$("#player").on("loadeddata", function () {
 			setInterval(updateProgress, 100);
 			updateTime();
-			toggleVideo();
 		});
 
 		$("#player").click(toggleVideo);
@@ -186,13 +183,6 @@
 					$("#player").css("cursor", "none");
 				}, 3000);
 			}
-		});
-
-		$(window).keypress(function (e) {
-		   if (e.keyCode === 32) {
-			  e.preventDefault()
-			  toggleVideo();
-		   }
 		});
 
 		$("#progressholder").hover(function(e) { over = true; }, function() { over = false; });
@@ -272,13 +262,6 @@
 			player.play();
 			$("#next")[0].classList.remove("show")
 		}
-
-		{% if next %}
-		function nextvid() {
-			search = "?video={0}&nextvid={1}&button={{ nextbutton }}&nextbutton={{ button }}"
-			window.location.search = format(search, "{{ next }}", "{{ video }}")
-		}
-		{% endif %}
 	</script>
 </body>
 </html>

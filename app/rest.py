@@ -1014,13 +1014,13 @@ class ClassesRestView(View):
 
                 if class_["price"] == 0:
                     try:
-                        return class_["info"][int(kwargs["lesson"])]
+                        return class_["lessons"][int(kwargs["lesson"])]
                     except:
                         pass
 
                     class_ = class_.copy()
-                    class_["length"] = len(class_["info"])
-                    class_.pop("info")
+                    class_["length"] = len(class_["lessons"])
+                    class_.pop("lessons")
                     return class_
                 else:
                     progress = None
@@ -1067,13 +1067,13 @@ class ClassesRestView(View):
                         key_mgr.update_cls_per_key(key, key_type, clsr_id)
 
                     try:
-                        return class_["info"][int(kwargs["lesson"])]
+                        return class_["lessons"][int(kwargs["lesson"])]
                     except:
                         pass
 
                     class_ = class_.copy()
-                    class_["length"] = len(class_["info"])
-                    class_.pop("info")
+                    class_["length"] = len(class_["lessons"])
+                    class_.pop("lessons")
                     class_["key"] = key
                     class_["progress"] = progress
                     return class_

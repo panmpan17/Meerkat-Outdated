@@ -1,100 +1,197 @@
-div.class_block {
-	font-family: fonta;
-	display:inline-block;
-	background-color: rgba(254, 144, 0,1);
-	border-right: 1px solid rgb(219, 238, 252);
-	border-left: 1px solid rgb(219, 238, 252);
-	height:30px;
-	text-align: center;
-	font-size: 20px;
-	cursor:pointer;
+#subject_id {display: none}
+
+.menu {
+	position: absolute;
+	left: 0;
+	top: 100px;
+	bottom: 0;
+	background: rgb(6, 48, 58);
+	color: white;
+	width: 200px;
+	height: calc(100% - 100px);
+	transition-duration: 0.2s;
+	overflow-y: scroll;
+}
+
+.menu.shrink {
+	left: -200px;
+}
+
+.lesson {
+	max-height: 100%;
+}
+
+.menu .lesson .title {
+	font-weight: 900;
+	height: 50px;
+	letter-spacing: 2px;
+	background: rgb(4, 36, 44);
+	padding: 10px;
+	cursor: pointer;
+}
+
+.menu .lesson .title:hover {
+	margin-left: 0;
+	background: white;
+	color: black;
+}
+
+/*.menu .lesson.shrink .title:hover {
+	margin-left: 30px;
+}*/
+
+.menu .lesson .video-bar {
+	position: absolute;
+	right: 0;
+	left: 0;
+	height: calc(100% - 100px);
+	overflow-y: scroll;
+}
+
+.menu .lesson .video-bar .video {
+	position: relative;
+	padding: 10px 0px;
+	padding-left: 20px;
+	background: rgb(5, 38, 46);
+	cursor: pointer;
+	transition-duration: 0.2s;
+	left: 30px;
+}
+
+.menu .lesson .video-bar .video:hover {
+	background: white;
+	color:black;
+	left: 15px;
+}
+
+.menu .lesson .video-bar .video.active {
+	left: 0;
+	background: white;
+	color: rgb(6, 48, 58);
+}
+
+/*.menu .lesson .video-bar .video.active:before {
+	content: "✔";
+	position: absolute;
+	color: red;
+	left: 3px;
+}*/
+
+.menu #description {
+	font-weight: 900;
+	position: relative;
+	padding: 10px 0px;
+	padding-left: 10px;
+	background: rgb(5, 38, 46);
+	cursor: pointer;
+	transition-duration: 0.2s;
+	left: 0;
+	font-size: 24px;
+	height: 50px;
+}
+
+.menu #description:hover {
+	background: white;
+	color: black;
+}
+
+#view-block {
+	position: absolute;
+	width: 100%;
+	height: calc(100% - 100px);
+	transition-duration: 0.2s;
+	padding-top: 15px;
+}
+
+#view-block.shrink {
+	margin-left: 200px;
+	width: calc(100% - 200px);
+}
+
+#view-block #toggle_btn {
+	position: absolute;
+	background: rgb(6, 48, 58);
+	top: 0;
+	left: 0;
+	width: 35px;
+	height: 35px;
+	font-size: 25px;
+	color: white;
+	cursor: pointer;
+	padding-left: 5px;
+}
+
+#view-block #footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 50px;
+	background: gray;
+}
+
+#view-block #footer #prev,
+#view-block #footer #next {
+	position: relative;
+	width: 100px;
+	height: 30px;
+	top: 10px;
+	background: rgb(200, 200, 200);
+	border-radius: 10px;
+	border: none;
 	color: white;
 }
 
-div.class_block.active {
-	background: rgba(43,142,183,1);
+#view-block #footer #prev:hover,
+#view-block #footer #next:hover {
+	background: rgb(155, 155, 155);
+	color: lightblue;
 }
 
-div#video {
-	width:80%;
+#view-block #footer #prev:active,
+#view-block #footer #next:active {
+	background: rgb(133, 133, 133);
 }
 
-div.button-display {
-	top: 2px;
-	width:88%;
-	position: relative;
-	transform: translate(-50%, 0px);
-	height:55px;
-	text-align:left;
-}
 
-div.lesson-display {
-	top: 120px;
-	width:90%;
-	position: absolute;
-	left: 50%;
-	transform: translate(-50%, 0px);
-}
-
-div#classname-now {
-	position: fixed;
-	right: 10px;
-	/*float:right;*/
-	display:inline;
-	font-size: 30px;
-	color: rgba(43,142,183,1);
-	font-family: fonta;
-}
-
-button#lesson-dropdown {
-	padding-top: 0px;
-	padding-bottom: 0px;
-	font-size: 24px;
-}
-
-ul#lessons {
-	top:30px;
-	font-size: 24px;
-}
-
-div.rightarrow,
-div.leftarrow {
-	position: fixed;
-	font-size: 50px;
-	top: 300px;
-}
-
-div.leftarrow {
+#view-block #footer #prev {
 	left: 10px;
 }
 
-div.rightarrow {
-	right: 10px;
+#view-block #footer #next {
+	right: calc(-100% + 220px);
 }
 
-.leftarrow a,
-.rightarrow a{
-  color: rgb(43,142,183);
+#view-block #video {
+	margin: 0 10%;
+	margin-bottom: 30px;
+	width: 80%;
+	max-height: 70%;
+	overflow-y: scroll;
 }
 
-.leftarrow a:hover,
-.rightarrow a:hover {
-  color: rgb(30,105,138);
+#view-block #title {
+	padding-left: 10%;
+	color: rgb(6, 48, 58);
 }
 
-.leftarrow a:active,
-.rightarrow a:active {
-  color: rgb(26,90,120);
+#view-block #btns {
+	padding-left: 10%;
 }
 
-div#answer {
-  position: relative;
-  top: -3px;
-  width: 100%;
-  height: 5px;
-  background-color: #ead141;
+#view-block #btns .btn {
+	border: rgb(6, 48, 58) solid 2px;
+	background: rgb(6, 48, 58);
+	color: white;
+	transition-duration: 0.2s;
+	border-radius: 0;
 }
 
+#view-block #btns .btn:hover {
+	background: transparent;
+	color: rgb(6, 48, 58);
+}
+
+/*eavluation*/
 #test {
 	background: white;
 	text-align: left;

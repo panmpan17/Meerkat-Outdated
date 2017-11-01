@@ -4,38 +4,20 @@
 <link rel="stylesheet" href="/html/css/class.css">
 {% endblock %}
 {% block content %}
-<span id="subject_id" style="display: none">{{ class_id }}</span>
-<br>
-<br>
-<br>
-<center>
-<div id="a">
+<span id="subject_id">{{ class_id }}</span>
+<div class="menu" id="lessons_bar">
+	<div id="description" onclick="show_description()">介紹</div>
 </div>
-<!-- <div class="classname-display" id="classname"></div> -->
-<br>
-<div id="video"></div>
-</center>
-
-<div class="lesson-display">
-	<div id="classname-now"></div>
-	<div class="dropdown push-left" style="width:50%;display:inline;font-family:fonta;">
-	  <button class="btn btn-default dropdown-toggle" type="button" id="lesson-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-		Dropdown
-	  </button>
-	  <ul class="dropdown-menu" aria-labelledby="lesson-dropdown" id="lessons">
-	  </ul>
+<div class="shrink" id="view-block">
+	<div id="toggle_btn" onclick="toggle_menu()">&#9776;</div>
+	<h1 id="title"></h1>
+	<div id="btns"></div><br>
+	<div id="video">
+		<h3>&larr; 請選擇課程</h3>
 	</div>
-	<div class="button-display" id="buttons" style="display:inline"></div>
-	
-	<div class="leftarrow">
-		<a onclick="prev()">
-			<i class="fa fa-chevron-left" aria-hidden="true"></i>
-		</a>
-	</div>
-	<div class="rightarrow">
-		<a onclick="next()">
-			<i class="fa fa-chevron-right" aria-hidden="true"></i>
-		</a>
+	<div id="footer">
+		<button id="prev" onclick="prev()">< Prev</button>
+		<button id="next" onclick="next()">Next ></button>
 	</div>
 </div>
 <br><br>
