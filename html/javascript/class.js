@@ -4,7 +4,7 @@ var video = 0
 
 var videoblock = `<iframe id="videoframe" src="{0}&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>`
 
-var privatevideoblock = `<iframe id="videoframe" src='http://{0}/video/{1}?video={2}'></iframe>`
+var privatevideoblock = `<iframe id="videoframe" class="python" src='http://{0}/video/{1}?video={2}'></iframe>`
 
 var lsn_bar_lsn = `<div id="lesson-{0}" class="lesson shrink">
 	<div class="title" onclick="toggle_lsn_btn({0}, this)">{1}</div>

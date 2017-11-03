@@ -36,9 +36,9 @@
 	color: black;
 }
 
-/*.menu .lesson.shrink .title:hover {
+.menu .lesson.shrink .title:hover {
 	margin-left: 30px;
-}*/
+}
 
 .menu .lesson .video-bar {
 	position: absolute;
@@ -113,9 +113,9 @@
 	background: rgb(6, 48, 58);
 	top: 0;
 	left: 0;
-	width: 35px;
-	height: 35px;
-	font-size: 25px;
+	width: 40px;
+	height: 40px;
+	font-size: 30px;
 	color: white;
 	cursor: pointer;
 	padding-left: 5px;
@@ -168,14 +168,42 @@
 
 #view-block #video #videoframe {
 	position: absolute;
-	top: 80px;
+	top: 50px;
 	left: 1%;
 	width: 98%;
-	height: calc(100% - 140px);
+	height: 280px;
+}
+
+#view-block #video #videoframe.python {height: 390px;}
+
+@media (min-width: 600px) {
+	#view-block #video #videoframe {height: 330px;}
+	#view-block #video #videoframe.python {height: 450px;}
+}
+@media (min-width: 700px) {
+	#view-block #video #videoframe {height: 360px;}
+	#view-block #video #videoframe.python {height: 520px;}
+}
+@media (min-width: 800px) {
+	#view-block #video #videoframe {height: 390px;}
+}
+@media (min-width: 900px) {
+	#view-block #video #videoframe {height: 420px;}
+}
+@media (min-width: 1000px) {
+	#view-block #video #videoframe {height: 450px;}
+}
+@media (min-width: 1100px) {
+	#view-block #video #videoframe {height: 480px;}
+}
+@media (min-width: 1200px) {
+	#view-block #video #videoframe {height: 510px;}
 }
 
 #view-block #title {
-	padding-left: 3%;
+	font-size: 24px;
+	margin-top: -15px;
+	padding-left: 45px;
 	color: rgb(6, 48, 58);
 	display: inline-block;
 }
