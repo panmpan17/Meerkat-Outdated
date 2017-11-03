@@ -100,6 +100,9 @@ $.ajax({
             else if (msg[i]["price"] == -1) {
                 price = "只提供實體課程"
             }
+            else if (msg[i]["price"] == -2) {
+                price = "免費線上課程"
+            }
             cardstext += format(card_format,
                 msg[i]["id"],
                 msg[i]["subject"],

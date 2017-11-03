@@ -118,7 +118,12 @@ function display_description() {
 	$("#buttons")[0].innerHTML = ""
 	lesson = -1
 
-	a = format(videoblock, class_["description-video"])
+	if (class_["description-video"].indexOf("youtube") == -1) {
+		a = format(privatevideoblock, window.location.host, class_["key"], class_["description-video"], "")
+	}
+	else {
+		a = format(videoblock, class_["description-video"])
+	}
 	$("#video")[0].innerHTML = a;
 	$("#classname-now")[0].innerHTML = "";
 }

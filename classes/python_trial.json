@@ -1,5 +1,5 @@
 {'description': '',
- 'description-video': '',
+ 'description-video': 'http://storage.googleapis.com/coding4fun-class-video/python-01/description-video.mp4',
  'id': 'python_trial',
  'info': [[{'answer': '',
             'type': 'video',
@@ -339,9 +339,9 @@
             'video': 'http://storage.googleapis.com/coding4fun-class-video/python-01/2-34.mp4'}]
     ],
  'link': '',
- 'price': -1,
- 'subject': 'Python 體驗課程',
- 'summary': '從 Scratch 邁向 Python<br>適合學過 Coding for Fun 的同學<br>以 Scratch 課程為基礎<br>Python 入門課程的體驗課程<br>請使用 <a style=\"color:Coral\" target=\"_black\" href=\"https://www.google.com/intl/zh-HK/chrome/browser/desktop/\">Google Chrome 瀏覽器</a>',
+ 'price': -2,
+ 'subject': 'Python 基礎<span style=\"color:coral\">體驗</span>課程',
+ 'summary': '從 Scratch 邁向 Python<br>請使用 Google Chrome 瀏覽器<br><a style=\"cursor:pointer;color:coral\" target=\"_blank\" href=\"https://docs.google.com/forms/d/e/1FAIpQLSc566_qAxKs4_oMZ2fwRt4yg9128b9rZa1X7vhkYdfa5he-Cg/viewform\">按此申請體驗課程</a>',
  'time': '2 堂課',
  'titles': ['第一課 與 Python 相遇',
             '第二課 運算、字串與變數']}
