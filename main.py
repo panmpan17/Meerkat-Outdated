@@ -210,7 +210,7 @@ class App():
         classes = ClassesPlugin(cherrypy.engine)
 
         dirname = "classes"
-        files = ["scratch_1.json", "teacher_1.json", "python_01.json"]
+        files = ["scratch_1.json", "teacher_1.json", "python_01.json", "python_trial.json"]
 
         for f in files:
             file = open(dirname + "/" + f, "r")

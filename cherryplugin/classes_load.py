@@ -46,7 +46,7 @@ class ClassesPlugin(plugins.SimplePlugin):
 
 	def get_class_all_info(self):
 		classes_json = []
-		v = ["scratch_1", "teacher_1", "python_01"]
+		v = ["scratch_1", "teacher_1", "python_01", "python_trial"]
 		for c in v:
 			j = {
 				"subject": self.classes[c]["subject"],

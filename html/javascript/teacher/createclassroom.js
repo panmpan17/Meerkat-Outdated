@@ -36,7 +36,7 @@ function check_students() {
 	if (type == "scratch_1" || type == "teacher_1") {
 		check_students_scratch()
 	}
-	else if (type == 'python_01') {
+	else if (type == 'python_01' || type == "python_trial") {
 		check_students_python()
 	}
 	else {
@@ -215,15 +215,13 @@ function create_classroom() {
 function changeclassroomtype() {
 	type = $("#select-type")[0].value
 
-	if ((type == 'python_01') || (type == "scratch_1") || (type == "teacher_1")) {
-		$("#students_info").show()
-		$("#hoverimg").show()
+	$("#students_info").show()
+	$("#hoverimg").show()
 
-		if ((type == "scratch_1") || (type == "teacher_1")) {
-			$("#hoverimg")[0].src = "html/images/scratch_table.png"
-		}
-		else {
-			$("#hoverimg")[0].src = "html/images/python_table.png"
-		}
+	if ((type == "scratch_1") || (type == "teacher_1")) {
+		$("#hoverimg")[0].src = "html/images/scratch_table.png"
+	}
+	else {
+		$("#hoverimg")[0].src = "html/images/python_table.png"
 	}
 }
