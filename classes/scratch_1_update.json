@@ -1107,7 +1107,10 @@
         "video": "http://www.youtube.com/embed/oWWLPCbqGTA?rel=0"}
     ]}
     ],
- "price": 0,
+ "permission": null,
  "subject": "Scratch #1",
- "summary": "適合小學五年級以上<br>歡迎自學，每堂課 2 小時<br>請使用 <a style=\"color:Coral\" target=\"_black\" href=\"https://www.google.com/intl/zh-HK/chrome/browser/desktop/\">Google Chrome 瀏覽器</a>",
- "time": "10 堂課"}
+ "summary": "適合小學五年級以上<br>歡迎自學，每堂課 2 小時<br>請使用 Google Chrome 瀏覽器",
+ "time": "10 堂課",
+ "style": {
+    "title_color": "#ffbb02"
+     }}

@@ -113,7 +113,8 @@
         "class_name": "附錄四 積木字體放大",
         "description": "",
         "video": "https://youtube.com/embed/6R0AYx1-j1I?rel=0"}]}],
- "price": 0,
+ "permission": null,
  "subject": "師資培訓",
  "summary": "師資培訓",
- "time": "18 影片"}
+ "time": "18 影片",
+ "style": {}}

@@ -53,9 +53,10 @@ class ClassesPlugin(plugins.SimplePlugin):
 			j = {
 				"subject": self.classes[c]["subject"],
 				"time": self.classes[c]["time"],
-				"price": self.classes[c]["price"],
+				"permission": self.classes[c]["permission"],
 				"summary": self.classes[c]["summary"],
 				"description": self.classes[c]["description"],
+				"style": self.classes[c]["style"],
 				"id": self.classes[c]["id"],
 				}
 			classes_json.append(j)

@@ -40,7 +40,9 @@ function login () {
 				storeCookie("id", msg["lastrowid"]);
 				storeCookie("userid", msg["userid"]);
 				storeCookie("key", msg["key"]);
-				location.reload();
+
+				$("#account-logo")[0].innerHTML = msg["userid"];
+				hide("login-frame")
 			},
 			error: function (error) {
 				errormsg = $("#login-errormsg")[0]
@@ -128,8 +130,11 @@ function signup () {
 			storeCookie("id", msg["lastrowid"]);
 			storeCookie("userid", msg["userid"]);
 			storeCookie("key", msg["key"]);
-			alert("請檢查 Email")
-			location.reload();
+
+			hide("signup-frame")
+			$("#account-logo")[0].innerHTML = getCookie("userid");
+			// alert("請檢查 Email")
+			// location.reload();
 		},
 		error: function (error) {
 			errormsg = $("#signup-errormsg")[0]
@@ -151,16 +156,24 @@ function logout () {
 	deleteCookie("id");
 	deleteCookie("userid");
 	deleteCookie("key");
-	location.reload();
+
+	hide("accountmenu")
+	$("#account-logo")[0].innerHTML = "登入/ 註冊";
 }
 
 function to_html (dict) {
 	$("#info-userid")[0].innerHTML = dict["userid"];
 	$("#info-point")[0].innerHTML = dict["point"];
 	$("#info-nick")[0].innerHTML = dict["nickname"];
-	$("#info-email")[0].innerHTML = dict["email"] + CHANGE_E_BTN;
 	$("#info-birth")[0].innerHTML = dict["birth_year"];
 	$("#info-job")[0].innerHTML = dict["job"];
+
+	if (dict["active"]) {
+		$("#info-email")[0].innerHTML = dict["email"] + CHANGE_E_BTN;
+	}
+	else {
+		$("#info-email")[0].innerHTML = dict["email"];
+	}
 
 	$("#info-level")[0].innerHTML = "一般";
 	point = dict["point"];
@@ -200,7 +213,6 @@ function showinfo () {
 			show('info-frame');
 		},
 		error: function (msg) {
-			console.log(msg)
 			reload = confirm("請重新登錄");
 			if (reload) {
 				hide('info-frame');

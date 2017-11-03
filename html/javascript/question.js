@@ -458,18 +458,17 @@ function ask() {
 	content = $("#ask-content")[0].value;
 	if (title && content) {
 		key = getCookie("key");
-		uid = getCookie("id");
 		json = {
+			"key": key,
 			"title": title,
 			"content": content,
 			"type": q_type,
-			"writer": uid,
 		}
 		$.ajax({
 			url: host + "question/",
 			type: "POST",
 			dataType: "json",
-			data: JSON.stringify({key: key,question_json: json}),
+			data: JSON.stringify(json),
 			contentType: "application/json; charset=utf-8",
 			success: function (msg) {
 				f1 = checkfile("f1-q");
@@ -487,7 +486,15 @@ function ask() {
 					getallquestion(select_type, select_values);
 				}
 			},
-			error: function (msg) {
+			error: function (error) {
+				p1 = error.responseText.indexOf("<p>") + 3
+				errortype = error.responseText.substring(p1, error.responseText.indexOf("</p>", p1))
+
+				if (errortype == "User is not active") {
+					alert("帳號需要 Email 認證")
+					return;
+				}
+
 				reload = confirm("請重新登錄");
 				if (reload) {
 					hide('ask-frame');

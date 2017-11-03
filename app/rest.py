@@ -66,6 +66,7 @@ class ErrMsg(ErrMsg):
     UNKNOWN_ID = "Id '{}' is not found"
     WRONG_PASSWORD = "Username or password wrong"
     DISABLED_USER = "User '{}' have been disable by admin"
+    NEED_ACTIVE = "User is not active"
 
     USERID_REPEAT = "This userid repeat"
     NOT_HUMAN = "You are not human"
@@ -669,37 +670,31 @@ class QuestionRestView(View):
             return {"questions":question_l, "pages":count_page(len(rows))}
         elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
-            self.check_login_u(data)
+            user = self.check_login_u(data)
 
-            self.check_key(data, ("question_json", ))
+            self.check_key(data, (
+                "title",
+                "content",
+                "type",
+                ))
 
-            question_json = data["question_json"]
-            if not isinstance(question_json, dict):
-                raise cherrypy.HTTPError(400, ErrMsg.NOT_DICT)
-
-            q = Question()
-            result = q.validate_json(question_json)
-            if isinstance(result, Exception):
-                raise result
-
-            # check user id exist
-            ss = select([users.c.id]).where(
-                users.c.id == int(question_json["writer"]))
-            rst = conn.execute(ss)
-            row = rst.fetchone()
-            if not row:
-                raise cherrypy.HTTPError(400,
-                    ErrMsg.UNKNOWN_ID.format(question_json["writer"]))
+            if not user["active"]:
+                raise cherrypy.HTTPError(400, ErrMsg.NEED_ACTIVE)
 
             ins = questions.insert().returning(questions.c.id)
-            rst = conn.execute(ins, question_json)
+            rst = conn.execute(ins, {
+                "title": data["title"],
+                "content": data["content"],
+                "type": data["type"],
+                "writer": user["id"],
+                })
 
             if rst.is_insert:
                 cherrypy.response.status = 201
 
                 qid = rst.fetchone()["id"]
-                title = data["question_json"]["title"]
-                content = data["question_json"]["content"]
+                title = data["title"]
+                content = data["content"]
 
                 addrs = [
                     "panmpan@gmail.com",
@@ -1012,7 +1007,7 @@ class ClassesRestView(View):
                     raise cherrypy.HTTPError(400,
                         ErrMsg.WRONG_CLASS.format(kwargs["class"]))
 
-                if class_["price"] == 0:
+                if class_["permission"] == None:
                     try:
                         return class_["lessons"][int(kwargs["lesson"])]
                     except:
@@ -1100,7 +1095,7 @@ class ClassesRestView(View):
             paid_class = []
             free_class = []
             for c in classes.classes.values():
-                if c["price"] == 0:
+                if c["permission"] == None:
                     free_class.append(c["id"])
                 else:
                     paid_class.append(c["id"])

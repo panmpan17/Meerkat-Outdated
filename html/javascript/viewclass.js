@@ -7,7 +7,7 @@ card_format = `
                     <img src="/html/images/class/{0}.png" class="card-image" />
                 </div>
                 <div class="col-sm-8 col-xs-12">
-                        <div class="title">
+                        <div id="{0}-title" class="title">
                             {1}
                             <span id="time">{2}</span>
                         </div>
@@ -29,7 +29,7 @@ describe_format = `
         <a id="closeloginframe" onclick="hide('{0}-frame');" style="">X</a>
         <br>
         <center>
-            <a onclick="leadtoclass('{0}', {2})">
+            <a onclick="leadtoclass('{0}')">
                 <button id="goclass">前往課程</button>
             </a>
         </center>
@@ -41,6 +41,8 @@ describe_format = `
     </div>
 </div>`
 
+classess_info = {}
+
 function goclass(id) {
     a = $("#" + id + "-frame")[0];
     if (a != undefined) {
@@ -51,8 +53,9 @@ function goclass(id) {
     }
 }
 
-function leadtoclass(id, price) {
-    if (price != 0) {
+function leadtoclass(id) {
+    class_ = classess_info[id]
+    if (class_["permission"] != null) {
         json = {"class": id, "key": getCookie("key")}
         if (getCookie("teacher-key") != "") {
             json["tkey"] = getCookie("teacher-key")
@@ -88,32 +91,44 @@ $.ajax({
     type: "GET",
     success: function (msg) {
         cardstext = "";
-        for (i=0;i<msg.length;i++) {
-            if (msg[i]["id"] == "teacher_1") {
-                continue
+        $.each(msg, function (_, i) {
+            if (i["id"] == "teacher_1") {
+                return true;
             }
 
-            price = "NT " + msg[i]["price"]
-            if (msg[i]["price"] == 0) {
-                price = "免費"
+            classess_info[i["id"]] = i
+
+            if (i["permission"] == null) {
+                price = "免費線上課程"
             }
-            else if (msg[i]["price"] == -1) {
-                price = "只提供實體課程"
+            else if (i["permission"] == "class") {
+                price = "需要配合實體課程，不開放線上課程"
+            }
+            else if (i["permission"] == "login") {
+                price = "免費線上課程，需註冊並登入"
+            }
+            else if (i["permission"] == "online") {
+                price = "線上課程"
             }
             cardstext += format(card_format,
-                msg[i]["id"],
-                msg[i]["subject"],
-                msg[i]["time"],
-                msg[i]["summary"],
+                i["id"],
+                i["subject"],
+                i["time"],
+                i["summary"],
                 price)
 
-            if (msg[i]["description"] != "") {
+            if (i["description"] != "") {
                 $("#describes")[0].innerHTML += format(describe_format,
-                    msg[i]["id"],
-                    msg[i]["description"],
-                    msg[i]["price"])
+                    i["id"],
+                    i["description"])
             }
-        }
+
+            setTimeout(function () {
+                if (i["style"]["title_color"] != undefined) {
+                    $("#" + i["id"] + "-title")[0].style.color = i["style"]["title_color"]
+                }
+            }, 100)
+        })
         $("#cards")[0].innerHTML = cardstext
     }
 })
