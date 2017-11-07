@@ -26,6 +26,21 @@
 	#userstable tr.i:nth-child(odd) {
 		background-color: #F1C40F;
 	}
+
+	div#search-bar {
+		position: absolute;
+		text-align: center;
+		top: 110px;
+		left: 300px;
+		width: 500px;
+		height: 50px;
+		transition-duration: 0.5s;
+	}
+
+	div#search-bar.big {
+		top: calc(50% - 25px);
+		left: calc(50% - 250px);
+	}
 </style>
 {% endblock %}
 {% block content %}
@@ -33,49 +48,10 @@
 	<br><br>
 	<a href="/admin/"><button id="submit">< 回去</button></a>
 	<br><br>
-	<nav aria-label="Page navigation">
-		<ul class="pagination">
-			<li><a onclick="loaduser('0')">0</a></li>
-			<li><a onclick="loaduser('1')">1</a></li>
-			<li><a onclick="loaduser('2')">2</a></li>
-			<li><a onclick="loaduser('3')">3</a></li>
-			<li><a onclick="loaduser('4')">4</a></li>
-			<li><a onclick="loaduser('5')">5</a></li>
-			<li><a onclick="loaduser('6')">6</a></li>
-			<li><a onclick="loaduser('7')">7</a></li>
-			<li><a onclick="loaduser('8')">8</a></li>
-			<li><a onclick="loaduser('9')">9</a></li>
-
-			<li><a onclick="loaduser('a')">a</a></li>
-			<li><a onclick="loaduser('b')">b</a></li>
-			<li><a onclick="loaduser('c')">c</a></li>
-			<li><a onclick="loaduser('d')">d</a></li>
-			<li><a onclick="loaduser('e')">e</a></li>
-			<li><a onclick="loaduser('f')">f</a></li>
-			<li><a onclick="loaduser('g')">g</a></li>
-			<li><a onclick="loaduser('h')">h</a></li>
-			<li><a onclick="loaduser('i')">i</a></li>
-			<li><a onclick="loaduser('j')">j</a></li>
-			<li><a onclick="loaduser('k')">k</a></li>
-			<li><a onclick="loaduser('l')">l</a></li>
-			<li><a onclick="loaduser('m')">m</a></li>
-			<li><a onclick="loaduser('n')">n</a></li>
-			<li><a onclick="loaduser('o')">o</a></li>
-			<li><a onclick="loaduser('p')">p</a></li>
-			<li><a onclick="loaduser('q')">q</a></li>
-			<li><a onclick="loaduser('r')">r</a></li>
-			<li><a onclick="loaduser('s')">s</a></li>
-			<li><a onclick="loaduser('t')">t</a></li>
-			<li><a onclick="loaduser('u')">u</a></li>
-			<li><a onclick="loaduser('v')">v</a></li>
-			<li><a onclick="loaduser('w')">w</a></li>
-			<li><a onclick="loaduser('x')">x</a></li>
-			<li><a onclick="loaduser('y')">y</a></li>
-			<li><a onclick="loaduser('z')">z</a></li>
-		</ul>
-	</nav>
-	<br>
-	<table id="userstable">
+	<div id="search-bar" class="big">
+		<input id="userid-field" type="text" width="400" placeholder="Search: ">
+	</div>
+	<table id="userstable" hidden>
 		<thead>
 			<tr>
 				<th>Id</th>
@@ -86,8 +62,8 @@
 			</tr>
 		</thead>
 		<tbody id="users"></tbody>
-	</table>
-	<br><br>
+	</table> 
+	<!-- <br><br> -->
 </div>
 {% endblock %}
 {% block bcontent %}
@@ -159,7 +135,9 @@
 {% endblock %}
 {% block script %}
 <script>
-var paid_class = [];
+var users = {};
+var alphabet_index = {};
+// var users_table = $("#users")[0]
 
 user_format = `\
 <tr class="i">
@@ -171,31 +149,7 @@ user_format = `\
 </tr>\
 `
 
-var users_table = $("#users")[0]
-var alphatable = "abcdefghijklmnopqrstuvwxyz0123456789"
-
-function loaduser(alpha) {
-	// console.log(alpha)
-	$.ajax({
-		url: host + "user/",
-		type: "GET",
-		data: {"key": getCookie("key"), "userid": alpha},
-		success: function (msg) {
-			html = "";
-			for (i=0; i<msg.length; i++) {
-				user = format(user_format, msg[i]["id"],
-					msg[i]["userid"],
-					msg[i]["email"],
-					msg[i]["nickname"],
-					msg[i]["create_at"])
-				html += user
-			}
-			users_table.innerHTML = html
-		}
-	})
-}
-
-function showdetail(uid) {
+function showdetail (uid) {
 	$.ajax({
 		url: host + "user/",
 		type: "GET",
@@ -235,25 +189,11 @@ function showdetail(uid) {
 					disableuser(msg["id"], true)
 				}
 			}
-
-			for (i=0;i<paid_class.length;i++) {
-				classid = paid_class[i]
-				if (classid in msg){
-					$("#" + classid)[0].checked = true;
-					$("#" + classid)[0].onclick = function () {
-						openclass(classid, msg["id"], "False")}
-				}
-				else {
-					$("#" + classid)[0].checked = false;
-					$("#" + classid)[0].onclick = function () {
-						openclass(classid, msg["id"], "True")}
-				}
-			}
 		}
 	})
 }
 
-function disableuser(uid, disabled) {
+function disableuser (uid, disabled) {
 	$.ajax({
 		url: host + "user/",
 		type: "PUT",
@@ -269,28 +209,59 @@ function disableuser(uid, disabled) {
 	})
 }
 
-// $.ajax({
-// 	url: host + "classes/price",
-// 	type: "GET",
-// 	success: function (msg) {
-// 		paid_class = msg["paid"]
-// 		for (i=0;i<paid_class.length;i++) {
-// 			tr = document.createElement("tr")
+$("#userid-field").on("input change", function (e) {
+	value = e.currentTarget.value
+	if (value == "") {
+		$("#search-bar")[0].classList.add("big")
+		$("#userstable").hide(600)
+	}
+	else {
+		$("#search-bar")[0].classList.remove("big")	
+		$("#userstable").show(600)
+	}
 
-// 			td1 = document.createElement("td")
-// 			td1.appendChild(document.createTextNode(paid_class[i]))
+	first_chr = String(value[0])
 
-// 			td2 = document.createElement("td")
-// 			input = document.createElement("input")
-// 			input.id = paid_class[i]
-// 			input.type = "checkbox"
-// 			td2.appendChild(input)
+	if (alphabet_index[first_chr] != undefined) {
+		users_show = []
+		$.each(alphabet_index[first_chr], function (_, i) {
+			if (users[i]["userid"].startsWith(value)) {
+				users_show.push(users[i])
+			}
+		})
 
-// 			tr.appendChild(td1)
-// 			tr.appendChild(td2)
-// 			$("#userinfo2")[0].appendChild(tr)
-// 		}
-// 	}
-// })
+		$("#users").html("")
+		$.each(users_show, function (_, user) {
+			$("#users")[0].innerHTML += format(
+				user_format,
+				user["id"],
+				user["userid"],
+				user["email"],
+				user["nickname"],
+				user["create_at"],
+				)
+		})
+	}
+})
+
+
+$(document).ready(function () {
+	$.ajax({
+		url: host + "user/",
+		type: "GET",
+		data: {"key": getCookie("key")},
+		success: function (msg) {
+			$.each(msg, function (_, i) {
+				users[i["id"]] = i
+
+				first_chr = String(i["userid"][0])
+				if (alphabet_index[first_chr] == undefined) {
+					alphabet_index[first_chr] = []
+				}
+				alphabet_index[first_chr].push(i["id"])
+			})
+		}
+	})
+})
 </script>
 {% endblock %}
