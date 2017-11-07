@@ -324,8 +324,13 @@ class UserRestView(View):
                 ss = select([users])
 
                 if "userid" in kwargs:
-                    ss = ss.where(users.c.userid.like(kwargs["userid"] + "%"))
+                    upper = kwargs["userid"].upper()
+                    lower = kwargs["userid"].lower()
+                    ss = ss.where(or_(
+                        users.c.userid.like(upper + "%"),
+                        users.c.userid.like(lower + "%")))
 
+                ss = ss.order_by(users.c.id)
                 rst = conn.execute(ss)
                 rows = rst.fetchall()
 
@@ -2068,7 +2073,8 @@ class FileUploadRestView(View):
                 if value > sections[biggest]:
                     biggest = section
                 
-            raise cherrypy.HTTPRedirect(f"/classattend?class={kwargs['clsroomid']}&section={biggest}")
+            raise cherrypy.HTTPRedirect(
+                f"/classattend?class={kwargs['clsroomid']}&section={biggest}")
         else:
             raise cherrypy.HTTPError(404)
 

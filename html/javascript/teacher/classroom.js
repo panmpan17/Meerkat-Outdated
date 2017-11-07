@@ -563,6 +563,7 @@ function show_change_classroom () {
 		url: host + "classroom/",
 		data: json,
 		success: function (msg) {
+			field_num = 0
 			table = ""
 			if (classroom["type"].startsWith("python")) {
 				tbody2 = ""
@@ -677,7 +678,11 @@ function check_change_student () {
 						}
 					})
 				}
-			}
+				else {
+					$("#bg").hide()
+				}
+			},
+			error: function (error) {console.log(error)}
 		})
 	}
 	else {
