@@ -542,7 +542,7 @@
             'class_name': '5-1 什麼是function',
             'description': '',
             'video': 'http://storage.googleapis.com/coding4fun-class-video/python-01/5-1.mp4'},
-           {'answer': 'http://storage.googleapis.com/coding4fun-class-video/python-01/5-2-answer.mp4',
+           {'answer': '',
             'type': 'video',
             'buttons': [],
             'class_name': '5-2 內建 functions',
