@@ -7,6 +7,7 @@ class ClassesPlugin(plugins.SimplePlugin):
 		self.classes = {}
 		self.videos = {}
 		self.files = {}
+		self.form_answers = {}
 
 	def start(self):
 		pass
@@ -18,15 +19,22 @@ class ClassesPlugin(plugins.SimplePlugin):
 		self.classes[class_id] = classinfo
 		self.classes[class_id]["lesson_length"] = {}
 		self.classes[class_id]["title"] = []
+
 		for i, lesson in enumerate(classinfo["lessons"]):
 			self.classes[class_id]["lesson_length"][i] = len(lesson["content"])
 			self.classes[class_id]["title"].append(lesson["title"])
 
-		# self.videos[class_id] = {}
-		# for lesson in classinfo["info"]:
-		# 	for class_ in lesson:
-		# 		if class_["type"] == "video":
-		# 			self.videos[class_id][class_["video"]] = class_["class_name"]
+		form_answer = {}
+		for lesson in classinfo["lessons"]:
+			for content in lesson["content"]:
+				if content["type"] == "evaluation":
+					answer = []
+					for question in content["questions"]:
+						q_a = [str(i) for i in question["answer"]]
+						answer.append("".join(q_a))
+					form_answer[content["class_name"]] = "a".join(answer)
+		self.form_answers[class_id] = form_answer
+
 
 	def video_find_class(self, videourl):
 		for class_id in self.videos:
@@ -64,6 +72,11 @@ class ClassesPlugin(plugins.SimplePlugin):
 
 	def get_classes_name(self):
 		return self.classes.keys()
+
+	def get_answer(self, type_):
+		if type_ not in self.form_answers:
+			return None
+		return self.form_answers[type_]
 
 class ClassesTool(cherrypy.Tool):
 	def __init__(self, classes_plugin):

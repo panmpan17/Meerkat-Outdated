@@ -11,10 +11,10 @@
 	<script src="/html/slick/slick.js" type="text/javascript" charset="utf-8"></script>
 	<script src="https://www.google.com/recaptcha/api.js"></script>
 
-	<link href="/html/bootstrap/css/bootstrap.css" rel="stylesheet">
-	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-	<link href="/html/slick/slick.css" rel="stylesheet">
-	<link href="/html/slick/slick-theme.css" rel="stylesheet">
+	<link rel="stylesheet" href="/html/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+	<link rel="stylesheet" href="/html/slick/slick.css">
+	<link rel="stylesheet" href="/html/slick/slick-theme.css">
 	<!-- my js css -->
 	<script src="/html/javascript/loginsignupframe.js"></script>
 	<script src="/html/javascript/base.js"></script>
@@ -48,7 +48,13 @@
 	
 	{% block content %}
 	{% endblock %}
-	<div id="navbar">Coding 4 Fun</div>
+	<div id="navbar">
+		Coding 4 Fun
+		<a class="btn-large" href="/news">最新</a>
+		<a class="btn-large" href="/classes">課程</a>
+		<a class="btn-large" href="/question">討論區</a>
+		<a id="account-logo" class="unselectable" onclick="presslogo();">登入/ 註冊</a>
+	</div>
 	<!-- <div class="my-container">
 		<div class="account-logo" style="cursor: pointer;">
 			<div class="dropdown">

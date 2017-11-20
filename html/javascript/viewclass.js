@@ -65,7 +65,24 @@ function leadtoclass(id) {
             type: "GET",
             data: json,
             success: function (msg) {
-                window.location.href = "/class/c/" + id;
+                console.log(msg)
+                if (msg.length == 1 || getCookie("teacher-key") != "") {
+                    storeCookie("clsrid", msg[0])
+                    window.location.href = "/class/c/" + id;
+                }
+
+                console.log(msg)
+                
+                $.each(msg, function (_, i) {
+                    $("#classroom-confirm #list")[0].innerHTML += format(`<div class="class" onclick="chose_classroome({0}, '{2}')">{1}</div>`,
+                        i["id"],
+                        i["name"],
+                        id,
+                        )
+                })
+
+                show("blackscreen");
+                show("classroom-confirm");
             },
             error: function (error) {
                 if (error.status == 401) {
@@ -84,6 +101,11 @@ function leadtoclass(id) {
     else {
         window.location.href = "/class/c/" + id
     }
+}
+
+function chose_classroome (clsid, id) {
+    storeCookie("clsrid", clsid)
+    window.location.href = "/class/c/" + id;
 }
 
 $.ajax({

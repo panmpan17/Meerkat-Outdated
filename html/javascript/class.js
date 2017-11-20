@@ -51,7 +51,10 @@ function toggle_lsn_btn (seq, i) {
 
 // load class info
 function loadclass (classname, qlesson=-1) {
-	j = {"class":classname}
+	j = {
+		"class": classname,
+		"clsrid": getCookie("clsrid")
+	}
 	key = getCookie("key")
 	if (key != "") {
 		j["key"] = key
@@ -80,7 +83,6 @@ function loadclass (classname, qlesson=-1) {
 				display_lessons_bar()
 				if (class_["description-video"] == "") {
 					$("#description").hide()
-					console.log(1)
 					setTimeout(function () {
 						$(".video-bar").css("height", "calc(100% - 50px)")
 					}, 400)
@@ -108,6 +110,8 @@ function loadclass (classname, qlesson=-1) {
 			}
 		},
 		error: function (error) {
+			storeCookie("teacher-key", "")
+			storeCookie("key", "")
 			window.location.pathname = "/classes"
 		}
 	})
@@ -176,10 +180,10 @@ function show_video() {
 			$("#next")[0].onclick = next
 		}
 	}
-	// else if (classvideo["type"] == "evaluation") {
-	// 	$("#video")[0].innerHTML = evaluation_html(classvideo["questions"]);
-	// 	evaluation_try = 0
-	// }
+	else if (classvideo["type"] == "evaluation") {
+		$("#view-block #video")[0].innerHTML = evaluation_html(classvideo["questions"]);
+		evaluation_try = 0
+	}
 }
 
 function show_answer () {
@@ -234,112 +238,142 @@ function link (url) {
 
 }
 
-// question_format = `<div class="question" id="q-{2}">
-// 	<spawn class="title">{0}</spawn>
-// 	<br><br>
-// 	{1}
-// </div>`
+question_format = `<div class="question" id="q-{2}">
+	<spawn class="title">{0}</spawn>
+	<br><br>
+	{1}
+</div>`
 
-// checkbox_format = `<div>
-// 	<input name="q-{0}" id="q-{0}-{1}" value="{1}" type="checkbox">
-// 	<label for="q-{0}-{1}"><div class="checkbox"></div>{2}</label><br>
-// </div>`
+checkbox_format = `<div>
+	<input name="q-{0}" id="q-{0}-{1}" value="{1}" type="checkbox">
+	<label for="q-{0}-{1}"><div class="checkbox"></div>{2}</label><br>
+</div>`
 
-// radio_format = `<div>
-// 	<input name="q-{0}" id="q-{0}-{1}" value="{1}" type="radio">
-// 	<label for="q-{0}-{1}"><div class="radio"></div>{2}</label><br>
-// </div>`
+radio_format = `<div>
+	<input name="q-{0}" id="q-{0}-{1}" value="{1}" type="radio">
+	<label for="q-{0}-{1}"><div class="radio"></div>{2}</label><br>
+</div>`
 
-// evaluation_btns = `
-// <button class="submit" onclick="check_evaluation_answer()">檢查答案</button>
-// <button id="eval_answer_btn" class="answer" hidden onclick="alert('敬請期待 !!')">看答案</button>
-// </div>`
+evaluation_btns = `
+<button class="submit" onclick="check_evaluation_answer()">檢查答案</button>
+<button id="eval_answer_btn" class="answer" hidden onclick="alert('敬請期待 !!')">看答案</button>
+</div>`
 
-// function evaluation_html(questions) {
-// 	test_html = `<div id="test">`
-// 	$.each(questions, function (i, question) {
-// 		choices = ""
-// 		$.each(question["choice"], function (e, choice) {
-// 			choice_html = choice.replace(/&/, "&amp;")
-// 			choice_html = choice_html.replace(/</, "&lt;")
-// 			choice_html = choice_html.replace(/>/, "&gt;")
-// 			if (question["answer"].length > 1) {
-// 				choices += format(checkbox_format,
-// 					i + 1,
-// 					e,
-// 					choice_html)
-// 			}
-// 			else {
-// 				choices += format(radio_format, i + 1,
-// 					e,
-// 					choice_html)
-// 			}
-// 		})
+function evaluation_html(questions) {
+	test_html = `<div id="test">`
+	$.each(questions, function (i, question) {
+		choices = ""
+		$.each(question["choice"], function (e, choice) {
+			choice_html = choice.replace(/&/, "&amp;")
+			choice_html = choice_html.replace(/</, "&lt;")
+			choice_html = choice_html.replace(/>/, "&gt;")
+			if (question["answer"].length > 1) {
+				choices += format(checkbox_format,
+					i + 1,
+					e,
+					choice_html)
+			}
+			else {
+				choices += format(radio_format, i + 1,
+					e,
+					choice_html)
+			}
+		})
 
-// 		test_html += format(question_format, (i + 1) + ". " + question["question"],
-// 			choices,
-// 			i + 1)
-// 	})
-// 	return test_html + evaluation_btns
-// }
+		test_html += format(question_format, (i + 1) + ". " + question["question"],
+			choices,
+			i + 1)
+	})
+	return test_html + evaluation_btns
+}
 
-// function check_evaluation_answer() {
-// 	classvideo = class_["info"][lesson][video]
-// 	questions = classvideo["questions"]
-// 	choices = []
-// 	for (i=1;i<=classvideo["questions"].length;i++) {
-// 		values = $(format("[name=q-{0}]:checked", i))
+function check_evaluation_answer() {
+	classvideo = class_["lessons"][lesson]["content"][video]
+	questions = classvideo["questions"]
+	choices = []
+	for (i=1;i<=classvideo["questions"].length;i++) {
+		values = $(format("[name=q-{0}]:checked", i))
 
-// 		checked = []
-// 		$.each(values, function (_, e) {
-// 			checked.push(parseInt(e.value))
-// 		})
-// 		if (checked.length == 0) {
-// 			alert("請檢查所有問題都有回答")
-// 			return;
-// 		}
-// 		choices.push(checked.sort())
-// 	}
-// 	evaluation_try += 1
+		checked = []
+		$.each(values, function (_, e) {
+			checked.push(parseInt(e.value))
+		})
+		if (checked.length == 0) {
+			alert("請檢查所有問題都有回答")
+			return;
+		}
+		choices.push(checked.sort())
+	}
+	evaluation_try += 1
 
-// 	wrong = []
-// 	right = []
-// 	$.each(choices, function (i, choice) {
-// 		equals = choice.equals(questions[i]["answer"])
-// 		if (equals) {
-// 			right.push(i)
-// 		}
-// 		else {
-// 			wrong.push(i)
-// 		}
-// 	})
+	wrong = []
+	right = []
+	$.each(choices, function (i, choice) {
+		equals = choice.equals(questions[i]["answer"])
+		if (equals) {
+			right.push(i)
+		}
+		else {
+			wrong.push(i)
+		}
+	})
 
-// 	if (wrong.length == 0) {
-// 		// 
-// 		alert("全對")
-// 		$.each($(".question"), function (_, i) {
-// 			i.style.background = "white"
-// 		})
-// 	}
-// 	else {
-// 		alert("有些沒答對, 請仔細檢查錯誤的題目 !")
-// 		if (evaluation_try >= 2) {
-// 			$("#eval_answer_btn").show()
-// 		}
+	if (class_["key_type"] == "user") {
+		answers = []
+		$.each(choices, function (_, i) {
+			answers.push(i.join(""))
+		})
+		answers = answers.join("a")
+		$.ajax({
+			url: host + "classroom/form",
+			type: "POST",
+			dataType: "json",
+			data: JSON.stringify({
+				"key": getCookie("key"),
+				"form": classvideo["class_name"],
+				"folder": class_["folder"],
+				"answer": answers,
+			}),
+			contentType: "application/json; charset=utf-8",
+			success: function (msg) {
+				console.log(msg)
+			},
+			error: function (error) {
+				console.log(error)
+			}
+		})
+	}
 
-// 		$.each(right, function (_, i) {
-// 			$(format("#q-{0}", i + 1))[0].style.background = "white"
-// 		})
+	if (wrong.length == 0) {
+		// 
+		alert("全對")
+		$.each($(".question"), function (_, i) {
+			i.style.background = "white"
+		})
+	}
+	else {
+		alert("有些沒答對, 請仔細檢查錯誤的題目 !")
+		if (evaluation_try >= 2) {
+			$("#eval_answer_btn").show()
+		}
 
-// 		$.each(wrong, function (_, i) {
-// 			$(format("#q-{0}", i + 1))[0].style.background = "rgba(255, 117, 91, 0.3)"
-// 		})
-// 	}
-// }
+		$.each(right, function (_, i) {
+			$(format("#q-{0}", i + 1))[0].style.background = "white"
+		})
+
+		$.each(wrong, function (_, i) {
+			$(format("#q-{0}", i + 1))[0].style.background = "rgba(255, 117, 91, 0.3)"
+		})
+	}
+}
 
 
 $(document).ready(function () {
 	subject_id = $("#subject_id")[0].textContent
+
+	if (getCookie("clsrid") == "" && getCookie("teacher-key") != "") {
+		window.location.pathname = "/classes"
+	}
 	loadclass(subject_id)
 
 	document.onkeydown = function (e) {

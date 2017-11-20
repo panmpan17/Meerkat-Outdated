@@ -14,5 +14,15 @@
 {% endblock %}
 {% block bcontent %}
   <div id="describes"></div>
+  <div id="blackscreen" hidden></div>
+  <div id="classroom-confirm" hidden>
+  	<div class="close-blackscreen" onclick="hide('blackscreen');hide('classroom-confirm')">✕</div>
+  	<div id="info">
+  		因為你參加 2 個「Python 入門課程」<br>
+  		請選擇其中一個
+  	</div><br>
+  	<div id="list">
+  	</div>
+  </div>
   <script src="/html/javascript/viewclass.js"></script>
 {% endblock %}

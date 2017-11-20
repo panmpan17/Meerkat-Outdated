@@ -122,3 +122,80 @@ span#indent {
 		content: "• ";
 		color: rgb(160, 160, 160);
 }
+
+#blackscreen {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, .8);
+	z-index: 5;
+}
+
+#classroom-confirm {
+	position: fixed;
+	left: calc(50% - 150px);
+	top: 100px;
+	bottom: 100px;
+	width: 300px;
+	background: white;
+	z-index: 10;
+}
+
+#classroom-confirm .close-blackscreen {
+	cursor: pointer;
+	margin: 5px;
+	margin-bottom: 15px;
+	width: 18px;
+	height: 18px;
+	line-height: 18px;
+	font-size: 10px;
+	text-align: center;
+	border-radius: 50%;
+	background: rgb(252, 101, 95);
+	color: transparent;
+}
+
+#classroom-confirm .close-blackscreen:hover {
+	color: white;
+}
+
+#classroom-confirm #info {
+	text-align: center;
+	line-height: 26px;
+}
+
+#classroom-confirm #list {
+	position: relative;
+	height: 300px;
+	overflow-y: scroll;
+}
+
+#classroom-confirm #list .class {
+	position: relative;
+	cursor: pointer;
+	width: calc(100%- 10px);
+	height: 50px;
+	line-height: 50px;
+	margin: 5px;
+	padding-left: 15px;
+	border: 2px solid rgb(6, 48, 59);
+	border-left: 5px solid rgb(6, 48, 59);
+}
+
+#classroom-confirm #list .class:hover {
+	border: 2px solid rgb(22, 106, 130);
+	border-left: 5px solid rgb(22, 106, 130);
+}
+
+#classroom-confirm #list .class::after {
+	content: "進入 →";
+	position: absolute;
+	right: 10px;
+	z-index: 2;
+}
+
+#classroom-confirm #list .class:hover::after {
+	color: gray;
+}

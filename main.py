@@ -110,6 +110,7 @@ class App():
         from cherryplugin.classes_load import ClassesTool
         from cherryplugin.email_valid import EmailValidPlugin, EmailValidTool
         from cherryplugin.file_mgr import FilePlugin, FileTool
+        from cherryplugin.classroom_mgr import ClassroomMgrPlugin, ClassroomMgrTool
 
         import app.model as model
 
@@ -144,12 +145,15 @@ class App():
         file_plugin = FilePlugin(cherrypy.engine, path)
         file_plugin.subscribe()
 
+        clsrom_plugin = ClassroomMgrPlugin(cherrypy.engine, path)
+        clsrom_plugin.subscribe()
+
         cherrypy.tools.keytool = KeyMgrTool(key_plugin)
         cherrypy.tools.classestool = ClassesTool(classes_plugin)
         cherrypy.tools.dbtool = SATool(sa_plugin)
         cherrypy.tools.emailvalidtool = EmailValidTool(email_valid_plugin)
         cherrypy.tools.filetool = FileTool(file_plugin)
-        cherrypy.engine.log("Start remove key remove threading")
+        cherrypy.tools.clsromtool = ClassroomMgrTool(clsrom_plugin)
 
     def mount(self, handler, config):
         cherrypy.tree.mount(

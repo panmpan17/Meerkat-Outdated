@@ -988,6 +988,7 @@ class AnswerRestView(View):
 class ClassesRestView(View):
     _cp_config = View._cp_config.copy()
     _cp_config["tools.classestool.on"] = True
+    _cp_config["tools.clsromtool.on"] = True
     _root = rest_config["url_root"] + "classes/"
 
     @cherrypy.expose
@@ -996,7 +997,7 @@ class ClassesRestView(View):
         meta, conn = cherrypy.request.db
         users = meta.tables[User.TABLE_NAME]
         classrooms = meta.tables[Classroom.TABLE_NAME]
-        key_mgr = cherrypy.request.key
+        clsrom_mgr = cherrypy.request.clsrom
 
         if cherrypy.request.method == "GET":
             if len(kwargs) > 0:
@@ -1007,6 +1008,7 @@ class ClassesRestView(View):
                     raise cherrypy.HTTPError(400,
                         ErrMsg.WRONG_CLASS.format(kwargs["class"]))
 
+                #if class is free
                 if class_["permission"] == None:
                     try:
                         return class_["lessons"][int(kwargs["lesson"])]
@@ -1019,19 +1021,27 @@ class ClassesRestView(View):
                     return class_
                 else:
                     progress = None
+                    folder = None
+                    # check user have been checked before
                     if "cls_per_key" in kwargs:
                         key = kwargs["cls_per_key"]
-                        if not key_mgr.get_cls_per_key(kwargs["cls_per_key"]):
+                        if not clsrom_mgr.get_cls_per_key(kwargs["cls_per_key"]):
                             raise cherrypy.HTTPError(400)
+
                     else:
                         clsr_id = None
                         key_type = None
                         try:
+                            try:
+                                clsr_id = int(kwargs["clsrid"])
+                            except:
+                                raise cherrypy.HTTPError(400)
+                            print("got clsid")
+
                             user = self.check_login_u(kwargs)
-                            ss = select([classrooms.c.id,
-                                classrooms.c.progress]).where(and_(
+                            ss = select([classrooms.c.progress, classrooms.c.folder]).where(and_(
+                                classrooms.c.id==clsr_id,
                                 classrooms.c.students_cid.any(user["id"]),
-                                classrooms.c.type==kwargs["class"]
                                 ))
                             rst = conn.execute(ss)
                             row = rst.fetchone()
@@ -1039,8 +1049,9 @@ class ClassesRestView(View):
                                 raise cherrypy.HTTPError(400,
                                     ErrMsg.NO_ACCESS_TO_CLASS.format(
                                         kwargs["class"]))
+
                             key_type = "user"
-                            clsr_id = row["id"]
+                            folder = row["folder"]
                             progress = row["progress"]
                         except:
                             teacher = self.check_login_teacher(kwargs)
@@ -1058,8 +1069,7 @@ class ClassesRestView(View):
                             key_type = "teacher"
                         key = str(uuid())
 
-                        key_mgr = cherrypy.request.key
-                        key_mgr.update_cls_per_key(key, key_type, clsr_id)
+                        clsrom_mgr.update_cls_per_key(key, key_type, clsr_id)
 
                     try:
                         return class_["lessons"][int(kwargs["lesson"])]
@@ -1070,7 +1080,9 @@ class ClassesRestView(View):
                     class_["length"] = len(class_["lessons"])
                     class_.pop("lessons")
                     class_["key"] = key
+                    class_["key_type"] = key_type
                     class_["progress"] = progress
+                    class_["folder"] = folder
                     return class_
             else: # return all class info
                 return classes.get_class_all_info()
@@ -1659,6 +1671,7 @@ class ClassroomRestView(View):
         "tools.encode.encoding": "utf-8",
         "tools.classestool.on": True,
         "tools.filetool.on": True,
+        "tools.clsromtool.on": True,
         }
 
     @cherrypy.expose
@@ -1741,6 +1754,7 @@ class ClassroomRestView(View):
                 str(folder))
             os.mkdir(clsrm_folder)
             os.mkdir(path_join(clsrm_folder, "teacher"))
+            os.mkdir(path_join(clsrm_folder, "form"))
             json["folder"] = folder
 
             ins = classrooms.insert()
@@ -1832,7 +1846,7 @@ class ClassroomRestView(View):
             try:
                 user = self.check_login_u(kwargs)
 
-                ss = select([classrooms.c.id]).where(and_(
+                ss = select([classrooms.c.id, classrooms.c.name]).where(and_(
                     classrooms.c.students_cid.any(user["id"]),
                     classrooms.c.type==kwargs["class"]
                     ))
@@ -1842,7 +1856,10 @@ class ClassroomRestView(View):
                     usererror = 2
                     raise cherrypy.HTTPError(400)
 
-                return [row["id"] for row in rows]
+                return [{
+                    "id": row["id"],
+                    "name": row["name"]
+                    } for row in rows]
             except:
                 try:
                     teacher = self.check_login_teacher(kwargs)
@@ -1870,16 +1887,17 @@ class ClassroomRestView(View):
     def progress(self, *args, **kwargs):
         meta, conn = cherrypy.request.db
         classrooms = meta.tables[Classroom.TABLE_NAME]
-        key_mgr = cherrypy.request.key
+        clsrom_mgr = cherrypy.request.clsrom
 
         if cherrypy.request.method == "GET":
             cls_per_key = kwargs["cls_per_key"]
-            if not key_mgr.get_cls_per_key(cls_per_key):
+            cls_per_key = clsrom_mgr.get_cls_per_key(cls_per_key)
+            if not cls_per_key:
                 raise cherrypy.HTTPError(400)
 
-            type_ = key_mgr.cls_per[cls_per_key]["type"]
+            type_ = cls_per_key["type"]
             if type_ == "user":
-                clsr_id = key_mgr.cls_per[cls_per_key]["clsr_id"]
+                clsr_id = cls_per_key["clsr_id"]
                 ss = select([classrooms.c.progress]).where(
                     classrooms.c.id==clsr_id)
                 rst = conn.execute(ss)
@@ -1904,6 +1922,9 @@ class ClassroomRestView(View):
 
             path = cherrypy.request.file_mgr.get_download_path()
             path += kwargs["folder"]
+
+            if not os.path.isdir(path):
+                raise cherrypy.HTTPError(400)
 
             if "student" in kwargs:
                 files = {}
@@ -1986,6 +2007,38 @@ class ClassroomRestView(View):
             conn.execute(stmt)
 
             cherrypy.response.status = 201
+            return {"success": True}
+        else:
+            raise cherrypy.HTTPError(404)
+
+    @cherrypy.expose
+    def form(self, *args, **kwargs):
+        clsrom_mgr = cherrypy.request.clsrom
+
+        if cherrypy.request.method == "GET":
+            teacher = self.check_login_teacher(kwargs)
+
+            self.check_key(kwargs, ("folder", ))
+
+            if ("answer" in kwargs) and ("type" in kwargs):
+                return cherrypy.request.classes.get_answer(kwargs["type"])
+            return clsrom_mgr.get_classroom(kwargs["folder"])
+        elif cherrypy.request.method == "POST":
+            data = cherrypy.request.json
+            user = self.check_login_u(data)
+            
+            self.check_key(data, (
+                "form",
+                "folder",
+                "answer",
+                ))
+
+            clsrom_mgr.new_answer(
+                data["folder"],
+                user["id"],
+                data["form"],
+                data["answer"])
+
             return {"success": True}
         else:
             raise cherrypy.HTTPError(404)

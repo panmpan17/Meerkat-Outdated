@@ -21,26 +21,10 @@ class FilePlugin(plugins.SimplePlugin):
         return self.users_files[i]
 
     def start(self):
-        if not path.isfile(self.path + "file_record.txt"):
-            return
-
-        with open(self.path + "file_record.txt") as file:
-            files = file.read().split("\n")
-        for file in files:
-            if file == "":
-                continue
-
-            filename, updated_time, lastupdate = file.split(",")
-            self.users_files[filename] = {
-                "updated_time": int(updated_time),
-                "lastupdate": lastupdate,
-                }
+        pass
 
     def stop(self):
-        with open(self.path + "file_record.txt", "w") as file:
-            for filename, fileinfo in self.users_files.items():
-                txt = f"{filename},{fileinfo['updated_time']},{fileinfo['lastupdate']}"
-                file.write(txt)
+        pass
 
     def write_file_from_file(self, filename, file):
         f = open(filename, "wb")

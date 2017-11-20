@@ -49,6 +49,7 @@ class UserCaseHandler(object):
         "tools.keytool.on": True,
         "tools.emailvalidtool.on": True,
         "tools.dbtool.on": True,
+        "tools.clsromtool.on": True,
         # "tools.caching.on": True,
         # "tools.caching.delay": 3600,
         }
@@ -207,10 +208,9 @@ class UserCaseHandler(object):
 
     @cherrypy.expose
     def video(self, key, video=None):
+        clsrom_mgr = cherrypy.request.clsrom
 
-        key_mgr = cherrypy.request.key
-
-        if not key_mgr.get_cls_per_key(key):
+        if not clsrom_mgr.get_cls_per_key(key):
             return access_deny
 
         return render("video.html", {"video": video})

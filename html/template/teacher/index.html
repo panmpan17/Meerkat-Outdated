@@ -5,24 +5,25 @@
 	<meta charset="utf-8">
 
 	<title>教師頁面</title>
-	<script src="html/javascript/jquery.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-	<script src="html/bootstrap/js/bootstrap.js"></script>
-	<script src="html/javascript/taiwan_town.js"></script>
-	<script src="html/javascript/base.js"></script>
-	<script src="html/slick/slick.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/html/javascript/jquery.min.js"></script>
+	<script src="/html/javascript/jquery-ui.min.js"></script>
+	<script src="/html/javascript/chart.min.js"></script>
+	<script src="/html/bootstrap/js/bootstrap.js"></script>
+	<script src="/html/javascript/taiwan_town.js"></script>
+	<script src="/html/javascript/base.js"></script>
+	<script src="/html/slick/slick.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/html/javascript/sha256.js"></script>
 	<script src="/html/javascript/datepicker.js"></script>
 
-	<link rel="stylesheet" href="html/bootstrap/css/bootstrap.css">
-	<link rel="stylesheet" href="html/css/sb-admin.css">
+	<link rel="stylesheet" href="/html/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" href="/html/css/sb-admin.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-	<link rel="stylesheet" href="html/css/circle-loading.css">
-	<link rel="stylesheet" href="html/slick/slick.css">
-	<link rel="stylesheet" href="html/slick/slick-theme.css">
-	<link rel="stylesheet" href="html/css/datepicker.css">
-	<link rel="stylesheet" href="html/css/checklist.css">
-	<link rel="stylesheet" href="html/css/teacher.css">
+	<link rel="stylesheet" href="/html/css/circle-loading.css">
+	<link rel="stylesheet" href="/html/slick/slick.css">
+	<link rel="stylesheet" href="/html/slick/slick-theme.css">
+	<link rel="stylesheet" href="/html/css/datepicker.css">
+	<link rel="stylesheet" href="/html/css/checklist.css">
+	<link rel="stylesheet" href="/html/css/teacher.css">
 </head>
 
 <body>
@@ -376,50 +377,86 @@
 		</div>
 
 		<div id="p-classroomview" class="page-wrapper" hidden>
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-md-12">
-						<h3>
-							<span id="class-name"></span>
-							<small>i
-								<span id="student-num"></span> 個學生
-								<div class="text-right">
-									課程種類 - <span id="classroom-type"></span>
-								</div>
-							</small>
-						</h3>
-						<hr>
-						<a style="cursor: pointer;color:dodgerblue;font-weight:700" id="refreshclassroom">重新載入功課 <i class="fa fa-refresh" aria-hidden="true"></i></a>
-
-						<hr>
-						<h4>公佈的檔案</h4>
-						<label style="cursor: pointer;color:dodgerblue;font-weight:700" for="annocefile">上傳 <i class="fa fa-cloud-upload" aria-hidden="true"></i></label>
-						<form action="/rest/1/upload/teacherfile" method="post" enctype="multipart/form-data" id="annoceform" hidden>
-							<input type="file" accept=".py,.sb,.sb2,.png,.gif,.jpeg,.jpg" name="annoce" id="annocefile" type="file" onchange="upload_annoce()">
-							<input type="text" name="tkey" id="annoce-tkey">
-							<input type="text" name="clsrid" id="annoce-clsrid">
-						</form>
-						<br>
-						<ul id="filelist"></ul>
-
-						<hr>
-						<h4>連結</h4>
-						<span id="links" style="display: inline;"></span>
-						<button style="padding: 9px 10px" onclick="new_links_field()"><i class="fa fa-fw fa-plus"></i></button>
-						<button style="padding: 9px 30px" onclick="save_links()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
-
-						<hr>
-						<h4>功課</h4>
-						<div id="buttonsgroup"></div>
-						<div id="homewrok"></div>
-						<hr>
-						<div id="porjects"></div>
-						<br><br>
-						<button style="padding: 9px 10px" onclick="show_change_classroom()"><i class="fa fa-fw fa-pencil"></i></button>
-						<button style="padding: 9px 10px" onclick="delete_classroom()"><i class="fa fa-fw fa-times"></i></button>
-						<br>
+			<h3>
+				<span id="class-name"></span>
+				<small>
+					<span id="student-num"></span> 個學生
+					<div class="text-right">
+						課程種類 - <span id="classroom-type"></span>
 					</div>
+				</small>
+			</h3>
+			
+			<div class="btn-group" role="group" >
+				<button type="button" class="btn btn-default" onclick="showClassroomJob('publish')">公佈事項</button>
+				<button type="button" class="btn btn-default" onclick="showClassroomJob('homework')">功課</button>
+				<button type="button" class="btn btn-default" onclick="showClassroomJob('grade')">評量成績</button>
+				<button type="button" class="btn btn-default" onclick="showClassroomJob('alter')">教室更改</button>
+			</div>
+			<hr>
+
+			<div id="clsrom-publish" class="clsrom-job" hidden>
+				<h4>公佈的檔案</h4>
+				<label style="cursor: pointer;color:dodgerblue;font-weight:700" for="annocefile">上傳 <i class="fa fa-cloud-upload" aria-hidden="true"></i></label>
+				<form action="/rest/1/upload/teacherfile" method="post" enctype="multipart/form-data" id="annoceform" hidden>
+					<input type="file" accept=".py,.sb,.sb2,.png,.gif,.jpeg,.jpg" name="annoce" id="annocefile" type="file" onchange="upload_annoce()">
+					<input type="text" name="tkey" id="annoce-tkey">
+					<input type="text" name="clsrid" id="annoce-clsrid">
+				</form>
+				<br>
+				<ul id="filelist"></ul>
+				<br><br>
+				<h4>公佈的連結</h4>
+				<span id="links" style="display: inline;"></span>
+				<button style="padding: 9px 10px" onclick="newLinksField()"><i class="fa fa-fw fa-plus"></i></button>
+				<button style="padding: 9px 30px" onclick="saveLinks()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
+			</div>
+
+			<div id="clsrom-homework" class="clsrom-job" hidden>
+				<h4>功課</h4>
+				<a style="cursor: pointer;color:dodgerblue;font-weight:700" id="refreshclassroom">重新載入功課 <i class="fa fa-refresh" aria-hidden="true"></i></a>
+				<div id="buttonsgroup"></div>
+				<div id="homewrok"></div>
+				<hr>
+				<div id="porjects"></div>
+				<br><br>
+			</div>
+
+			<div id="clsrom-grade" class="clsrom-job" hidden>
+				<h4>評量成績</h4>
+				<br>
+				<div class="dropdown">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						評量選擇 <i class="fa fa-caret-down" aria-hidden="true"></i>
+					</button>
+					<ul class="dropdown-menu" id="grade-form"></ul>
+				</div><br>
+				<div class="btn-group" role="group" >
+					<button type="button" class="btn btn-default" onclick="showChart('first')">第一次答對率</button>
+					<button type="button" class="btn btn-default" onclick="showChart('times')">第幾次完成</button>
+					<button type="button" class="btn btn-default" onclick="showChart('finish')">完成率</button>
+					<button type="button" class="btn btn-default" onclick="showChart('data')">個別資料</button>
 				</div>
+				<br><br>
+				<canvas id="chart" width="400" height="400"></canvas>
+				<div id="grade-detail">
+					<table class="table homework">
+						<thead id="grade-detail-head"></thead>
+						<tbody id="grade-detail-body"></tbody>
+					</table>
+					<br><br>
+					<h4 id="student-detail-name"></h4>
+					<table class="table homework" id="student-detail">
+						<thead id="student-detail-head"></thead>
+						<tbody id="student-detail-body"></tbody>
+					</table>
+				</div>
+			</div>
+			
+			<div id="clsrom-alter" class="clsrom-job" hidden>
+				<h4>教室更改</h4>
+				<button style="padding: 9px 10px" onclick="showChangeClassroom()"><i class="fa fa-fw fa-pencil"></i></button>
+				<button style="padding: 9px 10px" onclick="deleteClassroom()"><i class="fa fa-fw fa-times"></i></button>
 			</div>
 		</div>
 	</div>
@@ -448,7 +485,7 @@
 					<textarea maxlength="100" placeholder="作品評論 (100 字以下)" id="project-comment" cols="30" rows="5" class="form-control"></textarea>
 				</div>
 				<div class="modal-footer">
-					<button id="copycode" onclick="copycode()" type="button" class="btn btn-info">複製程式</button>
+					<button id="copycode" onclick="copyCode()" type="button" class="btn btn-info">複製程式</button>
 					<button id="changecomment" type="button" class="btn btn-success">改評論</button>
 					<a target="_blank" id="s_project_page" target="_blank">
 						<button type="button" class="btn btn-warning">看程式</button>
@@ -475,7 +512,7 @@
 				<div class="modal-footer">
 					<span style="color: grey">如果要刪除學生, 就把他的資料通通清空</span>
 					<button type="button" class="btn btn-info" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-warning" onclick="check_change_student()">更改</button>
+					<button type="button" class="btn btn-warning" onclick="checkChangeStudent()">更改</button>
 				</div>
 			</div>
 		</div>
