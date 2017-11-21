@@ -14,9 +14,7 @@ student_field_python_format = `\
 `
 
 sid_colors = {};
-function remove_blank() {
-	$("#create_classroom_b")[0].disabled = true
-	f = $("#field")[0]
+function remove_blank(f) {
 	f.value = f.value.replace(/\t/g, ",")
 	f.value = f.value.replace(/     /g, ",")
 	f.value = f.value.replace(/    /g, ",")
@@ -158,27 +156,24 @@ function check_students_python() {
 		url: host + "teacher/user",
 		data: {"tkey": getCookie("teacher-key"), "users": cids},
 		success: function (msg) {
-			for (i=0;i<msg["none"].length;i++) {
-				document.getElementById("cid-" + msg["none"][i]).classList.remove("bg-success")
-				document.getElementById("cid-" + msg["none"][i]).classList.add("bg-danger")
+			if (msg["none"].length >= 1) {
+				$.each(msg["none"], function (_, i) {
+					document.getElementById("cid-" + i).classList.remove("bg-success")
+					document.getElementById("cid-" + i).classList.add("bg-danger")
+				})
+				$("#create_classroom_b")[0].disabled = true
+				names = null
+				cids = null
+				sids = null
+			}
+			else {
+				$("#create_classroom_b")[0].disabled = false
 			}
 		}
 	})
 
 	$("#studentsthead")[0].innerHTML = "<tr><th>學生姓名</th><th>Coding 4 Fun 帳號</th></tr>"
 	$("#s-students-table").show()
-
-	if ($(".bg-danger").length == 0) {
-		if ($(".bg-danger").length == 0) {
-			$("#create_classroom_b")[0].disabled = false
-		}
-		else {
-			$("#create_classroom_b")[0].disabled = true
-			names = null
-			cids = null
-			sids = null
-		}
-	}
 }
 
 function create_classroom() {

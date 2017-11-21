@@ -152,7 +152,7 @@
 							</small>
 							<img hidden id="hoverimg" src="html/images/scratch_table.png" height="150px" alt="" />
 						</h3>
-						<textarea class="form-control" rows="10" id="field" onkeyup="remove_blank()"></textarea>
+						<textarea class="form-control" rows="10" id="field" onkeyup="$('#create_classroom_b')[0].disabled = true;remove_blank(this)"></textarea>
 						<br>
 					</div>
 					<div class="col-md-12">
@@ -440,12 +440,13 @@
 				<br><br>
 				<canvas id="chart" width="400" height="400"></canvas>
 				<div id="grade-detail">
+					<h4 id="grade-detail-name"></h4><br>
 					<table class="table homework">
 						<thead id="grade-detail-head"></thead>
 						<tbody id="grade-detail-body"></tbody>
 					</table>
 					<br><br>
-					<h4 id="student-detail-name"></h4>
+					<h4 id="student-detail-name"></h4><br>
 					<table class="table homework" id="student-detail">
 						<thead id="student-detail-head"></thead>
 						<tbody id="student-detail-body"></tbody>
@@ -454,8 +455,27 @@
 			</div>
 			
 			<div id="clsrom-alter" class="clsrom-job" hidden>
-				<h4>教室更改</h4>
-				<button style="padding: 9px 10px" onclick="showChangeClassroom()"><i class="fa fa-fw fa-pencil"></i></button>
+				<h4>教室更改 - 教室名稱</h4>
+				<input id="change-classroom-name" class="form-control" type="text">
+				<h4>教室更改 - 學生資料</h4>
+				<textarea class="form-control" rows="10" id="change-students" onkeyup="remove_blank(this)"></textarea>
+				<br>
+				<button type="button" class="btn btn-warning btn-lg" onclick="resetChangeClassroomField()">
+					<i class="fa fa-refresh" aria-hidden="true"></i> 重設資料
+				</button>
+				<button type="button" class="btn btn-info btn-lg" onclick="checkChangeStudent()">
+					<i class="fa fa-check" aria-hidden="true"></i> 檢查學生資料
+				</button>
+				<br><br>
+				<table class="table" id="change-students-table" hidden>
+					<thead id="change-students-head"></thead>
+					<tbody id="change-students-body"></tbody>
+				</table>
+				<br>
+				<button id="change-student-btn" type="button" class="btn btn-primary btn-lg btn-block" onclick="changeStudents()" disabled>
+					<i class="fa fa-wrench" aria-hidden="true"></i> 更新教室
+				</button>
+				<br>
 				<button style="padding: 9px 10px" onclick="deleteClassroom()"><i class="fa fa-fw fa-times"></i></button>
 			</div>
 		</div>
@@ -514,6 +534,18 @@
 					<button type="button" class="btn btn-info" data-dismiss="modal">取消</button>
 					<button type="button" class="btn btn-warning" onclick="checkChangeStudent()">更改</button>
 				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" tabindex="-1" role="dialog" id="answer-detail">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="answer-detail-title"></h4>
+				</div>
+				<div class="modal-body" id="answer-detail-body"></div>
 			</div>
 		</div>
 	</div>

@@ -37,7 +37,6 @@ class ClassroomMgrPlugin(plugins.SimplePlugin):
                         answers = answers.split(",")
                         classroom[userid][title] = answers
                 self.forms[folder] = classroom
-        print(self.forms)
 
     def stop(self):
         self.bus.log("Closing Classroom Manager")

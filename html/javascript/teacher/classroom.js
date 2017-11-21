@@ -124,6 +124,7 @@ function changeclassroom (cls_id) {
 
 	loadTeacherFiles()
 	loadStudentsGrade()
+	loadChangeClassroom()
 }
 
 function loadAllScratchHomework () {
@@ -501,11 +502,11 @@ function loadStudentsGrade () {
 		data: {
 			"tkey": getCookie("teacher-key"),
 			"folder": classroom["folder"],
-			"answer": true,
+			"evaluation": true,
 			"type": classroom["type"],
 		},
 		success: function (msg) {
-			classroom["answer"] = msg
+			// get students answer
 			$.ajax({
 				url: host + "classroom/form",
 				data: {
@@ -538,8 +539,64 @@ function loadStudentsGrade () {
 					$("#grade-form")[0].innerHTML = html
 				}
 			})
+
+			classroom["evaluations"] = msg
+			classroom["answer"] = {}
+			$.each(msg, function (form_name, info) {
+				answers = []
+				$.each(info["questions"], function (_, question) {
+					answers.push(question["answer"].join(""))
+				})
+				classroom["answer"][form_name] = answers.join("a")
+			})
 		}
 	})
+}
+
+function loadChangeClassroom () {
+	json = {
+		"tkey":getCookie("teacher-key")
+	}
+	if (!(classroom["students"] instanceof Array)) {
+		json["ids"] = Object.keys(classroom["students"])
+	}
+	else {
+		json["ids"] = []
+		$.each(classroom["students"], function (_, i) {
+			json["ids"].push(i[1])
+			// seqs[i[1]] = _
+		})
+	}
+
+	$.ajax({
+		url: host + "classroom/",
+		data: json,
+		success: function (msg) {
+			classroom["student_real_id"] = msg
+			resetChangeClassroomField()
+		}
+	})
+}
+
+function resetChangeClassroomField () {
+	value = []
+	if (!(classroom["students"] instanceof Array)) {
+		$.each(classroom["students"], function (k, v) {
+			value.push(v + "," + classroom["student_real_id"][k])
+		})
+	}
+	else {
+		$.each(classroom["students"], function (i, l) {
+			value.push(format("{0},{1},{2}",
+				l[0],
+				classroom["student_real_id"][l[1]],
+				l[2])
+				)
+		})
+	}
+	value = value.join("\n")
+	$("#change-students")[0].value = value
+	$("#change-classroom-name")[0].value = classroom["name"]
 }
 
 function showChart (method) {
@@ -570,7 +627,7 @@ function showChart (method) {
 			non_answered = 0
 
 			length = 0
-			if (typeof(classroom["students"]) == "object") {
+			if (!(classroom["students"] instanceof Array)) {
 				length = Object.keys(classroom["students"]).length
 			}
 			else {
@@ -645,6 +702,7 @@ function showChart (method) {
 	else if (method == "data") {
 		$("#chart").hide();
 		$("#grade-detail").show();
+		$("#grade-detail-name")[0].innerHTML = chart_form
 
 		form_answer = classroom["answer"][chart_form]
 		form_answer = form_answer.split("a")
@@ -716,8 +774,10 @@ function showFormStudentDetail (sid) {
 
 	tbody = ""
 	$.each(classroom["grade"][sid][chart_form], function (i, answer) {
-		tr = format(`<tr class="hover"><td>{0}</td>`,
-				i + 1
+		tr = format(`<tr class="hover" onclick="showAnswerDetail({1}, {2})"><td>{0}</td>`,
+				i + 1,
+				sid,
+				i,
 				)
 		answers = answer.split("a")
 		$.each(form_answer, function (e, right_one) {
@@ -734,6 +794,53 @@ function showFormStudentDetail (sid) {
 
 	$("#student-detail-head")[0].innerHTML = thead
 	$("#student-detail-body")[0].innerHTML = tbody
+}
+
+function showAnswerDetail (sid, seq) {
+	if (classroom["grade"][sid] == undefined) {
+		return;
+	}
+	if (classroom["grade"][sid][chart_form] == undefined) {
+		return;
+	}
+	if (classroom["grade"][sid][chart_form][seq] == undefined) {
+		return;
+	}
+
+	answer = classroom["grade"][sid][chart_form][seq]
+	answer = answer.split("a")
+
+	body = ""
+	$.each(classroom["evaluations"][chart_form]["questions"], function (qi, question) {
+		if (answer[qi] == question["answer"].join("")) {
+			correct = true
+			body += format(`<h4 style="font-weight: 900">{0} ?</h4>`, question["question"])
+		}
+		else {
+			correct = false
+			body += format(`<h4 style="font-weight: 900;background:tomato">{0} ?</h4>`, question["question"])
+		}
+		$.each(question["choice"], function (i, choice) {
+			body += choice
+			if (question["answer"].includes(i)) {
+				body += `<i class="fa fa-check" aria-hidden="true" style="color:cornflowerblue"></i>`
+			}
+			if (!correct) {
+				if (answer[qi].includes(i)) {
+					body += `<i class="fa fa-check" aria-hidden="true" style="color:mediumseagreen"></i>`
+				}
+			}
+			body +=  "<br>"
+		})
+		body += "<br>"
+	})
+
+	$("#answer-detail-title")[0].innerHTML = format("{0} / {1} - 第 {2} 次作答",
+		chart_form,
+		classroom["students"][sid],
+		seq + 1)
+	$("#answer-detail-body")[0].innerHTML = body
+	$("#answer-detail").modal("show")
 }
 
 function deleteClassroom () {
@@ -757,308 +864,163 @@ function deleteClassroom () {
 	}
 }
 
-TB_HTML_PY = `<table class="table">
-	<tr>
-		<th class="text-center">學生名字</th>
-		<th class="text-center">Coding 4 Fun 帳號</th>
-	</tr>
-	<tbody id="change-student-field">
-		{0}
-	</tbody>
-	<tr>
-		<td stylle="cursor: pointer;color: cornflowerblue" onclick="newField()">
-			<i class="fa fa-fw fa-plus"></i>
-		</td>
-	</tr>
-</table>`
-
-TBBODY_HTML_PY = `<tr>
-	<td><input name="{2}" class="form-control text-center" type="text" value="{0}" /></td>
-	<td><input name="{2}" class="form-control text-center" type="text" value="{1}" /></td>
-</tr>`
-
-TB_HTML_SC = `<table class="table">
-	<tr>
-		<th>學生名字</th>
-		<th>Coding 4 Fun 帳號</th>
-		<th>Scratch 帳號</th>
-	</tr>
-	<tbody id="change-student-field">
-		{0}
-	</tbody>
-	<tr>
-		<td stylle="cursor: pointer;color: cornflowerblue" onclick="newField()">
-			<i class="fa fa-fw fa-plus"></i>
-		</td>
-	</tr>
-</table>`
-
-TBBODY_HTML_SC = `<tr>
-	<td><input name="{3}" class="form-control text-center" type="text" value="{0}" /></td>
-	<td><input name="{3}" class="form-control text-center" type="text" value="{1}" /></td>
-	<td><input name="{3}" class="form-control text-center" type="text" value="{2}" /></td>
-</tr>`
-FIELD = `<td><input name="{0}" class="form-control text-center" type="text" placeholder="..." /></td>`
-
-field_num = 0
-field_num_2_cid = {}
-field_num_2_sid = {}
-wrong_field = false
-
-function showChangeClassroom () {
-	$("#change-student").modal("show")
-	$("#change_classroom_name")[0].value = classroom["name"]
-
-	seqs = {}
-	json = {
-		"tkey":getCookie("teacher-key")
-	}
-	if (classroom["type"].startsWith("python")) {
-		json["ids"] = Object.keys(classroom["students"])
-	}
-	else {
-		json["ids"] = []
-		$.each(classroom["students"], function (_, i) {
-			json["ids"].push(i[1])
-			seqs[i[1]] = _
-		})
-	}
-
-	$.ajax({
-		url: host + "classroom/",
-		data: json,
-		success: function (msg) {
-			table = ""
-			if (classroom["type"].startsWith("python")) {
-				tbody2 = ""
-				$.each(msg, function (id, userid) {
-					tbody2 += format(TBBODY_HTML_PY,
-						classroom["students"][id],
-						userid,
-						field_num)
-					field_num ++
-				})
-				table = format(TB_HTML_PY,
-					tbody2)
-			}
-			else {
-				tbody2 = ""
-				$.each(msg, function (id, userid) {
-					tbody2 += format(TBBODY_HTML_SC,
-						classroom["students"][seqs[id]][0],
-						userid,
-						classroom["students"][seqs[id]][2],
-						field_num)
-					field_num ++
-				})
-				table = format(TB_HTML_SC,
-					tbody2)
-			}
-			$("#change-student-table")[0].innerHTML = table
-		}
-	})
-}
-
-function newField () {
-	html = $("<tr>")
-	if (classroom["type"].startsWith("python")) {
-		field = $(format(FIELD, field_num))
-		html.append($(format(FIELD, field_num)))
-		html.append($(format(FIELD, field_num)))
-	}
-	else {
-		field = $(format(FIELD, field_num))
-		html.append($(format(FIELD, field_num)))
-		html.append($(format(FIELD, field_num)))
-		html.append($(format(FIELD, field_num)))
-	}
-	$("#change-student-field").append(html)
-	field_num ++
-}
-
 function checkChangeStudent () {
 	wrong_field = false
-	cids = []
+	c_cids = []
+	c_names = [];
+	c_sids = []
+
 	if (classroom["type"].startsWith("python")) {
-		for (i=0;i<field_num;i++) {
-			h = $("[name=" + i + "]")
-			h[0].style.border = ""
-			h[1].style.border = ""
-			if (h[0].value == "" && h[1].value != "") {
-				h[0].style.border = "red 2px solid"
-				wrong_field = true
+		data = $("#change-students")[0].value.split("\n")
+
+		$("#change-students-head")[0].innerHTML = "<tr><th>學生姓名</th><th>Coding 4 Fun 帳號</th></tr>"
+		change_table = $("#change-students-body")[0];
+		change_table.innerHTML = "";
+
+		for (i=0;i<data.length;i++) {
+			student = data[i].split(",")
+			if (student.length < 2) {
+				alert("學生資料不完整請檢查");
+				return;
 			}
-			else if (h[0].value != "" && h[1].value == "") {
-				h[1].style.border = "red 2px solid"
-				wrong_field = true
-			}
-			if (h[1].value != "") {
-				v = h[1].value
-				cids.push(v)
-				field_num_2_cid[v.toString()] = i
-			}
+
+			name = student[0];cid = student[1];
+
+			c_names.push(name)
+			c_cids.push(cid)
+
+			change_table.innerHTML += format(student_field_python_format,
+				name,
+				cid)
 		}
 
-		$("#bg").show()
 		$.ajax({
 			url: host + "teacher/user",
-			data: {"tkey": getCookie("teacher-key"), "users": cids},
+			data: {"tkey": getCookie("teacher-key"), "users": c_cids},
 			success: function (msg) {
-				$.each(msg["none"], function (_, i) {
-					h = $("[name=" + field_num_2_cid[i] + "]")
-					if (h[0].value != "" || h[1].value != "") {
-						h[1].style.border = "red 2px solid"
-						wrong_field = true
-					}
-				})
-				if (!wrong_field) {
-					names = []
-					for (i=0;i<field_num;i++) {
-						h = $("[name=" + i + "]")
-						if (h[0].value != "") {
-							names.push(h[0].value)
-						}
-					}
-					json = {
-						"clsid": classroom["id"],
-						"name": $("#change_classroom_name")[0].value,
-						"students_name": names,
-						"students_cid": cids,
-						"students_sid": [],
-						"tkey": getCookie("teacher-key")
-					}
-					$("#bg").hide()
-					$.ajax({
-						url: host + "classroom/",
-						type: "PUT",
-						dataType: "json",
-						data: JSON.stringify(json),
-						contentType: "application/json; charset=utf-8",
-						success: function (msg) {
-							alert("更改成功, 將自動重新整理");
-							location.reload()
-						},
-						error: function (error) {
-						}
+				$("#bg").hide()
+				if (msg["none"].length >= 1) {
+					$.each(msg["none"], function (_, i) {
+						$("#cid" + i)[0].classList.remove("bg-success")
+						$("#cid" + i)[0].classList.add("bg-danger")
 					})
+					$("#change-student-btn")[0].disabled = true
+					c_names = null
+					c_cids = null
+					c_sids = null
+				}
+				else {
+					$("#change-student-btn")[0].disabled = false
 				}
 			}
 		})
+
+		$("#change-students-table").show()
+		$("#bg").show()
 	}
 	else {
-		cids = []
-		sids = []
-		for (i=0;i<field_num;i++) {
-			h = $("[name=" + i + "]")
-			h[0].style.border = ""
-			h[1].style.border = ""
-			h[2].style.border = ""
-			if (h[0].value == "" && (h[1].value != "" || h[2].value != "")) {
-				h[0].style.border = "red 2px solid"
-				wrong_field = true
-			}
-			else if (h[0].value != "") {
-				if (h[1].value == "") {
-					h[1].style.border = "red 2px solid"
-					wrong_field = true
-				}
-				if (h[2].value == "") {
-					h[2].style.border = "red 2px solid"
-					wrong_field = true
-				}
-			}
-			if (h[1].value != "" && h[2].value == "") {
-				h[2].style.border = "red 2px solid"
-				wrong_field = true
-			}
-			if (h[1].value == "" && h[2].value != "") {
-				h[1].style.border = "red 2px solid"
-				wrong_field = true
+		data = $("#change-students")[0].value.split("\n")
+
+		$("#change-students-head")[0].innerHTML = "<tr><th>學生姓名</th><th>Coding 4 Fun 帳號</th><th>Scratch 帳號</th></tr>"
+		change_table = $("#change-students-body")[0];
+		change_table.innerHTML = "";
+
+		c_sid_colors = {};
+		for (i=0;i<data.length;i++) {
+			student = data[i].split(",")
+			if (student.length < 3) {
+				alert("學生資料不完整請檢查");
+				return;
 			}
 
-			if (h[1].value != "") {
-				v = h[1].value
-				cids.push(v)
-				field_num_2_cid[v.toString()] = i
-			}
-			if (h[2].value != "") {
-				v = h[2].value
-				sids.push(v)
-				field_num_2_sid[v.toString()] = i
-			}
+			name = student[0];cid = student[1];sid = student[2];
+
+			c_names.push(name)
+			c_cids.push(cid)
+			c_sids.push(sid)
+
+			sid = sid.toLowerCase();
+			c_sid_colors[sid] = false;
+
+			// check scratch user exist
+			$.ajax("https://scratch.mit.edu/users/" + sid).done(function (msg) {
+				sname = msg.substring(msg.indexOf("<title>") + 7, msg.indexOf(" on Scratch</title>"));
+				sname = sname.toLowerCase();
+				c_sid_colors[sname] = true;
+			})
+			change_table.innerHTML += format(student_field_scratch_format,
+				name,
+				cid,
+				sid)
 		}
 
-		$("#bg").show()
-		quest_id = 0
-		$.each(sids, function (_, sid) {
-			$.ajax({
-				url: "https://scratch.mit.edu/users/" + sid,
-				success: function (msg) {
-					quest_id ++
-					if (sids.length == quest_id) {
-						$("#bg").hide()
-						if (!wrong_field) {
-							names = []
-							for (i=0;i<field_num;i++) {
-								h = $("[name=" + i + "]")
-								if (h[0].value != "") {
-									names.push(h[0].value)
-								}
-							}
-							json = {
-								"name": $("#change_classroom_name")[0].value,
-								"clsid": classroom["id"],
-								"students_name": names,
-								"students_cid": cids,
-								"students_sid": sids,
-								"tkey": getCookie("teacher-key")
-							}
-							$.ajax({
-								url: host + "classroom/",
-								type: "PUT",
-								dataType: "json",
-								data: JSON.stringify(json),
-								contentType: "application/json; charset=utf-8",
-								success: function (msg) {
-									alert("更改成功, 將自動重新整理");
-									location.reload()
-								},
-								error: function (error) {
-									console.log(error)
-								}
-							})
-						}
-					}
-				},
-				error: function (error) {
-					quest_id ++
-					h = $("[name=" + field_num_2_sid[sid] + "]")
-					wrong_field = true
-					if (h[0].value != "" || h[1].value != "" || h[2].value != "") {
-						h[2].style.border = "red 2px solid"
-						wrong_field = true
-					}
-					if (sids.length == quest_id) {
-						$("#bg").hide()
-					}
-				}
-			})
-		})
-
+		// check userid exist
 		$.ajax({
 			url: host + "teacher/user",
-			data: {"tkey": getCookie("teacher-key"), "users": cids},
+			data: {"tkey": getCookie("teacher-key"), "users": c_cids},
 			success: function (msg) {
 				$.each(msg["none"], function (_, i) {
-					h = $("[name=" + field_num_2_cid[i] + "]")
-					if (h[0].value != "" || h[1].value != "" || h[2].value != "") {
-						h[1].style.border = "red 2px solid"
-						wrong_field = true
-					}
+					$("#cid" + i)[0].classList.remove("bg-success")
+					$("#cid" + i)[0].classList.add("bg-danger")
 				})
 			}
 		})
+
+		$("#change-students-table").show()
+		$("#bg").show()
+
+		// change input colr if scratch id not exist
+		setTimeout(function () {
+			$.each(c_sid_colors, function (k,v) {
+				k = k.toLowerCase()
+				if (v) {
+					$("#sid-" + k)[0].classList.add("bg-success")
+				}
+				else {
+					$("#sid-" + k)[0].classList.add("bg-danger")
+				}
+			})
+			$("#bg").hide();
+
+			if ($(".bg-danger").length == 0) {
+				$("#change-student-btn")[0].disabled = false
+			}
+			else {
+				$("#change-student-btn")[0].disabled = true
+				c_names = null
+				c_cids = null
+				c_sids = null
+			}
+		}, (1000 * Object.keys(c_sid_colors).length));
 	}
+}
+
+function changeStudents() {
+	if (c_names == null) {
+		return;
+	}
+	json = {
+		"name": $("#change-classroom-name")[0].value,
+		"clsid": classroom["id"],
+		"students_name": c_names,
+		"students_cid": c_cids,
+		"students_sid": c_sids,
+		"tkey": getCookie("teacher-key")
+	}
+	$.ajax({
+		url: host + "classroom/",
+		type: "PUT",
+		dataType: "json",
+		data: JSON.stringify(json),
+		contentType: "application/json; charset=utf-8",
+		success: function (msg) {
+			alert("更改成功, 將自動重新整理");
+			location.reload()
+		},
+		error: function (error) {
+			console.log(error)
+		}
+	})
 }
 
 function playScratchProject (project_id, hw_s, student_id) {

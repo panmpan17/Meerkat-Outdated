@@ -1036,7 +1036,6 @@ class ClassesRestView(View):
                                 clsr_id = int(kwargs["clsrid"])
                             except:
                                 raise cherrypy.HTTPError(400)
-                            print("got clsid")
 
                             user = self.check_login_u(kwargs)
                             ss = select([classrooms.c.progress, classrooms.c.folder]).where(and_(
@@ -2020,8 +2019,10 @@ class ClassroomRestView(View):
 
             self.check_key(kwargs, ("folder", ))
 
-            if ("answer" in kwargs) and ("type" in kwargs):
-                return cherrypy.request.classes.get_answer(kwargs["type"])
+            # if ("answer" in kwargs) and ("type" in kwargs):
+            #     return cherrypy.request.classes.get_answer(kwargs["type"])
+            if ("evaluation" in kwargs) and ("type" in kwargs):
+                return cherrypy.request.classes.get_evals(kwargs["type"])
             return clsrom_mgr.get_classroom(kwargs["folder"])
         elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
@@ -2111,7 +2112,6 @@ class FileUploadRestView(View):
                         os.remove(filename)
 
             biggest = None
-            print(sections)
             for section, value in sections.items():
                 if value > sections[biggest]:
                     biggest = section
