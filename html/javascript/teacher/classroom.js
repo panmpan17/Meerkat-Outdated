@@ -667,6 +667,7 @@ function showChart (method) {
 			if (chart_form in i) {
 				index = i[chart_form].indexOf(classroom["answer"][chart_form])
 				if (index != -1) {
+					index += 1
 					if (times[index] == undefined) {
 						times[index] = 0;
 					}

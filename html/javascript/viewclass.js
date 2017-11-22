@@ -67,7 +67,7 @@ function leadtoclass(id) {
             success: function (msg) {
                 console.log(msg)
                 if (msg.length == 1 || getCookie("teacher-key") != "") {
-                    storeCookie("clsrid", msg[0])
+                    storeCookie("clsrid", msg[0]["id"])
                     window.location.href = "/class/c/" + id;
                 }
 
