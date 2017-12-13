@@ -21,6 +21,17 @@
 </div>
 <br><br>
 {% endblock %}
+{% block bcontent %}
+<div id="intro-video-frame" class="loginsignup-frame" hidden>
+	<div class="loginsignup-frame-inside" style="overflow-y: scroll;">
+		<a id="closeloginframe" onclick="hide('intro-video-frame');$('#intro-video')[0].src=''" style="">X</a>
+		<br>
+		<center>
+			<iframe id="intro-video" style="border: none;" width="800" height="500"></iframe>
+		</center>
+	</div>
+</div>
+{% endblock %}
 {% block script %}
 <script src="/html/javascript/class.js"></script>
 {% endblock %}

@@ -3,7 +3,8 @@
  "id": "python_01",
  "lessons": [
     {"title": "第一課 與 Python 相遇",
-        "content": [{"answer": "",
+        "content": [
+            {"answer": "",
             "type": "video",
             "buttons": [],
             "class_name": "1-1 與 Python 相遇",

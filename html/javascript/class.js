@@ -1,17 +1,39 @@
 var class_ = null;
 var lesson = 0
 var video = 0
+var sections_active = null;
 
 var videoblock = `<iframe id="videoframe" src="{0}&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>`
 
 var privatevideoblock = `<iframe id="videoframe" class="python" src='http://{0}/video/{1}?video={2}'></iframe>`
 
-var lsn_bar_lsn = `<div id="lesson-{0}" class="lesson shrink">
+var lsn_bar_lsn = `<div id="lesson-{0}" class="lesson shrink{2}">
 	<div class="title" onclick="toggle_lsn_btn({0}, this)">{1}</div>
 	<div id="lesson-{0}-video" class="video-bar"></div>
 </div>`
 
-var lsn_bar_vid = `<div id="vid-{1}-{2}" class="video" onclick="video_jump({1}, {2})">{0}</div>`
+var lsn_bar_vid = `<div id="vid-{1}-{2}" class="video{3}" onclick="video_jump({1}, {2})">{0}</div>`
+
+var lsn_bar_section_vid = `<div id="vid-{1}-{2}-{3}" class="video" onclick="section_video_jump({1}, {2}, {3})">{0}</div>`
+
+var chose_video_div = `<div class="thumbnail">
+	<div class="play-btn" onclick="show_pop_video('{3}')"></div>
+	<center>
+		<img src="{0}">
+	</center>
+	<div class="text">
+		{1}
+		<div class="go" onclick="redirect_lesson('{2}')">
+			進入挑戰 <i class="fa fa-arrow-right" aria-hidden="true"></i>
+		</div>
+	</div>
+</div>`
+
+uniq_images = [
+	"/html/images/uniq-1.png",
+	"/html/images/uniq-2.png",
+	"/html/images/uniq-3.png",
+]
 
 // evaluation_try = 0
 // questionblock = `<br /><br />
@@ -38,7 +60,8 @@ function toggle_lsn_btn (seq, i) {
 				$("#lesson-" + seq + "-video").show(300)
 			}
 			else {
-				$(".menu .lesson").show()
+				$(i.parentNode).hide()
+				$(".menu .lesson:not(.myhide)").show()
 				$(".menu .lesson .video-bar").hide(300)
 			}
 			i.parentNode.classList.toggle("shrink")
@@ -95,13 +118,26 @@ function loadclass (classname, qlesson=-1) {
 				class_["lessons"][qlesson] = msg
 				lesson = qlesson
 
+				html = ""//
 				$.each(msg["content"], function (_, i) {
-					$("#lesson-" + qlesson + "-video")[0].innerHTML += format(lsn_bar_vid,
-						i["class_name"],
-						qlesson,
-						_)
+					if (i["type"] != "sections") {
+						html += format(lsn_bar_vid,
+							i["class_name"],
+							qlesson,
+							_,
+							"")
+					}
+					else {
+						html += format(lsn_bar_vid,
+							i["class_name"],
+							qlesson,
+							_,
+							" section")
+					}
 				})
 
+				html += `<div class="section"></div>`
+				$("#lesson-" + qlesson + "-video")[0].innerHTML = html
 				lesson_html = $("#lesson-" + qlesson)
 				$(".menu .lesson").hide()
 				$("#lesson-" + qlesson + "-video").show()
@@ -122,7 +158,8 @@ function display_lessons_bar() {
 	$.each(class_["title"], function (lesson_order, title) {
 		$("#lessons_bar")[0].innerHTML += format(lsn_bar_lsn,
 			lesson_order,
-			title)
+			title["title"],
+			"")
 	})
 	$(".menu .lesson .video-bar").hide(300)
 }
@@ -139,15 +176,17 @@ function show_description() {
 
 // show single video
 function show_video() {
-	// active video button
-	try {
-		$(".menu .lesson .video-bar .video.active")[0].classList.remove("active")
-	} catch (e) {}
-
-	$("#vid-" + lesson + "-" + video)[0].classList.add("active")
-
 	classvideo = class_["lessons"][lesson]["content"][video]
-	$("#view-block #title")[0].innerHTML = classvideo["class_name"];
+	video_id = format("#vid-{0}-{1}", lesson, video)
+
+	if ((classvideo["type"] != "redirect") && (classvideo["type"] != "sections")) {
+		// active video button
+		try {$(".menu .lesson .video-bar .video.active")[0].classList.remove("active")
+		} catch (e) {}
+
+		$(video_id)[0].classList.add("active")
+		$("#view-block #title")[0].innerHTML = classvideo["class_name"];
+	}
 
 	if (classvideo["type"] == "video") {
 		if (classvideo["video"].indexOf("youtube") > -1) {
@@ -184,6 +223,129 @@ function show_video() {
 		$("#view-block #video")[0].innerHTML = evaluation_html(classvideo["questions"]);
 		evaluation_try = 0
 	}
+	else if (classvideo["type"] == "chosevideo") {
+		html = `<center>`;
+		num = 0
+		$.each(classvideo["choice"], function (_, choice) {
+			html += format(
+				chose_video_div,
+				uniq_images[num],
+				choice["intro"],
+				choice["redirect"],
+				choice["video"],
+				)
+			num += 1
+			if (num == uniq_images.length) {
+				num = 0
+			}
+		})
+		html += "</center>";
+		$("#view-block #video")[0].innerHTML = html
+	}
+	else if (classvideo["type"] == "redirect") {
+		$(".lesson:not(.shrink)")[0].classList.add("shrink")
+		$.each(class_["title"], function (order, title) {
+			if (classvideo["redirect"] == title["title"]) {
+				toggle_lsn_btn(order, $(".title")[order])
+			}
+		})
+	}
+	else if (classvideo["type"] == "sections") {
+		try {$(".menu .lesson .video-bar .video.active")[0].classList.remove("active")
+		} catch (e) {}
+
+		$(video_id)[0].classList.add("active")
+
+		section_html = $("#lesson-" + lesson +"-video .section:not(.video)")
+
+		shrink_section = false
+		if (sections_active != null) {
+			if ((sections_active["lesson"] == lesson) && (sections_active["video"] == video)) {
+				shrink_section = true
+			}
+		}
+
+		if (!shrink_section) {
+			$(".video").hide(300);
+			$(video_id).show(300);
+
+			html = ""
+			$.each(classvideo["content"], function (_, i) {
+				html += format(lsn_bar_section_vid,
+					i["class_name"],
+					lesson,
+					video,
+					_)
+			})
+			section_html[0].innerHTML = html
+			sections_active = {
+				"lesson": lesson,
+				"video": video,
+			}
+		}
+		else {
+			$(".video.section").hide(300)
+			$(".video:not(.section)").show(300);
+
+			section_html[0].innerHTML = ""
+			$(video_id)[0].classList.remove("active");
+			sections_active = null;
+		}
+	}
+}
+
+function section_video_jump (lesson, video, section_index) {
+	classvideo = class_["lessons"][lesson]["content"][video]["content"][section_index]
+	video_id = format("#vid-{0}-{1}-{2}", lesson, video, section_index)
+	$("#view-block #title")[0].innerHTML = classvideo["class_name"];
+
+	try {$(".menu .lesson .video-bar .video.active:not(.section)")[0].classList.remove("active")
+	} catch (e) {}
+
+	$(video_id)[0].classList.add("active")
+
+	if (classvideo["video"].indexOf("youtube") > -1) {
+		video_html = format(videoblock, classvideo["video"])
+	}
+	else {
+		video_html = format(privatevideoblock,
+			window.location.host,
+			class_["key"],
+			classvideo["video"])
+
+	}
+	$("#view-block #video")[0].innerHTML = video_html;
+
+	// display buttons
+	buttons_html = ""
+	$.each(classvideo["buttons"], function (_, i) {
+		buttons_html += format(buttonblock, i[0], i[1])
+	})
+	$("#btns")[0].innerHTML = buttons_html
+
+	$("#prev")[0].innerText = "< Prev"
+	$("#prev")[0].onclick = prev
+	if (classvideo["answer"] != "") {
+		$("#next")[0].innerText = "Answer >"
+		$("#next")[0].onclick = show_answer
+	}
+	else {
+		$("#next")[0].innerText = "Next >"
+		$("#next")[0].onclick = next
+	}
+}
+
+function redirect_lesson (lesson_name) {
+	$.each(class_["lessons"][0]["content"], function (order, title) {
+		if (lesson_name == title["class_name"]) {
+			video_jump(lesson, order)
+		}
+	})
+}
+
+function show_pop_video (video_url) {
+	show("intro-video-frame");
+	$("#intro-video")[0].src = video_url;
 }
 
 function show_answer () {

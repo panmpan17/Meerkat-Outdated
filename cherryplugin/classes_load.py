@@ -22,7 +22,15 @@ class ClassesPlugin(plugins.SimplePlugin):
 
 		for i, lesson in enumerate(classinfo["lessons"]):
 			self.classes[class_id]["lesson_length"][i] = len(lesson["content"])
-			self.classes[class_id]["title"].append(lesson["title"])
+
+			hided = False
+			if "hide" in lesson:
+				hided = lesson["hide"]
+
+			self.classes[class_id]["title"].append({
+				"title": lesson["title"],
+				"hide": hided,
+				})
 
 		evaluations = {}
 		for lesson in classinfo["lessons"]:
@@ -51,7 +59,7 @@ class ClassesPlugin(plugins.SimplePlugin):
 
 	def get_class_all_info(self):
 		classes_json = []
-		v = ["scratch_1", "teacher_1", "python_01"]
+		v = ["scratch_1", "teacher_1", "python_01", "scratch_02"]
 		for c in v:
 			j = {
 				"subject": self.classes[c]["subject"],

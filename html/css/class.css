@@ -21,12 +21,21 @@
 	max-height: 100%;
 }
 
+.menu .lesson.shrink.myhide {
+	display: none;
+}
+
+.menu .lesson.myhide {
+	display: block;
+}
+
 .menu .lesson .title {
 	font-weight: 900;
 	height: 50px;
 	letter-spacing: 2px;
 	background: rgb(4, 36, 44);
 	padding: 10px;
+	padding-right: 20px;
 	cursor: pointer;
 }
 
@@ -36,9 +45,19 @@
 	color: black;
 }
 
-.menu .lesson.shrink .title:hover {
-	margin-left: 30px;
+.menu .lesson .title:after {
+	content: "⇦";
+	position: absolute;
+	font-weight: 900;
+	right: 10px;
+	color: white;
 }
+
+.menu .lesson.shrink .title:after {
+	content: "⇨";
+}
+
+.menu .lesson .title:hover:after {color: rgb(6, 48, 58)}
 
 .menu .lesson .video-bar {
 	position: absolute;
@@ -56,6 +75,7 @@
 	cursor: pointer;
 	transition-duration: 0.2s;
 	left: 30px;
+	width: calc(100% - 30px);
 }
 
 .menu .lesson .video-bar .video:hover {
@@ -67,15 +87,43 @@
 .menu .lesson .video-bar .video.active {
 	left: 0;
 	background: white;
-	color: rgb(6, 48, 58);
+	color: rgb(5, 38, 46);
 }
 
-/*.menu .lesson .video-bar .video.active:before {
-	content: "✔";
+.menu .lesson .video-bar .video.section {
+	display: none;
+}
+
+.menu .lesson .video-bar .video.section:after {
+	content: "⇦";
 	position: absolute;
-	color: red;
-	left: 3px;
-}*/
+	font-weight: 900;
+	right: 10px;
+	color: white;
+}
+
+.menu .lesson .video-bar .video.section:hover:after {color: rgb(6, 48, 58)}
+
+.menu .lesson .video-bar .video.active.section {
+	background: rgb(5, 38, 46);
+	color: white;
+	width: calc(100%);
+	left: 0;
+}
+
+.menu .lesson .video-bar .video.active.section:hover {
+	left: 0;
+	background: white;
+	color: rgb(5, 38, 46);
+}
+
+.menu .lesson .video-bar .section:not(.video) {
+	position: relative;
+	width: 100%;
+}
+
+.menu .lesson .video-bar .section.active:not(.video) {
+}
 
 .menu #description {
 	font-weight: 900;
@@ -214,7 +262,8 @@
 	display: inline-block;
 }
 
-#view-block #btns .btn {
+#view-block #btns .btn,
+#view-block #video .btn {
 	margin-top: -15px;
 	background: rgb(6, 48, 58);
 	color: white;
@@ -222,7 +271,8 @@
 	border-radius: 0;
 }
 
-#view-block #btns .btn:hover {
+#view-block #btns .btn:hover,
+#view-block #video .btn:hover {
 	background: white;
 	color: rgb(6, 48, 58);
 }
@@ -326,4 +376,75 @@
 
 .question input[type=radio]:checked + label > div {
 	background: cornflowerblue;
+}
+
+
+.thumbnail {
+	width: 45%;
+	min-width: 400px;
+	background: rgb(217, 217, 217);
+	display: inline-block;
+	margin: 5px;
+	text-align: left;
+}
+
+.thumbnail img {
+	width: auto;
+	height: auto;
+	max-width: 100%;
+	max-height: 250px;
+}
+
+.thumbnail .play-btn {
+	position: relative;
+	cursor: pointer;
+}
+
+.thumbnail .play-btn:before {
+	content: "";
+	position: absolute;
+	background: rgba(0, 0, 0, 0.7);;
+	width: 16%;
+	height: 50px;
+	border-radius: 20%;
+	left: 42%;
+	top: 100px;
+}
+
+.thumbnail .play-btn:after {
+	content: "";
+	position: absolute;
+	background: white;
+	width: 16%;
+	height: 50px;
+	left: 42%;
+	top: 100px;
+	-webkit-clip-path: polygon(64% 50%, 36% 32%, 36% 68%);
+	clip-path: polygon(64% 50%, 36% 32%, 36% 68%);
+}
+
+.thumbnail .play-btn:hover:before {
+	background: red;
+}
+
+.thumbnail .text {
+	padding: 10px;
+	padding-top: 5px;
+}
+
+.thumbnail .text .go {
+	width: 90px;
+	height: 25px;
+	line-height: 25px;
+	text-align: center;
+	background: rgb(84, 117, 251);
+	color: white;
+	margin-right: -8px;
+	float: right;
+	cursor: pointer;
+	box-shadow: -2px -2px 2px 0px gray;
+}
+
+.thumbnail .text .go:hover {
+	background: rgb(66, 102, 247);
 }
