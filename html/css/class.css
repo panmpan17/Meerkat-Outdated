@@ -46,18 +46,23 @@
 }
 
 .menu .lesson .title:after {
-	content: "⇦";
+	content: "";
 	position: absolute;
-	font-weight: 900;
+	width: 18px;
+	height: 18px;
+	background: white;
+	-webkit-clip-path: polygon(91% 56%, 22% 10%, 22% 100%);
+	clip-path: polygon(91% 56%, 22% 10%, 22% 100%);
+	transform: rotate(180deg);
+	transition-duration: .3s;
 	right: 10px;
-	color: white;
 }
 
 .menu .lesson.shrink .title:after {
-	content: "⇨";
+	transform: rotate(0deg);
 }
 
-.menu .lesson .title:hover:after {color: rgb(6, 48, 58)}
+.menu .lesson .title:hover:after {background: rgb(6, 48, 58)}
 
 .menu .lesson .video-bar {
 	position: absolute;
@@ -95,11 +100,15 @@
 }
 
 .menu .lesson .video-bar .video.section:after {
-	content: "⇦";
+	content: "";
 	position: absolute;
-	font-weight: 900;
+	width: 18px;
+	height: 18px;
+	-webkit-clip-path: polygon(91% 56%, 22% 10%, 22% 100%);
+	clip-path: polygon(91% 56%, 22% 10%, 22% 100%);
+	transform: rotate(180deg);
+	background: white;
 	right: 10px;
-	color: white;
 }
 
 .menu .lesson .video-bar .video.section:hover:after {color: rgb(6, 48, 58)}
@@ -382,10 +391,11 @@
 .thumbnail {
 	width: 45%;
 	min-width: 400px;
-	background: rgb(217, 217, 217);
 	display: inline-block;
 	margin: 5px;
-	text-align: left;
+	text-align: center;
+	background: transparent;
+	border: none;
 }
 
 .thumbnail img {
@@ -430,17 +440,18 @@
 .thumbnail .text {
 	padding: 10px;
 	padding-top: 5px;
+	font-size: 18px;
+	font-weight: 900;
 }
 
 .thumbnail .text .go {
+	display: inline-block;
 	width: 90px;
 	height: 25px;
 	line-height: 25px;
 	text-align: center;
 	background: rgb(84, 117, 251);
 	color: white;
-	margin-right: -8px;
-	float: right;
 	cursor: pointer;
 	box-shadow: -2px -2px 2px 0px gray;
 }

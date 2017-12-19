@@ -107,6 +107,29 @@
 			font-weight: bold;
 			float: right;
 		}
+
+		#playbtn {
+            position: fixed;
+            top: 40%;
+            left: 40%;
+            width: 20%;
+            height: 20%;
+            border-radius: 20px;
+            background: red;
+            cursor: pointer;
+        }
+
+        #playbtn:after {
+            content: "";
+            position: fixed;
+            top: 40%;
+            left: 40%;
+            width: 20%;
+            height: 20%;
+            -webkit-clip-path: polygon(64% 50%, 36% 32%, 36% 68%);
+            clip-path: polygon(64% 50%, 36% 32%, 36% 68%);
+            background: white;
+        }
 	</style>
 	<style>
 		div.next {
@@ -147,6 +170,8 @@
 <body>
 	<div id="playercontainer">
 		<video id="player" src="{{ video }}"></video>
+		<div id="shield" onclick="toggleVideo()"></div>
+        <div id="playbtn" onclick="toggleVideo()"></div>
 		<div id="controls">
 			<div id="progressholder">
 				<div id="buffered"></div>
@@ -157,7 +182,6 @@
 			<div id="progresstime">-:-- / -:--</div>
 		</div>
 	</div>
-	<div id="shield" onclick="toggleVideo()"></div>
 	<script>
 		var host = window.location.host + "/rest/1/"
 		var player = $("#player")[0];
@@ -200,6 +224,7 @@
 		function toggleVideo() {
 			//We're playing
 			if(!player.paused) {
+				$("#playbtn").show()
 				$("#controls").show();
 				$("#player").css("cursor", "pointer");
 				$("#playpause").attr("class", "fa fa-play");
@@ -209,6 +234,7 @@
 				$("#player").css("cursor", "none");
 				$("#playpause").attr("class", "fa fa-pause");
 				player.play();
+				$("#playbtn").fadeOut("medium")
 			}
 		}
 

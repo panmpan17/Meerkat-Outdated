@@ -23,6 +23,7 @@ var chose_video_div = `<div class="thumbnail">
 	</center>
 	<div class="text">
 		{1}
+		<br><br>
 		<div class="go" onclick="redirect_lesson('{2}')">
 			進入挑戰 <i class="fa fa-arrow-right" aria-hidden="true"></i>
 		</div>
@@ -281,6 +282,7 @@ function show_video() {
 			sections_active = {
 				"lesson": lesson,
 				"video": video,
+				"index": 0,
 			}
 		}
 		else {
@@ -295,6 +297,7 @@ function show_video() {
 }
 
 function section_video_jump (lesson, video, section_index) {
+	sections_active["index"] = section_index
 	classvideo = class_["lessons"][lesson]["content"][video]["content"][section_index]
 	video_id = format("#vid-{0}-{1}-{2}", lesson, video, section_index)
 	$("#view-block #title")[0].innerHTML = classvideo["class_name"];
@@ -312,7 +315,6 @@ function section_video_jump (lesson, video, section_index) {
 			window.location.host,
 			class_["key"],
 			classvideo["video"])
-
 	}
 	$("#view-block #video")[0].innerHTML = video_html;
 
@@ -336,16 +338,22 @@ function section_video_jump (lesson, video, section_index) {
 }
 
 function redirect_lesson (lesson_name) {
-	$.each(class_["lessons"][0]["content"], function (order, title) {
+	$.each(class_["lessons"][lesson]["content"], function (order, title) {
 		if (lesson_name == title["class_name"]) {
 			video_jump(lesson, order)
+			section_video_jump(lesson, order, 0)
 		}
 	})
 }
 
 function show_pop_video (video_url) {
 	show("intro-video-frame");
-	$("#intro-video")[0].src = video_url;
+	$("#intro-video")[0].src = format(
+		"http://{0}/video/{1}?video={2}",
+		window.location.host,
+		class_["key"],
+		video_url,
+		);
 }
 
 function show_answer () {
@@ -381,17 +389,40 @@ function video_jump(lsn_num, vid_num) {
 }
 
 function prev () {
+	classvideo = class_["lessons"][lesson]["content"][video]
 	if (video > 0) {
-		video -= 1;
-		show_video();
-	} 
+		if (classvideo["type"] != "sections") {
+			video -= 1;
+			show_video();
+		}
+	}
+
+	if (classvideo["type"] == "sections") {
+		if (sections_active["index"] > 0) {
+			section_video_jump(sections_active["lesson"],
+				sections_active["video"],
+				sections_active["index"] - 1)
+		}
+	}
 }
 
 function next () {
 	try {
+		classvideo = class_["lessons"][lesson]["content"][video]
 		if (video < class_["lessons"][lesson]["content"].length - 1) {
-			video += 1;
-			show_video();
+			if (classvideo["type"] != "sections") {
+				video += 1;
+				show_video();
+				return;
+			}
+		}
+
+		if (classvideo["type"] == "sections") {
+			if (sections_active["index"] < classvideo["content"].length - 1) {
+				section_video_jump(sections_active["lesson"],
+					sections_active["video"],
+					sections_active["index"] + 1)
+			}
 		}
 	} catch (e) {}
 }
