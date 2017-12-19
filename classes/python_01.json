@@ -698,7 +698,7 @@
             'class_name': '5-27 區域變數',
             'description': '',
             'video': 'http://storage.googleapis.com/coding4fun-class-video/python-01/5-27.mp4'},
-           {'answer': '',
+           {'answer': 'http://storage.googleapis.com/coding4fun-class-video/python-01/5-28-answer.mp4',
             'type': 'video',
             'buttons': [],
             'class_name': '5-28 全域變數',

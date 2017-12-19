@@ -163,3 +163,17 @@ textarea#answer-content {
 #content a {
 	color: orange;
 }
+
+span.ident {
+    display: inline-block;
+    width: 36px;
+    margin: 0px 2px;
+    height: 10px;
+    transform: translate(0px, -6px);
+    border-bottom: 2px solid rgb(230, 230, 230);
+}
+
+#answers span.ident {
+    width: 26px;
+    margin: 0px 2px;
+}

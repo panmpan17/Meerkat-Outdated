@@ -257,6 +257,12 @@ function displayfile (filename, fileseq) {
 // 
 // SHOW SIGNLE QUESTION
 // 
+answer_format = `<hr />
+<span id="writer"> {1} </span> <sup id="time"> {2} </sup><br />
+<div style="padding-left:30px">
+	{0}
+</div>
+`
 function getanswer(qid) {
 	string_param = {"qid": qid}
 	$.ajax({
@@ -264,18 +270,20 @@ function getanswer(qid) {
 		type: "GET",
 		data: string_param,
 		success: function (msg) {
-			answer_format = `<hr />
-			<span id="writer"> {1} </span> <sup id="time"> {2} </sup><br />
-			<div style="padding-left:30px">
-				{0}
-			</div>
-			`
 
 			answers = ""
 			for (i=0;i<msg["answers"].length;i++) {
 				m = msg["answers"][i]
-				answers += format(answer_format, m["content"].replace(/\n/g, "<br>"),
-					m["writer"], m["create_at"]);
+
+				var msg_content = m["content"].replace(/\n/g, "<br>");
+				msg_content = msg_content.replace(/\t/g, "    ")
+				msg_content = msg_content.replace(/    /g, `<span class="ident"></span>`)
+				console.log(msg_content)
+				answers += format(answer_format,
+					msg_content,
+					m["writer"],
+					m["create_at"]
+					)
 
 				file_display = "<div style=\"padding-left:30px\">"
 				if (m["file1"] != "") {
@@ -311,7 +319,11 @@ function showquestion(qid) {
 		data: string_param,
 		success: function (msg) {
 			$("#answer-content")[0].value = "";
-			$("#content")[0].innerHTML = msg["content"].replace(/\n/g, "<br>");
+
+			var msg_content = msg["content"].replace(/\n/g, "<br>");
+			msg_content = msg_content.replace(/    /g, `<span class="ident"></span>`)
+			console.log(msg_content)
+			$("#content")[0].innerHTML = msg_content;
 			$("#type")[0].innerHTML = q_typelist[msg["type"]];
 
 			a = "<div id=\"solved\" style=\"background-color:"
