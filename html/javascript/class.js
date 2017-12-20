@@ -59,6 +59,15 @@ function toggle_lsn_btn (seq, i) {
 				$(".menu .lesson").hide()
 				$(i.parentNode).show()
 				$("#lesson-" + seq + "-video").show(300)
+
+				if (sections_active != null) {
+					if (seq == sections_active["lesson"]) {
+						$(".video-bar > .video:not(.section)").hide();
+					}
+					else {
+						$(".video-bar > .video:not(.section)").show();
+					}
+				}
 			}
 			else {
 				$(i.parentNode).hide()
