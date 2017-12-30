@@ -17,11 +17,11 @@
 			margin: 0;
 			font-family: Arial, sans-serif;
 			-webkit-touch-callout: none;
-		    -webkit-user-select: none;
-		    -khtml-user-select: none;
-		    -moz-user-select: none;
-		    -ms-user-select: none;
-		    user-select: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
 		}
 		#shield {
 			position: fixed;
@@ -109,60 +109,26 @@
 		}
 
 		#playbtn {
-            position: fixed;
-            top: 40%;
-            left: 40%;
-            width: 20%;
-            height: 20%;
-            border-radius: 20px;
-            background: red;
-            cursor: pointer;
-        }
-
-        #playbtn:after {
-            content: "";
-            position: fixed;
-            top: 40%;
-            left: 40%;
-            width: 20%;
-            height: 20%;
-            -webkit-clip-path: polygon(64% 50%, 36% 32%, 36% 68%);
-            clip-path: polygon(64% 50%, 36% 32%, 36% 68%);
-            background: white;
-        }
-	</style>
-	<style>
-		div.next {
 			position: fixed;
-			top: 0px;
-			left: 0px;
-			width: 100%;
-			height: 100%;
-			background-color: rgba(75, 75, 75, 0.5);
-			display: none;
+			top: 40%;
+			left: 40%;
+			width: 20%;
+			height: 20%;
+			border-radius: 20px;
+			background: red;
+			cursor: pointer;
 		}
 
-		div.show {
-			display: block;
-		}
-
-		div.left,
-		div.right {
-			padding-top: 10%;
+		#playbtn:after {
+			content: "";
 			position: fixed;
-			top: 0px;
-			width: 48%;
-			height: 100%;
-			left: 0px;
-			background-color: rgba(75, 75, 75, 0);
-		}
-		div.right {
-			left: 50%;
-			right: 0px;
-		}
-		div.left:hover,
-		div.right:hover {
-			background-color: rgba(255, 255, 255, 0.4);
+			top: 40%;
+			left: 40%;
+			width: 20%;
+			height: 20%;
+			-webkit-clip-path: polygon(64% 50%, 36% 32%, 36% 68%);
+			clip-path: polygon(64% 50%, 36% 32%, 36% 68%);
+			background: white;
 		}
 	</style>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -171,7 +137,7 @@
 	<div id="playercontainer">
 		<video id="player" src="{{ video }}"></video>
 		<div id="shield" onclick="toggleVideo()"></div>
-        <div id="playbtn" onclick="toggleVideo()"></div>
+		<div id="playbtn" onclick="toggleVideo()"></div>
 		<div id="controls">
 			<div id="progressholder">
 				<div id="buffered"></div>
@@ -183,7 +149,6 @@
 		</div>
 	</div>
 	<script>
-		var host = window.location.host + "/rest/1/"
 		var player = $("#player")[0];
 
 		var fadeTime;
@@ -254,9 +219,6 @@
 				$("#controls").show();
 				$("#player").css("cursor", "pointer");
 				clearTimeout(fadeTime);
-				{% if next %}
-					$("#next")[0].classList.add("show")
-				{% endif %}
 			}
 		}
 
@@ -272,13 +234,13 @@
 		}
 
 		String.prototype.toHHMMSS = function () {
-		    var sec_num = parseInt(this, 10);
-		    var minutes = Math.floor(sec_num / 60);
-		    var seconds = sec_num - (minutes * 60);
+			var sec_num = parseInt(this, 10);
+			var minutes = Math.floor(sec_num / 60);
+			var seconds = sec_num - (minutes * 60);
 			
-		    if (seconds < 10) {seconds = "0"+seconds;}
-		    var time = minutes + ':' + seconds;
-		    return time;
+			if (seconds < 10) {seconds = "0"+seconds;}
+			var time = minutes + ':' + seconds;
+			return time;
 		};
 
 		function replay() {

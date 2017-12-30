@@ -50,6 +50,8 @@ buttonblock = `<a target="_blank" href="{1}">
 function toggle_menu () {
   $(".menu")[0].classList.toggle('shrink')
   $("#view-block")[0].classList.toggle('shrink')
+  $("#toggle_btn")[0].classList.toggle("back")
+  resize_video_frame()
 }
 
 function toggle_lsn_btn (seq, i) {
@@ -182,6 +184,7 @@ function show_description() {
 	$("#view-block #title")[0].innerHTML = "介紹";
 	$("#view-block #video")[0].innerHTML = video_html;
 	$("#btns")[0].innerHTML = ""
+	resize_video_frame();
 }
 
 // show single video
@@ -303,6 +306,7 @@ function show_video() {
 			sections_active = null;
 		}
 	}
+	resize_video_frame();
 }
 
 function section_video_jump (lesson, video, section_index) {
@@ -344,6 +348,7 @@ function section_video_jump (lesson, video, section_index) {
 		$("#next")[0].innerText = "Next >"
 		$("#next")[0].onclick = next
 	}
+	resize_video_frame();
 }
 
 function redirect_lesson (lesson_name) {
@@ -569,6 +574,20 @@ function check_evaluation_answer() {
 	}
 }
 
+function resize_video_frame () {
+	width = $(document).width()
+	height = $(document).height()
+
+	try {
+		if ($(".menu")[0].classList.contains("shrink")) {
+			$("#videoframe")[0].style.width = (width - 20) + "px"
+		}
+		else {
+			$("#videoframe")[0].style.width = (width - 320) + "px"
+		}
+		$("#videoframe")[0].style.height = (height - 170) + "px"
+	} catch (e) {}
+}
 
 $(document).ready(function () {
 	subject_id = $("#subject_id")[0].textContent
@@ -589,4 +608,6 @@ $(document).ready(function () {
 	        next();
 	    }
 	}
+
+	$(window).resize(resize_video_frame)
 })

@@ -36,8 +36,8 @@ span.type {
 
 div.askframe {
 	position: fixed;
-	bottom: 40px;
-	left: 40px;
+	bottom: 20px;
+	left: 20px;
 }
 
 div.toggle-label {
@@ -86,31 +86,46 @@ button#prevnext {
 	font-size: 30px;
 }
 
-div.card {
-	cursor:pointer;
-	width:80%;
-	height:105px;
-	background-color: rgba(245, 245, 245, 1);
-	box-shadow: 0px 0px 20px #888888;
-	text-align: left;
-	overflow-x: scroll;
+#cards {
+	margin-left: 200px;
+	margin-top: 30px;
+	margin-right: 30px;
+	margin-bottom: 15px;
 }
 
-span#card-title {
-	font-size:36px;
-	position: relative;
+.card {
+	cursor:pointer;
+	margin-bottom: 5px;
+	width: 100%;
+	background-color: rgba(245, 245, 245, 1);
+	box-shadow: 0px 5px 3px 0px #888888;
+	text-align: left;
+	padding: 10px 15px;
+}
+
+.card  .card-solved {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	display: inline-block;
+	background-color: #96FF96;
+}
+
+.card .card-title {
+	font-size: 24px;
 	white-space: nowrap;
 	left: 45px;
-	top: -5px;
+	display: inline-block;
+	margin-left: 10px;
 }
 
-span#card-time {
-	padding-left: 20px;
+.card  .card-time {
+	/*padding-left: 20px;*/
 	font-size:12px;
 	color:#555;
 }
 
-span#card-type {
+.card  .card-type {
 	font-size:12px;
 	color: white;
 	height:16px;
@@ -118,12 +133,8 @@ span#card-type {
 	padding: 0px 20px;
 }
 
-span#card-solved {
-	width: 36px;
-	height: 36px;
-	border-radius: 18px;
-	display: inline-block;
-	background-color: #96FF96;
+#cards nav {
+	margin-left: 200px;
 }
 
 li.label-button {
@@ -162,4 +173,50 @@ textarea#answer-content {
 
 #content a {
 	color: orange;
+}
+
+div.mynav-sidebar {
+	position: fixed;
+	width: 170px;
+	background: rgba(0, 0, 200, .25);
+	left: 0;
+	top: 130px;
+}
+
+div.mynav-sidebar .item {
+	padding: 10px 15px;
+	cursor: pointer;
+	background: transparent;
+}
+
+div.mynav-sidebar .item:hover {
+	background: rgba(0, 0, 200, .25);
+}
+
+div.mynav-sidebar .nav-dropdown {
+	display: none;
+	list-style: none;
+	padding-left: 25px;
+	margin-bottom: 0;
+}
+
+div.mynav-sidebar .nav-dropdown li {
+	cursor: pointer;
+	padding: 5px 8px;
+	background: rgba(0, 0, 200, .25);
+}
+
+div.mynav-sidebar .nav-dropdown li:hover {
+	background: rgba(0, 0, 200, .5);
+}
+
+div.mynav-sidebar #page-control {
+	position: fixed;
+	top: 60px;
+	left: 0px;
+	width: 100%;
+	max-height: 70px;
+	overflow: hidden;
+	margin-left: 15px;
+	background: rgb(219, 238, 252);
 }

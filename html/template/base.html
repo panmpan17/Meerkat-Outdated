@@ -49,11 +49,21 @@
 	{% block content %}
 	{% endblock %}
 	<div id="navbar">
-		Coding 4 Fun
+		<a href="/">Coding For Fun</a>
 		<a class="btn-large" href="/news">最新</a>
 		<a class="btn-large" href="/classes">課程</a>
 		<a class="btn-large" href="/question">討論區</a>
-		<a id="account-logo" class="unselectable" onclick="presslogo();">登入/ 註冊</a>
+		<div class="account-logo" style="cursor: pointer;">
+			<div class="dropdown" style="top: -75px;">
+				<div id="accountmenu">
+					<a onclick="showinfo();">帳號資訊</a>
+					<a href="/classattend">參加課程</a>
+					<a href="/report" style="color:red">回報問題</a>
+					<a onclick="logout();">登出</a>
+				</div>
+			</div>
+			<a id="account-logo" class="unselectable" onclick="presslogo();" style="position: fixed;right: 20px;top: 0;">登入/ 註冊</a>
+		</div>
 	</div>
 	<!-- <div class="my-container">
 		<div class="account-logo" style="cursor: pointer;">

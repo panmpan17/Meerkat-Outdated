@@ -182,19 +182,15 @@ function to_questions (l) {
 
 	card_format = `
 	<div class="card" onclick="openquestion({4})">
-		<br />&nbsp;&nbsp;&nbsp;&nbsp;
-		<span id="card-solved" style="background-color:{3}"><span id="card-title">{0}</span></span>
-		
-		<br />
-		<span id="card-time">{1}</span>
+		<div class="card-solved" style="background-color:{3}"></div><div class="card-title">{0}</div>
+		<br>
+		<span class="card-time">{1}</span>
 		&nbsp;&nbsp;&nbsp;
-		<span id="card-type" style="background-color:{5}">{2}</span>
+		<span class="card-type" style="background-color:{5}">{2}</span>
 	</div>
-	<br /><br />
 	`
 	
-	cards = "<center>";
-	cards += paging
+	cards = "";
 	if (l["pages"] > 0) {
 
 		questions = l["questions"]
@@ -217,8 +213,6 @@ function to_questions (l) {
 
 			cards += card;
 		}
-		cards += paging
-		cards += "</center>"
 	}
 
 	else {
@@ -229,10 +223,10 @@ function to_questions (l) {
 			<div class="well well-lg" style="width:90%">
 				沒有這類的問題
 			</div>
-		</center>
 		`
 	}
 
+	$("#page-control")[0].innerHTML = paging;
 	$("#cards")[0].innerHTML = cards;
 }
 
@@ -509,6 +503,9 @@ function ask() {
 }
 
 function getallquestion(t, v) {
+	if (t == "all") {
+		$("#question-range-btn")[0].innerHTML = " 問題範圍 : 所有問題 "
+	}
 
 	if (((t == "writer") || (t == "answer")) && (v == "")) {
 		reload = confirm("請登錄");
@@ -517,25 +514,24 @@ function getallquestion(t, v) {
 		}
 		return null;
 	}
+	else if (t == "writer") {
+		$("#question-range-btn")[0].innerHTML = " 問題範圍 : 我的問題 "
+	}
+	else if (t == "answer") {
+		$("#question-range-btn")[0].innerHTML = " 問題範圍 : 回答過的問題 "
+	}
 
 	select_values = v
 	if (select_values == "True") {
-		$(".active")[0].classList.remove("active");
-		$("#solved")[0].classList.add("active")
+		$("#question-range-btn")[0].innerHTML = " 問題範圍 : 已解問題 ";
 	}
 	if (select_values == "False") {
-		$(".active")[0].classList.remove("active");
-		$("#unsolved")[0].classList.add("active")
+		$("#question-range-btn")[0].innerHTML = " 問題範圍 : 未解的問題 ";
 	}
 
 	if (select_type != t) {
 		page = 1;
 		select_type = t;
-
-		if ((t != "solved") && (t != "answer")) {
-			$(".active")[0].classList.remove("active");
-			$("#" + t)[0].classList.add("active")
-		}
 	}
 
 	$("#cards")[0].innerHTML = '<span style="font-size:48px;color:#aaa">請稍等</span>';
@@ -568,12 +564,12 @@ function getallquestion(t, v) {
 function addfilter(t, v) {
 	if (v == null) {
 		delete filter[t]
-		$("#type-filter")[0].innerHTML = "問題種類"
+		$("#question-type-btn")[0].innerHTML = "問題種類 - 全部"
 		getallquestion(select_type, select_values);
 		return;
 	}
 	if (t == "type") {
-		$("#type-filter")[0].innerHTML = "問題種類 - " + q_typelist[v]
+		$("#question-type-btn")[0].innerHTML = "問題種類 - " + q_typelist[v]
 	}
 	filter[t] = v
 	getallquestion(select_type, select_values);

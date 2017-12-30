@@ -15,47 +15,27 @@
 </style>
 {% endblock %}
 {% block content %}
-<div class="container">
-	<div class="row">
-		<div class="col-sm-12"><!--  style="background-color:red"> -->
-		<br><br>
-			<center>
-				<ul class="nav nav-pills" style="width:90%">
-					<li role="presentation" id="all" class="label-button active">
-						<a class="text-primary" onclick="getallquestion('all', null)"> 所有問題 </a>
-					</li>
-					<li role="presentation" id="writer" class="label-button">
-						<a class="text-primary" onclick="getallquestion('writer', getCookie('id'))"> 我的問題 </a>
-					</li>
-					<li role="presentation" id="solved" class="label-button">
-						<a class="text-primary" onclick="getallquestion('solved', 'True')"> 已解問題 </a>
-					</li>
-					<li role="presentation" id="unsolved" class="label-button">
-						<a class="text-primary" onclick="getallquestion('solved', 'False')"> 未解的問題 </a>
-					</li>
-					<li role="presentation" id="answer" class="label-button">
-						<a class="text-primary" onclick="getallquestion('answer', getCookie('id'))"> 回答過的問題 </a>
-					</li>
-				</ul>
-				<ul class="nav nav-pills" style="width:90%;font-size: 12px;">
-					<li role="presentation" class="dropdown">
-						<a class="dropdown-toggle text-primary" id="type-filter" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-							問題種類
-						</a>
-						<ul class="dropdown-menu" style="padding-left: 10px;font-size: 14p2">
-							<li onclick="addfilter('type', null)" style="cursor: pointer;font-size: 18px;">全部</li>
-							<li onclick="addfilter('type', 0)" style="cursor: pointer;font-size: 18px;">Scratch</li>
-							<li onclick="addfilter('type', 1)" style="cursor: pointer;font-size: 18px;">Python</li>
-							<li onclick="addfilter('type', 2)" style="cursor: pointer;font-size: 18px;">Other</li>
-						</ul>
-					</li>
-				</ul>
-				<div id="cards">
-					<span style="font-size:48px;color:#aaa">請稍等</span>
-				</div>
-			</center>
-		</div>
-	</div>
+<br><br>
+<div class="mynav-sidebar">
+	<div id="page-control"></div>
+	<div id="question-range-btn" class="item" onclick="toggle('question-range')"> 問題範圍</div>
+	<ul id="question-range" class="nav-dropdown">
+		<li onclick="getallquestion('all', null)">所有問題</li>
+		<li onclick="getallquestion('solved', 'True')">已解問題</li>
+		<li onclick="getallquestion('solved', 'False')">未解問題</li>
+		<li onclick="getallquestion('writer', getCookie('id'))"> 我的問題 </li>
+		<li onclick="getallquestion('answer', getCookie('id'))"> 回答過的問題 </li>
+	</ul>
+	<div id="question-type-btn" class="item" onclick="toggle('question-type')"> 問題種類</div>
+	<ul id="question-type" class="nav-dropdown">
+		<li onclick="addfilter('type', null)">全部</li>
+		<li onclick="addfilter('type', 0)">Scratch</li>
+		<li onclick="addfilter('type', 1)">Python</li>
+		<li onclick="addfilter('type', 2)">Other</li>
+	</ul>
+</div>
+<div id="cards">
+	<span style="font-size:48px;color:#aaa">請稍等</span>
 </div>
 
 <div class="askframe">
