@@ -45,7 +45,7 @@
 		font-size: 24px;
 	}
 
-	.top-bar {
+	/*.top-bar {
 		display: flex;
 		width: 90%;
 		line-height: 20px;
@@ -172,15 +172,32 @@
 
 	.open.flip-down.flip-back .content {
 		transform: rotate3d(1, 0, 0, -90deg) translate3d(0, 10%, 0);
-	}
+	}*/
 </style>
+<link href="/html/css/advertise.css" rel="stylesheet">
 <link href="/html/css/datepicker.css" rel="stylesheet">
 {% endblock %}
 {% block content %}
-	<br><br><br>
-	
-	<div class="container">
-		<div class="row">
+	<br><br>
+	<div class="mynav-sidebar">
+		<div id="question-range-btn" class="item" onclick="toggle('question-range')"> 問題範圍</div>
+		<ul id="question-range" class="nav-dropdown">
+			<li onclick="getallquestion('all', null)">所有問題</li>
+			<li onclick="getallquestion('solved', 'True')">已解問題</li>
+			<li onclick="getallquestion('solved', 'False')">未解問題</li>
+			<li onclick="getallquestion('writer', getCookie('id'))"> 我的問題 </li>
+			<li onclick="getallquestion('answer', getCookie('id'))"> 回答過的問題 </li>
+		</ul>
+		<div id="question-type-btn" class="item" onclick="toggle('question-type')"> 問題種類</div>
+		<ul id="question-type" class="nav-dropdown">
+			<li onclick="addfilter('type', null)">全部</li>
+			<li onclick="addfilter('type', 0)">Scratch</li>
+			<li onclick="addfilter('type', 1)">Python</li>
+			<li onclick="addfilter('type', 2)">Other</li>
+		</ul>
+	</div>
+	<!-- <div class="container"> -->
+		<!-- <div class="row">
 			<div class="col-lg-2 col-md-1 col-sm-12"></div>
 			<div class="col-lg-4 col-md-5 col-sm-6">
 				<select class="form-control" id="city" onchange="changecity(true)">
@@ -216,8 +233,8 @@
 					搜尋 <i class="fa fa-search" aria-hidden="true"></i>
 				</button>
 			</div>
-		</div>
-		<div class="row">
+		</div> -->
+		<!-- <div class="row">
 			<div class="col-lg-2 col-md-1 col-sm-12"></div>
 			<div class="col-lg-8 col-md-10 col-sm-12">
 				<br>
@@ -233,8 +250,8 @@
 					<tbody id="teachers"></tbody>
 				</table>
 			</div>
-		</div>
-	</div>
+		</div> -->
+	<!-- </div> -->
 {% endblock %}
 {% block bcontent %}
 <div id="adclass-frame" class="loginsignup-frame" hidden>
