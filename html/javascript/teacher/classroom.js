@@ -138,7 +138,7 @@ function changeclassroom (cls_id) {
 					if (classroom["comment"][s[1]] != undefined) {
 						comments_keys = Object.keys(classroom["comment"][s[1]])
 					}
-					$.each(homeworks, function (_, i) {
+					$.each(homeworks, function (seq, i) {
 						h = v[i];
 						if (h != undefined) {
 							if (comments_keys.includes(i)) {
@@ -146,14 +146,14 @@ function changeclassroom (cls_id) {
 									"color: cornflowerblue",
 									h,
 									i,
-									s[1])
+									k)
 							}
 							else {
 								tbody += format(SCRATCH_HW_TB_FROMAT,
 									"",
 									h,
 									i,
-									s[1])
+									k)
 							}
 						}
 						else {
@@ -452,7 +452,7 @@ function displayScId (sid) {
 		slide += format(picture_fromat,
 			i,
 			s,
-			classroom["students"][sid][1],
+			sid,
 			s)
 	})
 	projects_html.innerHTML += "<h4>" + classroom["students"][sid][0] + " 的功課</h4>"
@@ -801,7 +801,7 @@ function check_change_student () {
 	}
 }
 
-function play_scratch_project (project_id, hw_s, student_id) {
+function play_scratch_project (project_id, hw_s, student_seq) {
 	$("#project_viewer").modal("show");
 	$("#copycode").hide();
 	$("#file").hide();
@@ -809,7 +809,8 @@ function play_scratch_project (project_id, hw_s, student_id) {
 
 	$("#scratch_iframe")[0].src = format(project_embed_fromat, project_id)
 	$("#s_project_page")[0].href = format(project_page_format, project_id)
-	$("#project-title")[0].innerHTML = classroom["students"][student_id][0] + " - " + hw_s
+	$("#project-title")[0].innerHTML = classroom["students"][student_seq][0] + " - " + hw_s
+	student_id = classroom["students"][student_seq][1]
 
 	$("#project-comment")[0].value = ""
 	if (classroom["comment"][student_id] != undefined) {
