@@ -241,15 +241,26 @@ class Question(object):
         return j
 
     @classmethod
-    def mk_info(cls, row):
+    def mk_info(cls, row, answer_row):
+        if answer_row:
+            return {
+                "id": row["id"],
+                "title": row["title"],
+                "type": row["type"],
+                "solved": row["solved"],
+                "create_at": GMT(row["create_at"]),
+
+                "answer_writer": answer_row["nickname"],
+                "answer_create_at": GMT(answer_row["create_at"]),
+                }
         return {
-            "id": row["id"],
-            "title": row["title"],
-            "type": row["type"],
-            "solved": row["solved"],
-            "last_reply": GMT(row["last_reply"]),
-            "create_at": GMT(row["create_at"]),
-            }
+                "id": row["id"],
+                "title": row["title"],
+                "type": row["type"],
+                "solved": row["solved"],
+                "create_at": GMT(row["create_at"]),
+
+                }
 
 
     def validate_json(self, json):

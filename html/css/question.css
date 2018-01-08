@@ -133,6 +133,12 @@ button#prevnext {
 	padding: 0px 20px;
 }
 
+.card .card-reply {
+	float: right;
+	font-size:10px;
+	color:#666;
+}
+
 #cards nav {
 	margin-left: 200px;
 }
@@ -176,9 +182,10 @@ textarea#answer-content {
 }
 
 div.mynav-sidebar {
+	color: white;
 	position: fixed;
 	width: 170px;
-	background: rgba(0, 0, 200, .25);
+	background: rgb(6, 48, 68);
 	left: 0;
 	top: 130px;
 }
@@ -190,7 +197,8 @@ div.mynav-sidebar .item {
 }
 
 div.mynav-sidebar .item:hover {
-	background: rgba(0, 0, 200, .25);
+	background: white;
+	color: rgb(6, 48, 68);
 }
 
 div.mynav-sidebar .nav-dropdown {
@@ -203,11 +211,13 @@ div.mynav-sidebar .nav-dropdown {
 div.mynav-sidebar .nav-dropdown li {
 	cursor: pointer;
 	padding: 5px 8px;
-	background: rgba(0, 0, 200, .25);
+	background: rgb(6, 48, 68);
+	color: white;
 }
 
 div.mynav-sidebar .nav-dropdown li:hover {
-	background: rgba(0, 0, 200, .5);
+	color: rgb(6, 48, 68);
+	background: white;
 }
 
 div.mynav-sidebar #page-control {

@@ -11,7 +11,9 @@ function openask() {
 		show("ask-frame");
 	}
 	else {
-		toggle("notlogin-frame");
+		if (confirm("請登錄")) {
+			show("login-frame");
+		}
 	}
 }
 
@@ -132,6 +134,18 @@ function pagging (selection, place) {
 	return pages
 }
 
+card_format = `
+	<div class="card" onclick="openquestion({4})">
+		<div class="card-solved" style="background-color:{3}"></div><div class="card-title">{0}</div>
+		<br>
+		<span class="card-time">{1}</span>
+		&nbsp;&nbsp;&nbsp;
+		<span class="card-type" style="background-color:{5}">{2}</span>
+		&nbsp;&nbsp;&nbsp;
+		<span class="card-reply">最後回應: {6}</span>
+	</div>
+	`
+
 function to_questions (l) {
 	// paging html
 	len_pages = l["pages"]
@@ -179,25 +193,14 @@ function to_questions (l) {
 	else {
 		paging = format(paging, "")
 	}
-
-	card_format = `
-	<div class="card" onclick="openquestion({4})">
-		<div class="card-solved" style="background-color:{3}"></div><div class="card-title">{0}</div>
-		<br>
-		<span class="card-time">{1}</span>
-		&nbsp;&nbsp;&nbsp;
-		<span class="card-type" style="background-color:{5}">{2}</span>
-	</div>
-	`
 	
 	cards = "";
 	if (l["pages"] > 0) {
 
 		questions = l["questions"]
-		for (i=0;i<questions.length;i++) {
-			// 0: title, 1:time, 2:type color, 3:solved color, 4:question id
+		$.each(questions, function (_, i) {
 			solved_color = "Crimson" // unsolved
-			if (questions[i]["solved"]) {
+			if (i["solved"]) {
 				solved_color = "LimeGreen";
 			}
 
@@ -206,13 +209,21 @@ function to_questions (l) {
 				"#0066cc",
 				]
 
-			card = format(card_format, questions[i]["title"],
-				questions[i]["create_at"], 
-				q_typelist[questions[i]["type"]],
-				solved_color, questions[i]["id"], colormatch[questions[i]["type"]])
+			reply = "尚無回答"
+			if (i["answer_writer"] != undefined) {
+				reply = i["answer_writer"] + "&nbsp;&nbsp;&nbsp;" + i["answer_create_at"]
+			}
+
+			card = format(card_format, i["title"],
+				i["create_at"], 
+				q_typelist[i["type"]],
+				solved_color,
+				i["id"],
+				colormatch[i["type"]],
+				reply)
 
 			cards += card;
-		}
+		})
 	}
 
 	else {

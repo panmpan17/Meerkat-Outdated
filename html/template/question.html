@@ -33,23 +33,15 @@
 		<li onclick="addfilter('type', 1)">Python</li>
 		<li onclick="addfilter('type', 2)">Other</li>
 	</ul>
+	<div class="item" onclick="openask()">
+		<i class="fa fa-pencil-square-o" aria-hidden="true"></i> 問問題
+	</div>
+	<div class="item" onclick="show('helpquestion-frame');playVideo()">
+		<i class="fa fa-info-circle" aria-hidden="true"></i> 如何提問
+	</div>
 </div>
 <div id="cards">
 	<span style="font-size:48px;color:#aaa">請稍等</span>
-</div>
-
-<div class="askframe">
-	<img width="64" onclick="openask()" onmouseover="show('askquestion-frame')" onmouseout="hide('askquestion-frame')" src="/html/images/writequestion.png">
-	<img style="display: inline-block;" width="64" onclick="show('helpquestion-frame');playVideo()" onmouseover="show('howto-frame')" onmouseout="hide('howto-frame')" src="/html/images/howto.png">
-</div>
-<div id="howto-frame" class="toggle-label" style="left: 170px;">
-	示範
-</div>
-<div id="askquestion-frame" class="toggle-label">
-	問問題
-</div>
-<div id="notlogin-frame" class="toggle-label" style="bottom: 90px;color:red;font-weight: bold;">
-	請先登錄
 </div>
 {% endblock %}
 {% block bcontent %}

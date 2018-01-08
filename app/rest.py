@@ -37,6 +37,13 @@ rest_config = {
     "db_connstr": DB_STRING % (un, pwd, hst, prt, db),
     }
 
+def GMT(t):
+    # G = timezone("GMT")
+    # utc = t.utcnow()
+    t += timedelta(hours=8)
+    fmt = '%Y / %m / %d %H:%M'
+    return t.strftime(fmt)
+
 def count_page(r):
     if (r % 10) == 0:
         return (r // 10)
@@ -606,7 +613,7 @@ class QuestionRestView(View):
 
                 return Question.mk_dict_user(row)
 
-            ss = None
+            ss = select([questions])
             if "writer" in kwargs:
                 try:
                     uid = int(kwargs["writer"])
@@ -614,7 +621,7 @@ class QuestionRestView(View):
                     raise cherrypy.HTTPError(400,
                         ErrMsg.NOT_INT.format(kwargs["writer"]))
 
-                ss = select([questions]).where(questions.c.writer == uid)
+                ss.where(questions.c.writer == uid)
             elif "solved" in kwargs:
                 solved = False
                 if ((kwargs["solved"] != "True") and
@@ -624,7 +631,7 @@ class QuestionRestView(View):
                 elif kwargs["solved"] == "True":
                     solved = True
 
-                ss = select([questions]).where(questions.c.solved == solved)
+                ss.where(questions.c.solved == solved)
             elif "answer" in kwargs:
                 try:
                     uid = int(kwargs["answer"])
@@ -635,9 +642,7 @@ class QuestionRestView(View):
                 a_ss = select([answers.c.answer_to]).where(
                     answers.c.writer == uid)
 
-                ss = select([questions]).where(questions.c.id.in_(a_ss))
-            else:
-                ss = select([questions])
+                ss = ss.where(questions.c.id.in_(a_ss))
 
             if "type" in kwargs:
                 try:
@@ -666,8 +671,15 @@ class QuestionRestView(View):
             except:
                 question_l = rows[page:-1]
 
-            question_l = [Question.mk_info(row) for row in question_l]
-            return {"questions":question_l, "pages":count_page(len(rows))}
+            questions_list = []
+            for row in question_l:
+                ss = select([users.c.nickname,
+                    answers.c.create_at]).select_from(join(answers, users)).where(
+                    answers.c.answer_to==row["id"]).order_by(answers.c.create_at).limit(1)
+                rst = conn.execute(ss)
+                answer_row = rst.fetchone()
+                questions_list.append(Question.mk_info(row, answer_row))
+            return {"questions": questions_list, "pages":count_page(len(rows))}
         elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
             user = self.check_login_u(data)

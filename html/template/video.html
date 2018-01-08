@@ -101,12 +101,23 @@
 		#progresstime {
 			position: relative;
 			z-index: 10;
-			right: 10px;
-			font-size: 10pt;
-			color: #fff;
-			font-weight: bold;
-			float: right;
-		}
+			right: 30px;
+            font-size: 10pt;
+            color: #fff;
+            font-weight: bold;
+            float: right;
+        }
+
+        #fullscreen {
+            position: relative;
+            z-index: 10;
+            right: 10px;
+            font-size: 10pt;
+            color: #fff;
+            font-weight: bold;
+            float: right;
+            cursor: pointer;
+        }
 
 		#playbtn {
 			position: fixed;
@@ -145,6 +156,7 @@
 				<div id="progressorb"></div>
 			</div>
 			<div id="playpause" class="fa fa-play"></div>
+            <div id="fullscreen" onclick="fullscreen()"><i class="fa fa-arrows-alt" aria-hidden="true"></i></div>
 			<div id="progresstime">-:-- / -:--</div>
 		</div>
 	</div>
@@ -250,6 +262,16 @@
 			player.play();
 			$("#next")[0].classList.remove("show")
 		}
+
+        function fullscreen () {
+            if (player.requestFullscreen) {
+              player.requestFullscreen();
+            } else if (player.mozRequestFullScreen) {
+              player.mozRequestFullScreen();
+            } else if (player.webkitRequestFullscreen) {
+              player.webkitRequestFullscreen();
+            }
+        }
 	</script>
 </body>
 </html>
