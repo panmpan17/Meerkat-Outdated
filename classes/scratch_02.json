@@ -2,7 +2,7 @@
  "description-video": "",
  "id": "scratch_02",
  "lessons": [
-      {"title": "第一課 九九乘法表",
+      {"title": "第一課 九九乘法表 v.s. 九九乘法快問快答",
       "content": [
             {"answer": "",
             "type": "video",
@@ -397,7 +397,7 @@
             }
         ]
       },
-      {"title": "第三課 飛舞的三角形",
+      {"title": "第三課 飛舞的三角形 v.s. 彩虹密碼",
       "content": [
             {"answer": "",
             "type": "video",

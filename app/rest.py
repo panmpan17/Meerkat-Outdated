@@ -17,7 +17,7 @@ from requests import post as http_post
 from _thread import start_new_thread
 
 from sqlalchemy import desc, not_
-from sqlalchemy.sql import select, update, and_, join, or_
+from sqlalchemy.sql import select, update, and_, or_, join, outerjoin
 from sqlalchemy.exc import IntegrityError
 
 PY_FILE_RE = r"(test|hw)1?[0-9]-[0-9]{1,2}\.py"
@@ -1486,6 +1486,11 @@ class AdAreaRestView(View):
                 teachers = meta.tables[Teacher.TABLE_NAME]
                 adclasses = meta.tables[AdClass.TABLE_NAME]
 
+                try:
+                    city = int(kwargs["city"])
+                except:
+                    raise cherrypy.HTTPError(400)
+
                 ss = select([
                     teachers.c.name,
                     teachers.c.id,
@@ -1503,10 +1508,10 @@ class AdAreaRestView(View):
                     adclasses.c.start_time,
                     adclasses.c.end_time,
                     adclasses.c.weekdays,
-                    ])
+                    ]).where(adareas.c.city==city)
 
-                j1 = teachers.join(
-                    adareas, teachers.c.id==adareas.c.teacher).join(
+                j1 = teachers.outerjoin(
+                    adareas, teachers.c.id==adareas.c.teacher).outerjoin(
                     adclasses, teachers.c.id==adclasses.c.teacher)
                 ss = ss.select_from(j1)
                 rst = conn.execute(ss)

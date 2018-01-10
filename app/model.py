@@ -434,7 +434,16 @@ class Teacher(object):
     def mk_dict_adarea_adclass(cls, row):
         enddate = row["enddate"]
         if enddate != None:
-            enddate = row["enddate"].strftime("%Y 年 %m 月 %d 日")
+            enddate = enddate.strftime("%Y 年 %m 月 %d 日")
+        date = row["enddate"]
+        if date != None:
+            date = date.strftime("%Y 年 %m 月 %d 日")
+        start_time = row["start_time"]
+        if start_time != None:
+            start_time = start_time.strftime("%I:%M %p")
+        end_time = row["end_time"]
+        if end_time != None:
+            end_time = end_time.strftime("%I:%M %p")
         return {
             "id": row["id"],
             "name": row["name"],
@@ -447,10 +456,10 @@ class Teacher(object):
             "adclassid": row["adclassid"],
             "address": row["address"],
             "type": row["type"],
-            "date": row["date"].strftime("%Y 年 %m 月 %d 日"),
+            "date": date,
             "enddate": enddate,
-            "start_time": row["start_time"].strftime("%I:%M %p"),
-            "end_time": row["end_time"].strftime("%I:%M %p"),
+            "start_time": start_time,
+            "end_time": end_time,
             "weekdays": row["weekdays"],
             }
 
