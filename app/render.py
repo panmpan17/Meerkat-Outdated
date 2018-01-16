@@ -256,6 +256,10 @@ class UserCaseHandler(object):
         else:
             raise cherrypy.HTTPError(404)
 
+    @cherrypy.expose
+    def faq(self):
+        return render("faq.html")
+
 class ClassHandler(object):
     _root = "/class/"
     _cp_config = {

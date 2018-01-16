@@ -2,7 +2,7 @@
  "description-video": "",
  "id": "scratch_02",
  "lessons": [
-      {"title": "第一課 九九乘法表 v.s. 九九乘法快問快答",
+      {"title": "第一課 九九乘法快問快答",
       "content": [
             {"answer": "",
             "type": "video",
@@ -397,7 +397,7 @@
             }
         ]
       },
-      {"title": "第三課 飛舞的三角形 v.s. 彩虹密碼",
+      {"title": "第三課 彩虹密碼",
       "content": [
             {"answer": "",
             "type": "video",
@@ -413,7 +413,7 @@
             "video": "http://storage.googleapis.com/coding4fun-class-video/scratch-02/4-2.mp4"},
             {"answer": "",
             "type": "video",
-            "buttons": [],
+            "buttons": [["彩虹密碼原始專案", "https://storage.googleapis.com/coding4fun-class-video/scratch-02-files/彩虹密碼_原始專案.sb2"]],
             "class_name": "3 remix的步驟",
             "description": "",
             "video": "http://storage.googleapis.com/coding4fun-class-video/scratch-02/4-3.mp4"},
