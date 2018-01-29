@@ -556,10 +556,10 @@ function getallquestion(t, v) {
 			to_questions(msg);
 			page_limit = msg["pages"]
 
-			if (t == "answer") {
-				$(".active")[0].classList.remove("active");
-				$("#" + t)[0].classList.add("active")
-			}
+			// if (t == "answer") {
+			// 	$(".active")[0].classList.remove("active");
+			// 	$("#" + t)[0].classList.add("active")
+			// }
 		},
 		error: function (msg) {
 			if (t == "answer") {

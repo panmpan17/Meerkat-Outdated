@@ -17,7 +17,7 @@
 	left: -300px;
 }
 
-.lesson {
+.menu .lesson {
 	max-height: 100%;
 }
 
@@ -150,6 +150,19 @@
 .menu #description:hover {
 	background: white;
 	color: black;
+}
+
+.menu .lesson.disabled .title {
+	color: gray;
+	cursor: not-allowed;
+}
+
+.menu .lesson.disabled .title:hover {
+	background: rgb(5, 38, 46);
+}
+
+.menu .lesson.disabled .title:after {
+	display: none;
 }
 
 #view-block {

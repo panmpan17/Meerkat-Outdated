@@ -621,7 +621,7 @@ class QuestionRestView(View):
                     raise cherrypy.HTTPError(400,
                         ErrMsg.NOT_INT.format(kwargs["writer"]))
 
-                ss.where(questions.c.writer == uid)
+                ss = ss.where(questions.c.writer == uid)
             elif "solved" in kwargs:
                 solved = False
                 if ((kwargs["solved"] != "True") and
@@ -631,7 +631,7 @@ class QuestionRestView(View):
                 elif kwargs["solved"] == "True":
                     solved = True
 
-                ss.where(questions.c.solved == solved)
+                ss = ss.where(questions.c.solved == solved)
             elif "answer" in kwargs:
                 try:
                     uid = int(kwargs["answer"])
@@ -1023,12 +1023,25 @@ class ClassesRestView(View):
                 #if class is free
                 if class_["permission"] == None:
                     try:
-                        return class_["lessons"][int(kwargs["lesson"])]
+                        user = self.check_login_u(kwargs)
+                    except:
+                        user = None
+
+                    try:
+                        lesson = int(kwargs["lesson"])
+                        if user:
+                            return class_["lessons"][lesson]
+                        elif lesson >= len(class_["trial"]):
+                            return {"success": False, "reason": "trial key"}
+                        else:
+                            return class_["lessons"][lesson]
                     except:
                         pass
 
                     class_ = class_.copy()
                     class_["length"] = len(class_["lessons"])
+                    if not user:
+                        class_["key_type"] = "trial"
                     class_.pop("lessons")
                     return class_
                 else:
@@ -1037,7 +1050,8 @@ class ClassesRestView(View):
                     # check user have been checked before
                     if "cls_per_key" in kwargs:
                         key = kwargs["cls_per_key"]
-                        if not clsrom_mgr.get_cls_per_key(kwargs["cls_per_key"]):
+                        key_info = clsrom_mgr.get_cls_per_key(kwargs["cls_per_key"])
+                        if not key_info:
                             raise cherrypy.HTTPError(400)
 
                     else:
@@ -1056,14 +1070,24 @@ class ClassesRestView(View):
                                 ))
                             rst = conn.execute(ss)
                             row = rst.fetchone()
-                            if not row:
-                                raise cherrypy.HTTPError(400,
-                                    ErrMsg.NO_ACCESS_TO_CLASS.format(
-                                        kwargs["class"]))
 
-                            key_type = "user"
-                            folder = row["folder"]
-                            progress = row["progress"]
+                            if not row:
+                                # create trial key
+                                key_type = "trial"
+                                clsr_id = None
+                                key = str(uuid())
+                                clsrom_mgr.update_cls_per_key(key, key_type, clsr_id)
+
+                                class_ = class_.copy()
+                                class_["length"] = 1
+                                class_.pop("lessons")
+                                class_["key"] = key
+                                class_["key_type"] = key_type
+                                return class_
+                            else:
+                                key_type = "user"
+                                folder = row["folder"]
+                                progress = row["progress"]
                         except:
                             teacher = self.check_login_teacher(kwargs)
                             teachers = meta.tables[Teacher.TABLE_NAME]
@@ -1083,7 +1107,13 @@ class ClassesRestView(View):
                         clsrom_mgr.update_cls_per_key(key, key_type, clsr_id)
 
                     try:
-                        return class_["lessons"][int(kwargs["lesson"])]
+                        lesson = int(kwargs["lesson"])
+                        if key_info["type"] != "trial":
+                            return class_["lessons"][lesson]
+                        elif lesson >= len(class_["trial"]):
+                            return {"success": False, "reason": "trial key"}
+                        else:
+                            return class_["lessons"][lesson]
                     except:
                         pass
 
@@ -1273,44 +1303,10 @@ class TeacherRestView(View):
         elif cherrypy.request.method == "PUT":
             data = cherrypy.request.json
 
-            if "ext_area" in data:
-                uid = self.check_login(data)
-                admin = self.check_admin(uid)
-                if not admin:
-                    raise cherrypy.HTTPError(401)
-
-                try:
-                    tid = int(data["tid"])
-                    ext_area = int(data["ext_area"])
-                except:
-                    raise cherrypy.HTTPError(400,
-                        ErrMsg.NOT_INT.format("tid"))
-
-                stmt = teachers.update().where(
-                    teachers.c.id==tid).values(
-                    ext_area=teachers.c.ext_area+ext_area)
-                conn.execute(stmt)
-                return {"success": True}
-            elif "whole_city" in data:
-                uid = self.check_login(data)
-                admin = self.check_admin(uid)
-                if not admin:
-                    raise cherrypy.HTTPError(401)
-
-                try:
-                    tid = int(data["tid"])
-                    whole_city = int(data["whole_city"])
-                except:
-                    raise cherrypy.HTTPError(400,
-                        ErrMsg.NOT_INT.format("tid"))
-
-                stmt = teachers.update().where(
-                    teachers.c.id==tid).values(
-                    whole_city=teachers.c.whole_city+whole_city)
-                conn.execute(stmt)
-                return {"success": True}
-            elif "summary" in data:
+            if "teacher" in data:
                 teacher = self.check_login_teacher(data)
+
+                self.check_key(data, ("summary", ))
 
                 stmt = teachers.update().where(
                     teachers.c.id==teacher["id"]).values(
@@ -1327,13 +1323,25 @@ class TeacherRestView(View):
                     "name",
                     "phone",
                     "class_permission",
+                    "ext_area",
+                    "whole_city",
+                    "summary",
                     ))
+
+                try:
+                    ext_area = int(data["ext_area"])
+                    whole_city = int(data["whole_city"])
+                except:
+                    raise cherrypy.HTTPError(400)
 
                 json = {
                     "userid": data["userid"],
                     "name": data["name"],
                     "phone": data["phone"],
                     "class_permission": data["class_permission"],
+                    "ext_area": ext_area,
+                    "whole_city": whole_city,
+                    "summary": data["summary"],
                     }
 
                 if "password" in data:
@@ -1344,6 +1352,7 @@ class TeacherRestView(View):
                 conn.execute(stmt)
 
                 return {"success": True}
+
         elif cherrypy.request.method == "DELETE":
             user = self.check_login_u(kwargs)
 
@@ -1467,11 +1476,20 @@ class AdAreaRestView(View):
         adareas = meta.tables[AdArea.TABLE_NAME]
 
         if cherrypy.request.method == "GET":
-            if "tkey" in kwargs:
-                teacher = self.check_login_teacher(kwargs)
+            if "teacher" in kwargs:
+                try:
+                    teacher = self.check_login_teacher(kwargs)
+                    tid = teacher["id"]
+                except:
+                    user = self.check_login_u(kwargs)
+                    if not user["admin"]:
+                        raise cherrypy.HTTPError(401)
+
+                    self.check_key(kwargs, ("tid", ))
+                    tid = kwargs["tid"]
 
                 ss = select([adareas]).where(
-                    adareas.c.teacher == teacher["id"]
+                    adareas.c.teacher == tid
                     )
                 rst = conn.execute(ss)
                 rows = rst.fetchall()
@@ -1523,7 +1541,18 @@ class AdAreaRestView(View):
                 return [Teacher.mk_dict_adarea_adclass(row) for row in rows]
         elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
-            teacher = self.check_login_teacher(data)
+            try:
+                teacher = self.check_login_teacher(data)
+                tid = teacher["id"]
+                t_area = teacher["ext_area"]
+            except:
+                user = self.check_login_u(data)
+                if not user["admin"]:
+                    raise cherrypy.HTTPError(401)
+
+                self.check_key(data, ("tid", "t_area", ))
+                tid = data["tid"]
+                t_area = data["t_area"]
 
             self.check_key(data, ("city", "town", ))
 
@@ -1534,26 +1563,16 @@ class AdAreaRestView(View):
                 raise cherrypy.NOT_INT.format("city or town")
 
             ss = select([adareas.c.id]).where(
-                adareas.c.teacher==teacher["id"]
+                adareas.c.teacher==tid
                 )
             rst = conn.execute(ss)
             rows = rst.fetchall()
 
-            if len(rows) >= ADVERTISE_LIMIT + teacher["ext_area"]:
+            if len(rows) >= ADVERTISE_LIMIT + t_area:
                 raise cherrypy.HTTPError(400, ErrMsg.LIMITED_ADVERTISE)
 
-            ss = select([adareas.c.id]).where(and_(
-                adareas.c.city==city,
-                adareas.c.town==town,
-                adareas.c.teacher==teacher["id"]))
-            rst = conn.execute(ss)
-            row = rst.fetchone()
-
-            if row:
-                raise cherrypy.HTTPError(400, ErrMsg.ADVERTISE_REPEAT)
-
             j = {
-                "teacher": teacher["id"],
+                "teacher": tid,
                 "city": city,
                 "town": town,
                 }
@@ -1566,7 +1585,16 @@ class AdAreaRestView(View):
             else:
                 raise cherrypy.HTTPError(503)
         elif cherrypy.request.method == "DELETE":
-            teacher = self.check_login_teacher(kwargs)
+            try:
+                teacher = self.check_login_teacher(kwargs)
+                tid = teacher["id"]
+            except:
+                user = self.check_login_u(kwargs)
+                if not user["admin"]:
+                    raise cherrypy.HTTPError(401)
+
+                self.check_key(kwargs, ("tid", ))
+                tid = kwargs["tid"]
 
             try:
                 aid = int(kwargs["aid"])
@@ -1576,7 +1604,7 @@ class AdAreaRestView(View):
             # delete answer
             ds = adareas.delete().where(and_(
                 adareas.c.id == aid,
-                adareas.c.teacher == teacher["id"]))
+                adareas.c.teacher == tid))
             rst = conn.execute(ds)
 
             return {"success": True}
@@ -1592,11 +1620,20 @@ class AdClassRestView(View):
         adclasses = meta.tables[AdClass.TABLE_NAME]
 
         if cherrypy.request.method == "GET":
-            if "tkey" in kwargs:
-                teacher = self.check_login_teacher(kwargs)
+            if "teacher" in kwargs:
+                try:
+                    teacher = self.check_login_teacher(kwargs)
+                    tid = teacher["id"]
+                except:
+                    user = self.check_login_u(kwargs)
+                    if not user["admin"]:
+                        raise cherrypy.HTTPError(401)
+
+                    self.check_key(kwargs, ("tid", ))
+                    tid = kwargs["tid"]
 
                 ss = select([adclasses]).where(
-                    adclasses.c.teacher == teacher["id"]
+                    adclasses.c.teacher == tid
                     )
                 rst = conn.execute(ss)
                 rows = rst.fetchall()
@@ -1659,7 +1696,16 @@ class AdClassRestView(View):
             else:
                 raise cherrypy.HTTPError(503)
         elif cherrypy.request.method == "DELETE":
-            teacher = self.check_login_teacher(kwargs)
+            try:
+                teacher = self.check_login_teacher(kwargs)
+                tid = teacher["id"]
+            except:
+                user = self.check_login_u(kwargs)
+                if not user["admin"]:
+                    raise cherrypy.HTTPError(401)
+
+                self.check_key(kwargs, ("tid", ))
+                tid = kwargs["tid"]
 
             try:
                 aid = int(kwargs["aid"])
@@ -1669,7 +1715,7 @@ class AdClassRestView(View):
             # delete answer
             ds = adclasses.delete().where(and_(
                 adclasses.c.id == aid,
-                adclasses.c.teacher == teacher["id"]))
+                adclasses.c.teacher == tid))
             rst = conn.execute(ds)
 
             return {"success": True}

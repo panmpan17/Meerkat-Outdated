@@ -31,7 +31,7 @@
 		position: absolute;
 		text-align: center;
 		top: 110px;
-		left: 300px;
+		left: 400px;
 		width: 500px;
 		height: 50px;
 		transition-duration: 0.5s;
@@ -222,6 +222,7 @@ $("#userid-field").on("input change", function (e) {
 
 	first_chr = String(value[0])
 
+	$("#users").html("")
 	if (alphabet_index[first_chr] != undefined) {
 		users_show = []
 		$.each(alphabet_index[first_chr], function (_, i) {
@@ -230,7 +231,6 @@ $("#userid-field").on("input change", function (e) {
 			}
 		})
 
-		$("#users").html("")
 		$.each(users_show, function (_, user) {
 			$("#users")[0].innerHTML += format(
 				user_format,

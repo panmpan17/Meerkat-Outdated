@@ -634,6 +634,19 @@
 			town = city_towns[city].indexOf(town);
 			city = cities.indexOf(city);
 
+			passed = true;
+			$.each(adareas, function (_, i) {
+				if (i["city"] == city && i["town"] == town) {
+					passed = false;
+					return false;
+				}
+			})
+
+			if (!passed) {
+				alert("這區域重複了");
+				return;
+			}
+
 			json = {
 				"tkey": getCookie("teacher-key"),
 				"city": city,
@@ -647,15 +660,6 @@
 				contentType: "application/json; charset=utf-8",
 				success: function (msg) {
 					loadadarea();
-				},
-				error: function (err) {
-					p1 = err.responseText.indexOf("<p>") + 3
-					errortype = err.responseText.substring(p1, err.responseText.indexOf("</p>", p1))
-					if (errortype == "This advertise repeat") {
-						alert(format("這個區域你已經有了: {0}, {1}",
-							$("#city")[0].value,
-							$("#towns")[0].value))
-					}
 				}
 			})
 		}
@@ -664,25 +668,28 @@
 			$.ajax({
 				url: host + "adarea/",
 				type: "GET",
-				data: {"tkey": getCookie("teacher-key")},
+				data: {
+					"teacher": true,
+					"tkey": getCookie("teacher-key")},
 				success: function (msg) {
 					$("#tadvertise")[0].innerHTML = "";
 
 					if (msg["adareas"] == undefined) {
 						return ;
 					}
+
+					advertise_num = msg["adareas"].length
 					adareas = msg["adareas"]
-					advertise_num = adareas.length
-					for (a=0;a<adareas.length;a++) {
-						city = cities[adareas[a]["city"]]
-						town = city_towns[city][adareas[a]["town"]]
+					$.each(msg["adareas"], function (_, i) {
+						city = cities[i["city"]]
+						town = city_towns[city][i["town"]]
 
 						$("#tadvertise")[0].innerHTML += format(
 							advertise_format,
 							city,
 							town,
-							adareas[a]["id"]);
-					}
+							i["id"]);
+					})
 				}
 			})
 		}

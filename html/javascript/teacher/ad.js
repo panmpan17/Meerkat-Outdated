@@ -96,37 +96,36 @@ function loadadclass() {
 	$.ajax({
 		url: host + "adclass/",
 		type: "GET",
-		data: {"tkey": getCookie("teacher-key")},
+		data: {"teacher": true,
+			"tkey": getCookie("teacher-key")},
 		success: function (msg) {
 			$("#tadclass")[0].innerHTML = "";
 
-			adclasses = msg["adclasses"]
-			advertise_num = adclasses.length
-			for (a=0;a<adclasses.length;a++) {
+			$.each(msg["adclasses"], function (_, i) {
 				c_weekdays = []
-				$.each(adclasses[a]["weekdays"], function (i) {
+				$.each(i["weekdays"], function (e) {
 					c_weekdays.push(
 						chinese_weekday[
-							adclasses[a]["weekdays"][i]
+							e
 							])
 				})
 
 				enddate = ""
-				if (adclasses[a]["enddate"]) {
-					enddate = adclasses[a]["enddate"]
+				if (i["enddate"]) {
+					enddate = i["enddate"]
 				}
 
 				$("#tadclass")[0].innerHTML += format(
 					adclass_format,
-					CLASS_TO[adclasses[a]["type"]],
-					adclasses[a]["date"],
+					CLASS_TO[i["type"]],
+					i["date"],
 					enddate,
 					c_weekdays,
-					adclasses[a]["start_time"],
-					adclasses[a]["end_time"],
-					adclasses[a]["address"],
-					adclasses[a]["id"]);
-			}
+					i["start_time"],
+					i["end_time"],
+					i["address"],
+					i["id"]);
+			})
 		}
 	})
 }

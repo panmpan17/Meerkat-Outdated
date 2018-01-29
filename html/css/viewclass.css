@@ -129,7 +129,7 @@ span#indent {
 	right: 0;
 	top: 0;
 	bottom: 0;
-	background: rgba(0, 0, 0, .8);
+	background: rgba(30,30,30,0.9);
 	z-index: 5;
 }
 
@@ -139,6 +139,7 @@ span#indent {
 	top: 100px;
 	bottom: 100px;
 	width: 300px;
+	min-height: 200px;
 	background: white;
 	z-index: 10;
 }
@@ -198,4 +199,56 @@ span#indent {
 
 #classroom-confirm #list .class:hover::after {
 	color: gray;
+}
+
+#alert {
+	position: fixed;
+	left: calc(50% - 175px);
+	top: 200px;
+	width: 350px;
+	min-height: 200px;
+	background: white;
+	z-index: 10;
+}
+
+#alert #title {
+	font-size: 22px;
+	/*text-align: center;*/
+	padding: 10px;
+}
+
+#alert #describe {
+	padding: 10px 20px;
+}
+
+#alert #btns {
+	position: absolute;
+	bottom: 0;
+	text-align: center;
+	padding: 10px;
+}
+
+#alert #btns .mybtn {
+	min-width: 80px;
+	height: 30px;
+	border: none;
+	background: rgb(200, 200, 200);
+}
+
+#alert #btns .mybtn:hover {
+	background: rgb(175, 175, 175);
+}
+
+#alert #btns .mybtn:active {
+	background: rgb(150, 150, 150);
+}
+
+#alert #btns .mybtn.primary {
+	background: rgb(6, 48, 59);
+	color: white;
+}
+
+#alert #btns .mybtn.primary:hover {
+	background: white;
+	color: rgb(6, 48, 59);
 }

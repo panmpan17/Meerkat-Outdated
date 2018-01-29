@@ -7,7 +7,7 @@ var videoblock = `<iframe id="videoframe" src="{0}&amp;showinfo=0" frameborder="
 
 var privatevideoblock = `<iframe id="videoframe" class="python" src='http://{0}/video/{1}?video={2}' allowfullscreen></iframe>`
 
-var lsn_bar_lsn = `<div id="lesson-{0}" class="lesson shrink{2}">
+var lsn_bar_lsn = `<div id="lesson-{0}" class="lesson shrink{2} {3}">
 	<div class="title" onclick="toggle_lsn_btn({0}, this)">{1}</div>
 	<div id="lesson-{0}-video" class="video-bar"></div>
 </div>`
@@ -111,6 +111,14 @@ function loadclass (classname, qlesson=-1) {
 		type: "GET",
 		data: j,
 		success: function (msg) {
+			if (msg["success"] != undefined) {
+				if (!msg["success"]) {
+					if (msg["reason"] == "trial key") {
+						alert("這只是體驗課程, 要看更多課程請購買課程")
+					}
+					return;
+				}
+			}
 			if (class_ == null) {
 				class_ = msg
 				class_["lessons"] = {}
@@ -168,10 +176,30 @@ function loadclass (classname, qlesson=-1) {
 //render lessons bar
 function display_lessons_bar() {
 	$.each(class_["title"], function (lesson_order, title) {
-		$("#lessons_bar")[0].innerHTML += format(lsn_bar_lsn,
-			lesson_order,
-			title["title"],
-			"")
+		if (class_["key_type"] != "trial") {
+			$("#lessons_bar")[0].innerHTML += format(lsn_bar_lsn,
+				lesson_order,
+				title["title"],
+				"",
+				"")
+		}
+		else {
+			// console.log(clas_["trial"], title["title"])
+			if (class_["trial"].includes(title["title"])){
+				$("#lessons_bar")[0].innerHTML += format(lsn_bar_lsn,
+					lesson_order,
+					title["title"],
+					"",
+					"")
+			}
+			else {
+				$("#lessons_bar")[0].innerHTML += format(lsn_bar_lsn,
+					lesson_order,
+					title["title"],
+					"",
+					"disabled")
+			}
+		}
 	})
 	$(".menu .lesson .video-bar").hide(300)
 }
@@ -592,9 +620,9 @@ function resize_video_frame () {
 $(document).ready(function () {
 	subject_id = $("#subject_id")[0].textContent
 
-	if (getCookie("clsrid") == "" && getCookie("teacher-key") != "") {
-		window.location.pathname = "/classes"
-	}
+	// if (getCookie("clsrid") == "" && getCookie("teacher-key") != "") {
+	// 	window.location.pathname = "/classes"
+	// }
 	loadclass(subject_id)
 
 	document.onkeydown = function (e) {

@@ -46,7 +46,10 @@ class KeyMgrPlugin(plugins.SimplePlugin):
         self.keydict.pop(key)
 
     def get_cls_per_key(self, key):
-        return key in self.cls_per_key
+        try:
+            return self.cls_per_key[key]
+        except:
+            return False
 
     def update_cls_per_key(self, key, key_type, clsr_id):
         self.cls_per[key] = {

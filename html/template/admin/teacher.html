@@ -53,6 +53,42 @@
 		/*display:inline;*/
 		padding-right: 15px;
 	}
+
+	#sidebtn1 {
+		float: right;
+		font-size: 16px;
+		width: 30px;
+		height: 90px;
+		background: #063044;
+		color: white;
+		word-spacing: 30px;
+		text-align: center;
+		cursor: pointer;
+	}
+
+	#sidebtn1:hover {
+		background: white;
+		color: #063044;
+	}
+
+	#sidebtn2 {
+		margin-top: 95px;
+		margin-right: -30px;
+		float: right;
+		font-size: 16px;
+		width: 30px;
+		height: 90px;
+		background: #063044;
+		color: white;
+		word-spacing: 30px;
+		text-align: center;
+		cursor: pointer;
+	}
+
+	#sidebtn2:hover {
+		background: white;
+		color: #063044;
+	}
 </style>
 {% endblock %}
 {% block content %}
@@ -82,8 +118,6 @@
 					<th>帳號</th>
 					<th>名字</th>
 					<th>電話</th>
-					<th>停用</th>
-					<th style="width: 200px;">額外的廣告數量</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -97,47 +131,113 @@
 <div id="change-frame" class="loginsignup-frame" hidden>
 	<div class="loginsignup-frame-inside">
 		<a id="closeloginframe" onclick="hide('change-frame');" style="">X</a>
+		<div id="sidebtn1" onclick="hide('ad-setting');show('info-setting')">資訊設定</div>
+		<div id="sidebtn2" onclick="hide('info-setting');show('ad-setting');loadadarea(teacher['id']);loadadclass(teacher['id'])">廣告設定</div>
 		<br>
-		<div class="frame-content" style="padding: 15px;padding-top: 0px">
-			<h3>變更教師設定</h3><br>
-			<input type="text" name="change-teacher-id" hidden>
-			<input type="text" name="change-userid" placeholder="帳號">
-			<br><br>
-			<input type="text" name="change-password" placeholder="密碼">
+		<div id="info-setting" class="frame-content" style="padding: 15px;padding-top: 0px">
+			<h3>資訊設定</h3><br>
+			<input id="change-teacher-id" hidden  type="text">
+			<input id="change-userid" placeholder="帳號"  type="text" style="width: 45%">
+			<input id="change-password" placeholder="密碼"  type="text" style="width: 45%">
 			<br>
-			<span class="hint">* 密碼如果不改就請留空</span><br>
+			<span class="hint">* 密碼如果不改就請留空</span>
 			<br>
-			<input type="text" name="change-name" placeholder="名字">
+			<input id="change-name" placeholder="名字"  type="text" style="width: 45%">
+			<input id="change-phone" placeholder="電話"  type="text" style="width: 45%">
 			<br><br>
-			<input type="text" name="change-phone" placeholder="電話">
+			<textarea id="change-summary" class="form-control" cols="30" rows="10"></textarea>
+			<br><br>
+			地區: <input id="area-num" type="number" max="99" min="0" style="width: 50px">
+			整縣市: <input id="city-num" type="number" max="99" min="0" style="width: 50px">
 			<br><br>
 			<dl class="check-list-right" id="change_classlist">
 				<dt>教學課程權限</dt>
 			</dl>
-			<div id="signup-errormsg" class="login-errorms">
-			</div>
-			<button id="submit" onclick="change_teacher()">更改</button>
+			<button class="btn" onclick="change_teacher()">更改</button>
+		</div>
+		<div id="ad-setting" class="frame-content" style="padding: 15px;padding-top: 0px" hidden>
+			<h3>廣告設定</h3><br>
+			<select class="form-control" id="city" onchange="changecity()">
+				<option value="臺北市">臺北市</option>
+				<option value="新北市">新北市</option>
+				<option value="桃園市">桃園市</option>
+				<option value="臺中市">臺中市</option>
+				<option value="臺南市">臺南市</option>
+				<option value="高雄市">高雄市</option>
+				<option value="基隆市">基隆市</option>
+				<option value="新竹市">新竹市</option>
+				<option value="嘉義市">嘉義市</option>
+				<option value="新竹縣">新竹縣</option>
+				<option value="苗栗縣">苗栗縣</option>
+				<option value="彰化縣">彰化縣</option>
+				<option value="南投縣">南投縣</option>
+				<option value="雲林縣">雲林縣</option>
+				<option value="嘉義縣">嘉義縣</option>
+				<option value="屏東縣">屏東縣</option>
+				<option value="宜蘭縣">宜蘭縣</option>
+				<option value="花蓮縣">花蓮縣</option>
+				<option value="臺東縣">臺東縣</option>
+				<option value="澎湖縣">澎湖縣</option>
+				<option value="金門縣">金門縣</option>
+				<option value="連江縣">連江縣</option>
+			</select>
+			<br>
+			<select id="towns" class="form-control">
+				<option value="中正區">中正區</option>
+				<option value="大同區">大同區</option>
+				<option value="中山區">中山區</option>
+				<option value="松山區">松山區</option>
+				<option value="大安區">大安區</option>
+				<option value="萬華區">萬華區</option>
+				<option value="信義區">信義區</option>
+				<option value="士林區">士林區</option>
+				<option value="北投區">北投區</option>
+				<option value="內湖區">內湖區</option>
+				<option value="南港區">南港區</option>
+				<option value="文山區">文山區</option>
+			</select>
+			<br>
+			<button type="button" class="btn btn-info btn-block" onclick="newarea()">
+				新增地區
+			</button>
+			<br><br>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>縣市</th>
+						<th>鄉鎮市區</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody id="tadarea"></tbody>
+			</table><br>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>課程種類</th>
+						<th>開課日期</th>
+						<th>結束日期</th>
+						<th>上課日</th>
+						<th>上課時間</th>
+						<th>下課時間</th>
+						<th>地址</th>
+					</tr>
+				</thead>
+				<tbody id="tadclass"></tbody>
+			</table>
 		</div>
 	</div>
 </div>
 {% endblock %}
 {% block script %}
+<script src="/html/javascript/taiwan_town.js"></script>
 <script>
 	teacher_format = `\
 	<tr class="i">
 		<td>{0}</td>
-		<td>{1}{7}</td>
+		<td>{1}{4}</td>
 		<td>{2}</td>
 		<td>{3}</td>
-		<td><input type="checkbox" {4} /></td>
-		<td>
-			地區: <i class="fa fa-minus" onclick="change_area('{0}', -1)"></i>
-			{5}
-			<i class="fa fa-plus" onclick="change_area('{0}', 1)"></i><br />
-			整縣市: <i class="fa fa-minus" onclick="change_city('{0}', -1)"></i>
-			{6}
-			<i class="fa fa-plus" onclick="change_city('{0}', 1)"></i>
-		</td>
 		<td>
 			<span class="hover" style="color:red" onclick="delete_teacher({0})">
 				<i class="fa fa-times" aria-hidden="true"></i>
@@ -154,6 +254,39 @@
 		<label for="{2}cid-{0}">{1}</label>
 	</dd>
 	`
+
+	adarea_format = `
+	<tr>
+	<td>{0}</td>
+	<td>{1}</td>
+	<td class="b-close" onclick="deletearea('{2}')"><i class="fa fa-times"></i></td>
+	</tr>
+	`
+
+	adclass_format = `
+	<tr>
+		<td>{0}</td>
+		<td>{1}</td>
+		<td>{2}</td>
+		<td>{3}</td>
+		<td>{4}</td>
+		<td>{5}</td>
+		<td>{6}</td>
+		<td class="b-close" onclick="deleteadclass('{7}')"><i class="fa fa-times"></i></td>
+	</tr>
+	`
+
+	chinese_weekday = [
+		"",
+		"星期一",
+		"星期二",
+		"星期三",
+		"星期四",
+		"星期五",
+		"星期六",
+		"星期日",
+	]
+
 	CLASS_TO = {
 		"python_01": "Python 初級",
 		"scratch_1": "Scratch 初級",
@@ -211,32 +344,6 @@
 		})
 	}
 
-	function change_area(tid, num) {
-		$.ajax({
-			url: host + "teacher/",
-			type: "PUT",
-			dataType: "json",
-			data: JSON.stringify({"key":getCookie("key"), "tid": tid, "ext_area": num}),
-			contentType: "application/json; charset=utf-8",
-			success: function (msg) {
-				load_teachers();
-			}
-		})
-	}
-
-	function change_city(tid, num) {
-		$.ajax({
-			url: host + "teacher/",
-			type: "PUT",
-			dataType: "json",
-			data: JSON.stringify({"key":getCookie("key"), "tid": tid, "whole_city": num}),
-			contentType: "application/json; charset=utf-8",
-			success: function (msg) {
-				load_teachers();
-			}
-		})
-	}
-
 	function load_teachers() {
 		$.ajax({
 			url: host + "teacher/",
@@ -267,9 +374,6 @@
 						i["userid"],
 						i["name"],
 						i["phone"],
-						disabled,
-						5 + i["ext_area"],
-						i["whole_city"],
 						p);
 
 					teachers_table.innerHTML += user
@@ -313,11 +417,14 @@
 
 	function show_change_teacher(tid) {
 		teacher = teachers[tid]
-		$("[name=change-teacher-id]")[0].value = tid
-		$("[name=change-userid]")[0].value = teacher["userid"]
-		$("[name=change-password]")[0].value = ""
-		$("[name=change-name]")[0].value = teacher["name"]
-		$("[name=change-phone]")[0].value = teacher["phone"]
+		$("#change-teacher-id")[0].value = tid
+		$("#change-userid")[0].value = teacher["userid"]
+		$("#change-password")[0].value = ""
+		$("#change-name")[0].value = teacher["name"]
+		$("#change-phone")[0].value = teacher["phone"]
+		$("#change-summary")[0].value = teacher["summary"]
+		$("#area-num")[0].value = 5 + teacher["ext_area"]
+		$("#city-num")[0].value = teacher["whole_city"]
 
 		if (teacher["class_permission"].includes("scratch_1")) {
 			$("[name=change_class_permission][value=scratch_1]")[0].checked = true
@@ -332,11 +439,14 @@
 	}
 
 	function change_teacher() {
-		tid = $("[name=change-teacher-id]")[0].value
-		userid = $("[name=change-userid]")[0].value
-		password = $("[name=change-password]")[0].value
-		name = $("[name=change-name]")[0].value
-		phone = $("[name=change-phone]")[0].value
+		tid = $("#change-teacher-id")[0].value
+		userid = $("#change-userid")[0].value
+		password = $("#change-password")[0].value
+		name = $("#change-name")[0].value
+		phone = $("#change-phone")[0].value
+		summary = $("#change-summary")[0].value
+		ext_area = $("#area-num")[0].value - 5
+		whole_city = $("#city-num")[0].value
 
 		checked_list = [];
 		c = $("[name=change_class_permission]")
@@ -353,6 +463,9 @@
 			"name": name,
 			"phone": phone,
 			"class_permission": checked_list,
+			"ext_area": ext_area,
+			"whole_city": whole_city,
+			"summary": summary,
 			}
 
 		if (password != "") {
@@ -375,6 +488,153 @@
 			},
 			error: function (error) {
 				console.log(error)
+			}
+		})
+	}
+
+	function loadadarea(tid) {
+		$.ajax({
+			url: host + "adarea/",
+			type: "GET",
+			data: {
+				"teacher": true,
+				"tid": tid,
+				"key": getCookie("key")},
+			success: function (msg) {
+				$("#tadarea")[0].innerHTML = "";
+
+				if (msg["adareas"] == undefined) {
+					return ;
+				}
+
+				advertise_num = msg["adareas"].length
+				adareas = msg["adareas"]
+				$.each(msg["adareas"], function (_, i) {
+					city = cities[i["city"]]
+					town = city_towns[city][i["town"]]
+
+					$("#tadarea")[0].innerHTML += format(
+						adarea_format,
+						city,
+						town,
+						i["id"]);
+				})
+			}
+		})
+	}
+
+	function loadadclass(tid) {
+		$.ajax({
+			url: host + "adclass/",
+			type: "GET",
+			data: {
+				"teacher": true,
+				"tid": tid,
+				"key": getCookie("key")},
+			success: function (msg) {
+				$("#tadclass")[0].innerHTML = "";
+
+				$.each(msg["adclasses"], function (_, i) {
+					c_weekdays = []
+					$.each(i["weekdays"], function (e) {
+						c_weekdays.push(
+							chinese_weekday[
+								e
+								])
+					})
+
+					enddate = ""
+					if (i["enddate"]) {
+						enddate = i["enddate"]
+					}
+
+					$("#tadclass")[0].innerHTML += format(
+						adclass_format,
+						CLASS_TO[i["type"]],
+						i["date"],
+						enddate,
+						c_weekdays,
+						i["start_time"],
+						i["end_time"],
+						i["address"],
+						i["id"]);
+				})
+			}
+		})
+	}
+
+	function deletearea(aid) {
+		json = {
+			"tid": teacher["id"],
+			"key": getCookie("key"),
+			"aid": aid}
+		$.ajax({
+			url: host + "adarea?" + $.param(json),
+			type: "DELETE",
+			success: function(result) {
+				loadadarea(teacher["id"]);
+			}
+		});
+	}
+
+	function deleteadclass (aid) {
+		c = confirm("你確定要刪除這個招生文?")
+		if (!c) {
+			return;
+		}
+		json = {
+			"tid": teacher["id"],
+			"key": getCookie("key"),
+			"aid": aid}
+		$.ajax({
+			url: host + "adclass?" + $.param(json),
+			type: "DELETE",
+			success: function(result) {
+				loadadclass(teacher["id"]);
+			}
+		});
+	}
+
+	function newarea () {
+		if (advertise_num >= (teacher["ext_area"] + 5)) {
+			alert("達到上限")
+			return;
+		}
+
+		city = $("#city")[0].value;
+		town = $("#towns")[0].value;
+
+		town = city_towns[city].indexOf(town);
+		city = cities.indexOf(city);
+
+		passed = true;
+		$.each(adareas, function (_, i) {
+			if (i["city"] == city && i["town"] == town) {
+				passed = false;
+				return false;
+			}
+		})
+
+		if (!passed) {
+			alert("這區域重複了");
+			return;
+		}
+
+		json = {
+			"key": getCookie("key"),
+			"tid": teacher["id"],
+			"t_area": teacher["ext_area"],
+			"city": city,
+			"town": town,
+			}
+		$.ajax({
+			url: host + "adarea/",
+			type: "POST",
+			dataType: "json",
+			data: JSON.stringify(json),
+			contentType: "application/json; charset=utf-8",
+			success: function (msg) {
+				loadadarea(teacher["id"]);
 			}
 		})
 	}

@@ -230,3 +230,19 @@ div.mynav-sidebar #page-control {
 	margin-left: 15px;
 	background: rgb(219, 238, 252);
 }
+
+div#green-dot {
+	width: 10px;
+	height: 10px;
+	background: limegreen;
+	border-radius: 5px;
+	display: inline-block;
+}
+
+div#red-dot {
+	width: 10px;
+	height: 10px;
+	background: crimson;
+	border-radius: 5px;
+	display: inline-block;
+}

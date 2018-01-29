@@ -54,9 +54,11 @@ function goclass(id) {
 }
 
 function leadtoclass(id) {
+    u_key = getCookie("key")
+
     class_ = classess_info[id]
     if (class_["permission"] != null) {
-        json = {"class": id, "key": getCookie("key")}
+        json = {"class": id, "key": u_key}
         if (getCookie("teacher-key") != "") {
             json["tkey"] = getCookie("teacher-key")
         }
@@ -73,32 +75,63 @@ function leadtoclass(id) {
 
                 console.log(msg)
                 
+                html = ""
                 $.each(msg, function (_, i) {
-                    $("#classroom-confirm #list")[0].innerHTML += format(`<div class="class" onclick="chose_classroome({0}, '{2}')">{1}</div>`,
+                    html += format(`<div class="class" onclick="chose_classroome({0}, '{2}')">{1}</div>`,
                         i["id"],
                         i["name"],
                         id,
                         )
                 })
 
+                $("#classroom-confirm #list")[0].innerHTML = html
                 show("blackscreen");
                 show("classroom-confirm");
             },
             error: function (error) {
                 if (error.status == 401) {
-                    reload = confirm("請登錄");
-                    if (reload) {
-                        show("login-frame");
-                    }
+                    $("#alert #title")[0].innerHTML = format(`您還沒有登入`,
+                        class_["subject"])
+                    $("#alert #describe")[0].innerHTML = ""
+                    $("#alert #btns")[0].innerHTML = format(`<button class="mybtn primary" onclick="dismiss_alert();show('login-frame')">登入</button>
+                          <button class="mybtn" onclick="dismiss_alert()">不用謝謝</button>`,
+                          id
+                          )
+                    $("#blackscreen").show()
+                    $("#alert").show()
                     return null;
                 }
                 else if (error.status == 400) {
-                    alert("您不是 Python 學員，無法進入")
+                    $("#alert #title")[0].innerHTML = format(`您不是 "{0}" 的學員，無法進入`,
+                        class_["subject"])
+                    $("#alert #describe")[0].innerHTML = "是否要試試體驗課程"
+                    $("#alert #btns")[0].innerHTML = format(`<button class="mybtn primary" onclick="window.location.href = '/class/c/{0}'">好, 看體驗課程</button>
+                          <button class="mybtn" onclick="dismiss_alert()">不用謝謝</button>`,
+                          id
+                          )
+                    $("#blackscreen").show()
+                    $("#alert").show()
                 }
             }
         })
     }
     else {
+        if (u_key == "") {
+            if (getCookie("teacher-key") == "") {
+
+                $("#alert #title")[0].innerHTML = format(`您還沒有登入`)
+                $("#alert #describe")[0].innerHTML = "是否要試試體驗課程, 還是要登入"
+                $("#alert #btns")[0].innerHTML = format(`<button class="mybtn primary" onclick="window.location.href = '/class/c/{0}'">看體驗課程</button>
+                    <button class="mybtn primary" onclick="dismiss_alert();show('login-frame')">登入</button>
+                    <button class="mybtn" onclick="dismiss_alert()">都不用謝謝</button>`,
+                    id
+                    )
+                $(".loginsignup-frame").hide()
+                $("#blackscreen").show()
+                $("#alert").show()
+                return
+            }
+        }
         window.location.href = "/class/c/" + id
     }
 }
@@ -154,3 +187,8 @@ $.ajax({
         $("#cards")[0].innerHTML = cardstext
     }
 })
+
+function dismiss_alert () {
+    $("#blackscreen").hide()
+    $("#alert").hide()
+}
