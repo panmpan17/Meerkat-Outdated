@@ -253,15 +253,14 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 	<script src="/html/javascript/datepicker.js"></script>
 	<script src="/html/javascript/taiwan_town.js"></script>
-	<script src="/html/javascript/teacher/advertise.js" type="text/javascript" charset="utf-8"></script>
+	<!-- <script src="/html/javascript/teacher/advertise.js" type="text/javascript" charset="utf-8"></script> -->
 	<script>
+		http_re = new RegExp("http[s]?:\/\/[^ \n]+", "g")
+		simple_email_re = new RegExp("[^ \n@]+@[^ \n@]+", "g")
 		month_re = new RegExp("[0-9]+ 月")
-		CLASS_TO = {
-			"python_01": "Python 初級",
-			"scratch_1": "Scratch 初級",
-			"hourofcode": "Hour of Code",
-			"teacher_1": "教師訓練",
-		}
+
+		http_link_format = `<a href="{0}" target="_blank">{0}</a>`
+		email_link_format = `<a href="mailto:{0}">{0}</a>`
 
 		advertise_format = `
 		<tr id="teacher-{3}" onclick="showadclass('{3}')">
@@ -401,6 +400,9 @@
 					if (summary == "" || summary == null) {
 						summary = "沒有自我介紹"
 					}
+					else {
+						summary = summary_add_link(summary)
+					}
 					teachers_table.innerHTML += format(advertise_format,
 						i["name"],
 						i["phone"],
@@ -497,6 +499,23 @@
 			}
 		}
 
+		function summary_add_link (summary) {
+			links = http_re.exec(summary)
+			if (links.length > 0) {
+				$.each(links, function (_, i) {
+					summary = summary.replace(i, format(http_link_format, i))
+				})
+			}
+
+			emails = simple_email_re.exec(summary)
+			if (emails.length > 0) {
+				$.each(emails, function (_, i) {
+					summary = summary.replace(i, format(email_link_format, i))
+				})
+			}
+			return summary
+		}
+
 		$(document).ready(function () {
 			$.ajax({
 				url: host + "adarea/",
@@ -521,6 +540,9 @@
 							summary = i["summary"]
 							if (summary == "" || summary == null) {
 								summary = "沒有自我介紹"
+							}
+							else {
+								summary = summary_add_link(summary)
 							}
 							teachers_table.innerHTML += format(advertise_format,
 								i["name"],
