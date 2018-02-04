@@ -1022,14 +1022,20 @@ class ClassesRestView(View):
 
                 #if class is free
                 if class_["permission"] == None:
+                    logon = False
                     try:
                         user = self.check_login_u(kwargs)
+                        logon = True
                     except:
-                        user = None
+                        try:
+                            teacher = self.check_login_teacher(kwargs)
+                            logon = True
+                        except:
+                            pass
 
                     try:
                         lesson = int(kwargs["lesson"])
-                        if user:
+                        if logon:
                             return class_["lessons"][lesson]
                         elif lesson >= len(class_["trial"]):
                             return {"success": False, "reason": "trial key"}
@@ -1040,7 +1046,7 @@ class ClassesRestView(View):
 
                     class_ = class_.copy()
                     class_["length"] = len(class_["lessons"])
-                    if not user:
+                    if not logon:
                         class_["key_type"] = "trial"
                     class_.pop("lessons")
                     return class_
@@ -1903,8 +1909,9 @@ class ClassroomRestView(View):
 
         if cherrypy.request.method == "GET":
             self.check_key(kwargs, ("class", ))
-            usererror = 1
             clsr_id = None
+
+            # test user login
             try:
                 user = self.check_login_u(kwargs)
 
@@ -1914,34 +1921,34 @@ class ClassroomRestView(View):
                     ))
                 rst = conn.execute(ss)
                 rows = rst.fetchall()
-                if not rows:
-                    usererror = 2
-                    raise cherrypy.HTTPError(400)
-
-                return [{
-                    "id": row["id"],
-                    "name": row["name"]
-                    } for row in rows]
+                if rows:
+                    return {
+                        "class": [{"id": row["id"], "name": row["name"]} 
+                            for row in rows],
+                        "success": True,
+                        "key": "user",
+                        }
+                return {"success": False, "reason": "not in class"}
             except:
-                try:
-                    teacher = self.check_login_teacher(kwargs)
-                except:
-                    if usererror == 1:
-                        raise cherrypy.HTTPError(401)
-                    else:
-                        raise cherrypy.HTTPError(400)
-                teachers = meta.tables[Teacher.TABLE_NAME]
+                pass
 
-                ss = select([teachers.c.class_permission]).where(
-                    teachers.c.id==teacher["id"])
-                rst = conn.execute(ss)
-                row = rst.fetchone()
+            #user login failed try teacher
+            teacher = self.check_login_teacher(kwargs)
+            teachers = meta.tables[Teacher.TABLE_NAME]
 
-                if kwargs["class"] not in row["class_permission"]:
-                    raise cherrypy.HTTPError(400)
+            ss = select([teachers.c.class_permission]).where(
+                teachers.c.id==teacher["id"])
+            rst = conn.execute(ss)
+            row = rst.fetchone()
 
-                return row["class_permission"]
+            if kwargs["class"] not in row["class_permission"]:
+                return {"success": False, "reason": "no permission"}
 
+            return {
+                "permission": row["class_permission"],
+                "success": True,
+                "key": "teacher",
+                }
         else:
             raise cherrypy.HTTPError(404)
 

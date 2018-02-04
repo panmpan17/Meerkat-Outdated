@@ -69,6 +69,7 @@ class ClassesPlugin(plugins.SimplePlugin):
 				"description": self.classes[c]["description"],
 				"style": self.classes[c]["style"],
 				"id": self.classes[c]["id"],
+				"trial": self.classes[c]["trial"],
 				}
 			classes_json.append(j)
 		return classes_json
