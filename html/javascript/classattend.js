@@ -210,7 +210,23 @@ function loadfilehomework(folder, cls_id) {
 				}
 			})
 
-			units = Array.from(units).sort()
+			units = Array.from(units)
+			units_array = []
+			$.each(units, function (_, i) {
+				value = i.replace("test", "").replace("hw", "")
+				value = parseInt(value)
+				insert_index = 0
+				$.each(units_array, function (_, e) {
+					e_value = parseInt(e.replace("test", "").replace("hw", ""))
+					if (e_value > value) {
+						return false;
+					}
+					insert_index += 1
+				})
+				units_array.splice(insert_index, 0, i)
+			})
+			units = units_array
+			
 			homeworks[cls_id] = homework
 			if (units.length > 0) {
 				buttonsgroup = PY_UNIT_BTN

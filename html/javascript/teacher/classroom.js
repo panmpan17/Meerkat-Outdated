@@ -182,10 +182,15 @@ function changeclassroom (cls_id) {
 				files_records = msg
 				files = {}
 				units = new Set()
+				console.log(msg)
 				$.each(msg, function (k, v) {
 					if (k.indexOf("teacher") != -1) { return true; }
 
-					cid_hwn = file_re.exec(k)[0]
+					try {
+						cid_hwn = file_re.exec(k)[0]
+					}
+					catch (e) {return true;}
+					
 					cid_hwn = cid_hwn.split("_")
 					cid = cid_hwn[0]
 					hwn = cid_hwn[1]
@@ -209,7 +214,23 @@ function changeclassroom (cls_id) {
 					}
 				})
 
-				units = Array.from(units).sort()
+				units = Array.from(units)
+				units_array = []
+				$.each(units, function (_, i) {
+					value = i.replace("test", "").replace("hw", "")
+					value = parseInt(value)
+					insert_index = 0
+					$.each(units_array, function (_, e) {
+						e_value = parseInt(e.replace("test", "").replace("hw", ""))
+						if (e_value > value) {
+							return false;
+						}
+						insert_index += 1
+					})
+					units_array.splice(insert_index, 0, i)
+				})
+				units = units_array
+
 				if (units.length > 0) {
 					buttonsgroup = `<br><div class="dropdown">
 						<button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -266,6 +287,7 @@ function changefileunit (unit) {
 	homeworks = Array.from(homework).sort();
 
 	thead = "<thead><tr><th>學生 \\ 功課</th>";
+	unit += "-"
 	$.each(homeworks, function (_, i) {
 		if (i.startsWith(unit)) {
 			filename_seq = i.substring(i.indexOf("-") + 1)
