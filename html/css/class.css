@@ -3,12 +3,12 @@
 .menu {
 	position: absolute;
 	left: 0;
-	top: 60px;
+	top: 53px;
 	bottom: 0;
 	background: rgb(6, 48, 58);
 	color: white;
 	width: 300px;
-	height: calc(100% - 60px);
+	height: calc(100% - 53px);
 	transition-duration: 0.2s;
 	overflow-y: scroll;
 }
@@ -168,7 +168,7 @@
 #view-block {
 	position: absolute;
 	width: 100%;
-	height: calc(100% - 60px);
+	height: calc(100% - 53px);
 	transition-duration: 0.2s;
 	padding-top: 15px;
 	overflow-y: scroll;

@@ -1,0 +1,78 @@
+@charset "utf-8";
+/*連結文字樣式*/
+a ,a:hover ,a:focus {
+	color:white;
+}
+.advantage {
+	background-color: #EEECE9;
+}
+.advantage img {
+	width: 100%;
+}
+.advantagblock {
+	border-radius: 20px;
+	background-color: white;
+	overflow: hidden;
+	margin-bottom: 20px;
+	min-height:300px; 
+}
+.advantagblock h2 {
+	margin-top: 0px;
+	padding: 15px 15px;
+	text-align: center;
+	background-color: #00C4B3;
+	color: white;
+}
+.advantagblock ol {
+	padding-right: 20px;
+}
+.index .carousel-control {
+	opacity: 0;
+}
+/*第2banner位置上移*/
+.banner2 {
+	position: relative;
+	top:-100px;
+}
+/*課程區塊上移*/
+.classup {
+	position: relative;
+	top:-30px;
+}
+/*課程區塊上下內距*/
+.classtop {
+	padding-top: 30px;
+	padding-bottom: 30px;
+}
+/*課程區塊內容居中*/
+.class h1 ,.class  {
+	text-align: center;
+}
+.class ul {
+	text-align: left;
+}
+.class {
+	margin-top: 20px;
+}
+/*課程區塊按鈕樣式*/
+.btn-orange {
+	color: white;
+	background-color: rgb(255,131,0);
+	border-color: rgb(255,131,0);
+}
+/*課程區塊按鈕滑鼠滑入樣式*/
+.btn:hover {
+	color: white;
+	background-color: rgb(149,214,0);
+	border-color: rgb(149,214,0);
+}
+/*綠塊背景*/
+.learn {
+	background-color: rgb(149,214,0);
+	text-align: center;
+	padding: 30px 10px 30px 10px;
+}
+/*綠塊文字*/
+.learn h2 {
+	padding-top: 60px;
+}

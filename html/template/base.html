@@ -1,104 +1,105 @@
 <!DOCTYPE html>
-<html lang="en"><!--  manifest="/html/main.appcache"> -->
+<html lang="en" manifest="/html/main.appcache">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{% block title %}{% endblock %}</title>
 
-	<script src="/html/javascript/jquery.min.js"></script>
-	<script src="/html/javascript/sha256.js"></script>
-	<script src="/html/bootstrap/js/bootstrap.js"></script>
-	<script src="/html/slick/slick.js" type="text/javascript" charset="utf-8"></script>
-	<script src="https://www.google.com/recaptcha/api.js"></script>
 
 	<link rel="stylesheet" href="/html/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" href="/html/css/3.0/base.css">
+	<link rel="stylesheet" href="/html/css/3.0/index.css">
+	<link rel="stylesheet" href="/html/css/3.0/site.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 	<link rel="stylesheet" href="/html/slick/slick.css">
 	<link rel="stylesheet" href="/html/slick/slick-theme.css">
-	<!-- my js css -->
-	<script src="/html/javascript/loginsignupframe.js"></script>
-	<script src="/html/javascript/base.js"></script>
-
 	<link href="/html/css/theme.css" rel="stylesheet">
-
-	<style>
-		div#navbar {
-			position: fixed;
-			top: 0;
-			left: 0;
-			height: 60px;
-			border-bottom: rgb(253, 131, 36) solid 3px;
-			width: 100%;
-			background: rgb(6, 48, 59);
-			color: white;
-			line-height: 57px;
-			padding-left: 100px;
-			font-size: 24px;
-		}
-
-		div.fixcontainer {height: 60px}
-	</style>
-	{% block css %}
-	{% endblock %}
-
+	{% block css %}{% endblock %}
 </head>
 <body>
-	<div class="fixcontainer"></div>
-
-	
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				</button>
+				<div class="logobefore">
+					<a class="navbar-brand" href="/" title="返回首頁">
+						<img src="/html/images/logo.png" width="150px" alt="cording for fun logo">
+					</a>
+				</div>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">最新消息<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#">訊息公告</a></li>
+							<li><a href="#">近期開課</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">核心課程<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="scratchcs1.html">C-Scratch初級班</a></li>
+							<li><a href="scratchcs2.html">C-Scratch動畫班</a></li>
+							<li><a href="scratchcs3.html">C-Scratch應用班</a></li>
+							<li><a href="scratchcs4.html">C-Scratch進階班</a></li>
+							<li><a href="pythonpc1.html">C-Python初級班</a></li>
+							<li><a href="pythonpc2.html">C-Python進階班</a></li>
+							<li><a href="udacity.html">C-Udacity工作坊</a></li>
+							<li><a href="classprove.html">實證</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">師資培訓<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="class-scratch.html">授權名單</a></li>
+							<li><a href="#">說明會報名</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<ul class="dropdown-menu">
+							<li><a href="aboutdream.html">願景使命</a></li>
+							<li><a href="ourteam.html">樂學團隊</a></li>
+							<li><a href="aboutmilestone.html">樂學事記</a></li>
+							<li><a href="https://www.pixnet.net/" target="_blank">部落格</a></li>
+							<li><a href="aboutmedia.html">媒體報導</a></li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">我要發問<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="faq.html">FAQ</a></li>
+							<li><a href="contactus.html">聯絡我們</a></li>
+							<li><a href="#">討論區</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="#">新會員註冊</a></li>
+							<li><a href="#">舊會員登入</a></li>
+							<li><a href="#">免費線上體驗</a></li>
+							<li><a href="ourteam.html">完整付費課程</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div><!-- /.navbar-collapse -->
+		</div><!-- /.container-fluid -->
+	</nav>
 	{% block content %}
 	{% endblock %}
-	<div id="navbar">
-		<a href="/">Coding For Fun</a>
-		<a class="btn-large" href="/news">最新</a>
-		<a class="btn-large" href="/classes">課程</a>
-		<a class="btn-large" href="/question">討論區</a>
-		<div class="account-logo" style="cursor: pointer;">
-			<div class="dropdown" style="top: -75px;">
-				<div id="accountmenu">
-					<a onclick="showinfo();">帳號資訊</a>
-					<a href="/classattend">參加課程</a>
-					<a href="/report" style="color:red">回報問題</a>
-					<a onclick="logout();">登出</a>
-				</div>
-			</div>
-			<a id="account-logo" class="unselectable" onclick="presslogo();" style="position: fixed;right: 20px;top: 0;">登入/ 註冊</a>
-		</div>
-	</div>
-	<!-- <div class="my-container">
-		<div class="account-logo" style="cursor: pointer;">
-			<div class="dropdown">
-				<div id="accountmenu">
-					<a onclick="showinfo();">帳號資訊</a>
-					<a href="/classattend">參加課程</a>
-					<a href="/report" style="color:red">回報問題</a>
-					<a onclick="logout();">登出</a>
-				</div>
-			</div>
-			<a id="account-logo" class="unselectable" onclick="presslogo();">登入/ 註冊</a>
-		</div>
-		<a href="/">
-			<img id="navbarlogo" src="/html/images/kidcodingicon.png" alt="">
-		</a>
-		<ul class="navbar">
-			<li class="navtext" style="cursor: pointer;"><a class="btn-large" href="/news">最新</a></li>
-			<li class="navtext" style="cursor: pointer;"><a class="btn-large" href="/classes">課程</a></li>
-			<li class="navtext" style="cursor: pointer;"><a class="btn-large" href="/question">討論區</a></li>
-			<li class="navtext unselectable" style="cursor: pointer;" onclick="toggle('linksmenu')"><a class="btn-large">
-				&#9776;
-			</a></li>
-		</ul>
-		<div class="dropdown">
-			<div id="linksmenu" hidden>
-				<a href="/about"> 關於 Kids Coding Studio </a>
-				<a href="/mission"> Kids Coding Studio 的使命 </a>
-				<a href="/resource"> 教學資源 </a>
-				<a href="/presentation"> 授權說明會 </a>
-				<a href="/teacher/advertise"> 教師廣告 </a>
-				<a href="/teacher/login"> 教師頁面 </a>
-			</div>
-		</div>
-	</div> -->
 	<!-- login frame -->
 	<div id="login-frame" class="loginsignup-frame" hidden>
 		<div class="loginsignup-frame-inside">
@@ -237,9 +238,29 @@
 			</div>
 		</div>
 	</div>
-	{% block bcontent %}
-	{% endblock %}
+	{% block bcontent %}{% endblock %}
+
+	<script src="/html/javascript/jquery.min.js"></script>
+	<script src="/html/javascript/sha256.js"></script>
+	<script src="/html/bootstrap/js/bootstrap.js"></script>
+	<script src="/html/slick/slick.js" type="text/javascript" charset="utf-8"></script>
+	<script src="https://www.google.com/recaptcha/api.js"></script>
+	<script src="/html/javascript/loginsignupframe.js"></script>
+	<script src="/html/javascript/base.js"></script>
 	<script>
+		// JavaScript Document
+		$(function(){
+			// 幫 a.scrolltop 加上 click 事件
+			$('a.scrolltop').click(function(){
+				// 讓捲軸用動畫的方式移動到 0 的位置
+				var $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $('html') : $('body')) : $('html,body');
+				$body.animate({
+					scrollTop: 0
+				}, 600);
+				return false;
+			});
+		});
+
 		function show(eid) {
 			$("#" + eid).show();
 		}
@@ -265,10 +286,6 @@
 	  	  ga('create', 'UA-100934969-1', 'auto');
 	  	  ga('send', 'pageview');
 	</script>
-
-	{% block script %}
-	{% endblock %}
-	
- 
+	{% block script %}{% endblock %}
 </body>
 </html>

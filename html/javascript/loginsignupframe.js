@@ -40,8 +40,6 @@ function login () {
 				storeCookie("id", msg["lastrowid"]);
 				storeCookie("userid", msg["userid"]);
 				storeCookie("key", msg["key"]);
-
-				$("#account-logo")[0].innerHTML = msg["userid"];
 				hide("login-frame")
 			},
 			error: function (error) {

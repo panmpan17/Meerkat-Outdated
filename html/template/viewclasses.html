@@ -1,33 +1,35 @@
 {% extends "base.html" %}
 {% block title %}Coding for Fun / 課程{% endblock %}
 {% block css %}
-<link rel="stylesheet" href="/html/css/viewclass.css">
+	<link rel="stylesheet" href="/html/css/viewclass.css">
+{% endblock %}
+{% block script %}
+	<script src="/html/javascript/viewclass.js"></script>
 {% endblock %}
 {% block content %}
 <br>
 <div class="container">
-  <br>
-  <div id="cards" class="row">
-  </div>
+	<br>
+	<div id="cards" class="row">
+	</div>
 </div>
 <br><br>
 {% endblock %}
 {% block bcontent %}
-  <div id="describes"></div>
-  <div id="blackscreen" hidden></div>
-  <div id="classroom-confirm" hidden>
-  	<div class="close-blackscreen" onclick="hide('blackscreen');hide('classroom-confirm')">✕</div>
-  	<div id="info">
-  		因為你參加 2 個「Python 入門課程」<br>
-  		請選擇其中一個
-  	</div><br>
-  	<div id="list">
-  	</div>
-  </div>
-  <div id="alert" hidden>
-    <div id="title"></div>
-    <div id="describe"></div>
-    <div id="btns"></div>
-  </div>
-  <script src="/html/javascript/viewclass.js"></script>
+	<div id="describes"></div>
+	<div id="blackscreen" hidden></div>
+	<div id="classroom-confirm" hidden>
+		<div class="close-blackscreen" onclick="hide('blackscreen');hide('classroom-confirm')">✕</div>
+		<div id="info">
+			因為你參加 2 個「Python 入門課程」<br>
+			請選擇其中一個
+		</div><br>
+		<div id="list">
+		</div>
+	</div>
+	<div id="alert" hidden>
+		<div id="title"></div>
+		<div id="describe"></div>
+		<div id="btns"></div>
+	</div>
 {% endblock %}
