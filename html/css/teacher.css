@@ -74,11 +74,11 @@ span.spanbutton {
 	border-radius: 4px;
 }
 
-div#changepasswordframe {
+div.changepasswordframe {
 	border-left: none;
 }
 @media (min-width: 992px) {
-	div#changepasswordframe {
+	div.changepasswordframe {
 		border-left: 1px rgb(200, 200, 200) solid;
 	}
 }

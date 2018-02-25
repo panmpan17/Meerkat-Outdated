@@ -5,8 +5,8 @@
 <style>
 	div.mynav-sidebar {
 		color: white;
-		position: fixed;
-		width: 170px;
+		/*position: relative;*/
+		width: 100%;
 		background: rgb(6, 48, 68);
 		left: 0;
 		top: 130px;
@@ -69,15 +69,24 @@
 		background: rgb(219, 238, 252);
 	}
 
-	#cards {margin-left: 190px;}
+	#cards {
+		margin-top: -4px;
+		padding-left: 10px
+	}
 
 	#cards .card {
 		float: left;
 		display: inline-block;
 		background: rgb(240, 240, 240);
-		min-width: 250px;
-		width: 20%;
+		min-width: 350px;
+		width: 50%;
 		margin: 4px 4px;
+	}
+
+	@media (max-width: 992px) {
+		#cards .card {
+			width: 100%;
+		}
 	}
 
 	#cards .card img {
@@ -126,13 +135,23 @@
 </style>
 {% endblock %}
 {% block content %}
-	<br><br>
-	<div class="mynav-sidebar">
-		<div id="cities-btn" class="item" onclick="toggle('cities');hide('towns')"> 縣市</div>
-		<ul id="cities" class="nav-dropdown"></ul>
-		<div id="towns-btn" class="item" onclick="toggle('towns');hide('cities')"> 鄉鎮區</div>
-		<ul id="towns" class="nav-dropdown"></ul>
+<main>
+	<div class="container-fluid">
+		<br>
+		<div class="col-md-3 col-sm-4 col-xs-12">
+			<div class="mynav-sidebar">
+				<div id="cities-btn" class="item" onclick="toggle('cities');hide('towns')"> 縣市</div>
+				<ul id="cities" class="nav-dropdown"></ul>
+				<div id="towns-btn" class="item" onclick="toggle('towns');hide('cities')"> 鄉鎮區</div>
+				<ul id="towns" class="nav-dropdown"></ul>
+			</div>
+			<br>
+		</div>
+		<div id="cards" class="col-md-9 col-sm-8 col-xs-12">
+		</div>
 	</div>
+</main>
+<br>
 {% endblock %}
 {% block bcontent %}
 <div id="adclass-frame" class="loginsignup-frame" hidden>
@@ -145,13 +164,12 @@
 		</div>
 	</div>
 </div>
-<div id="cards"></div>
 {% endblock %}
 {% block script %}
 	<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-	<script src="/html/javascript/datepicker.js"></script>
-	<script src="/html/javascript/taiwan_town.js"></script>
+	<script src="/html/js/datepicker.js"></script>
+	<script src="/html/js/taiwan_town.js"></script>
 	<script>
 		month_re = new RegExp("[0-9]+ 月")
 		CLASS_TO = {

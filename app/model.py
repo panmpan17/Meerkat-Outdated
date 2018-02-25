@@ -412,6 +412,7 @@ class Teacher(object):
             Column("disabled", Boolean, default=False, nullable=True, autoincrement=True),
             Column("class_permission", ARRAY(String), nullable=False, autoincrement=False),
             Column("summary", Text, nullable=False, autoincrement=False),
+            Column("contact", Text, nullable=False, autoincrement=True, default=""),
             )
         cls.teacher_t.create(db_engine, checkfirst=True)
         return cls.teacher_t

@@ -1,0 +1,252 @@
+@charset "utf-8";
+/* CSS Document */
+a:hover {
+	text-decoration: none;
+}
+a:focus {
+	text-decoration: none;
+}
+/*清除nav空白底線*/
+.navbar {
+	margin-bottom: 0px;
+}
+/*nav背景色及底線*/
+.navbar-default {
+	background-color: rgb(0,48,60);
+	border-bottom: rgb(255,131,0) 3px solid;
+}
+/*logo位置*/
+.navbar-brand {
+	padding: 8px 0px 5px 20px;
+}
+/*nav文字顏色*/
+.navbar-default .navbar-nav>li>a {
+	color: white;
+}
+/*nav選取文字及背景色*/
+.navbar-default .navbar-nav > li > a:hover {
+	color: white;
+	background-color: rgb(38,79,89);
+}
+/*nav點選展開後文字及背景色*/
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+	color: white;
+	background-color: rgb(38,79,89);
+}
+/*nav點選後文字及背景色*/
+.navbar-default .navbar-nav>li>a:focus {
+	color: white;
+	background-color: rgb(38,79,89);
+}
+/*下拉式選單背景色*/
+.dropdown-menu {
+	background-color: rgb(0,48,60);
+}
+/*下拉式選單文字色*/
+.dropdown-menu>li>a {
+	color: white;
+}
+/*下拉式選單選取文字及背景色*/
+.dropdown-menu>li>a:hover {
+	color: white;
+	background-color: rgb(38,79,89);
+}
+/*手機版漢堡紐hover背景色*/
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
+	background-color: rgb(38,79,89);
+}
+/*手機版漢堡紐色*/
+.navbar-default .navbar-toggle .icon-bar{
+	background-color: white;
+}
+/*綠塊圖片*/
+figcaption img {
+	width: 100%;
+	margin: 10px 0px 10px 0px;
+}
+/*code背景顏色*/
+.darkslategrayspace {
+	height: 80px;
+	background-color: darkslategray;
+	position: relative;
+	top: 75px;
+}
+/*code區塊位置*/
+.code {
+	text-align: center;
+	padding: 30px 0px 0px 0px;
+	position: relative;
+	top: -75px;
+}
+/*頁尾背景色*/
+.footer {
+	background-color: rgb(26,171,165);
+	padding: 50px 30px 50px 30px;
+}
+/*頁尾社群媒體以及連結文字*/
+.social {
+	text-align: center;
+	margin-top: 20px;
+	line-height: 2em;
+}
+/*頁尾連結文字顏色*/
+.social a{
+	color: white;
+}
+.social a:hover {
+	color: rgb(255,131,0);
+}
+.copyright {
+	color: white;
+	text-align: center;
+	margin-top: 30px;
+}
+.navbar-toggle {
+    position: relative;
+    float: right;
+    padding: 9px 10px;
+    margin-top: 8px;
+    margin-right: 15px;
+    margin-bottom: 8px;
+    background-color: transparent;
+    background-image: none;
+    border: 0px solid transparent !important;
+    border-radius: 4px;
+}
+@media (min-width: 768px){
+	/*footerlogo位置*/
+	.footerlogo {
+		margin-top: 70px;
+	}
+}
+@media (max-width: 767px){
+	/*手機版文字顏色*/
+	.navbar-default .navbar-nav .open .dropdown-menu>li>a {
+		color: white;
+	}
+	/*手機版hover文字及背景顏色*/
+	.navbar-default .navbar-nav .open .dropdown-menu>li>a:hover {
+		color: white;
+		background-color: rgb(38,79,89);
+	}
+	/*footerlogo位置*/
+	.footerlogo {
+		margin-top: 10px;
+	}
+	.darkslategrayspace {
+		visibility: hidden;
+	}
+}
+/*自訂480px以下刪格系統*/
+@media (max-width: 767px) and (min-width: 480px) {
+	.col-xsm-12 {
+	  width: 100%;
+	}
+	.col-xsm-11 {
+	  width: 91.66666667%;
+	}
+	.col-xsm-10 {
+	  width: 83.33333333%;
+	}
+	.col-xsm-9 {
+	  width: 75%;
+	}
+	.col-xsm-8 {
+	  width: 66.66666667%;
+	}
+	.col-xsm-7 {
+	  width: 58.33333333%;
+	}
+	.col-xsm-6 {
+	  width: 50%;
+	}
+	.col-xsm-5 {
+	  width: 41.66666667%;
+	}
+	.col-xsm-4 {
+	  width: 33.33333333%;
+	}
+	.col-xsm-3 {
+	  width: 25%;
+	}
+	.col-xsm-2 {
+	  width: 16.66666667%;
+	}
+	.col-xsm-1 {
+	  width: 8.33333333%;
+	}
+}
+@media (max-width: 480px){
+	.col-xsm-12 {
+	  width: 100%;
+	}
+	.col-xsm-11 {
+	  width: 100%;
+	}
+	.col-xsm-10 {
+	  width: 100%;
+	}
+	.col-xsm-9 {
+	  width: 100%;
+	}
+	.col-xsm-8 {
+	  width: 100%;
+	}
+	.col-xsm-7 {
+	  width: 100%;
+	}
+	.col-xsm-6 {
+	  width: 100%;
+	}
+	.col-xsm-5 {
+	  width: 100%;
+	}
+	.col-xsm-4 {
+	  width: 100%;
+	}
+	.col-xsm-3 {
+	  width: 100%;
+	}
+	.col-xsm-2 {
+	  width: 100%;
+	}
+	.col-xsm-1 {
+	  width: 100%;
+	}
+	.col-xxsm-12 {
+	  width: 100%;
+	}
+	.col-xxsm-11 {
+	  width: 91.66666667%;
+	}
+	.col-xxsm-10 {
+	  width: 83.33333333%;
+	}
+	.col-xxsm-9 {
+	  width: 75%;
+	}
+	.col-xxsm-8 {
+	  width: 66.66666667%;
+	}
+	.col-xxsm-7 {
+	  width: 58.33333333%;
+	}
+	.col-xxsm-6 {
+	  width: 50%;
+	}
+	.col-xxsm-5 {
+	  width: 41.66666667%;
+	}
+	.col-xxsm-4 {
+	  width: 33.33333333%;
+	}
+	.col-xxsm-3 {
+	  width: 25%;
+	}
+	.col-xxsm-2 {
+	  width: 16.66666667%;
+	}
+	.col-xxsm-1 {
+	  width: 8.33333333%;
+	}
+}

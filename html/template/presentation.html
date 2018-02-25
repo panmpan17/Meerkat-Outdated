@@ -1,64 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Coding for Fun / 授權說明會{% endblock %}
 {% block css %}
-<link rel="stylesheet" href="/html/css/about.css">
-<style>
-	button.outline {
-		border-radius: 50px;
-		padding: 10px 50px;
-		border: 2px solid #DC6180;
-		color: #DC6180;
-		font-size: 18px;
-		background-color: white;
-		cursor: pointer;
-	}
-
-	button.outline:hover {
-		color: white;
-		background: #DC6180;
-	}
-
-	button.outline.green {
-		border: 2px solid #67bf24;
-		color: #67bf24;
-	}
-
-	button.outline.green:hover {
-		color: white;
-		background: #67bf24;
-	}
-</style>
+	<link rel="stylesheet" href="/html/css/about.css">
 {% endblock %}
 {% block content %}
 <br>
 <div class="container">
 	<div class="row">
 		<div class="col-md-2 col-sm-1"></div>
-		<div class="col-md-8 col-sm-10" style="background: white" id="presentation">
-			<div class="row">
-				<div class="col-sm-6 col-xs-12">
-					<center>
-						<h3>
-							<a href="https://docs.google.com/forms/d/e/1FAIpQLSdFy4e500Y6SBuAUG0pb6ZZnEJ9AATt1GHzvpLYbk6ABeQX-A/closedform" target="_blank">
-								<button class="outline green">按此報名</button>
-							</a>
-						</h3>
-					</center>
-				</div>
-				<div class="col-sm-6 col-xs-12">
-					<center>
-						<h3>
-							<a href="https://docs.google.com/forms/d/e/1FAIpQLSeEGD-Vf8wtUO0iUi2OHcL1geXX1yyyw7-_m1ZidWJCIwPUww/viewform?c=0&w=1" target="_blank">
-								<button class="outline">新增需求</button>
-							</a>
-						</h3>
-					</center>
-				</div>
-			</div>
+		<div class="col-md-8 col-sm-10" style="background: white">
+			<div id="presentation"></div>
+			<a href="https://docs.google.com/forms/d/e/1FAIpQLSdFy4e500Y6SBuAUG0pb6ZZnEJ9AATt1GHzvpLYbk6ABeQX-A/closedform" target="_blank">
+				<!-- <button class="btn btn-orange">我要報名</button> -->
+				<button class="btn btn-orange">按此報名</button>
+			</a>
 		</div>
 	</div>
 </div>
-<br><br><br>
+<br>
 {% endblock %}
 {% block script %}
 <script>
@@ -67,7 +26,7 @@
 			url: host + "presentation/",
 			success: function (msg) {
 				if (msg["success"]) {
-					$("#presentation")[0].innerHTML = msg["success"] + $("#presentation")[0].innerHTML
+					$("#presentation")[0].innerHTML = msg["success"]
 				}
 			}
 		})

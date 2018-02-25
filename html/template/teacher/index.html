@@ -5,15 +5,15 @@
 	<meta charset="utf-8">
 
 	<title>教師頁面</title>
-	<script src="/html/javascript/jquery.min.js"></script>
-	<script src="/html/javascript/jquery-ui.min.js"></script>
-	<script src="/html/javascript/chart.min.js"></script>
+	<script src="/html/js/jquery.min.js"></script>
+	<script src="/html/js/jquery-ui.min.js"></script>
+	<script src="/html/js/chart.min.js"></script>
 	<script src="/html/bootstrap/js/bootstrap.js"></script>
-	<script src="/html/javascript/taiwan_town.js"></script>
-	<script src="/html/javascript/base.js"></script>
+	<script src="/html/js/taiwan_town.js"></script>
+	<script src="/html/js/base.js"></script>
 	<script src="/html/slick/slick.js" type="text/javascript" charset="utf-8"></script>
-	<script src="/html/javascript/sha256.js"></script>
-	<script src="/html/javascript/datepicker.js"></script>
+	<script src="/html/js/sha256.js"></script>
+	<script src="/html/js/datepicker.js"></script>
 
 	<link rel="stylesheet" href="/html/bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" href="/html/css/sb-admin.css">
@@ -109,7 +109,7 @@
 						<b>變更密碼</b>
 						<br><br>
 					</div>
-					<div class="col-md-8 col-xs-12" id="changepasswordframe">
+					<div class="col-md-8 col-xs-12" class="changepasswordframe">
 						<input type="password" class="form-control" placeholder="舊密碼" id="oldpassword"><br>
 						<input type="password" class="form-control" placeholder="新密碼 (建議 8-16 英文字母, 數字)" id="newpassword"><br>
 						<input type="password" class="form-control" placeholder="確認新密碼" id="renewpassword"><br>
@@ -121,9 +121,30 @@
 						<b>變更自我介紹</b>
 						<br><br>
 					</div>
-					<div class="col-md-8 col-xs-12" id="changepasswordframe">
+					<div class="col-md-8 col-xs-12" class="changepasswordframe">
 						<textarea id="self-intro" class="form-control" maxlength="120" placeholder="自我介紹 (120 字以下)" cols="30" rows="10"></textarea><br>
 						<button class="btn btn-success" onclick="changesummary()">更改自我介紹</button>
+					</div>
+					<div class="col-md-12 col-xs-12">
+						<br><br>
+					</div>
+					<div class="col-md-2 col-xs-12">
+						<b>變更聯絡資訊</b>
+						<br><br>
+					</div>
+					<div class="col-md-8 col-xs-12" class="changepasswordframe">
+						<h4>FB</h4>
+						<input class="form-control" type="text">
+						<h4>Line</h4>
+						<input class="form-control" type="text">
+						<h4>Blog</h4>
+						<input class="form-control" type="text">
+						<h4>Email</h4>
+						<input class="form-control" type="text">
+						<h4>聯絡時間</h4>
+						<input class="form-control" type="text">
+						<br>
+						<button class="btn btn-success" >更改聯絡資訊</button>
 					</div>
 				</div>
 			</div>

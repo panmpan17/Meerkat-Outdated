@@ -1,0 +1,377 @@
+@charset "utf-8";
+/* CSS Document */
+a ,a:hover ,a:focus {
+	color:white;
+}
+.ourteam h1 {
+	margin-bottom: 0px;
+}
+/*區塊顏色*/
+.bg {
+	color: white;
+	border-radius: 10px;
+	border: 3px white solid;
+	margin: 20px auto;
+}
+.bgword {
+	padding: 10px 30px 10px 30px;
+}
+.strongtop {
+	padding-top: 40px;
+}
+.bg hr {
+	margin-top: 0px;
+}
+.bg p {
+	line-height: 2em;
+}
+.bg1 {
+	background-color: rgb(26,171,165);
+}
+.bg2 {
+	background-color: rgb(153,198,23);
+}
+.bg3 {
+	background-color: rgb(73,74,167);
+}
+.bg4 {
+	background-color: rgb(239,130,1);
+}
+.bg5 {
+	background-color: rgb(26,171,165);
+}
+/*設定milestone切換頁css*/
+.milestone li a{
+	color:darkslategray;
+}
+.milestone .nav-pills>li{
+	background: linear-gradient(whitesmoke, lightgray);;
+}
+.milestone .nav-pills>li.active>a,.nav-pills>li.active>a:hover{
+	color:white;
+	background-color:darkslategray;
+}
+.milestone .nav>li>a:hover,.nav-pills>li.active>a:hover{
+	color:white;
+	background-color:darkslategray;
+}
+.tab-pane .h4 {
+	color:darkslategray;
+	font-weight:bolder;
+}
+
+.aboutdreambanner_bg{
+	background-color: #E5E5E5;
+	clear: both;
+}
+.aboutdreambanner{
+	width: 1200px;
+	margin: 0 auto;
+}
+.aboutdreambanner_left{}
+.aboutdreambanner_left img{
+	width: 30%;
+  float: left;
+  margin-top: 13%;
+  margin-left: 9%;
+}
+.aboutdreambanner_right{
+	padding: 2% 2%;
+}
+.aboutdreambanner_right img{
+	width: 50%;
+	margin-left: 5%;
+}
+
+
+.aboutnote_bg{
+	background-color: #CEDE00;
+	clear: both;
+	height: 270px;
+}
+.aboutnote_bg::after{
+	clear: both;
+	content: '';
+	display: block;
+}
+.aboutnote{
+	margin: 0 auto;
+	width: 1200px;
+	padding-left: 5%;
+  padding-right: 5%;
+}
+.aboutnote_content{}
+.aboutnote_content img{
+	float:left;
+	width: 100%;
+	margin-bottom: 5%;
+}
+
+
+.aboutmedia_bg{
+	background-color: #D8D1C9;
+	height: 270px;
+}
+.aboutmedia_bg::after{
+	clear: both;
+	content: '';
+	display: block;
+}
+.aboutmedia{
+	margin: 0 auto;
+	width: 1200px;
+	padding-left: 5%;
+  padding-right: 5%;
+}
+.aboutmedia_left{}
+.aboutmedia_left img{
+	width: 30%;
+	float: left;
+	margin-top: 6%;
+	margin-left: 10%;
+	margin-bottom: 4%;
+}
+.aboutmedia_right{}
+.aboutmedia_right img{
+	width: 35%;
+  margin-left: 15%;
+  margin-top: 6%;
+}
+.aboutdream_contect{
+	margin-bottom: 40px;
+}
+.aboutdream_contect p{
+	font-size: 14px !important;
+	line-height: 2em !important;
+}
+.aboutmilestone_contect{
+	margin-bottom: 40px;
+}
+.aboutmilestone_contect h2{
+	font-family: 'xingothic-tc';
+	font-weight: 500 !important;
+}
+.aboutmilestone_contect P{
+	font-family: 'xingothic-tc';
+	font-weight: 500 !important;
+	font-size: 14px !important;
+	line-height: 1.5em !important;
+}
+/*.nav {
+    padding-left: 0 ;
+    margin-bottom: 5% !important;
+    list-style: none;
+}*/
+.aboutmilestone_border{
+	margin: 0 5%;
+}
+.outteam_Introduction{}
+.outteam_Introduction p{
+	font-weight: 300 !important;
+}
+.outteam_Introduction a{
+	font-weight: 500 !important;
+}
+.outteam_Introduction strong{
+	font-weight: 300 !important;
+}
+.outteam_Introduction h1{
+  margin-top: 35px !important;
+}
+.aboutmedia_contect{
+	margin-bottom: 40px;
+}
+.aboutmedia_contect h2{
+	font-weight: 700 !important;
+}
+.aboutmedia_contect p{
+	font-weight: 500 !important;
+	font-size: 18px;
+	line-height: 1.5em !important;
+  padding-right: 40px;
+}
+.aboutmedia_contect a{
+	font-weight: 700 !important;
+	font-size: 18px;
+  color: darkslategray;
+}
+
+
+@media screen and (min-width: 960px) and (max-width: 1199px){
+	.aboutdreambanner{
+		width: 960px;
+	}
+	.aboutnote_bg{
+		background-color: #CEDE00;
+		clear: both;
+		height: 220px;
+	}
+	.aboutnote{
+		width: 960px;
+	}
+	.aboutmedia_bg{
+		background-color: #D8D1C9;
+		height: 210px;
+	}
+	.aboutmedia{
+		width: 960px;
+	}
+}
+@media screen and (min-width: 768px) and (max-width: 959px){
+	.aboutdreambanner{
+		width: 768px;
+	}
+	.aboutnote_bg{
+		background-color: #CEDE00;
+		clear: both;
+		height: 180px;
+	}
+	.aboutnote{
+		width: 768px;
+	}
+	.aboutmedia_bg{
+		background-color: #D8D1C9;
+		height: 190px;
+	}
+	.aboutmedia{
+		width: 768px;
+	}
+	.aboutmedia_left img{
+		width: 35%;
+    float: left;
+    margin-top: 6%;
+    margin-left: 5%;
+    margin-bottom: 4%;
+	}
+	.aboutmedia_right img{
+		width: 40%;
+    margin-left: 15%;
+    margin-top: 6%;
+	}
+}
+@media screen and (min-width: 480px) and (max-width: 767px){
+	.aboutdreambanner{
+		width: 480px;
+	}
+	.tr {
+		text-align: left;
+	}
+	.strongtop {
+		padding-top: 10px;
+	}
+	.aboutnote_bg{
+		background-color: #CEDE00;
+		clear: both;
+		height: 100px;
+	}
+	.aboutnote{
+		width: 480px;
+	}
+	.aboutnote_content img{
+		float: left;
+		width: 100%;
+		margin-bottom: 8%;
+	}
+	.aboutmedia_bg{
+		background-color: #D8D1C9;
+		height: 110px;
+	}
+	.aboutmedia{
+		width: 480px;
+	}
+	.aboutmedia_left img{
+		width: 35%;
+		float: left;
+		margin-top: 6%;
+		margin-left: 5%;
+		margin-bottom: 4%;
+	}
+	.aboutmedia_right img{
+		width: 40%;
+		margin-left: 15%;
+		margin-top: 6%;
+	}
+	.aboutmedia_contect p{
+	  padding-right: 0px;
+	}
+}
+@media screen and (min-width: 390px) and (max-width: 479px){
+	.aboutdreambanner{
+		width: 390px;
+	}
+	.aboutnote_bg{
+		background-color: #CEDE00;
+		clear: both;
+		height: 80px;
+	}
+	.aboutnote{
+		width: 390px;
+	}
+	.aboutnote_content img{
+		float: left;
+		width: 100%;
+		margin-bottom: 8%;
+	}
+	.aboutmedia_bg{
+		background-color: #D8D1C9;
+		height: 120px;
+	}
+	.aboutmedia{
+		width: 390px;
+	}
+	.aboutmedia_left img{
+		width: 35%;
+		float: left;
+		margin-top: 6%;
+		margin-left: 5%;
+		margin-bottom: 4%;
+	}
+	.aboutmedia_right img{
+		width: 40%;
+		margin-left: 15%;
+		margin-top: 6%;
+	}
+	.aboutmedia_contect p{
+	  padding-right: 0px;
+	}
+}
+@media screen and (min-width: 350px) and (max-width: 389px){
+	.aboutdreambanner{
+		width: 350px;
+	}
+	.aboutnote_bg{
+		background-color: #CEDE00;
+		clear: both;
+		height: 80px;
+	}
+	.aboutnote{
+		width: 350px;
+	}
+	.aboutnote_content img{
+		float: left;
+		width: 100%;
+		margin-bottom: 8%;
+	}
+	.aboutmedia_bg{
+		background-color: #D8D1C9;
+		height: 90px;
+	}
+	.aboutmedia{
+		width: 350px;
+	}
+	.aboutmedia_left img{
+		width: 35%;
+		float: left;
+		margin-top: 6%;
+		margin-left: 5%;
+		margin-bottom: 4%;
+	}
+	.aboutmedia_right img{
+		width: 40%;
+		margin-left: 15%;
+		margin-top: 6%;
+	}
+	.aboutmedia_contect p{
+	  padding-right: 0px;
+	}
+}

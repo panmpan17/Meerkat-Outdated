@@ -256,9 +256,62 @@ class UserCaseHandler(object):
         else:
             raise cherrypy.HTTPError(404)
 
+    # new page
     @cherrypy.expose
     def faq(self):
         return render("faq.html")
+
+    @cherrypy.expose
+    def scratchcs1(self):
+        return render("scratchcs1.html")
+
+    @cherrypy.expose
+    def scratchcs2(self):
+        return render("scratchcs2.html")
+
+    @cherrypy.expose
+    def scratchcs3(self):
+        return render("scratchcs3.html")
+
+    @cherrypy.expose
+    def scratchcs4(self):
+        return render("scratchcs4.html")
+
+    @cherrypy.expose
+    def pythonpc1(self):
+        return render("pythonpc1.html")
+
+    @cherrypy.expose
+    def pythonpc2(self):
+        return render("pythonpc2.html")
+
+    @cherrypy.expose
+    def udacity(self):
+        return render("udacity.html")
+
+    @cherrypy.expose
+    def classprove(self):
+        return render("classprove.html")
+
+    @cherrypy.expose
+    def aboutdream(self):
+        return render("aboutdream.html")
+
+    @cherrypy.expose
+    def aboutmedia(self):
+        return render("aboutmedia.html")
+
+    @cherrypy.expose
+    def aboutmilestone(self):
+        return render("aboutmilestone.html")
+
+    @cherrypy.expose
+    def ourteam(self):
+        return render("ourteam.html")
+
+    @cherrypy.expose
+    def contactus(self):
+        return render("contactus.html")
 
 class ClassHandler(object):
     _root = "/class/"

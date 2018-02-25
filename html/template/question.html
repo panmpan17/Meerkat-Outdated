@@ -16,8 +16,8 @@
 {% endblock %}
 {% block content %}
 <br><br>
+<div id="page-control"></div>
 <div class="mynav-sidebar">
-	<div id="page-control"></div>
 	<div id="question-range-btn" class="item" onclick="toggle('question-range')"> 問題範圍</div>
 	<ul id="question-range" class="nav-dropdown">
 		<li onclick="getallquestion('all', null)">所有問題</li>
@@ -164,7 +164,7 @@
 </div>
 {% endblock %}
 {% block script %}
-<script src="/html/javascript/question.js"></script>
+<script src="/html/js/question.js"></script>
 <script src="http://www.youtube.com/iframe_api"></script>
 <script>
 	function onYouTubeIframeAPIReady() {

@@ -44,8 +44,9 @@ class FilePlugin(plugins.SimplePlugin):
             }
 
     def write_sys_file(self, filename, data):
+        print(self.path, filename, data)
         try:
-            with open(self.dl_path + filename, "w") as file:
+            with open(self.path + filename, "w") as file:
                 file.write(data)
             self.files[filename] = data
             return True
@@ -53,9 +54,10 @@ class FilePlugin(plugins.SimplePlugin):
             return False
 
     def read_sys_file(self, filename):
+        print(self.path, filename)
         try:
             if filename not in self.files:
-                with open(self.dl_path + filename, "r") as file:
+                with open(self.path + filename, "r") as file:
                     read = file.read()
                 self.files[filename] = read
                 return read

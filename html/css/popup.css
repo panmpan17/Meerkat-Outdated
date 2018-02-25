@@ -1,0 +1,48 @@
+#black-bg {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(30,30,30,0.9);
+	z-index: 1000000;
+}
+
+.popup-frame {
+	position: fixed;
+	background: white;
+	top: calc(50% - 240px);
+	left: calc(50% - 240px);
+	width: 480px;
+	height: 400px;
+	overflow-y: scroll;
+	z-index: 1000000;
+}
+
+.popup-frame#signup-frame {
+	top: 5%;
+	height: 90%;
+}
+
+input.my-form {
+	border-radius: 5px;
+	width: 80%;
+	height: 36px;
+	font-size:18px;
+	border: 2px rgba(0,0,0,0.2);
+	box-shadow: 0px 1px 8px 0px rgba(0,0,0,0.2);
+}
+
+input.my-form-small {
+	border-radius: 5px;
+	width: 80%;
+	height: 28px;
+	font-size:14px;
+	border: 1px rgba(0,0,0,0.2);
+	box-shadow: 0px 1px 8px 0px rgba(0,0,0,0.2);
+}
+
+.close {
+	padding-top: 10px;
+	padding-right: 10px;
+}

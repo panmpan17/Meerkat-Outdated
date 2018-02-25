@@ -128,9 +128,9 @@ button#prevnext {
 .card  .card-type {
 	font-size:12px;
 	color: white;
-	height:16px;
-	background-color:rgba(254, 54, 147, 1);
-	padding: 0px 20px;
+	height: 16px;
+	background-color: rgba(254, 54, 147, 1);
+	padding: 0px 10px;
 }
 
 .card .card-reply {
@@ -183,7 +183,7 @@ textarea#answer-content {
 
 div.mynav-sidebar {
 	color: white;
-	position: fixed;
+	position: absolute;
 	width: 170px;
 	background: rgb(6, 48, 68);
 	left: 0;
@@ -220,15 +220,14 @@ div.mynav-sidebar .nav-dropdown li:hover {
 	background: white;
 }
 
-div.mynav-sidebar #page-control {
-	position: fixed;
+#page-control {
+	position: absolute;
 	top: 60px;
 	left: 0px;
 	width: 100%;
 	max-height: 70px;
 	overflow: hidden;
 	margin-left: 15px;
-	background: rgb(219, 238, 252);
 }
 
 div#green-dot {
