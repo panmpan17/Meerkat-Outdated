@@ -95,7 +95,7 @@ function selectfile (e) {
 }
 
 function checkfile (eid) {
-    if ($("#" + eid + "-filename")[0].textContent != "") {
+    if ($("#" + eid)[0].value != "") {
         return true;
     }
     else {

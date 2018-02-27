@@ -26,8 +26,6 @@
 	<link rel="stylesheet" href="/html/stylecss/base.css">
 	<link rel="stylesheet" href="/html/stylecss/site.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-	<!-- <link rel="stylesheet" href="/html/slick/slick.css">
-	<link rel="stylesheet" href="/html/slick/slick-theme.css"> -->
 	<link href="/html/css/popup.css" rel="stylesheet">
 
 	{% block css %}{% endblock %}
@@ -122,8 +120,10 @@
 		</div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
 	</nav>
+
 	{% block content %}{% endblock %}
-	<footer>
+
+	<footer id="footer">
 		<a href="#" class="scrolltop myMOUSE">
 			<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
 		</a>
@@ -159,45 +159,45 @@
 				</div>
 				<div class="col-lg-1 col-lg-offset-1 footernavlg">
 					<h2 class="h4">最新消息</h2>
-					<p><a href="#">訊息公告</a></p>
-					<p><a href="#">近期開課</a></p>
+					<p><a href="/news">訊息公告</a></p>
+					<p><a href="/teacher/advertise">近期開課</a></p>
 				</div>
 				<div class="col-lg-1 footernavlg">
 					<h2 class="h4">核心課程</h2>
-					<p><a href="scratchcs1.html">Scratch初級班</a></p>
-					<p><a href="scratchcs2.html">Scratch動畫班</a></p>
-					<p><a href="scratchcs3.html">Scratch應用班</a></p>
-					<p><a href="scratchcs4.html">Scratch進階班</a></p>
-					<p><a href="pythonpc1.html">Python初級班</a></p>
-					<p><a href="pythonpc2.html">Python進階班</a></p>
-					<p><a href="udacity.html">Udacity工作坊</a></p>
-					<p><a href="#">實證</a></p>
+					<p><a href="/scratchcs1">Scratch初級班</a></p>
+					<p><a href="/scratchcs2">Scratch動畫班</a></p>
+					<p><a href="/scratchcs3">Scratch應用班</a></p>
+					<p><a href="/scratchcs4">Scratch進階班</a></p>
+					<p><a href="/pythonpc1">Python初級班</a></p>
+					<p><a href="/pythonpc2">Python進階班</a></p>
+					<p><a href="/udacity">Udacity工作坊</a></p>
+					<p><a href="/classprove">實證</a></p>
 				</div>
 				<div class="col-lg-1 footernavlg">
 					<h2 class="h4">師資培訓</h2>
-					<p><a href="class-scratch.html">授權名單</a></p>
-					<p><a href="#">說明會報名</a></p>
+					<p><a href="/teacher/advertise">授權名單</a></p>
+					<p><a href="/presentation">說明會報名</a></p>
 				</div>
 				<div class="col-lg-1 footernavlg">
 					<h2 class="h4">關於樂學</h2>
-					<p><a href="aboutdream.html">願景使命</a></p>
-					<p><a href="ourteam.html">樂學團隊</a></p>
-                    <p><a href="aboutmilestone.html">樂學事記</a></p>
+					<p><a href="/aboutdream">願景使命</a></p>
+					<p><a href="/ourteam">樂學團隊</a></p>
+                    <p><a href="/aboutmilestone">樂學事記</a></p>
 					<p><a href="https://www.pixnet.net/" target="_blank">部落格</a></p>
-					<p><a href="aboutmedia.html">媒體報導</a></p>
+					<p><a href="/aboutmedia">媒體報導</a></p>
 				</div>
 				<div class="col-lg-1 footernavlg">
 					<h2 class="h4">我要發問</h2>
-					<p><a href="faq.html">FAQ</a></p>
-					<p><a href="contactus.html">聯絡我們</a></p>
-					<p><a href="#">討論區</a></p>
+					<p><a href="/faq">FAQ</a></p>
+					<p><a href="/contactus">聯絡我們</a></p>
+					<p><a href="/question">討論區</a></p>
 				</div>
 				<div class="col-lg-1 footernavlg">
 					<h2 class="h4">會員登入</h2>
-					<p><a href="#">新會員註冊</a></p>
-					<p><a href="#">舊會員登入</a></p>
+					<p><a onclick="show_popup('signup-frame')">新會員註冊</a></p>
+					<p><a onclick="show_popup('login-frame')">舊會員登入</a></p>
 					<p><a href="#">免費線上體驗</a></p>
-					<p><a href="ourteam.html">完整付費課程</a></p>
+					<p><a href="#">完整付費課程</a></p>
 				</div>
 			</div>
 			<div class="row footernavmd">
@@ -213,8 +213,8 @@
 						</div>
 						<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
 						  <div class="panel-body">
-							<p><a href="#">訊息公告</a></p>
-							<p><a href="#">近期開課</a></p>
+							<p><a href="/news">訊息公告</a></p>
+							<p><a href="/teacher/advertise">近期開課</a></p>
 						  </div>
 						</div>
 					  </div>
@@ -228,14 +228,14 @@
 						</div>
 						<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 						  <div class="panel-body">
-							<p><a href="scratchcs1.html">Scratch初級班</a></p>
-							<p><a href="scratchcs2.html">Scratch動畫班</a></p>
-							<p><a href="scratchcs3.html">Scratch應用班</a></p>
-							<p><a href="scratchcs4.html">Scratch進階班</a></p>
-							<p><a href="pythonpc1.html">Python初級班</a></p>
-							<p><a href="pythonpc2.html">Python進階班</a></p>
-							<p><a href="udacity.html">Udacity工作坊</a></p>
-							<p><a href="classprove.html">實證</a></p>
+							<p><a href="/scratchcs1">Scratch初級班</a></p>
+							<p><a href="/scratchcs2">Scratch動畫班</a></p>
+							<p><a href="/scratchcs3">Scratch應用班</a></p>
+							<p><a href="/scratchcs4">Scratch進階班</a></p>
+							<p><a href="/pythonpc1">Python初級班</a></p>
+							<p><a href="/pythonpc2">Python進階班</a></p>
+							<p><a href="/udacity">Udacity工作坊</a></p>
+							<p><a href="/classprove">實證</a></p>
 						  </div>
 						</div>
 					  </div>
@@ -249,8 +249,8 @@
 						</div>
 						<div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
 						  <div class="panel-body">
-							<p><a href="class-scratch.html">授權名單</a></p>
-							<p><a href="#">說明會報名</a></p>
+							<p><a href="/teacher/advertise">授權名單</a></p>
+							<p><a href="/presentation">說明會報名</a></p>
 						  </div>
 						</div>
 					  </div>
@@ -264,11 +264,11 @@
 						</div>
 						<div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
 						  <div class="panel-body">
-							<p><a href="aboutdream.html">願景使命</a></p>
-							<p><a href="ourteam.html">樂學團隊</a></p>
-							<p><a href="aboutmilestone.html">樂學事記</a></p>
+							<p><a href="/aboutdream">願景使命</a></p>
+							<p><a href="/ourteam">樂學團隊</a></p>
+							<p><a href="/aboutmilestone">樂學事記</a></p>
 							<p><a href="https://www.pixnet.net/" target="_blank">部落格</a></p>
-							<p><a href="aboutmedia.html">媒體報導</a></p>
+							<p><a href="/aboutmedia">媒體報導</a></p>
 						  </div>
 						</div>
 					  </div>
@@ -282,9 +282,9 @@
 						</div>
 						<div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
 						  <div class="panel-body">
-							<p><a href="faq.html">FAQ</a></p>
-							<p><a href="contactus.html">聯絡我們</a></p>
-							<p><a href="#">討論區</a></p>
+							<p><a href="/faq">FAQ</a></p>
+							<p><a href="/contactus">聯絡我們</a></p>
+							<p><a href="/question">討論區</a></p>
 						  </div>
 						</div>
 					  </div>
@@ -298,8 +298,8 @@
 						</div>
 						<div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
 						  <div class="panel-body">
-							<p><a href="#">新會員註冊</a></p>
-							<p><a href="#">舊會員登入</a></p>
+							<p><a onclick="show_popup('signup-frame')">新會員註冊</a></p>
+							<p><a onclick="show_popup('login-frame')">舊會員登入</a></p>
 							<p><a href="#">免費線上體驗</a></p>
 							<p><a href="ourteam.html">完整付費課程</a></p>
 						  </div>
@@ -316,7 +316,7 @@
 		</div>
 	</footer>
 
-	<div id="black-bg" hidden></div>
+	<div id="black-bg" hidden onclick="hide_allpopup()"></div>
 	<!-- login frame -->
 	<div id="login-frame" class="popup-frame" hidden>
 		<a class="close" onclick="hide_popup('login-frame');">X</a><br>

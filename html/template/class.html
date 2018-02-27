@@ -1,12 +1,7 @@
-{% extends "base-nofooter.html" %}
+{% extends "base.html" %}
 {% block title %}Coding for Fun - {{ subject }}{% endblock %}
 {% block css %}
 <link rel="stylesheet" href="/html/css/class.css">
-<style>
-	body {
-		background: white;
-	}
-</style>
 {% endblock %}
 {% block content %}
 <span id="subject_id">{{ class_id }}</span>
@@ -28,16 +23,18 @@
 <br><br>
 {% endblock %}
 {% block bcontent %}
-<div id="intro-video-frame" class="loginsignup-frame" hidden>
-	<div class="loginsignup-frame-inside" style="overflow-y: scroll;">
-		<a id="closeloginframe" onclick="hide('intro-video-frame');$('#intro-video')[0].src=''" style="">X</a>
-		<br>
-		<center>
-			<iframe id="intro-video" style="border: none;" width="800" height="500"></iframe>
-		</center>
-	</div>
+<div id="intro-video-frame" class="popup-frame" hidden>
+	<a class="close" onclick="hide_popup('intro-video-frame');$('#intro-video')[0].src=''">X</a>
+	<br>
+	<center>
+		<iframe id="intro-video" style="border: none;" width="800" height="500"></iframe>
+	</center>
 </div>
 {% endblock %}
 {% block script %}
 <script src="/html/js/class.js"></script>
+<script>
+	$("#footer").hide();
+	$(".footer").hide()
+</script>
 {% endblock %}

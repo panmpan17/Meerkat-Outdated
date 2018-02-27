@@ -294,6 +294,11 @@ function checkenumber () {
 	}
 }
 
+function hide_allpopup () {
+	$("#black-bg").hide();
+	$(".popup-frame").hide()
+}
+
 function hide_popup (pop_id) {
 	$("#black-bg").hide();
 	$("#" + pop_id).hide();

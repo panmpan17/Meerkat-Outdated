@@ -82,8 +82,11 @@
 }
 
 .question .detail .hashtag {
-	background: lightgray;
-	color: cornflowerblue;
-	border-radius: 5px;
+	color: white;
+	background-color: rgb(149,214,0);
+	border-color: rgb(149,214,0);
+	/*background: lightgray;*/
+	/*color: cornflowerblue;*/
+	border-radius: 1px;
 	padding: 2px 4px;
 }

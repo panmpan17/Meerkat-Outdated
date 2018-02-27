@@ -14,11 +14,11 @@ colormatch = [
 //
 function openask() {
 	if (getCookie("id")) {
-		show("ask-frame");
+		show_popup("ask-frame");
 	}
 	else {
 		if (confirm("請登錄")) {
-			show("login-frame");
+			show_popup("login-frame");
 		}
 	}
 }
@@ -243,7 +243,7 @@ function to_questions (l) {
 }
 
 function displayimg (e) {
-	show("image-frame");
+	show_popup("image-frame");
 	$("#image-frame-image")[0].src = e.src;
 }
 
@@ -382,7 +382,7 @@ function showquestion(qid) {
 }
 
 function openquestion (id) {
-	show("question-frame");
+	show_popup("question-frame");
 	showquestion(id);
 }
 // 
@@ -447,8 +447,8 @@ function answer() {
 			error: function (msg) {
 				reload = confirm("請重新登錄");
 				if (reload) {
-					hide('question-frame');
-					show("login-frame");
+					hide_popup('question-frame');
+					show_popup("login-frame");
 				}
 			}
 		})
@@ -488,7 +488,7 @@ function ask() {
 				else {
 					$("#ask-title")[0].value = "";
 					$("#ask-content")[0].value = "";
-					hide("ask-frame");
+					hide_popup("ask-frame");
 					openquestion(msg["question_id"]);
 					getallquestion(select_type, select_values);
 				}
@@ -589,12 +589,93 @@ function addfilter(t, v) {
 }
 
 function hidequestion() {
-	hide('question-frame');
+	hide_popup('question-frame');
 	window.history.pushState({}, "", "question")
 }
 
+multi_file_btn_data = {}
+input_2_label = {}
+files_format = `<tr><td>{0}</td><td class="delete-file" onclick="delete_file('{1}', '{2}')">X</td></tr>`
+
+function format() {
+    var s = arguments[0];
+    for (var i = 0; i < arguments.length - 1; i++) {       
+        var reg = new RegExp("\\{" + i + "\\}", "gm");             
+        s = s.replace(reg, arguments[i + 1]);
+    }
+    return s;
+}
+
+function find_input (lid) {
+	var new_for = false;
+	var files_html = ""
+
+	$.each(multi_file_btn_data[lid], function (_, i_id) {
+		input_ele = $("#" + i_id)[0]
+
+		if (input_ele.value == "") {
+			if (!new_for) {
+				$("#" + lid)[0].setAttribute("for", input_ele.id);
+				new_for = true;
+			}
+		}
+		else {
+			files_html += format(
+				files_format,
+				input_ele.value,
+				lid,
+				input_ele.id,
+				)
+		}
+	})
+	$("#" + lid + "-files")[0].innerHTML = files_html
+	// console.log(files_html)
+	if (!new_for) {
+		alert("滿了");
+	}
+}
+
+function delete_file (label_id, input_id) {
+	$("#" + input_id)[0].value = "";
+	find_input(label_id);
+}
 
 $(document).ready(function () {
+	$.each($(".multi-file-btn"), function (_, btn) {
+		var for_list = btn.attributes["for-list"].value.split(" ");
+		var element_list = [];
+		$.each(for_list, function (_, id) {
+			$("#" + id)[0].onchange = function (e) {
+				e = e.target
+				accept = e.accept.split(",")
+				filename = e.files[0]["name"]
+
+				breaked = false;
+				$.each(accept, function (_, i) {
+				    if (filename.endsWith(i)) {
+				        breaked = true;
+				        return false;
+				    } 
+				})
+				if (!breaked) {
+				    alert("檔案格式不合");
+				    e.value = ""
+				}
+				else {
+					find_input(input_2_label[e.id])
+				}
+			}
+			element_list.push(id)
+			input_2_label[id] = btn.id
+		})
+		
+		multi_file_btn_data[btn.id] = element_list;
+	})
+	$.each(multi_file_btn_data, function (i) {
+		find_input(i)
+	})
+
+
 	getallquestion(select_type, select_values);
 
 	try {

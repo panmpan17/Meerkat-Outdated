@@ -428,3 +428,7 @@ footer .myMOUSE:hover{
 	background-color: rgb(149,214,0);
 	border-color: rgb(149,214,0);
 }
+
+.pointer {
+	cursor: pointer;
+}

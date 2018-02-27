@@ -391,7 +391,7 @@ function redirect_lesson (lesson_name) {
 }
 
 function show_pop_video (video_url) {
-	show("intro-video-frame");
+	show_popup("intro-video-frame");
 	$("#intro-video")[0].src = format(
 		"http://{0}/video/{1}?video={2}",
 		window.location.host,

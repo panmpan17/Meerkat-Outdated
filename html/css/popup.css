@@ -24,6 +24,37 @@
 	height: 90%;
 }
 
+.popup-frame#intro-video-frame {
+	left: 5%;
+	width: 90%;
+	height: auto;
+}
+
+.popup-frame#ask-frame,
+.popup-frame#question-frame,
+.popup-frame#helpquestion-frame {
+	width: 70%;
+	left: 15%;
+	top: 5%;
+	height: 90%;
+}
+
+@media (max-width: 700px) {
+	.popup-frame#ask-frame,
+	.popup-frame#question-frame,
+	.popup-frame#helpquestion-frame {
+		width: 90%;
+		left: 5%;
+	}
+}
+
+.popup-frame#image-frame {
+	width: 90%;
+	height: 90%;
+	left: 5%;
+	top: 5%;
+}
+
 input.my-form {
 	border-radius: 5px;
 	width: 80%;

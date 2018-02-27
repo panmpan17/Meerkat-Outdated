@@ -12,6 +12,14 @@
 		background-color: #428bca;
 		color: white;
 	}
+
+	input.multi-file-input {
+		display: none;
+	}
+	.delete-file {
+		color: red;
+		cursor: pointer;
+	}
 </style>
 {% endblock %}
 {% block content %}
@@ -36,7 +44,7 @@
 	<div class="item" onclick="openask()">
 		<i class="fa fa-pencil-square-o" aria-hidden="true"></i> 問問題
 	</div>
-	<div class="item" onclick="show('helpquestion-frame');playVideo()">
+	<div class="item" onclick="show_popup('helpquestion-frame');playVideo()">
 		<i class="fa fa-info-circle" aria-hidden="true"></i> 如何提問
 	</div>
 </div>
@@ -45,121 +53,103 @@
 </div>
 {% endblock %}
 {% block bcontent %}
-<div id="question-frame" class="loginsignup-frame" hidden>
-	<div class="loginsignup-frame-inside">
-		<a id="closeloginframe" onclick="hidequestion()" style="">X</a><br>
-		<div class="frame-content" style="padding-top: 0%;padding-left: 10%">
-			<span id="title"></span><br>
-			<span id="question-writer"></span>
-			<span id="type" class="type"></span>
-			<span id="create_at"></span>
-			<button class="btn btn-warning btn-xs" id="closequestion"> 關閉問題 </button>
-			<hr>
-			<span id="content"></span>
+<div id="question-frame" class="popup-frame" hidden>
+	<a class="close" onclick="hidequestion()">X</a><br>
+	<div style="padding: 3% 5%">
+		<span id="title"></span><br>
+		<span id="question-writer"></span>
+		<span id="type" class="type"></span>
+		<span id="create_at"></span>
+		<button class="btn btn-orange btn-xs" id="closequestion"> 關閉問題 </button>
+		<hr>
+		<span id="content"></span>
+		<br>
+		<div id="files">沒有檔案</div>
+		<br>
+		<div id="answer-div" style="display: none;">
 			<br>
-			<div id="files">
-				沒有檔案
+			<textarea id="answer-content" placeholder="請在這裡回答問題"></textarea><br>
+			<label id="answer-upload" class="multi-file-btn" for-list="f1-a f2-a f3-a">
+				<button class="btn btn-orange">+ 上傳</button>
+			</label><br>
+			<table id="answer-upload-files" class="multi-files"></table>
+
+			<form method="post" enctype="multipart/form-data" id="answerform" hidden>
+				<input id="f1-a" name="file1" class="multi-file-input" type="file" accept=".py,.sb,.sb2,.png,.gif,.jpeg,.jpg">
+				<input id="f2-a" name="file2" class="multi-file-input" type="file" accept=".py,.sb,.sb2,.png,.gif,.jpeg,.jpg">
+				<input id="f3-a" name="file3" class="multi-file-input" type="file" accept=".py,.sb,.sb2,.png,.gif,.jpeg,.jpg">
+				<input type="text" readonly=1 name="answerkey" id="answerkey" style="display:none;">
+			</form>
+			<button class="btn btn-orange" onclick="answer()"> 回答 </button>
+		</div>
+		<div id="answers" style="padding-left: 50px"></div>
+		<br>
+	</div>
+</div>
+
+<div id="ask-frame" class="popup-frame" hidden>
+	<a class="close" onclick="hide_popup('ask-frame')">X</a><br>
+	<div style="padding-top: 5%;">
+		<div class="row">
+			<div class="col-md-1 col-xs-12"></div>
+			<div class="col-md-7 col-xs-8" style="padding-left: 30px">
+				<input id="ask-title" class="form-control" placeholder="標題" type="text"><br>
 			</div>
-			<br>
-			<div id="answer-div" style="display: none;">
-				<br>
-				<textarea id="answer-content" placeholder="請在這裡回答問題"></textarea><br>
-				<label for="f1-a"  class="file-button" style="width: 500px">
-					上傳檔案 (Python, Scratch 或圖片檔) <span id="f1-a-filename"></span>
-				</label>
-				<label for="f2-a"  class="file-button" style="width: 500px">
-					上傳檔案 (Python, Scratch 或圖片檔) <span id="f2-a-filename"></span>
-				</label>
-				<label for="f3-a"  class="file-button" style="width: 500px">
-					上傳檔案 (Python, Scratch 或圖片檔) <span id="f3-a-filename"></span>
-				</label>
-
-				<form method="post" enctype="multipart/form-data" id="answerform" hidden>
-					<input accept=".py,.sb,.sb2,.png,.gif,.jpeg,.jpg" name="file1" id="f1-a" type="file" onchange="selectfile(this)" />
-					<input accept=".py,.sb,.sb2,.png,.gif,.jpeg,.jpg" name="file2" id="f2-a" type="file" onchange="selectfile(this)" />
-					<input accept=".py,.sb,.sb2,.png,.gif,.jpeg,.jpg" name="file3" id="f3-a" type="file" onchange="selectfile(this)" />
-					<input type="text" readonly=1 name="answerkey" id="answerkey" style="display:none;">
-				</form>
-				<br><br>
-				<button id="answer-submit" class="btn btn-primary" onclick="answer()"> 回答 </button>
+			<div class="col-md-3 col-xs-4">
+				<div class="dropdown">
+					<button class="btn btn-orange dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width:90%">
+						問題種類 <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+						<li><a class="pointer" onclick="changetype(0)">Scratch</a></li>
+						<li><a class="pointer" onclick="changetype(1)">Python</a></li>
+						<li><a class="pointer" onclick="changetype(2)">其他</a></li>
+					</ul>
+				</div><br>
 			</div>
-			<div id="answers" style="padding-left: 50px"></div>
-			<br>
 		</div>
+		<div class="row">
+			<div class="col-md-1 col-xs-12"></div>
+			<div class="col-md-10 col-xs-12" style="padding-left: 30px">
+				<textarea id="ask-content" class="form-control" rows="10"></textarea><br>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-1"></div>
+			<div class="col-xs-5">
+				<label id="question-upload" class="multi-file-btn" for-list="f1-q f2-q f3-q">
+					<button class="btn btn-orange">+ 上傳</button>
+				</label><br>
+				<table id="question-upload-files" class="multi-files"></table>
+			</div>
+			<div class="col-xs-3">
+				<button class="btn btn-orange" onclick="ask()">發問</button>
+			</div>
+		</div>
+		<form method="post" enctype="multipart/form-data" id="questionform" hidden>
+			<input id="f1-q" name="file1" class="multi-file-input" type="file" accept=".py,.sb,.sb2,.png,.gif,.jpeg,.jpg">
+			<input id="f2-q" name="file2" class="multi-file-input" type="file" accept=".py,.sb,.sb2,.png,.gif,.jpeg,.jpg">
+			<input id="f3-q" name="file3" class="multi-file-input" type="file" accept=".py,.sb,.sb2,.png,.gif,.jpeg,.jpg">
+			<input type="text" readonly name="questionkey" id="questionkey" style="display:none;">
+		</form><br><br><br>
 	</div>
 </div>
 
-<div id="ask-frame" class="loginsignup-frame" hidden>
-	<div class="loginsignup-frame-inside">
-		<a id="closeloginframe" onclick="hide('ask-frame');" style="">X</a><br>
-		<div class="frame-content" style="padding-top: 5%;">
-			<div class="row">
-				<div class="col-xs-2"></div>
-				<div class="col-xs-6">
-					<input placeholder="標題" id="ask-title" type="text"><br>
-				</div>
-				<div class="col-xs-4">
-					<div class="dropdown" style="width: 30%">
-						<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width:90%">
-							問題種類 <span class="caret">
-						</button>
-						<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-							<li><a onclick="changetype(0)">Scratch</a></li>
-							<li><a onclick="changetype(1)">Python</a></li>
-							<li><a onclick="changetype(2)">其他</a></li>
-						</ul>
-					</div><br>
-				</div>
-				<div class="col-xs-2"></div>
-				<div class="col-xs-8">
-					<textarea id="ask-content" cols="30" rows="10"></textarea><br>
-				</div>
-				<div class="col-xs-2"><br><br><br><br><br><br><br><br><br><br><br><br><br></div>
-				<div class="col-xs-2"></div>
-				<div class="col-xs-5">
-					<label for="f1-q"  class="file-button" style="width: 500px">
-						上傳檔案 (Python, Scratch 或圖片檔) <span id="f1-q-filename"></span>
-					</label><br>
-					<label for="f2-q"  class="file-button" style="width: 500px">
-						上傳檔案 (Python, Scratch 或圖片檔) <span id="f2-q-filename"></span>
-					</label>
-					<label for="f3-q"  class="file-button" style="width: 500px">
-						上傳檔案 (Python, Scratch 或圖片檔) <span id="f3-q-filename"></span>
-					</label>
-				</div>
-				<div class="col-xs-3">
-					<button onclick="ask()" id="submit" style="width: 80%">發問</button>
-				</div>
-			</span>
-			<form method="post" enctype="multipart/form-data" id="questionform" hidden>
-				<input accept=".py,.sb,.sb2,.png,.gif,.jpeg,.jpg" name="file1" id="f1-q" type="file" onchange="selectfile(this)" />
-				<input accept=".py,.sb,.sb2,.png,.gif,.jpeg,.jpg" name="file2" id="f2-q" type="file" onchange="selectfile(this)" />
-				<input accept=".py,.sb,.sb2,.png,.gif,.jpeg,.jpg" name="file3" id="f3-q" type="file" onchange="selectfile(this)" />
-				<input type="text" readonly name="questionkey" id="questionkey" style="display:none;">
-			</form><br><br><br>
-		</div>
+<div id="helpquestion-frame" class="popup-frame" hidden>
+	<a class="close" onclick="hide_popup('helpquestion-frame');stopVideo()">X</a><br>
+	<div style="padding-top: 5%;">
+		<center>
+			<div id="player"></div>
+		</center>
 	</div>
 </div>
 
-<div id="helpquestion-frame" class="loginsignup-frame" hidden>
-	<div class="loginsignup-frame-inside">
-		<a id="closeloginframe" onclick="hide('helpquestion-frame');stopVideo()" style="">X</a><br>
-		<div class="frame-content" style="padding-top: 5%;">
-			<center>
-				<div id="player"></div>
-			</center>
-		</div>
-	</div>
-</div>
-
-<div id="image-frame" class="loginsignup-frame" hidden>
-	<div class="loginsignup-frame-inside">
-		<a id="closeloginframe" onclick="hide('image-frame');" style="">X</a><br>
-		<div class="frame-content" style="padding-top: 5%;">
-			<center>
-				<img id="image-frame-image" style="width: 80%">
-			</center>
-		</div>
+<div id="image-frame" class="popup-frame" hidden>
+	<a class="close" onclick="hide('image-frame')">X</a><br>
+	<div>
+		<center>
+			<img id="image-frame-image" style="width: 95%;height:auto">
+		</center>
 	</div>
 </div>
 {% endblock %}
