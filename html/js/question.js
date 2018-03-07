@@ -376,7 +376,7 @@ function showquestion(qid) {
 			question_id = qid;
 		},
 		error: function (msg) {
-			hide("question-frame")
+			hide_popup("question-frame")
 		}
 	})
 }
@@ -409,7 +409,7 @@ function closequestion (v) {
 			reload = confirm("請重新登錄");
 			if (reload) {
 				hide('question-frame');
-				show("login-frame");
+				show_popup("login-frame");
 			}
 		}
 	})
@@ -505,7 +505,7 @@ function ask() {
 				reload = confirm("請重新登錄");
 				if (reload) {
 					hide('ask-frame');
-					show("login-frame");
+					show_popup("login-frame");
 				}
 			}
 		})
@@ -523,7 +523,7 @@ function getallquestion(t, v) {
 	if (((t == "writer") || (t == "answer")) && (v == "")) {
 		reload = confirm("請登錄");
 		if (reload) {
-			show("login-frame");
+			show_popup("login-frame");
 		}
 		return null;
 	}

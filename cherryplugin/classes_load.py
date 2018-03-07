@@ -57,16 +57,18 @@ class ClassesPlugin(plugins.SimplePlugin):
 			return False
 		return self.classes[class_id]["subject"]
 
+	def get_subjects_name(self):
+		return tuple(self.classes.keys())
+
 	def get_class_all_info(self):
 		classes_json = []
-		v = ["scratch_1", "teacher_1", "python_01", "scratch_02"]
+		v = ["scratch_1", "python_01", "scratch_02"]
 		for c in v:
 			j = {
 				"subject": self.classes[c]["subject"],
-				"time": self.classes[c]["time"],
+				# "time": self.classes[c]["time"],
 				"permission": self.classes[c]["permission"],
 				"summary": self.classes[c]["summary"],
-				"description": self.classes[c]["description"],
 				"style": self.classes[c]["style"],
 				"id": self.classes[c]["id"],
 				"trial": self.classes[c]["trial"],

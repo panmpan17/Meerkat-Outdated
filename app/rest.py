@@ -1007,7 +1007,7 @@ class ClassesRestView(View):
     def index(self, *args, **kwargs):
         classes = cherrypy.request.classes
         meta, conn = cherrypy.request.db
-        users = meta.tables[User.TABLE_NAME]
+        # users = meta.tables[User.TABLE_NAME]
         classrooms = meta.tables[Classroom.TABLE_NAME]
         clsrom_mgr = cherrypy.request.clsrom
 
@@ -1064,21 +1064,11 @@ class ClassesRestView(View):
                         clsr_id = None
                         key_type = None
                         try:
+                            user = self.check_login_u(kwargs)
+
                             try:
                                 clsr_id = int(kwargs["clsrid"])
                             except:
-                                raise cherrypy.HTTPError(400)
-
-                            user = self.check_login_u(kwargs)
-                            ss = select([classrooms.c.progress, classrooms.c.folder]).where(and_(
-                                classrooms.c.id==clsr_id,
-                                classrooms.c.students_cid.any(user["id"]),
-                                ))
-                            rst = conn.execute(ss)
-                            row = rst.fetchone()
-
-                            if not row:
-                                # create trial key
                                 key_type = "trial"
                                 clsr_id = None
                                 key = str(uuid())
@@ -1090,21 +1080,26 @@ class ClassesRestView(View):
                                 class_["key"] = key
                                 class_["key_type"] = key_type
                                 return class_
-                            else:
-                                key_type = "user"
-                                folder = row["folder"]
-                                progress = row["progress"]
-                        except:
-                            teacher = self.check_login_teacher(kwargs)
-                            teachers = meta.tables[Teacher.TABLE_NAME]
-                            ss = select([teachers.c.id]).where(and_(
-                                teachers.c.id==teacher["id"],
-                                teachers.c.class_permission.any(kwargs["class"])
-                                ))
+
+                            ss = select([classrooms.c.progress, classrooms.c.folder]).where(
+                                classrooms.c.id==clsr_id,
+                                )
                             rst = conn.execute(ss)
                             row = rst.fetchone()
 
-                            if not row:
+                            if row:
+                                if user["id"] not in row:
+                                    raise Exception("not in class")
+
+                                key_type = "user"
+                                folder = row["folder"]
+                                progress = row["progress"]
+                            else:
+                                raise Exception("clsrid wrong")
+
+                        except:
+                            teacher = self.check_login_teacher(kwargs)
+                            if kwargs["class"] not in teacher["class_permission"]:
                                 raise cherrypy.HTTPError(400)
 
                             key_type = "teacher"
@@ -1132,9 +1127,59 @@ class ClassesRestView(View):
                     class_["folder"] = folder
                     return class_
             else: # return all class info
-                return classes.get_class_all_info()
+                raise cherrypy.HTTPError(404)
         else:
             raise cherrypy.HTTPError(404)
+
+    @cherrypy.expose
+    def all(self, *args, **kwargs):
+        classes = cherrypy.request.classes
+        meta, conn = cherrypy.request.db
+        classrooms = meta.tables[Classroom.TABLE_NAME]
+
+        classroom_in = {}
+        login_as = None
+        
+        try:
+            # test user login
+            user = self.check_login_u(kwargs)
+            login_as = "user"
+
+            for cls_type in classes.get_subjects_name():
+                ss = select([
+                        classrooms.c.id,
+                        classrooms.c.name,
+                        classrooms.c.students_cid]).where(
+                            classrooms.c.type==cls_type
+                            )
+                rst = conn.execute(ss)
+                rows = rst.fetchall()
+
+                if rows:
+                    for row in rows:
+                        if user["id"] in row["students_cid"]:
+                            if cls_type not in classroom_in:
+                                classroom_in[cls_type] = {}
+
+                            classroom_in[cls_type][row["id"]] = {
+                                "id": row["id"],
+                                "name": row["name"],
+                                "type": cls_type,
+                                }
+        except:
+            try:
+                # user login failed try teacher
+                teacher = self.check_login_teacher(kwargs)
+                login_as = "teacher"
+                classroom_in = teacher["class_permission"]
+            except:
+                pass
+
+        return {
+            "info": classes.get_class_all_info(),
+            "classroom": classroom_in,
+            "login_as": login_as,
+            }
 
     @cherrypy.expose
     def id(self, *args, **kwargs):
@@ -1169,7 +1214,6 @@ class PostRestView(View):
     def index(self, *args, **kwargs):
         meta, conn = cherrypy.request.db
         posts = meta.tables[Post.TABLE_NAME]
-        users = meta.tables[User.TABLE_NAME]
 
         if len(args) > 0:
             raise cherrypy.HTTPError(404)
@@ -1187,9 +1231,10 @@ class PostRestView(View):
             if not admin:
                 raise cherrypy.HTTPError(401)
 
-            self.check_key(data, ("content", ))
+            self.check_key(data, ("title", "content", ))
 
             j = {
+                "title": data["title"],
                 "content": PostRestView.turn_url(data["content"]),
                 }
 
@@ -1515,24 +1560,44 @@ class AdAreaRestView(View):
                 except:
                     raise cherrypy.HTTPError(400)
 
-                ss = select([
-                    teachers.c.name,
-                    teachers.c.id,
-                    teachers.c.phone,
-                    teachers.c.summary,
+                if city == -1:
+                    ss = select([
+                        teachers.c.name,
+                        teachers.c.id,
+                        teachers.c.phone,
+                        teachers.c.summary,
 
-                    adareas.c.city,
-                    adareas.c.town,
+                        adareas.c.city,
+                        adareas.c.town,
 
-                    adclasses.c.id.label("adclassid"),
-                    adclasses.c.address,
-                    adclasses.c.type,
-                    adclasses.c.date,
-                    adclasses.c.enddate,
-                    adclasses.c.start_time,
-                    adclasses.c.end_time,
-                    adclasses.c.weekdays,
-                    ]).where(adareas.c.city==city)
+                        adclasses.c.id.label("adclassid"),
+                        adclasses.c.address,
+                        adclasses.c.type,
+                        adclasses.c.date,
+                        adclasses.c.enddate,
+                        adclasses.c.start_time,
+                        adclasses.c.end_time,
+                        adclasses.c.weekdays,
+                        ])
+                else:
+                    ss = select([
+                        teachers.c.name,
+                        teachers.c.id,
+                        teachers.c.phone,
+                        teachers.c.summary,
+
+                        adareas.c.city,
+                        adareas.c.town,
+
+                        adclasses.c.id.label("adclassid"),
+                        adclasses.c.address,
+                        adclasses.c.type,
+                        adclasses.c.date,
+                        adclasses.c.enddate,
+                        adclasses.c.start_time,
+                        adclasses.c.end_time,
+                        adclasses.c.weekdays,
+                        ]).where(adareas.c.city==city)
 
                 j1 = teachers.outerjoin(
                     adareas, teachers.c.id==adareas.c.teacher).outerjoin(

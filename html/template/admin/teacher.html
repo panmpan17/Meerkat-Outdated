@@ -435,7 +435,7 @@
 		if (teacher["class_permission"].includes("python_01")) {
 			$("[name=change_class_permission][value=python_01]")[0].checked = true
 		}
-		show("change-frame");
+		show_popup("change-frame");
 	}
 
 	function change_teacher() {
@@ -483,7 +483,7 @@
 			data: JSON.stringify(json),
 			contentType: "application/json; charset=utf-8",
 			success: function (msg) {
-				hide("change-frame")
+				hide_popup("change-frame")
 				load_teachers();
 			},
 			error: function (error) {

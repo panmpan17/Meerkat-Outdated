@@ -2,22 +2,150 @@
 {% block title %}Coding for Fun / 課程{% endblock %}
 {% block css %}
 	<link rel="stylesheet" href="/html/css/viewclass.css">
-{% endblock %}
-{% block script %}
-	<script src="/html/js/viewclass.js"></script>
+	<style>
+		#cards .card {
+			float: left;
+			display: inline-block;
+			background: rgb(240, 240, 240);
+			width: 46%;
+			height: auto;
+			margin: 15px 2%;
+			text-align: left;
+			padding: 20px 10px;
+			cursor: default;
+		}
+
+		#cards .card img {
+			position: relative;
+			width: 50%;
+			left: 25%;
+		}
+
+		#cards .card .title {
+			height: 35px;
+			font-size: 24px;
+			text-align: center;
+		}
+
+		#cards .card .description {
+			font-size: 18px;
+			text-align: center;
+			line-height: 28px;
+			padding-bottom: 15px;
+		}
+
+		#cards .card .btn-group {
+			margin-left: -10px;
+			margin-right: -10px;
+			margin-bottom: -24px;
+			width: calc(100% + 20px);
+			text-align: center;
+			white-space: nowrap;
+		}
+
+		#cards .card .btn-group div {
+			display: inline-block;
+			font-size: 15px;
+			width: 50%;
+			height: 40px;
+			line-height: 40px;
+			text-align: center;
+			color: white;
+			cursor: pointer;
+		}
+
+		#cards .card .btn-group div:hover {
+			background: #95D600;
+		}
+
+		#cards .card .btn-group .trial-btn {
+			background: #f99f40;
+		}
+
+		#cards .card .btn-group .apply-btn {
+			background: #FF8300;
+		}
+
+		#cards .card .btn-group .full-btn {
+			width: 65%;
+			background: #FF8300;
+		}
+
+		@media (max-width: 767px) {
+			#cards .card {
+				width: 100%;
+				margin: 15px 0;
+			}
+
+			#cards .card img {
+				position: relative;
+				width: 80%;
+				left: 10%;
+			}
+
+			#cards .card .title {
+				height: 65px;
+				font-size: 48px;
+				text-align: center;
+			}
+
+			#cards .card .description {
+				font-size: 24px;
+				line-height: 36px;
+				padding-bottom: 25px;
+			}
+
+			#cards .card .btn-group div {
+				font-size: 24px;
+				height: 60px;
+				line-height: 60px;
+			}
+
+			#cards .card .btn-group {
+				margin-bottom: -20px;
+			}
+		}
+	</style>
 {% endblock %}
 {% block content %}
-<br>
-<div class="container">
-	<br>
-	<div id="cards" class="row">
+<main>
+	<div class="container-fluid">
+		<br>
+		<div id="cards" class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
+			<!-- <button class="card">
+				<img src="http://www.iconninja.com/files/373/611/612/person-user-profile-male-man-avatar-account-icon.svg" >
+				<br>
+				<div class="title">Python</div>
+				<div class="description">
+					python is great<br>
+					join now<br>
+					right now
+				</div>
+				<div class="btn-group">
+					<div class="full-btn">進入完整課程</div>
+				</div>
+			</button>
+			<button class="card">
+				<img src="http://www.iconninja.com/files/373/611/612/person-user-profile-male-man-avatar-account-icon.svg" >
+				<br>
+				<div class="title">Python</div>
+				<div class="description">
+					python is great<br>
+					join now<br>
+					right now
+				</div>
+				<div class="btn-group">
+					<div class="trial-btn">體驗課程</div><!-- 
+					 --><!--<div class="apply-btn">報名課程</div>
+				</div>
+			</button> -->
+		</div>
 	</div>
-</div>
-<br><br>
+</main>
+<br>
 {% endblock %}
 {% block bcontent %}
 	<div id="describes"></div>
-	<div id="blackscreen" hidden></div>
 	<div id="classroom-confirm" hidden>
 		<div class="close-blackscreen" onclick="hide('blackscreen');hide('classroom-confirm')">✕</div>
 		<div id="info">
@@ -27,9 +155,12 @@
 		<div id="list">
 		</div>
 	</div>
-	<div id="alert" hidden>
+	<div id="alert" class="popup-frame" hidden>
 		<div id="title"></div>
 		<div id="describe"></div>
 		<div id="btns"></div>
 	</div>
+{% endblock %}
+{% block script %}
+	<script src="/html/js/viewclass.js"></script>
 {% endblock %}

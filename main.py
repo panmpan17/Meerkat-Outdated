@@ -214,7 +214,7 @@ class App():
         classes = ClassesPlugin(cherrypy.engine)
 
         dirname = "classes"
-        files = ["scratch_1_update.json", "teacher_1_update.json", "python_01_update.json", "scratch_02.json"]
+        files = ["scratch_1_update.json", "python_01_update.json", "scratch_02.json"]
 
         for f in files:
             class_ = json.load(open(f"{dirname}/{f}"))

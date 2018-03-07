@@ -168,8 +168,12 @@ function loadclass (classname, qlesson=-1) {
 			}
 		},
 		error: function (error) {
+			storeCookie("teacher-id", "")
 			storeCookie("teacher-key", "")
+			storeCookie("teacher-userid", "")
+			storeCookie("id", "")
 			storeCookie("key", "")
+			storeCookie("userid", "")
 			window.location.pathname = "/classes"
 		}
 	})

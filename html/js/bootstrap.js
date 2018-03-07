@@ -439,6 +439,12 @@ if (typeof jQuery === 'undefined') {
       var $nextIndicator = $(this.$indicators.children()[this.getItemIndex($next)])
       $nextIndicator && $nextIndicator.addClass('active')
     }
+    if (this.$indicators.find('.active')[0].attributes["data-slide-to"].value == "0") {
+      this.$element[0].classList.add("mixblend")
+    }
+    else {
+      this.$element[0].classList.remove("mixblend")
+    }
 
     var slidEvent = $.Event('slid.bs.carousel', { relatedTarget: relatedTarget, direction: direction }) // yes, "slid"
     if ($.support.transition && this.$element.hasClass('slide')) {

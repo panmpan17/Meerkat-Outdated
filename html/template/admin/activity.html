@@ -30,7 +30,7 @@
 {% endblock %}
 {% block content %}
 	<br><br>
-	<a href="/admin/"><button id="submit">< 回去</button></a>
+	<a href="/admin/" style="padding-left: 20px"><button class="btn btn-orange">< 回去</button></a>
 	<br><br>
 	<div class="container">
 		<div class="row">
@@ -300,7 +300,7 @@
 			error: function (error) {
 				reload = confirm("請重新登錄")
 				if (reload) {
-					show("login-frame");
+					show_popup("login-frame");
 				}
 			}
 		})
@@ -511,7 +511,7 @@
 				console.log(error)
 				reload = confirm("請重新登錄")
 				if (reload) {
-					show("login-frame");
+					show_popup("login-frame");
 				}
 			}
 		})
@@ -624,7 +624,7 @@
 			error: function (error) {
 				reload = confirm("請重新登錄")
 				if (reload) {
-					show("login-frame");
+					show_popup("login-frame");
 				}
 			}
 		})
@@ -718,7 +718,7 @@
 			error: function (error) {
 				reload = confirm("請重新登錄")
 				if (reload) {
-					show("login-frame");
+					show_popup("login-frame");
 				}
 			}
 		})
@@ -749,7 +749,7 @@
 			error: function (error) {
 				reload = confirm("請重新登錄")
 				if (reload) {
-					show("login-frame");
+					show_popup("login-frame");
 				}
 			}
 		})

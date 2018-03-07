@@ -1,47 +1,56 @@
-card_format = `
-<div class="col-md-6 col-sm-12">
-    <div class="classview-container" onclick="goclass('{0}')">
-        <div class="classview-card">
-            <center>
-                <div class="col-sm-4 col-xs-12">
-                    <img src="/html/images/class/{0}.png" class="card-image" />
-                </div>
-                <div class="col-sm-8 col-xs-12">
-                        <div id="{0}-title" class="title">
-                            {1}
-                            <span id="time">{2}</span>
-                        </div>
-                        <div class="describe">
-                            {3}
-                        </div>
-                        <span id="price">
-                            {4}
-                        </span>
-                </div>
-            </center>
-        </div>
+card_format = `<button class="card">
+    <img src="http://www.iconninja.com/files/373/611/612/person-user-profile-male-man-avatar-account-icon.svg" >
+    <br>
+    <div class="title">{0}</div>
+    <div class="description">
+        {1}
     </div>
-</div>`
+    <div class="btn-group">
+        <div class="full-btn" onclick="window.location.href='/class/c/{2}'">進入完整課程</div>
+    </div>
+</button>`
 
-describe_format = `
-<div hidden id="{0}-frame" class="loginsignup-frame">
-    <div class="loginsignup-frame-inside">
-        <a id="closeloginframe" onclick="hide('{0}-frame');" style="">X</a>
-        <br>
-        <center>
-            <a onclick="leadtoclass('{0}');hide('{0}-frame')">
-                <button id="goclass">前往課程</button>
-            </a>
-        </center>
-        <hr>
-        <div class="frame-content"
-            style="padding:15px;padding-top: 0%;padding-bottom: 50px;">
-            {1}
-        </div>
+card_noaccess_format = `<button class="card">
+    <img src="http://www.iconninja.com/files/373/611/612/person-user-profile-male-man-avatar-account-icon.svg" >
+    <br>
+    <div class="title">{0}</div>
+    <div class="description">
+        {1}
     </div>
-</div>`
+    <div class="btn-group">
+        <div onclick="start_trial('{2}')" class="trial-btn">體驗課程</div><!-- 
+        --><div onclick="apply_class('{2}')" class="apply-btn">報名課程</div>
+    </div>
+</button>`
+
+card_notrial_format = `<button class="card">
+    <img src="http://www.iconninja.com/files/373/611/612/person-user-profile-male-man-avatar-account-icon.svg" >
+    <br>
+    <div class="title">{0}</div>
+    <div class="description">
+        {1}
+    </div>
+    <div class="btn-group">
+        <div onclick="start_trial('{2}')" class="trial-btn">體驗課程</div><!-- 
+        --><div onclick="apply_class('{2}')" class="apply-btn">報名課程</div>
+    </div>
+</button>`
+
+card_noaccess_notrial_format = `<button class="card">
+    <img src="http://www.iconninja.com/files/373/611/612/person-user-profile-male-man-avatar-account-icon.svg" >
+    <br>
+    <div class="title">{0}</div>
+    <div class="description">
+        {1}
+    </div>
+    <div class="btn-group">
+        <div onclick="apply_class('{2}')" class="full-btn">報名課程</div>
+    </div>
+</button>`
 
 classess_info = {}
+classroom_in = null
+login_as = null
 
 function goclass(id) {
     a = $("#" + id + "-frame")[0];
@@ -53,185 +62,148 @@ function goclass(id) {
     }
 }
 
-function leadtoclass(id) {
-    u_key = getCookie("key")
-
-    class_ = classess_info[id]
-    json = {"class": id, "key": u_key}
-    if (getCookie("teacher-key") != "") {
-        json["tkey"] = getCookie("teacher-key")
-    }
-    $.ajax({
-        url: host + "classroom/student_permission",
-        type: "GET",
-        data: json,
-        success: function (msg) {
-            if (msg["success"]) {
-                if (msg["key"] == "teacher") {
-                    storeCookie("clsrid", msg["permission"][0]["id"])
-                    window.location.href = "/class/c/" + id;
-                }
-                else {
-                    if (msg["class"].length == 1) {
-                        storeCookie("clsrid", msg["class"][0]["id"]);
-                        window.location.href = "/class/c/" + id;
-                        return
-                    }
-                    html = ""
-                    $.each(msg["class"], function (_, i) {
-                        html += format(`<div class="class" onclick="chose_classroome({0}, '{2}')">{1}</div>`,
-                            i["id"],
-                            i["name"],
-                            id,
-                            )
-                    })
-
-                    $("#classroom-confirm #list")[0].innerHTML = html
-                    show("blackscreen");
-                    show("classroom-confirm");
-                }
-            }
-            else if (class_["trial"].length > 0) {
-                if (class_["permission"] == null) {
-                    $("#alert #title")[0].innerHTML = format(`您還沒有登入`)
-                    $("#alert #describe")[0].innerHTML = format(
-                        "要試試 {0} 堂的體驗課程<br>還是要登入觀看完整課程",
-                        class_["trial"].length
-                        )
-                    $("#alert #btns")[0].innerHTML = format(`
-                        <button class="mybtn primary" onclick="window.location.href = '/class/c/{0}'">看體驗課程</button>
-                        <button class="mybtn primary" onclick="dismiss_alert();show('login-frame')">登入</button>
-                        <button class="mybtn" onclick="dismiss_alert()">都不用謝謝</button>`,
-                        id
-                        )
-                    $(".loginsignup-frame").hide()
-                    $("#blackscreen").show()
-                    $("#alert").show()
-                    return
-                }
-
-                if (msg["reason"] == "not in class") {
-                    $("#alert #title")[0].innerHTML = format(`您不是 "{0}" 的學員，無法進入`,
-                        class_["subject"])
-                }
-                else if (msg["reason"] == "no permission") {
-                    $("#alert #title")[0].innerHTML = format(`您的教師帳號沒有 {0} 的權限，無法進入`,
-                        class_["subject"])
-                }
-
-                $("#alert #describe")[0].innerHTML = format(
-                    "有 {0} 個體驗課程<br>是否要試試",
-                    class_["trial"].length
-                    )
-                $("#alert #btns")[0].innerHTML = format(`
-                    <button class="mybtn primary" onclick="window.location.href = '/class/c/{0}'">好, 看體驗課程</button>
-                    <button class="mybtn" onclick="dismiss_alert()">不用謝謝</button>`,
-                    id
-                    )
-                $("#blackscreen").show()
-                $("#alert").show()
-            }
-            else {
-                $("#alert #title")[0].innerHTML = format(`您不是 "{0}" 的學員，無法進入`,
-                    class_["subject"])
-                $("#alert #describe")[0].innerHTML = "無體驗課程"
-                $("#alert #btns")[0].innerHTML = format(`
-                    <button class="mybtn" onclick="dismiss_alert()">知道了</button>`,
-                    )
-                $("#blackscreen").show()
-                $("#alert").show()
-            }
-        },
-        error: function (error) {
-            if (class_["permission"] == null) {
-                $("#alert #title")[0].innerHTML = format(`您還沒有登入`)
-                $("#alert #describe")[0].innerHTML = format(
-                    "要試試 {0} 堂的體驗課程<br>還是要登入觀看完整課程",
-                    class_["trial"].length
-                    )
-                $("#alert #btns")[0].innerHTML = format(`
-                    <button class="mybtn primary" onclick="window.location.href = '/class/c/{0}'">看體驗課程</button>
-                    <button class="mybtn primary" onclick="dismiss_alert();show('login-frame')">登入</button>
-                    <button class="mybtn" onclick="dismiss_alert()">都不用謝謝</button>`,
-                    id
-                    )
-                $(".loginsignup-frame").hide()
-                $("#blackscreen").show()
-                $("#alert").show()
-                return
-            }
-            else {
-                if (error.status == 401) {
-                    $("#alert #title")[0].innerHTML = format(`您還沒有登入`,
-                        class_["subject"])
-                    $("#alert #describe")[0].innerHTML = ""
-                    $("#alert #btns")[0].innerHTML = format(`
-                        <button class="mybtn primary" onclick="dismiss_alert();show('login-frame')">登入</button>
-                        <button class="mybtn" onclick="dismiss_alert()">不用謝謝</button>`,
-                        id
-                        )
-                    $("#blackscreen").show()
-                    $("#alert").show()
-                    return null;
-                }
-            }
-        }
-    })
-}
-
 function chose_classroome (clsid, id) {
     storeCookie("clsrid", clsid)
     window.location.href = "/class/c/" + id;
 }
 
+function start_trial (cls_type) {
+    if (classess_info[cls_type]["permission"] == null) {
+        $("#alert #title")[0].innerHTML = format(`您還沒有登入`)
+        $("#alert #describe")[0].innerHTML = format(
+            "要試試 {0} 堂的體驗課程<br>還是要登入觀看完整課程",
+            classess_info[cls_type]["trial"].length
+            )
+
+        $("#alert #btns")[0].innerHTML = format(
+            `<button class="btn btn-orange" onclick="hide_popup('alert');show_popup('login-frame')">馬上登入</button>
+            <button class="btn btn-default" onclick="window.location.href='/class/c/{0}'">不用登入，直接體驗課程</button>`,
+            cls_type
+            )
+
+        show_popup("alert");
+        return;
+    }
+
+    if (login_as != null) {
+        window.location.href = "/class/c/" + cls_type;
+    }
+    else {
+        $("#alert #title")[0].innerHTML = format(`您還沒有登入`)
+        $("#alert #describe")[0].innerHTML = "要先登入才能體驗課程"
+
+        $("#alert #btns")[0].innerHTML = `<button class="btn btn-orange" onclick="hide_popup('alert');show_popup('login-frame')">馬上登入</button>
+            <button class="btn btn-default" onclick="hide_allpopup()">不用</button>`
+
+        show_popup("alert");
+    }
+}
+
+function apply_class (cls_type) {
+    window.location.href = "/teacher/advertise"
+}
+
 $.ajax({
-    url: host + "classes/",
+    url: host + "classes/all",
     type: "GET",
+    data: {"key": getCookie("key"), "tkey": getCookie("teacher-key")},
     success: function (msg) {
         cardstext = "";
-        $.each(msg, function (_, i) {
-            if (i["id"] == "teacher_1") {
-                return true;
-            }
+        login_as = msg["login_as"]
 
-            classess_info[i["id"]] = i
+        if (msg["login_as"] == null) {
+            // no user or teacher login
+            $.each(msg["info"], function (_, i) {
+                classess_info[i["id"]] = i
 
-            if (i["permission"] == null) {
-                price = "免費線上課程"
-            }
-            else if (i["permission"] == "class") {
-                price = "需要配合實體課程，不開放線上課程"
-            }
-            else if (i["permission"] == "login") {
-                price = "免費線上課程，需註冊並登入"
-            }
-            else if (i["permission"] == "online") {
-                price = "線上課程"
-            }
-            cardstext += format(card_format,
-                i["id"],
-                i["subject"],
-                i["time"],
-                i["summary"],
-                price)
-
-            if (i["description"] != "") {
-                $("#describes")[0].innerHTML += format(describe_format,
-                    i["id"],
-                    i["description"])
-            }
-
-            setTimeout(function () {
-                if (i["style"]["title_color"] != undefined) {
-                    $("#" + i["id"] + "-title")[0].style.color = i["style"]["title_color"]
+                if (i["trial"].length != 0) {
+                    if (i["permission"] == null) {
+                        cardstext += format(card_noaccess_format,
+                            i["subject"],
+                            i["summary"],
+                            i["id"],
+                            )
+                    }
+                    else {
+                        cardstext += format(card_notrial_format,
+                            i["subject"],
+                            i["summary"],
+                            i["id"],
+                            )
+                    }
                 }
-            }, 100)
-        })
+                else {
+                    cardstext += format(card_noaccess_notrial_format,
+                        i["subject"],
+                        i["summary"],
+                        i["id"],
+                        )
+                }
+            })
+        }
+        else {
+            classroom_in = msg["classroom"]
+
+            if (login_as == "user") {
+                $.each(msg["info"], function (_, i) {
+                    classess_info[i["id"]] = i
+
+                    if (classroom_in.hasOwnProperty(i["id"])) {
+                        cardstext += format(card_format,
+                            i["subject"],
+                            i["summary"],
+                            i["id"],
+                            )
+                    }
+                    else {
+                        if (i["trial"].length == 0) {
+                            cardstext += format(card_noaccess_notrial_format,
+                                i["subject"],
+                                i["summary"],
+                                i["id"],
+                                )
+                        }
+                        else {
+                            cardstext += format(card_noaccess_format,
+                                i["subject"],
+                                i["summary"],
+                                i["id"],
+                                )
+                        }
+                    }
+                })
+            }
+            else {
+                $.each(msg["info"], function (_, i) {
+                    classess_info[i["id"]] = i
+
+                    if (classroom_in.indexOf(i["id"]) != -1) {
+                        cardstext += format(card_format,
+                            i["subject"],
+                            i["summary"],
+                            i["id"],
+                            )
+                    }
+                    else {
+                        if (i["trial"].length == 0) {
+                            cardstext += format(card_noaccess_notrial_format,
+                                i["subject"],
+                                i["summary"],
+                                i["id"],
+                                )
+                        }
+                        else {
+                            cardstext += format(card_noaccess_format,
+                                i["subject"],
+                                i["summary"],
+                                i["id"],
+                                )
+                        }
+                    }
+                })
+            }
+        }
+
         $("#cards")[0].innerHTML = cardstext
     }
 })
-
-function dismiss_alert () {
-    $("#blackscreen").hide()
-    $("#alert").hide()
-}

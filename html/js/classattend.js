@@ -602,7 +602,7 @@ function attendquit(e, id) {
 		error: function (error) {
 			reload = confirm("請重新登錄");
 			if (reload) {
-				show("login-frame");
+				show_popup("login-frame");
 			}
 		}
 	})
@@ -662,7 +662,7 @@ function showparticipant(t) {
 		error: function (error) {
 			reload = confirm("請重新登錄");
 			if (reload) {
-				show("login-frame");
+				show_popup("login-frame");
 			}
 		}
 	})
@@ -714,7 +714,7 @@ function showpresent(t) {
 		error: function (error) {
 			reload = confirm("請重新登錄");
 			if (reload) {
-				show("login-frame");
+				show_popup("login-frame");
 			}
 		}
 	})
@@ -768,7 +768,7 @@ $(document).ready(function () {
 		error: function (msg) {
 			reload = confirm("請重新登錄");
 			if (reload) {
-				show("login-frame");
+				show_popup("login-frame");
 			}
 		}
 	})

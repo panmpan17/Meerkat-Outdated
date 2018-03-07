@@ -7,7 +7,7 @@ function checkKey(e) {
     e = e.keyCode
 
     if (e == 27) {
-        $(".loginsignup-frame").hide()
+        hide_allpopup();
     }
 }
 

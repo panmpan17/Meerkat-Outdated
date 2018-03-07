@@ -121,22 +121,22 @@
 
 		#playbtn {
 			position: fixed;
-			top: 40%;
-			left: 40%;
-			width: 20%;
-			height: 20%;
+			top: calc(50% - 40px);
+			left: calc(50% - 60px);
+			height: 80px;
+			width: 120px;
 			border-radius: 20px;
-			background: red;
+			background: rgb(5, 38, 46);
 			cursor: pointer;
 		}
 
 		#playbtn:after {
 			content: "";
 			position: fixed;
-			top: 40%;
-			left: 40%;
-			width: 20%;
-			height: 20%;
+			top: calc(50% - 40px);
+			left: calc(50% - 60px);
+			height: 80px;
+			width: 120px;
 			-webkit-clip-path: polygon(64% 50%, 36% 32%, 36% 68%);
 			clip-path: polygon(64% 50%, 36% 32%, 36% 68%);
 			background: white;

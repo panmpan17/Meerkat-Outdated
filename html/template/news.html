@@ -1,33 +1,79 @@
 {% extends "base.html" %}
 {% block title %}Coding for Fun / 最新消息{% endblock %}
 {% block css %}
-<link rel="stylesheet" href="/html/css/about.css">
+	<!-- <link href="/html/stylecss/class.css" rel="stylesheet" type="text/css"> -->
+	<style>
+		.mynav-sidebar {
+			color: white;
+			width: 100%;
+			background: rgb(6, 48, 68);
+			left: 0;
+			top: 130px;
+		}
+
+		.mynav-sidebar .item {
+			padding: 10px 15px;
+			cursor: pointer;
+			background: transparent;
+		}
+
+		.mynav-sidebar .item:hover {
+			background: rgb(40, 79, 88);
+		}
+
+		.item.active {
+			color: rgb(255,131,0);
+		}
+
+		.h4 {
+			color: darkslategray;
+			font-weight: bolder;
+		}
+
+		.orange {
+			color: rgb(255,131,0);
+			font-weight: bold;
+		}
+
+		.card {
+			background: whitesmoke;
+			width: 100%;
+			padding: 25px;
+		}
+
+		.card div {
+			text-align: left;
+		}
+
+		#cards h2 {
+			padding-left: 0px;
+		}
+	</style>
 {% endblock %}
 {% block content %}
 <br>
-<div style="position: absolute;right: 10%">
-	<a href="/classattend">
-		<button class="btn btn-success">最新活動 (需登入)</button>
-	</a>
-	<a href="/teacher/advertise">
-		<button class="btn btn-info">找老師</button>
-	</a>
-</div>
-<br><br><br>
-<center id="news">
-</center>
+<main>
+	<div class="container-fluid">
+		<div class="col-md-2 col-sm-1 col-xs-12"></div>
+		<div class="col-md-4 col-sm-10 col-xs-12" style="padding: 25px;padding-bottom: 10px">
+			<div id="post-title-bar" class="mynav-sidebar"></div>
+		</div>
+		<div id="cards" class="col-md-4 col-md-offset-0 col-sm-10 col-sm-offset-1 col-xs-12" style="padding: 25px;padding-top: 10px"></div>
+	</div>
+</main>
+<br>
 {% endblock %}
 {% block script %}
 <script>
-	news_format = `
-	<div class="container-card">
-		<div class="card-content">{0}</div>
-		<br />
-		<hr />
-		<span id="date">{1}</span>
-	</div>
-	<br /><br />
-	`
+	posts = {}
+	title_bar_item_format = `<div class="item" onclick="show_post(this, {1})"> {0}</div>`
+	news_format = `<button class="card">
+		<div class="classprove_contect">
+			<div>{0}</div>
+			<p class="orange" style="float: right">{1}</p>
+		</div>
+	</button>`
+
 	no_news = `
 	<br />
 	<br />
@@ -35,31 +81,42 @@
 		<div class="well well-lg" style="width:90%">
 			沒有任何的發佈
 		</div>
-	</center>
-	`
+	</center>`
 
-	function loadnews() {
+	function show_post (e, post_id) {
+		active_item = $(".item.active")
+		if (active_item.length > 0) {
+			active_item[0].classList.remove("active")
+		}
+
+		console.log(e)
+		e.classList.add("active")
+		$("#cards")[0].innerHTML = format(
+			news_format,
+			posts[post_id]["content"],
+			posts[post_id]["create_at"],
+			)
+	}
+
+	$(document).ready(function () {
 		$.ajax({
 			url: host +  "post/",
 			type: "GET",
 			success: function (msg) {
-				posts = msg["posts"];
+				html = ""
+				$.each(msg["posts"], function (_, post) {
+					posts[post["id"]] = post
+					html += format(
+						title_bar_item_format,
+						post["title"],
+						post["id"],
+						)
+				})
 
-				if (posts.length > 0) {
-					news = "";
-					for (i = 0; i < posts.length; i++) {
-						// paging += format(page_f, i, "");
-						news += format(news_format, posts[i]["content"], posts[i]["create_at"])
-					}
-					$("#news")[0].innerHTML = news;
-				}
-				else {
-					$("#news")[0].innerHTML = no_news;
-				}
+				$("#post-title-bar")[0].innerHTML = html
+				$(".item")[0].onclick()
 			}
 		})
-	}
-
-	loadnews()
+	})
 </script>
 {% endblock %}

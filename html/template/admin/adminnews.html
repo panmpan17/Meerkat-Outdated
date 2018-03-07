@@ -11,10 +11,11 @@
 {% endblock %}
 {% block content %}
 	<br><br>
-	<a href="/admin/" style="padding-left: 14%"><button id="submit">< 回去</button></a>
+	<a href="/admin/" style="padding-left: 20px"><button class="btn btn-orange">< 回去</button></a>
 	<br><br>
 	<div class="newPost">
 		<h3>新發佈</h3>
+		<input id="title" type="text" class="form-control" placeholder="標題">
 		<div class="toolbar">
 			<button type="button" data-func="bold"><i class="fa fa-bold"></i></button>
 			<button type="button" data-func="italic"><i class="fa fa-italic"></i></button>
@@ -71,18 +72,28 @@
 	<script src="/html/js/editor.js"></script>
 	<script>
 		function post() {
-			tf = confirm("是否要發布")
-			if (!tf) {
-				return 
-			}
 			content = turn_url($(".editor").html());
 			if (content == "") {
 				alert("請不要留空");
 				return;
 			}
 
-			json = {"key": getCookie("key"),
-				"content": content}
+			title = $("#title")[0].value;
+			if (title == "") {
+				alert("請不要留空");
+				return;
+			}
+
+			tf = confirm("是否要發布")
+			if (!tf) {
+				return;
+			}
+
+			json = {
+				"key": getCookie("key"),
+				"title": title,
+				"content": content,
+			}
 			$.ajax({
 				url: window.location.origin + "/rest/1/post/",
 				type: "POST",

@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}教師廣告{% endblock %}
 {% block css %}
-<link href="/html/css/datepicker.css" rel="stylesheet">
 <style>
 	div.mynav-sidebar {
 		color: white;
@@ -75,18 +74,14 @@
 	}
 
 	#cards .card {
+		cursor: default;
 		float: left;
 		display: inline-block;
 		background: rgb(240, 240, 240);
 		min-width: 350px;
 		width: 50%;
 		margin: 4px 4px;
-	}
-
-	@media (max-width: 992px) {
-		#cards .card {
-			width: 100%;
-		}
+		text-align: left;
 	}
 
 	#cards .card img {
@@ -101,6 +96,7 @@
 	}
 
 	#cards .card .info #name {
+		color: rgb(48, 79, 79);
 		font-size: 20px;
 		font-weight: 900;
 	}
@@ -116,21 +112,14 @@
 		padding: 0px 15px;
 	}
 
-	#cards .card .bttn {
-		background: rgb(6, 48, 68);
-		color: white;
-		clear: left;
+	#cards .card .btn {
 		float: right;
-		width: 60px;
-		height: 25px;
-		line-height: 25px;
-		text-align: center;
-		cursor: pointer;
 	}
 
-	#cards .card .bttn:hover {
-		background: white;
-		color: rgb(6, 48, 68);
+	@media (max-width: 992px) {
+		#cards .card {
+			width: 100%;
+		}
 	}
 </style>
 {% endblock %}
@@ -138,7 +127,7 @@
 <main>
 	<div class="container-fluid">
 		<br>
-		<div class="col-md-3 col-sm-4 col-xs-12">
+		<div class="col-md-3 col-sm-4 col-xs-12" hidden>
 			<div class="mynav-sidebar">
 				<div id="cities-btn" class="item" onclick="toggle('cities');hide('towns')"> 縣市</div>
 				<ul id="cities" class="nav-dropdown"></ul>
@@ -147,7 +136,7 @@
 			</div>
 			<br>
 		</div>
-		<div id="cards" class="col-md-9 col-sm-8 col-xs-12">
+		<div id="cards" class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
 		</div>
 	</div>
 </main>
@@ -190,7 +179,7 @@
 			"星期日",
 		]
 
-		CARD_F = `<div class="card">
+		CARD_F = `<button class="card">
 			<img src="http://www.iconninja.com/files/373/611/612/person-user-profile-male-man-avatar-account-icon.svg" >
 			<div class="info">
 				<span id="name">{0}</span><br>
@@ -198,8 +187,8 @@
 			</div>
 			<br>
 			<div class="describe">{2}</div>
-			<div class="bttn">更多</div>
-		</div>`
+			<div class="btn btn-orange">更多</div>
+		</button>`
 
 		cities_teachers = {}
 		teachers_data = {}
@@ -213,6 +202,7 @@
 					method: "GET",
 					data: {"city": city_index},
 					success: function (msg) {
+						console.log(msg)
 						cities_teachers[city_index] = {}
 
 						$.each(msg, function (_, teacher) {
@@ -308,7 +298,7 @@
 					CARD_F,
 					t_data["name"],
 					t_data["phone"],
-					t_data["summary"],
+					t_data["summary"].replace(/\n/g, "<br>"),
 					)
 			})
 
@@ -316,17 +306,17 @@
 		}
 
 		$(document).ready(function () {
-			html = ""
-			$.each(cities, function (i, city) {
-				html += format(
-					`<li onclick="change_city('{0}', {1})">{0}</li>`,
-					city,
-					i,
-					)
-			})
+			// html = ""
+			// $.each(cities, function (i, city) {
+			// 	html += format(
+			// 		`<li onclick="change_city('{0}', {1})">{0}</li>`,
+			// 		city,
+			// 		i,
+			// 		)
+			// })
 
-			$("#cities")[0].innerHTML = html;
-			change_city(cities[0], 0);
+			// $("#cities")[0].innerHTML = html;
+			change_city(cities[0], -1);
 		})
 	</script>
 {% endblock %}

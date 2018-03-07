@@ -208,7 +208,7 @@ span#indent {
 	width: 350px;
 	min-height: 200px;
 	background: white;
-	z-index: 10;
+	z-index: 1000000;
 }
 
 #alert #title {

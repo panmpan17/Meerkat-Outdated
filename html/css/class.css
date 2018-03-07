@@ -33,16 +33,14 @@
 	font-weight: 900;
 	height: 50px;
 	letter-spacing: 2px;
-	background: rgb(4, 36, 44);
+	/*background: rgb(4, 36, 44);*/
 	padding: 10px;
 	padding-right: 20px;
 	cursor: pointer;
 }
 
 .menu .lesson .title:hover {
-	margin-left: 0;
-	background: white;
-	color: black;
+	background: rgb(40, 79, 88);
 }
 
 .menu .lesson .title:after {
@@ -62,8 +60,6 @@
 	transform: rotate(0deg);
 }
 
-.menu .lesson .title:hover:after {background: rgb(6, 48, 58)}
-
 .menu .lesson .video-bar {
 	position: absolute;
 	right: 0;
@@ -76,23 +72,21 @@
 	position: relative;
 	padding: 10px 0px;
 	padding-left: 20px;
-	background: rgb(5, 38, 46);
+	/*background: rgb(5, 38, 46);*/
 	cursor: pointer;
 	transition-duration: 0.2s;
-	left: 30px;
-	width: calc(100% - 30px);
+	left: 0px;
+	width: 100%;
 }
 
 .menu .lesson .video-bar .video:hover {
-	background: white;
-	color:black;
-	left: 15px;
+	background: rgb(40, 79, 88);
 }
 
 .menu .lesson .video-bar .video.active {
-	left: 0;
-	background: white;
-	color: rgb(5, 38, 46);
+	/*left: 0;*/
+	/*background: white;*/
+	color: rgb(255,131,0);
 }
 
 .menu .lesson .video-bar .video.section {
@@ -111,7 +105,7 @@
 	right: 10px;
 }
 
-.menu .lesson .video-bar .video.section:hover:after {color: rgb(6, 48, 58)}
+/*.menu .lesson .video-bar .video.section:hover:after {color: rgb(6, 48, 58)}*/
 
 .menu .lesson .video-bar .video.active.section {
 	background: rgb(5, 38, 46);
@@ -121,9 +115,7 @@
 }
 
 .menu .lesson .video-bar .video.active.section:hover {
-	left: 0;
-	background: white;
-	color: rgb(5, 38, 46);
+	background: rgb(40, 79, 88);
 }
 
 .menu .lesson .video-bar .section:not(.video) {
@@ -450,7 +442,7 @@
 }
 
 .thumbnail .play-btn:hover:before {
-	background: red;
+	background: rgb(5, 38, 46);
 }
 
 .thumbnail .text {
