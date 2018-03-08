@@ -1,246 +1,4 @@
-
-{'type': 'evaluation',
-'class_name': '第 1 課評量',
-'questions': [
-        {'question': '下面哪些是自然語言(複選)',
-        'choice': ['中文', 'Python', 'Scratch', '英文'],
-        'answer': [0, 3]
-        },
-        {'question': '選出會在螢幕上印出 \"I like Python.\" 的算式(複選)',
-        'choice': [
-            '\"I\"+\"like\"+\"Python.\"',
-            '\"I\" +\"like\" +\"Python.\"',
-            '\"I \"+\"like \"+\"Python.\"',
-            '\"I \" + \"like \" + \"Python.\"'],
-        'answer': [2, 3]
-        },
-        {'question': 'Python 中表示乘法的符號是',
-        'choice': ['%', '#', '*', '/'],
-        'answer': [2]
-        },
-        {'question': '連續印出 100 個 \"hello \", 使用哪個運算子最為方便',
-        'choice': ['+', '-', '*', '%'],
-        'answer': [2]
-        },
-        {'question': '同時按下 Ctrl 鍵與 C 鍵有什麼作用',
-        'choice': ['複製', '選擇', '貼上', '剪下'],
-        'answer': [0]
-        },
-        {'question': '同時按下 Ctrl 鍵與 V 鍵有什麼作用',
-        'choice': ['複製', '選擇', '貼上', '剪下'],
-        'answer': [2]
-        },
-        {'question': '哪種模式下, 每行前面會出現「>>>」',
-        'choice': ['互動模式 (shell)', '檔案模式'],
-        'answer': [0]
-        },
-        {'question': '哪種模式要嚴格遵守Python 語法',
-        'choice': ['互動模式 (shell)', '檔案模式'],
-        'answer': [1]
-        },
-        {'question': '哪種模式適合嘗試, 或是測試簡短的程式',
-        'choice': ['互動模式 (shell)', '檔案模式'],
-        'answer': [0]
-        },
-        {'question': '執行程式「Run」時, 會點選「Run Module」｡ 哪一個方便的按鍵可以做相同的事呢',
-        'choice': ['F1', 'F2', 'F4', 'F5'],
-        'answer': [3]
-        },
-        {'question': '使用 shell 算出一星期有幾小時',
-        'choice': ['print(\"24 * 7\")', 'print(24 * 7)'],
-        'answer': [1]
-        }
-    ]
-}
-,
-            {'type': 'evaluation',
-            'class_name': '第 2 課評量',
-            'questions':[
-                {'question': '「浮點」數字表示小數點是浮動的; 小數點向右浮動, 數字',
-                'choice': ['乘以10', '除以10'],
-                'answer': [0]
-                },
-                {'question': '8 + 3 * 7 + 4, 哪個部分最先執行呢',
-                'choice': ['8 + 3', '3 * 7', '7 + 4'],
-                'answer': [1]
-                },
-                {'question': '\"10\" 是 string, 還是 number?',
-                'choice': ['string', 'number'],
-                'answer': [0]
-                },
-                {'question': '10 是 string, 還是 number?',
-                'choice': ['string', 'number'],
-                'answer': [1]
-                },
-                {'question': '想把數字轉為字串, 可以使用',
-                'choice': ['str()', 'int()', 'len()', 'float()'],
-                'answer': [0]
-                },
-                {'question': '哪一對變數名稱是不同的？(複選)',
-                'choice': ['Hello 和 hello', 'friend 和 Friend', 'happyTime 和 happytime'],
-                'answer': [0, 1, 2]
-                },
-                {'question': 'Python接受哪些變數名稱？(複選)',
-                'choice': ['Coding4Fun', '4Fun_Coding', 'Coding_4_Fun', 'Coding 4 fun'],
-                'answer': [0, 2]
-                }]
-            }
-            ,
-            {'type': 'evaluation',
-            'class_name': '第 3 課評量',
-            'questions':[
-                {'question': 'type(a) 得到 <class \"str\">, 表示 a 的資料類型是',
-                'choice': ['integer', 'float', 'string', 'list'],
-                'answer': [2]
-                },
-                {'question': 'type(b) 得到 <class \"float\">, 表示 b 的資料類型是',
-                'choice': ['integer', 'float', 'string', 'list'],
-                'answer': [1]
-                },
-                {'question': 'type(1) 會得到',
-                'choice': ['<class \"int\">', '<class \"float\">', '<class \"str\">', '<class \"list\">'],
-                'answer': [0]
-                },
-                {'question': 'int() 如何將 float 的資料轉成整數',
-                'choice': ['四捨五入', '無條件進入', '無條件捨去', '捨棄小數部分'],
-                'answer': [3]
-                },
-                {'question': '哪些 function 直接傳入字串 \"1234.567\", 而不會有錯誤產生？(複選)',
-                'choice': ['int()', 'float()', 'str()', 'len()'],
-                'answer': [1, 2, 3]
-                },
-                {'question': '哪些 function 直接傳入數字 1234.567, 而不會有錯誤產生？(複選)',
-                'choice': ['int()', 'float()', 'str()', 'len()'],
-                'answer': [0, 1, 2]
-                },
-                {'question': '哪些 function 直接傳入數字 1234, 而不會有錯誤產生？(複選)',
-                'choice': ['int()', 'float()', 'str()', 'len()'],
-                'answer': [0, 1, 2]
-                },
-                {'question': '「answer = input(\"請輸入數字\")」, 如果使用者輸入 12, answer 的資料類型為',
-                'choice': ['string', 'integer', 'float', 'list'],
-                'answer': [0]
-                },
-                {'question': '想在 print() 的內容裡加入新的一行, 可以使用',
-                'choice': ['\\\\', '\\a', '\\n', '\\t'],
-                'answer': [2]
-                }]
-            }
-
-            ,
-            {'type': 'evaluation',
-            'class_name': '第 5 課評量',
-            'questions':[
-                {'question': 'Python 使用哪個關鍵字來引入模組',
-                'choice': ['import', 'def', 'return', 'float'],
-                'answer': [0]
-                },
-                {'question': 'Python 使用哪個關鍵字來定義 function',
-                'choice': ['import', 'def', 'return', 'float'],
-                'answer': [1]
-                },
-                {'question': '如果有個 function sayHello(), 需要傳入字串作為參數, 哪個是對的使用方式',
-                'choice': ['sayHello', 'sayHello()', 'sayHello(\"Jack\")'],
-                'answer': [2]
-                },
-                {'question': 'function 理論上最多可以傳幾個參數',
-                'choice': ['3 個', '10 個', '沒有限制'],
-                'answer': [2]
-                },
-                {'question': 'function 使用哪個關鍵字將資料傳回來',
-                'choice': ['import', 'def', 'return', 'float'],
-                'answer': [2]
-                },
-                {'question': 'function 中的區域變數在 function 結束後到哪去了',
-                'choice': ['還在啊！', '消失不見了！'],
-                'answer': [1]
-                }]
-            }
-            ,
-            {'type': 'evaluation',
-            'class_name': '第 6 課評量',
-            'questions':[
-                {'question': '在 test6-8.py 中如何像 print(\"你的數字太大\") 一樣顯示資訊',
-                'choice': [
-                    'easygui.msgbox(\"你的數字太大\")',
-                    'easygui.choicebox(\"你的數字太大\")',
-                    'easygui.buttonbox(\"你的數字太大\")',
-                    'easygui.enterbox(\"你的數字太大\")'],
-                'answer': [0]
-                },
-                {'question': '在 test6-8.py 中如何像 int(input(\"請輸入數字：\"))一樣, 讓使用者輸入數字',
-                'choice': [
-                    'easygui.msgbox(\"請輸入數字：\")',
-                    'easygui.choicebox(\"請輸入數字：\")',
-                    'easygui.buttonbox(\"請輸入數字：\")',
-                    'easygui.integerbox(\"請輸入數字：\")'],
-                'answer': [3]
-                }]
-            }
-
-            ,
-            {'type': 'evaluation',
-            'class_name': '第 8 課評量',
-            'questions':[
-                {'question': '要增加 list 的 item, 可以使用哪些 functions 或關鍵字？(複選)',
-                'choice': [
-                    'add()',
-                    'append()',
-                    'extend()',
-                    'del',
-                    'insert()',
-                    'len()',
-                    'pop()',
-                    'remove()'],
-                'answer': [0, 2, 4]
-                },
-                {'question': '要刪除 list 的 item, 可以使用哪些 functions 或關鍵字？(複選)',
-                'choice': [
-                    'add()',
-                    'append()',
-                    'extend()',
-                    'del',
-                    'insert()',
-                    'len()',
-                    'pop()',
-                    'remove()'],
-                'answer': [3, 6, 7]
-                }]
-            }
-
-            ,
-            {'type': 'evaluation',
-            'class_name': '第 10 課評量',
-            'questions':[
-                {'question': 'jump.py 最可能是哪類檔案',
-                'choice': ['Python 檔案', 'Scratch 檔案', '音樂檔案', '文字檔案'],
-                'answer': [0]
-                },
-                {'question': 'jump.sb2 最可能是哪類檔案',
-                'choice': ['Python 檔案', 'Scratch 檔案', '音樂檔案', '文字檔案'],
-                'answer': [1]
-                },
-                {'question': 'jump.txt 最可能是哪類檔案',
-                'choice': ['Python 檔案', 'Scratch 檔案', '音樂檔案', '文字檔案'],
-                'answer': [3]
-                },
-                {'question': 'jump.mp3 最可能是哪類檔案',
-                'choice': ['Python 檔案', 'Scratch 檔案', '音樂檔案', '文字檔案'],
-                'answer': [2]
-                },
-                {'question': '使用 open(file_name, file_mode) 從檔案裡讀內容, file_mode 可以是下列哪些值呢',
-                'choice': ['\"a\"', '\"r\"', '\"rb\"', '\"w\"'],
-                'answer': [1]
-                },
-                {'question': '使用 open(file_name, file_mode) 從檔案裡寫內容, file_mode 可以是下列哪些值呢',
-                'choice': ['\"a\"', '\"r\"', '\"rb\"', '\"w\"'],
-                'answer': [3]
-                }]
-            }
-
-
-            
- 'files_required': [
+"files_required": [
     "1-18",
     "2-13", "2-15", "2-20", "2-21", "2-22", "2-29", "2-30",
     "3-15", "3-16", "3-17", "3-19", "3-20",
@@ -252,89 +10,89 @@
     "9-2", "9-3", "9-5", "9-6", "9-7", "9-8", "9-9", "9-10", "9-11", "9-12", "9-14", "9-15", "9-17", "9-18", "9-19", "9-21", "9-22",
     "10-6", "10-7", "10-8", "10-9", "10-10", "10-11", "10-12", "10-13", "10-14"
     ],
- 'feedback': [
+ "feedback": [
     {
-        'question': '你為什麼來上這門課 (可複選)',
-        'type': 'multiple',
-        'choice':[
-            'Scratch 很有趣', '想學程式設計', '好奇',
-            '朋友推薦', '父母報名', '其他 <input>']
+        "question": "你為什麼來上這門課 (可複選)",
+        "type": "multiple",
+        "choice":[
+            "Scratch 很有趣", "想學程式設計", "好奇",
+            "朋友推薦", "父母報名", "其他 <input>"]
     },
     {
-        'question': '你喜歡這們課嗎',
-        'type': 'single',
-        'choice':[
-            '非常喜歡', '喜歡', '還好', '不喜歡', '非常不喜歡']
+        "question": "你喜歡這們課嗎",
+        "type": "single",
+        "choice":[
+            "非常喜歡", "喜歡", "還好", "不喜歡", "非常不喜歡"]
     },
     {
-        'question': '你在家花多少時間做作業或看課程 (可複選)',
-        'type': 'mutiple',
-        'choice':[
-            '6 小時以上', '3~6 小時', '1~3 小時', '1 小時以下', '沒有']
+        "question": "你在家花多少時間做作業或看課程 (可複選)",
+        "type": "mutiple",
+        "choice":[
+            "6 小時以上", "3~6 小時", "1~3 小時", "1 小時以下", "沒有"]
     },
     {
-        'question': '你覺得進度',
-        'type': 'single',
-        'choice':[
-            '太快', '剛好適合我', '太慢']
+        "question": "你覺得進度",
+        "type": "single",
+        "choice":[
+            "太快", "剛好適合我", "太慢"]
     },
     {
-        'question': '你覺得課程難度',
-        'type': 'single',
-        'choice':[
-            '太難', '有些難', '剛好適合我', '簡單', '太簡單', '其他 <input>']
+        "question": "你覺得課程難度",
+        "type": "single",
+        "choice":[
+            "太難", "有些難", "剛好適合我", "簡單", "太簡單", "其他 <input>"]
     },
     {
-        'question': '你對 Scratch 的熟悉度',
-        'type': 'single',
-        'choice':[
-            '很熟', '普通', '不熟']
+        "question": "你對 Scratch 的熟悉度",
+        "type": "single",
+        "choice":[
+            "很熟", "普通", "不熟"]
     },
     {
-        'question': '你覺得學過 Scratch 是否幫助你瞭解 Python',
-        'type': 'single',
-        'choice':[
-            '同意', '還好', '不同意']
+        "question": "你覺得學過 Scratch 是否幫助你瞭解 Python",
+        "type": "single",
+        "choice":[
+            "同意", "還好", "不同意"]
     },
     {
-        'question': '你了解本課程對 function 的介紹嗎 (可複選)',
-        'type': 'multiple',
-        'choice':[
-            '我會定義 function', '我知道如何呼叫 function', '影片說明都夠清楚',
-            '作業內容都沒問題', '還不是很清楚', '需要更多的練習題', '其他 <input>']
+        "question": "你了解本課程對 function 的介紹嗎 (可複選)",
+        "type": "multiple",
+        "choice":[
+            "我會定義 function", "我知道如何呼叫 function", "影片說明都夠清楚",
+            "作業內容都沒問題", "還不是很清楚", "需要更多的練習題", "其他 <input>"]
     },
     {
-        'question': '你了解本課程對 if/ elif/ else 的介紹嗎 (可複選)',
-        'type': 'multiple',
-        'choice':[
-            '我了解 True/ Fale 的意義', '我會使用 if/ elif/ else', '影片說明都夠清楚',
-            '作業內容都沒問題', '還不是很清楚', '需要更多的練習題', '其他 <input>']
+        "question": "你了解本課程對 if/ elif/ else 的介紹嗎 (可複選)",
+        "type": "multiple",
+        "choice":[
+            "我了解 True/ Fale 的意義", "我會使用 if/ elif/ else", "影片說明都夠清楚",
+            "作業內容都沒問題", "還不是很清楚", "需要更多的練習題", "其他 <input>"]
     },
     {
-        'question': '你了解本課程對 list 的介紹嗎 (可複選)',
-        'type': 'multiple',
-        'choice':[
-            '我了解 list 的意義', '我會知道如何使用 index, 存取 list 裡的資料, 像是 letters[2]', '影片說明都夠清楚',
-            '作業內容都沒問題', '還不是很清楚', '需要更多的練習題', '其他 <input>']
+        "question": "你了解本課程對 list 的介紹嗎 (可複選)",
+        "type": "multiple",
+        "choice":[
+            "我了解 list 的意義", "我會知道如何使用 index, 存取 list 裡的資料, 像是 letters[2]", "影片說明都夠清楚",
+            "作業內容都沒問題", "還不是很清楚", "需要更多的練習題", "其他 <input>"]
     },
     {
-        'question': '你了解本課程對 for loop 的介紹嗎 (可複選)',
-        'type': 'multiple',
-        'choice':[
-            '我了解 range() 的的三種使用方法', '影片說明都夠清楚',
-            '作業內容都沒問題', '還不是很清楚', '需要更多的練習題', '其他 <input>']
+        "question": "你了解本課程對 for loop 的介紹嗎 (可複選)",
+        "type": "multiple",
+        "choice":[
+            "我了解 range() 的的三種使用方法", "影片說明都夠清楚",
+            "作業內容都沒問題", "還不是很清楚", "需要更多的練習題", "其他 <input>"]
     },
     {
-        'question': '你了解本課程對 while loop 的介紹嗎 (可複選)',
-        'type': 'multiple',
-        'choice':[
-            '我了解 break/ continue 的使用方法', '影片說明都夠清楚',
-            '作業內容都沒問題', '還不是很清楚', '需要更多的練習題', '其他 <input>']
+        "question": "你了解本課程對 while loop 的介紹嗎 (可複選)",
+        "type": "multiple",
+        "choice":[
+            "我了解 break/ continue 的使用方法", "影片說明都夠清楚",
+            "作業內容都沒問題", "還不是很清楚", "需要更多的練習題", "其他 <input>"]
     },
     {
-        'question': '想要繼續學程式設計嗎',
-        'type': 'single',
-        'choice':[
-            '想繼續學 (請寫出想學的方向,像是寫遊戲、做 App 或是程式語言) <input>',
-            '因為太難, 不想繼續學', '因為沒興趣, 不想繼續學', '其他 <input>']
+        "question": "想要繼續學程式設計嗎",
+        "type": "single",
+        "choice":[
+            "想繼續學 (請寫出想學的方向,像是寫遊戲、做 App 或是程式語言) <input>",
+            "因為太難, 不想繼續學", "因為沒興趣, 不想繼續學", "其他 <input>"]
     }],

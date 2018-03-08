@@ -2,239 +2,145 @@
 {% block title %}教師廣告{% endblock %}
 {% block css %}
 <style>
-	#advertisetable {
-		width: 100%;
-	}
-
-	#advertisetable td,
-	#advertisetable th {
-		border: 1px solid #dddddd;
-		text-align: left;
-		padding: 8px;
-		font-size: 18px;
-	}
-
-	#advertisetable thead tr {
-		background-color: white;
-	}
-
-
-	#advertisetable tbody tr:nth-child(even) {
-		background-color: #a9e8e7;
-		/*color: white;*/
-	}
-	#advertisetable tbody tr:nth-child(odd) {
-		background-color: #8fdeef;
-		/*color: white;*/
-	}
-
-
-	#advertisetable tbody tr:hover:nth-child(even) {
-		background-color: #358db2;
-		cursor: pointer;
-	}
-
-	#advertisetable tbody tr:hover:nth-child(odd) {
-		background-color: #0f90c4;
-		cursor: pointer;
-	}
-
-	td {font-family: Courier;}
-
-	.ui-state-default {
-		font-size: 24px;
-	}
-
-	.top-bar {
-		display: flex;
-		width: 90%;
-		line-height: 20px;
-		top: 0;
-		background: #2181bc;
-		border-radius: 10px;
-		padding: 6px;
-	}
-
-	.open {
-		z-index: 2;
-		cursor: pointer;
-		flex: 1;
-		position: relative;
-		color: #eee;
-		font-size: 20px;
-		text-align: left;
-	}
-
-	.open table td {
-		 text-align: left;
-	}
-
-	.open #type {
-		color: #eeff55;
-		font-size:24px;
-		position: static;
-	}
-
-	.open #start {
+	div.mynav-sidebar {
 		color: white;
-		font-size:12px;
-	}
-
-	.open #detail {
-		text-align: right;
-		font-size: 13px;
-	}
-
-	.open table td {
-		font-size: 16px;
-		line-height: 22px;
-		color: #144ee2;
-		font-weight: 700;
-	}
-
-	.open input {
-		display: none;
-	}
-
-	.open ul {
-		display : inline-block;
+		/*position: relative;*/
 		width: 100%;
-		margin-top: 5px;
-		margin-bottom: -5px;
+		background: rgb(6, 48, 68);
+		left: 0;
+		top: 130px;
 	}
 
-	.open ul li {
-		display : inline-block;
-		width: 48%;
-		height: 35px;
+	div.mynav-sidebar .item {
+		padding: 10px 15px;
+		cursor: pointer;
+		background: transparent;
 	}
 
-	.open ul li:before {
-		content: "○ ";
+	div.mynav-sidebar .item:hover {
+		background: white;
+		color: rgb(6, 48, 68);
 	}
 
-	.fix-content {
-		height: 0px;
+	div.mynav-sidebar .nav-dropdown {
+		display: none;
+		list-style: none;
+		padding-left: 25px;
+		margin-bottom: 0;
+		max-height: 315px;
+		overflow-y: scroll;
 	}
 
-	.open .content {
-		z-index: 2;
-		display: block;
-		position: absolute;
-		width: calc(100% + 13.5px);
-		left: -6px;
-		background-color: #89d2ff;
-		padding: 15px;
-		box-sizing: border-box;
-		border-bottom-left-radius: 10px;
-		border-bottom-right-radius: 10px;
+	div.mynav-sidebar .nav-dropdown::-webkit-scrollbar {
+	    width: 10px;
 	}
 
-	.open.slide-down .content {
-		opacity: 0;
-		transform: translate3d(0, -100%, 0);
-		transition: transform 1.3s, opacity 1s;
+	/* Handle */
+	div.mynav-sidebar .nav-dropdown::-webkit-scrollbar-thumb {
+	    background: rgb(9, 72, 102); 
 	}
 
-	.open.slide-down input:checked ~ .content {
-		transform: translate3d(0, 0, 0);
-		opacity: 1;
+	/* Handle on hover */
+	div.mynav-sidebar .nav-dropdown::-webkit-scrollbar-thumb:hover {
+	    background: white; 
 	}
 
-	.open.pop-in .content {
-		opacity: 0;
-		transform-origin: center top;
-		transform: scale3d(0, 0, 0);
-		transition: transform 1.3s, opacity 1s;
+	div.mynav-sidebar .nav-dropdown li {
+		cursor: pointer;
+		padding: 5px 8px;
+		background: rgb(6, 48, 68);
+		color: white;
 	}
 
-	.open.pop-in input:checked ~ .content {
-		transform: scale3d(1, 1, 1);
-		opacity: 1;
+	div.mynav-sidebar .nav-dropdown li:hover {
+		color: rgb(6, 48, 68);
+		background: white;
 	}
 
-	.open.flip-down {
-		perspective-origin: center, top;
-		perspective: 400px;
+	div.mynav-sidebar #page-control {
+		position: fixed;
+		top: 60px;
+		left: 0px;
+		width: 100%;
+		max-height: 70px;
+		overflow: hidden;
+		margin-left: 15px;
+		background: rgb(219, 238, 252);
 	}
 
-	.open.flip-down .content {
-		opacity: 0;
-		transform-origin: top center;
-		transform: rotate3d(1, 0, 0, 90deg) translate3d(0, 10%, 0);
-		transition: transform 1.3s, opacity 1s;
+	#cards {
+		margin-top: -4px;
+		padding-left: 10px
 	}
 
-	.open.flip-down input:checked ~ .content {
-		transform: rotate3d(1, 0, 0, 0deg);
-		opacity: 1;
+	#cards .card {
+		cursor: default;
+		float: left;
+		display: inline-block;
+		background: rgb(240, 240, 240);
+		min-width: 350px;
+		width: 50%;
+		margin: 4px 4px;
+		text-align: left;
 	}
 
-	.open.flip-down.flip-back .content {
-		transform: rotate3d(1, 0, 0, -90deg) translate3d(0, 10%, 0);
+	#cards .card img {
+		width: 100px;
+		float: left;
+	}
+
+	#cards .card .info {
+		float: left;
+		margin-top: 20px;
+		line-height: 30px;
+	}
+
+	#cards .card .info #name {
+		color: rgb(48, 79, 79);
+		font-size: 20px;
+		font-weight: 900;
+	}
+
+	#cards .card .info #contact {
+		font-size: 13px;
+		font-weight: 100;
+		color: #AAA;
+	}
+
+	#cards .card .describe {
+		clear: left;
+		padding: 0px 15px;
+	}
+
+	#cards .card .btn {
+		float: right;
+	}
+
+	@media (max-width: 992px) {
+		#cards .card {
+			width: 100%;
+		}
 	}
 </style>
-<link href="/html/css/datepicker.css" rel="stylesheet">
 {% endblock %}
 {% block content %}
-	<br><br><br>
-	
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-2 col-md-1 col-sm-12"></div>
-			<div class="col-lg-4 col-md-5 col-sm-6">
-				<select class="form-control" id="city" onchange="changecity(true)">
-					<option value="" selected>全臺</option>
-				</select>
-				<br>
-				<select id="towns" class="form-control">
-				</select>
-				<br>
+<main>
+	<div class="container-fluid">
+		<br>
+		<div class="col-md-3 col-sm-4 col-xs-12" hidden>
+			<div class="mynav-sidebar">
+				<div id="cities-btn" class="item" onclick="toggle('cities');hide('towns')"> 縣市</div>
+				<ul id="cities" class="nav-dropdown"></ul>
+				<div id="towns-btn" class="item" onclick="toggle('towns');hide('cities')"> 鄉鎮區</div>
+				<ul id="towns" class="nav-dropdown"></ul>
 			</div>
-			<div class="col-lg-4 col-md-5 col-sm-6">
-				<select id="classtype" class="form-control">
-					<option value="" selected>所有的課程</option>
-				</select>
-				<br>
-				<div class="date-picker" style="float: left;">
-					<div class="input">
-						<div class="result">上課日期: <span id="classdate"></span></div>
-						<button><i class="fa fa-calendar"></i></button>
-					</div>
-					<div class="calendar"></div>
-				</div>
-				<div class="date-picker-cancel" onclick="$('#classdate')[0].textContent = ''">
-					&#10006;
-				</div>
-				<br>
-			</div>
+			<br>
 		</div>
-		<div class="row">
-			<div class="col-lg-2 col-md-1 col-sm-12"></div>
-			<div class="col-lg-8 col-md-10 col-sm-12">
-				<button class="btn btn-block btn-info" onclick="loadadverise()">
-					搜尋 <i class="fa fa-search" aria-hidden="true"></i>
-				</button>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-2 col-md-1 col-sm-12"></div>
-			<div class="col-lg-8 col-md-10 col-sm-12">
-				<br>
-				<table id="advertisetable">
-					<thead>
-						<tr>
-							<th>老師</th>
-							<th>電話</th>
-							<th>地區</th>
-							<th>簡介</th>
-						</tr>
-					</thead>
-					<tbody id="teachers"></tbody>
-				</table>
-			</div>
+		<div id="cards" class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
 		</div>
 	</div>
+</main>
+<br>
 {% endblock %}
 {% block bcontent %}
 <div id="adclass-frame" class="loginsignup-frame" hidden>
@@ -251,9 +157,8 @@
 {% block script %}
 	<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-	<script src="/html/javascript/datepicker.js"></script>
-	<script src="/html/javascript/taiwan_town.js"></script>
-	<!-- <script src="/html/javascript/teacher/advertise.js" type="text/javascript" charset="utf-8"></script> -->
+	<script src="/html/js/datepicker.js"></script>
+	<script src="/html/js/taiwan_town.js"></script>
 	<script>
 		http_re = new RegExp("http[s]?:\/\/[^ \n]+", "g")
 		simple_email_re = new RegExp("[^ \n@]+@[^ \n@]+", "g")
@@ -261,56 +166,6 @@
 
 		http_link_format = `<a href="{0}" target="_blank">{0}</a>`
 		email_link_format = `<a href="mailto:{0}">{0}</a>`
-
-		advertise_format = `
-		<tr id="teacher-{3}" onclick="showadclass('{3}')">
-			<td>{0}</td> <!-- Name -->
-			<td>{1}</td> <!-- Phone -->
-			<td id="{3}-area"></td> <!-- City Town -->
-			<td>{2}</td>
-		</tr>
-		`
-
-		adclass_format = `
-		<div class="top-bar-contain">
-			<div class="top-bar">
-				<label class="open flip-down">
-					<span id="type">{0}</span><br />
-					<span id="start">{1} 開課</span>
-
-					<div id="detail"></div>
-					<input type="checkbox" onclick="togglecontent(this)">
-					<div class="content">
-						<table>
-							<tr>
-								<td>{1} 開課</td>
-							</tr>
-							<tr>
-								<td>{2}</td>
-							</tr>
-							<tr>
-								<td>
-									<br />
-									上課日:
-									<ul>
-										{3}
-									</ul>
-								</td>
-							</tr>
-							<tr>
-								<td>時間: {4} ~ {5}</td>
-							</tr>
-							<tr>
-								<td>地址: {6}</td>
-							</tr>
-						</table>
-					</div>
-				</label>
-			</div>
-			<div class="fix-content"></div>
-		</div>
-		<br />
-		`
 
 		chinese_weekday = [
 			"",
@@ -323,180 +178,129 @@
 			"星期日",
 		]
 
-		CLASS_TO = {
-			"python_01": "Python 初級",
-			"scratch_1": "Scratch 初級",
-			"hourofcode": "Hour of Code",
-			"teacher_1": "教師訓練",
-		}
+		CARD_F = `<button class="card">
+			<img src="http://www.iconninja.com/files/373/611/612/person-user-profile-male-man-avatar-account-icon.svg" >
+			<div class="info">
+				<span id="name">{0}</span><br>
+				<span id="contact">{1}</span>
+			</div>
+			<br>
+			<div class="describe">{2}</div>
+			<div class="btn btn-orange">更多</div>
+		</button>`
 
-		teachers = null;
-		ads = {};
-		function loadadverise() {
-			c = $("#city")[0].value
-			t = $("#towns")[0].value
-			classtype = $("#classtype")[0].value;
-			date = getdate("classdate")
+		cities_teachers = {}
+		teachers_data = {}
 
-			json = {};
-			if (c !== "") {
-				if (t != "") {
-					t = city_towns[city].indexOf(t);
-					json["town"] = t;
-				}
-				c = cities.indexOf(c);
-				json["city"] = c;
-			}
-			if (classtype != "") {
-				json["type"] = classtype;
-			}
-			if (date != "") {
-				json["date"] = date;
-			}
+		function change_city (city, city_index) {
+			$("#cities-btn")[0].innerHTML = "縣市 - " + city
+			$("#cities").hide()
+			if (cities_teachers[city_index] == undefined) {
+				$.ajax({
+					url: host + "adarea/",
+					method: "GET",
+					data: {"city": city_index},
+					success: function (msg) {
+						console.log(msg)
+						cities_teachers[city_index] = {}
 
-			jsonkeys = Object.keys(json)
-				
-			teachers_table = $("#teachers")[0]
+						$.each(msg, function (_, teacher) {
+							if (cities_teachers[city_index][teacher["town"]] == undefined) {
+								cities_teachers[city_index][teacher["town"]] = new Set()
+							}
+							cities_teachers[city_index][teacher["town"]].add(teacher["id"])
 
-			ads = {}
-			teachers_table.innerHTML = "";
-			exist_city_town = {}
-			$.each(teachers, function (_, i) {
-				if (jsonkeys.includes("type")) {
-					if (json["type"] != i["type"]) {
-						return true;
+							t_id = teacher["id"]
+							if (teachers_data[t_id] == undefined) {
+								teachers_data[t_id] = {
+									"id": teacher["id"],
+									"name": teacher["name"],
+									"phone": teacher["phone"],
+									"summary": teacher["summary"],
+									"adclass": {}
+								}
+							}
+
+							adcls_id = teacher["adclassid"]
+							if (adcls_id != null) {
+								if (teachers_data[t_id]["adclass"][adcls_id] == undefined) {
+									teachers_data[t_id]["adclass"][adcls_id] = {
+										"id": teacher["id"],
+										"type": teacher["type"],
+										"address": teacher["address"],
+										"date": teacher["date"],
+										"enddate": teacher["enddate"],
+										"start_time": teacher["start_time"],
+										"end_time": teacher["end_time"],
+										"weekday": teacher["weekday"],
+									}
+								}
+							}
+						})
+						display_towns_btn(city, city_index);
+						display_teacher(city_index, -1);
 					}
-				}
-				if (jsonkeys.includes("city")) {
-					if (json["city"] != i["city"]) {
-						return true;
-					}
-				}
-				if (jsonkeys.includes("town")) {
-					if (json["town"] != i["town"]) {
-						return true;
-					}
-				}
-				if (jsonkeys.includes("date")) {
-					date = json["date"].split("/")
-					month = date[1]
-					year = date[2]
-
-					if (!i["date"].startsWith(year)) {
-						return true;
-					}
-
-					m = month_re.exec(i["date"])[0]
-					if (!m.startsWith(month)) {
-						return true;
-					}
-				}
-
-				if ($("#teacher-" + i["id"])[0] == undefined) {
-					t = city_towns[cities[i["city"]]][i["town"]]
-					c = cities[i["city"]]
-
-					summary = i["summary"]
-					if (summary == "" || summary == null) {
-						summary = "沒有自我介紹"
-					}
-					else {
-						summary = summary_add_link(summary)
-					}
-					teachers_table.innerHTML += format(advertise_format,
-						i["name"],
-						i["phone"],
-						summary.replace(/\n/g, "<br>"),
-						i["id"])
-
-					ads[i["id"]] = []
-				}
-
-				if (exist_city_town[i["id"]] == undefined) {
-					exist_city_town[i["id"]] = []
-				}
-
-				city_town_id = i["city"] + "-" + i["town"]
-				if (!exist_city_town[i["id"]].includes(city_town_id)) {
-					exist_city_town[i["id"]].push(city_town_id)
-					t = city_towns[cities[i["city"]]][i["town"]]
-					c = cities[i["city"]]
-					$("#" + i["id"] + "-area")[0].innerHTML += c + " " + t + "<br>"
-				}
-
-				ads[i["id"]].push({
-					"address": i["address"],
-					"type": i["type"],
-					"date": i["date"],
-					"enddate": i["enddate"],
-					"start_time": i["start_time"],
-					"end_time": i["end_time"],
-					"weekdays": i["weekdays"],
-					"id": i["adclassid"],
-					})
-				types.add(i["type"])
-			})
-		}
-
-		function showadclass(tid) {
-			show("adclass-frame");
-
-			$("#adclasses")[0].innerHTML = ""
-			repeat = []
-			$.each(ads[tid], function (_, ad) {
-				if (repeat.includes(ad["id"])) {
-					return true;
-				}
-				c_weekdays = ""
-				$.each(ad["weekdays"], function (i) {
-					c_weekdays += format(`<li>{0}</li>`, chinese_weekday[ad["weekdays"][i]])
 				})
-
-				enddate = "老師沒有指定結束日期"
-				if (ad["enddate"] != null) {
-					enddate = ad["enddate"] + " 結束"
-				}
-
-				$("#adclasses")[0].innerHTML += format(
-					adclass_format,
-					CLASS_TO[ad["type"]],
-					ad["date"],
-					enddate,
-					c_weekdays,
-					ad["start_time"],
-					ad["end_time"],
-					ad["address"]);
-				repeat.push(ad["id"])
-			})
-			$.each($(".open input[type=checkbox]"), function (_, i) {
-				togglecontent(i)
-			})
-		}
-
-		function togglecontent(e) {
-			if (e.checked) {
-				$(e).parents(".top-bar").animate({
-					borderBottomLeftRadius: "0px",
-					borderBottomRightRadius: "0px",
-				});
-				$(e).parent().children("#detail")[0].innerHTML = `詳情 <i class="fa fa-caret-up" aria-hidden="true"></i>`
-				
-				$(e).parents(".top-bar-contain").children(".fix-content").animate({
-					height: "240px"
-				}, 1200)
 			}
 			else {
-				$(e).parents(".top-bar").animate({
-					borderBottomLeftRadius: "10px",
-					borderBottomRightRadius: "10px",
-				});
-				$(e).parent().children("#detail")[0].innerHTML = `詳情 <i class="fa fa-caret-down" aria-hidden="true"></i>`
-				
-				
-				$(e).parents(".top-bar-contain").children(".fix-content").animate({
-					height: "0px"
-				}, 1200)
+				display_towns_btn(city, city_index);
+				display_teacher(city_index, -1);
 			}
+		}
+
+		function change_town (city_index, town_index, town) {
+			$("#towns-btn")[0].innerHTML = "鄉鎮區 - " + town
+			$("#towns").hide()
+
+			display_teacher(city_index, town_index)
+		}
+
+		function display_towns_btn (city, city_index) {
+			$("#towns-btn")[0].innerHTML = "鄉鎮區 - 全部"
+
+			if (Object.keys(cities_teachers[city_index]).length == 0) {
+				$("#towns")[0].innerHTML = "";
+				alert("這縣市並沒有老師");
+				return;
+			}
+
+			html = "";
+
+			$.each(Object.keys(cities_teachers[city_index]), function (_, town_index) {
+				html += format(
+					`<li onclick="change_town('{1}', {2}, '{0}')">{0}</li>`,
+					city_towns[city][town_index],
+					city_index,
+					town_index,
+					)
+			})
+			$("#towns")[0].innerHTML = html;
+			$("#towns").show()
+		}
+
+		function display_teacher (city_index, town_index) {
+			teachers_ids = new Set()
+			if (town_index == -1) {
+				$.each(cities_teachers[city_index], function (_, teacher_set) {
+					teachers_ids = new Set([...teachers_ids, ...teacher_set])
+				})
+			}
+			else {
+				teachers_ids = cities_teachers[city_index][town_index]
+			}
+
+			html = ""
+			$.each(Array.from(teachers_ids), function (_, t_id) {
+				t_data = teachers_data[t_id]
+				html += format(
+					CARD_F,
+					t_data["name"],
+					t_data["phone"],
+					t_data["summary"].replace(/\n/g, "<br>"),
+					)
+			})
+
+			$("#cards")[0].innerHTML = html
 		}
 
 		function summary_add_link (summary) {
@@ -517,113 +321,17 @@
 		}
 
 		$(document).ready(function () {
-			$.ajax({
-				url: host + "adarea/",
-				type: "GET",
-				data: {},
-				success: function (msg) {
-					teachers = msg
-					teachers_table = $("#teachers")[0]
+			// html = ""
+			// $.each(cities, function (i, city) {
+			// 	html += format(
+			// 		`<li onclick="change_city('{0}', {1})">{0}</li>`,
+			// 		city,
+			// 		i,
+			// 		)
+			// })
 
-					ads = {}
-					teachers_table.innerHTML = "";
-
-					types = new Set();
-					cities_set = new Set();
-					towns_set = {}
-					exist_city_town = {}
-					$.each(teachers, function (_, i) {
-						if ($("#teacher-" + i["id"])[0] == undefined) {
-							t = city_towns[cities[i["city"]]][i["town"]]
-							c = cities[i["city"]]
-
-							summary = i["summary"]
-							if (summary == "" || summary == null) {
-								summary = "沒有自我介紹"
-							}
-							else {
-								summary = summary_add_link(summary)
-							}
-							teachers_table.innerHTML += format(advertise_format,
-								i["name"],
-								i["phone"],
-								summary.replace(/\n/g, "<br>"),
-								i["id"])
-
-							ads[i["id"]] = []
-						}
-						cities_set.add(c)
-
-						if (towns_set[c] == undefined) {
-							towns_set[c] = []
-						}
-						if (!towns_set[c].includes(t)) {
-							towns_set[c].push(t)
-						}
-
-						if (exist_city_town[i["id"]] == undefined) {
-							exist_city_town[i["id"]] = []
-						}
-
-						city_town_id = i["city"] + "-" + i["town"]
-						if (!exist_city_town[i["id"]].includes(city_town_id)) {
-							exist_city_town[i["id"]].push(city_town_id)
-							t = city_towns[cities[i["city"]]][i["town"]]
-							c = cities[i["city"]]
-							$("#" + i["id"] + "-area")[0].innerHTML += c + " " + t + "<br>"
-						}
-
-						ads[i["id"]].push({
-							"address": i["address"],
-							"type": i["type"],
-							"date": i["date"],
-							"enddate": i["enddate"],
-							"start_time": i["start_time"],
-							"end_time": i["end_time"],
-							"weekdays": i["weekdays"],
-							"id": i["adclassid"],
-							})
-						types.add(i["type"])
-					})
-
-					types_html = `<option value="" selected>所有的課程</option>`
-					$.each(Array.from(types), function (_, type) {
-						types_html += format(`<option value="{0}">{1}</option>`,
-							type,
-							CLASS_TO[type])
-					})
-					$("#classtype").html(types_html)
-
-					cities_html = `<option value="" selected>全臺</option>`
-					$.each(Array.from(cities_set), function (_, city_chose) {
-						cities_html += format(`<option value="{0}">{0}</option>`,
-							city_chose)
-					})
-					$("#city").html(cities_html)
-
-					$.each(teachers, function (_, i) {
-						c = cities[i["city"]]
-						t = i["town"]
-						t = city_towns[c][t]
-						index = towns_set[c].indexOf(t)
-						i["town"] = index
-					})
-
-					city_towns = towns_set
-				}
-			});
-
-			date = new Date();
-			m = date.getMonth() + 1
-			d = date.getDate()
-			if (m < 10) {
-				m = "0" + m
-			}
-			if (d < 10) {
-				d = "0" + d
-			}
-			d = date.getFullYear() + "/" + m + "/" + d
-			$("#classdate").html(d)
+			// $("#cities")[0].innerHTML = html;
+			change_city(cities[0], -1);
 		})
 	</script>
 {% endblock %}

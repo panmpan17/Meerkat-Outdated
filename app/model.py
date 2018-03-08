@@ -241,15 +241,26 @@ class Question(object):
         return j
 
     @classmethod
-    def mk_info(cls, row):
+    def mk_info(cls, row, answer_row):
+        if answer_row:
+            return {
+                "id": row["id"],
+                "title": row["title"],
+                "type": row["type"],
+                "solved": row["solved"],
+                "create_at": GMT(row["create_at"]),
+
+                "answer_writer": answer_row["nickname"],
+                "answer_create_at": GMT(answer_row["create_at"]),
+                }
         return {
-            "id": row["id"],
-            "title": row["title"],
-            "type": row["type"],
-            "solved": row["solved"],
-            "last_reply": GMT(row["last_reply"]),
-            "create_at": GMT(row["create_at"]),
-            }
+                "id": row["id"],
+                "title": row["title"],
+                "type": row["type"],
+                "solved": row["solved"],
+                "create_at": GMT(row["create_at"]),
+
+                }
 
 
     def validate_json(self, json):
@@ -354,6 +365,7 @@ class Post(object):
     def create_schema(cls, db_engine, db_meta):
         cls.post_t = Table(cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
+            Column("title", String, nullable=False, autoincrement=False),
             Column("content", Text, nullable=False, autoincrement=False),
             Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
             )
@@ -364,7 +376,7 @@ class Post(object):
     def mk_dict(cls, row):
         return {
             "id": row["id"],
-            # "title": row["title"],
+            "title": row["title"],
             "content": row["content"],
             "create_at": GMT(row["create_at"]),
             }
@@ -401,6 +413,7 @@ class Teacher(object):
             Column("disabled", Boolean, default=False, nullable=True, autoincrement=True),
             Column("class_permission", ARRAY(String), nullable=False, autoincrement=False),
             Column("summary", Text, nullable=False, autoincrement=False),
+            Column("contact", Text, nullable=False, autoincrement=True, default=""),
             )
         cls.teacher_t.create(db_engine, checkfirst=True)
         return cls.teacher_t
@@ -423,7 +436,16 @@ class Teacher(object):
     def mk_dict_adarea_adclass(cls, row):
         enddate = row["enddate"]
         if enddate != None:
-            enddate = row["enddate"].strftime("%Y 年 %m 月 %d 日")
+            enddate = enddate.strftime("%Y 年 %m 月 %d 日")
+        date = row["enddate"]
+        if date != None:
+            date = date.strftime("%Y 年 %m 月 %d 日")
+        start_time = row["start_time"]
+        if start_time != None:
+            start_time = start_time.strftime("%I:%M %p")
+        end_time = row["end_time"]
+        if end_time != None:
+            end_time = end_time.strftime("%I:%M %p")
         return {
             "id": row["id"],
             "name": row["name"],
@@ -436,10 +458,10 @@ class Teacher(object):
             "adclassid": row["adclassid"],
             "address": row["address"],
             "type": row["type"],
-            "date": row["date"].strftime("%Y 年 %m 月 %d 日"),
+            "date": date,
             "enddate": enddate,
-            "start_time": row["start_time"].strftime("%I:%M %p"),
-            "end_time": row["end_time"].strftime("%I:%M %p"),
+            "start_time": start_time,
+            "end_time": end_time,
             "weekdays": row["weekdays"],
             }
 

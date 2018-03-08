@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% block title %} FAQ {% endblock %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="/html/css/faq.css">
+{% endblock %}
+{% block content %}
+<main>
+	<div class="container-fluid">
+		<br>
+		<div class="my-sidebar">
+			<div id="1" class="item active">問題分類</div>
+			<div id="2" class="item">學生學習</div>
+			<div id="3" class="item">家長育才</div>
+			<div id="4" class="item">師資培訓</div>
+			<div class="item">課程細節</div>
+		</div>
+		<div id="questions">
+			<div name="" class="question">
+				<div class="collapse">
+					<i class="fa fa-play" aria-hidden="true"></i>
+				</div>
+				<div class="title">為什麼要學程式？</div>
+				<div class="detail">
+					若要以一句話來說明，樂學科技認為是「軟體正在吃掉全世界，而且吃掉了工作機會。」<br>
+					雖然孩子距離「工作」還有好多年，如果不從教育做改變，恐怕會追不上產業的挑戰。<br>
+					我們的教育長期以來追求標準答案與分數，若能將軟體創新與創意的價值深植於教育中、鼓勵孩子思考與創造，才能在人工智慧與機器人之外，找到自己的路。<br>
+					詳情請見數位時代專欄蔡創辦人主筆：<br>
+					<a href="https://www.bnext.com.tw/article/46116/coding-programmer-scratch" target="_blank">程式教育將納入課綱，會不會寫程式有這麼重要嗎？</a><br>
+					<span class="hashtag">#軟體吃掉全世界</span>
+				</div>
+			</div>
+			<div name="" class="question">
+				<div class="collapse">
+					<i class="fa fa-play" aria-hidden="true"></i>
+				</div>
+				<div class="title">網站上有免費的線上課程，可以自學嗎？實體課有什麼不一樣？</div>
+				<div class="detail">
+					為了讓城市與偏鄉的孩子都有機會學習程式設計課程，Kids Coding Studio (樂學科技前身) 自2015年起提供了免費、可自學的程式設計課程。<br>
+					這套課程以創意為出發點，讓孩子沒有壓力、快樂地學習，適合小學五年級以上到成人。<br>
+					學習前請詳看「課程介紹」影片，以正確的方法來進行，要邊學邊動手，練習與作業都要確實。<br>
+					課程網址：<a>http://coding4fun.tw/scratch</a><br>
+					但是若沒有陪伴者，學生仍可能因為惰性而無法完成課程。<br>
+					因此，樂學科技也提供實體課程 (請參考翻轉教室) <br>供家長選擇。翻轉教室提供了家教班的教學品質，讓孩子以自己的學習步調前進，可以隨時提問。<br>
+					加上精心設計的活動，學生在與同儕的交流、互動中，激發更多思考與創意。<br>
+					實體課程額外提供了課本，讓孩子在學習上更扎實，更有成就感。<br><br>
+					<span class="hashtag">#自學</span>
+					<span class="hashtag">#翻轉教室</span>
+					<span class="hashtag">#Scratch</span>
+					<span class="hashtag">#Python</span>
+				</div>
+			</div>
+			<div name="" class="question">
+				<div class="collapse">
+					<i class="fa fa-play" aria-hidden="true"></i>
+				</div>
+				<div class="title">什麼是翻轉教室？</div>
+				<div class="detail">
+					樂學科技的翻轉教室有自己獨特的模式，結合程式設計學習的特性，已有相當好的教學成效。<br>
+					首先，我們依據孩子思考的脈絡與學習心裡，設計了程式基礎課程的教學課程。這些程式基礎課程建立孩子對程式設計的觀念與根本原理。<br>
+					在課堂上，老師引導孩子每看完一段影片，隨即動手嘗試與體驗。若有看不懂的部分，孩子可以將影片暫停、或是從頭播放。<br>
+					透過樂學科技的翻轉教室，孩子能以自己理解的速度前進，即使分心了，很快地又可以回到課程中。<br>
+					老師的角色，並不是催趕孩子的進度，而是隨時救援，為需要的孩子做講解或排除狀況。<br>
+					聰明的孩子則一路往前學習，完全不需要等待老師下一個指令，順暢地完成學習。<br>
+					在課堂上，每個孩子都沈浸在課程中。看似平淡、不熱絡，但每個孩子的學習都是滿滿的收穫。<br>
+					<span class="hashtag">#自學</span>
+					<span class="hashtag">#翻轉教室</span>
+					<span class="hashtag">#Scratch</span>
+					<span class="hashtag">#Python</span>
+				</div>
+			</div>
+			<div name="" class="question">
+				<div class="collapse">
+					<i class="fa fa-play" aria-hidden="true"></i>
+				</div>
+				<div class="title">學校也有教Scratch，樂學科技的 Scratch 課程有什麼不一樣？</div>
+				<div class="detail">
+					Scratch 是充滿創意與樂趣的程式工具。<br>
+					如果您的孩子在學校的 Scratch課程得到「好簡單」「好無聊」的印象，這個課程一定有問題。<br>
+					這個問題來自於：<br>
+					1. 課本。課本以教 word，powerpoint的方式讓學生一步一步操作。這中間沒有思考，沒有學生的創作因子，當然無法引起學生的學習興趣。教學資源。學校普遍是「老師說，學生做」的教學模式。<br>
+					2. 多數老師沒有寫過程式，加上學生人數眾多，教的班級也多。學生若有問題，就會造成老師身心疲憊。保守的教法，成為最安全的教法，難怪學生領受不到寫程式的樂趣。<br><br>
+					樂學科技的 Scratch 課程讓學生邊學邊動手。學生以自己的學習步調前進，可以隨時提問。加上精心設計的活動，學生在與同儕的交流、互動中，激發更多思考與創意。<br>
+					在短短的時間內，學生累積創作能量與使用工具的能力。讓學生無邊無際的想像力，化為一個個獨一無二、生動有趣的作品。<br>
+					真正開啟學生學習程式的動機。 <br>
+					<span class="hashtag">#自學</span>
+					<span class="hashtag">#翻轉教室</span>
+					<span class="hashtag">#Scratch</span>
+				</div>
+			</div>
+			<div name="" class="question">
+				<div class="collapse">
+					<i class="fa fa-play" aria-hidden="true"></i>
+				</div>
+				<div class="title">坊間的課程搭配硬體像是 Arduino，micro:bit，機器人等，跟樂學科技的程式課程有什麼不一樣？</div>
+				<div class="detail">
+					樂學科技專注在程式課程，是因為程式應用範圍極廣。孩子的想像力與創造力本來就沒有侷限，我們應將這些創意開發出來。<br>
+					透過硬體學習，雖能短期引起孩子的注意，但因為受限於硬體的功能，所以即使不斷地變換硬體，程式能力的成長仍很有限。<br>
+					大部分結合硬體的課程，基礎的程式都已被廠商寫好了，像是感測器的使用。孩子撰寫的程式其實相當簡單。<br>
+					而機器人的學習更著重於結構的部分，程式常因為結構變化而調整參數。這些參數的調整並非來自計算，而是來自「測試」。調整參數並無法加深孩子程式能力，但卻非常花時間。<br>
+					學習這些也是好的，只是這些課程偏重在硬體與機構的設計。但若以學習程式為目標，則走錯方向。<br>
+					「軟體吃掉全世界」<br>
+					從無到有、沒有庫存、發揮腦力，是軟體產業的特色。程式能力的養成則需要不斷地思考、探索、培養解決問題的能力。<br>
+					樂學科技不僅提升孩子的程式能力，更要養成孩子自學的能力。在資訊爆炸的時代，孩子才能不畏挑戰與變化，勇往直前。<br>
+					樂學科技給孩子「帶得走的能力」！<br>
+					<span class="hashtag">#自學</span>
+					<span class="hashtag">#翻轉教室</span>
+					<span class="hashtag">#Scratch</span>
+					<span class="hashtag">#Python</span>
+					<span class="hashtag">#軟體吃掉全世界</span>
+				</div>
+			</div>
+			<div name="" class="question">
+				<div class="collapse">
+					<i class="fa fa-play" aria-hidden="true"></i>
+				</div>
+				<div class="title">在別的地方上過 Scratch 課程，能上樂學科技的 Scratch 應用班嗎？</div>
+				<div class="detail">
+					我們的課程不僅開啟孩子學程式的興趣，在10-12堂的Scratch 初級班就讓孩子超越一般坊間的「初級＋進階」課程。<br>
+					差別在哪裡呢？<br>
+					因為我們藉由孩子創意的開展，讓孩子自己學會 90％ 的Scratch 積木。孩子很快地滿手工具，面對問題，可以自己找到解決方案並自行應用。<br>
+					但是一般坊間的課程以專案來教學，學的再久，仍是那些積木，見樹不見林。想要進一步做應用，孩子就可能束手無策。如果是「填鴨」學習，更會坐在那裡不知所措。<br>
+					我們整理了一個九宮格，看看您的孩子能對幾題？能自我回答 6 - 9 題就有能力參加我們的 Scratch 應用班。<br><br>
+					<center>
+						<img src="/html/images/scratch_9_block_test.png" width="400" alt="">
+					</center><br>
+					<span class="hashtag">#自學</span>
+					<span class="hashtag">#翻轉教室</span>
+					<span class="hashtag">#Scratch </span>
+				</div>
+			</div>
+			<div name="" class="question">
+				<div class="collapse">
+					<i class="fa fa-play" aria-hidden="true"></i>
+				</div>
+				<div class="title">樂學科技整體課程的規劃是什麼？</div>
+				<div class="detail">
+					樂學科技以推廣兒童程式設計為公司宗旨，「樂學程式學院」則是樂學科技所提供的程式設計教材，目的在培育台灣地區程式設計人才。 <br>
+					我們的課程都以翻轉教室/養成自學力為主軸，讓孩子以自己理解的速度前進，以達到充分的學習與成長。<br>
+					目前推出的課程以左側為主，107年底前將會把右側的三堂課補齊。讓孩子學得更深入、學得更開心。<br>
+					與其他坊間課程不同的是，學生在Python 初級班之後，可以無縫接軌 <a href="http://www.udacity.com" target="_blank">Udacity</a> 英文課程。讓孩子的學習與世界接軌，實實在在培養「帶得走的能力」！<br>
+					英文不好？沒有問題！讓孩子對程式的喜愛，帶動英文的學習。Coding for Fun!<br>
+					<span class="hashtag">#自學</span>
+					<span class="hashtag">#翻轉教室</span>
+					<span class="hashtag">#Scratch</span>
+					<span class="hashtag">#Python</span>
+					<span class="hashtag">#軟體吃掉全世界</span>
+				</div>
+			</div>
+			<div name="" class="question">
+				<div class="collapse">
+					<i class="fa fa-play" aria-hidden="true"></i>
+				</div>
+				<div class="title">幾歲開始學程式比較好呢？</div>
+				<div class="detail">
+					孩童第一個學習的程式語言通常是圖像式的語言，像是 Scratch 或是以 blockly 寫成的程式語言。都是以拖曳的方式來組合程式指令。<br>
+					但年紀較小的孩子坐不住，家長以為遊戲式的學習可以幫助孩子，反而讓孩子對「程式的本質」產生錯誤認知，甚至陷入電腦遊戲的世界。<br>
+					「程式的本質」是什麼呢？程式是解決問題的工具。面對問題，能夠思考、並嘗試解決，最後以程式作為解決手段。<br>
+					問題在於，稚齡的孩子有什麼問題想要主動解決？會定義問題嗎？<br>
+					孩子缺乏定義問題的主動性，就只能跟著老師的步驟做，改改參數，並不理解程式內涵。<br>
+					寫程式原本可以發展創意，但為了向家長交差，反而以填鴨的方式來教，適得其反。<br>
+					如果是想訓練孩子邏輯，未必需要使用電腦。像閱讀、玩桌遊，都可以讓孩子願意「主動思考」。<br>
+					樂學科技強烈建議家長更應重視孩子的「閱讀力」與「對英文的興趣」。這對孩子未來發展程式能力，增加理解力與續航力。<br>
+					一般來說，小五學生具備創造力與應用力，可以順利地學會像 Scratch 這樣的程式工具。一但開啟興趣與學習動機，孩子就可以銜接更具挑戰性的程式技能，像是Python 程式語言。<br>
+					詳情請見數位時代專欄蔡創辦人主筆：<br>
+					<a herf="https://www.bnext.com.tw/artic…/47279/code-education-scratch">何時開始學程式？愈小學愈好嗎？</a><br>
+					<span class="hashtag">#Scratch</span>
+				</div>
+			</div>
+			<div name="" class="question">
+				<div class="collapse">
+					<i class="fa fa-play" aria-hidden="true"></i>
+				</div>
+				<div class="title">回家有作業嗎？回家要練習多久？ </div>
+				<div class="detail">
+					有回家作業。我們設計的作業內容需要30~60分鐘。每個孩子有自己學習的步調，如果在課堂上來不及完成創作，回家需要繼續完成。<br>
+					作業的練習非常重要。家長一定要鼓勵孩子進行練習。因為學程式和學「工藝」、「才藝」相當類似，需要透過「練習」才能掌握訣竅、精益求精。<br>
+					<b>
+						像美術課，沒有練習、沒有思考，無法畫出創意的作品。<br>
+						像溜冰課，沒有練習、沒有跌跤，無法熟悉技巧與訣竅。
+					</b><br>
+					在練習之間，或許跌跌撞撞，製造了很多錯誤。但只要願意去思考、解決問題，能力便不斷地開展。<br>
+					程式的技能就像騎腳踏車，一旦會了，就不會忘記。可以舉一反三、以此類推。是一輩子帶得走的能力！<br>
+					<span class="hashtag">#Scratch</span>
+					<span class="hashtag">#Python</span>
+				</div>
+			</div>
+			<div name="" class="question detail">
+				<div class="collapse">
+					<i class="fa fa-play" aria-hidden="true"></i>
+				</div>
+				<div class="title"></div>
+				<div class="detail">
+				</div>
+			</div>
+			<div name="" class="question detail">
+				<div class="collapse">
+					<i class="fa fa-play" aria-hidden="true"></i>
+				</div>
+				<div class="title"></div>
+				<div class="detail">
+				</div>
+			</div>
+			<div name="" class="question detail">
+				<div class="collapse">
+					<i class="fa fa-play" aria-hidden="true"></i>
+				</div>
+				<div class="title"></div>
+				<div class="detail">
+				</div>
+			</div>
+			<div name="" class="question detail">
+				<div class="collapse">
+					<i class="fa fa-play" aria-hidden="true"></i>
+				</div>
+				<div class="title"></div>
+				<div class="detail">
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+{% endblock %}
+{% block script %}
+<script src="/html/js/faq.js"></script>
+{% endblock %}

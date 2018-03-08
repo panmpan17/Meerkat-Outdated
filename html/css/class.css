@@ -1,100 +1,300 @@
-div.class_block {
-	font-family: fonta;
-	display:inline-block;
-	background-color: rgba(254, 144, 0,1);
-	border-right: 1px solid rgb(219, 238, 252);
-	border-left: 1px solid rgb(219, 238, 252);
-	height:30px;
-	text-align: center;
-	font-size: 20px;
-	cursor:pointer;
-	color: white;
-}
+#subject_id {display: none}
 
-div.class_block.active {
-	background: rgba(43,142,183,1);
-}
-
-div#video {
-	width:80%;
-}
-
-div.button-display {
-	top: 2px;
-	width:88%;
-	position: relative;
-	transform: translate(-50%, 0px);
-	height:55px;
-	text-align:left;
-}
-
-div.lesson-display {
-	top: 120px;
-	width:90%;
+.menu {
 	position: absolute;
-	left: 50%;
-	transform: translate(-50%, 0px);
+	left: 0;
+	top: 53px;
+	bottom: 0;
+	background: rgb(6, 48, 58);
+	color: white;
+	width: 300px;
+	height: calc(100% - 53px);
+	transition-duration: 0.2s;
+	overflow-y: scroll;
 }
 
-div#classname-now {
-	position: fixed;
+.menu.shrink {
+	left: -300px;
+}
+
+.menu .lesson {
+	max-height: 100%;
+}
+
+.menu .lesson.shrink.myhide {
+	display: none;
+}
+
+.menu .lesson.myhide {
+	display: block;
+}
+
+.menu .lesson .title {
+	font-weight: 900;
+	height: 50px;
+	letter-spacing: 2px;
+	/*background: rgb(4, 36, 44);*/
+	padding: 10px;
+	padding-right: 20px;
+	cursor: pointer;
+}
+
+.menu .lesson .title:hover {
+	background: rgb(40, 79, 88);
+}
+
+.menu .lesson .title:after {
+	content: "";
+	position: absolute;
+	width: 18px;
+	height: 18px;
+	background: white;
+	-webkit-clip-path: polygon(91% 56%, 22% 10%, 22% 100%);
+	clip-path: polygon(91% 56%, 22% 10%, 22% 100%);
+	transform: rotate(180deg);
+	transition-duration: .3s;
 	right: 10px;
-	/*float:right;*/
-	display:inline;
-	font-size: 30px;
-	color: rgba(43,142,183,1);
-	font-family: fonta;
 }
 
-button#lesson-dropdown {
-	padding-top: 0px;
-	padding-bottom: 0px;
+.menu .lesson.shrink .title:after {
+	transform: rotate(0deg);
+}
+
+.menu .lesson .video-bar {
+	position: absolute;
+	right: 0;
+	left: 0;
+	height: calc(100% - 100px);
+	overflow-y: scroll;
+}
+
+.menu .lesson .video-bar .video {
+	position: relative;
+	padding: 10px 0px;
+	padding-left: 20px;
+	/*background: rgb(5, 38, 46);*/
+	cursor: pointer;
+	transition-duration: 0.2s;
+	left: 0px;
+	width: 100%;
+}
+
+.menu .lesson .video-bar .video:hover {
+	background: rgb(40, 79, 88);
+}
+
+.menu .lesson .video-bar .video.active {
+	/*left: 0;*/
+	/*background: white;*/
+	color: rgb(255,131,0);
+}
+
+.menu .lesson .video-bar .video.section {
+	display: none;
+}
+
+.menu .lesson .video-bar .video.section:after {
+	content: "";
+	position: absolute;
+	width: 18px;
+	height: 18px;
+	-webkit-clip-path: polygon(91% 56%, 22% 10%, 22% 100%);
+	clip-path: polygon(91% 56%, 22% 10%, 22% 100%);
+	transform: rotate(180deg);
+	background: white;
+	right: 10px;
+}
+
+/*.menu .lesson .video-bar .video.section:hover:after {color: rgb(6, 48, 58)}*/
+
+.menu .lesson .video-bar .video.active.section {
+	background: rgb(5, 38, 46);
+	color: white;
+	width: calc(100%);
+	left: 0;
+}
+
+.menu .lesson .video-bar .video.active.section:hover {
+	background: rgb(40, 79, 88);
+}
+
+.menu .lesson .video-bar .section:not(.video) {
+	position: relative;
+	width: 100%;
+}
+
+.menu .lesson .video-bar .section.active:not(.video) {
+}
+
+.menu #description {
+	font-weight: 900;
+	position: relative;
+	padding: 10px 0px;
+	padding-left: 10px;
+	background: rgb(5, 38, 46);
+	cursor: pointer;
+	transition-duration: 0.2s;
+	left: 0;
 	font-size: 24px;
+	height: 50px;
 }
 
-ul#lessons {
-	top:30px;
-	font-size: 24px;
+.menu #description:hover {
+	background: white;
+	color: black;
 }
 
-div.rightarrow,
-div.leftarrow {
+.menu .lesson.disabled .title {
+	color: gray;
+	cursor: not-allowed;
+}
+
+.menu .lesson.disabled .title:hover {
+	background: rgb(5, 38, 46);
+}
+
+.menu .lesson.disabled .title:after {
+	display: none;
+}
+
+#view-block {
+	position: absolute;
+	width: 100%;
+	height: calc(100% - 53px);
+	transition-duration: 0.2s;
+	padding-top: 15px;
+	overflow-y: scroll;
+	/*margin-bottom: 60px;*/
+}
+
+#view-block.shrink {
+	margin-left: 300px;
+	width: calc(100% - 300px);
+}
+
+#view-block #toggle_btn {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 40px;
+	height: 40px;
+	cursor: pointer;
+	padding-left: 5px;
+	z-index: 2;
+}
+
+#view-block #toggle_btn:after {
+	content: "";
+	position: absolute;
+	width: 40px;
+	height: 40px;
+	background: rgb(6, 48, 58);
+	left: 0;
+	width: 40px;
+	height: 40px;
+	-webkit-clip-path: polygon(50% 10%, 68% 50%, 50% 86%, 24% 86%, 45% 50%, 24% 10%);
+	clip-path: polygon(50% 10%, 68% 50%, 50% 86%, 24% 86%, 45% 50%, 24% 10%);
+	transition-duration: .3s;
+}
+
+#view-block #toggle_btn.back:after {
+	transform: rotate(180deg);
+}
+
+#view-block #footer {
 	position: fixed;
-	font-size: 50px;
-	top: 300px;
+	bottom: 0;
+	width: 100%;
+	height: 50px;
+	background: gray;
+	transition-duration: .3s;
 }
 
-div.leftarrow {
+#view-block.shrink #footer {
+	width: calc(100% - 300px);
+}
+
+#view-block #footer #prev,
+#view-block #footer #next {
+	position: relative;
+	width: 100px;
+	height: 30px;
+	top: 10px;
+	/*background: rgb(200, 200, 200);*/
+	border: 2px solid white;
+	border-radius: 4px;
+	color: white;
+	text-shadow: 2px 2px black;
+	box-shadow: 2px 2px 0px 0px black;
+	background: transparent;
+}
+
+#view-block #footer #prev:hover,
+#view-block #footer #next:hover {
+	border-color: lightblue;
+	color: lightblue;
+}
+
+#view-block #footer #prev:active,
+#view-block #footer #next:active {
+	text-shadow: none;
+	box-shadow: none;
+	transform: translate(2px, 2px);
+}
+
+#view-block #footer #prev {
 	left: 10px;
 }
 
-div.rightarrow {
-	right: 10px;
+#view-block #footer #next {
+	right: calc(-100% + 220px);
 }
 
-.leftarrow a,
-.rightarrow a{
-  color: rgb(43,142,183);
+#view-block #video {
+	height: calc(100% - 80px);
+	overflow-y: scroll;
 }
 
-.leftarrow a:hover,
-.rightarrow a:hover {
-  color: rgb(30,105,138);
+#view-block #video #videoframe {
+	position: absolute;
+	top: 50px;
+	left: 1%;
+	width: 98%;
+	height: 280px;
+	transition-duration: .3s;
 }
 
-.leftarrow a:active,
-.rightarrow a:active {
-  color: rgb(26,90,120);
+#view-block #video #videoframe.python {height: 390px;}
+
+#view-block #title {
+	font-size: 24px;
+	margin-top: -15px;
+	padding-left: 45px;
+	color: rgb(6, 48, 58);
+	display: inline-block;
 }
 
-div#answer {
-  position: relative;
-  top: -3px;
-  width: 100%;
-  height: 5px;
-  background-color: #ead141;
+#view-block #btns {
+	padding-left: 30px;
+	display: inline-block;
 }
 
+#view-block #btns .btn,
+#view-block #video .btn {
+	margin-top: -15px;
+	background: rgb(6, 48, 58);
+	color: white;
+	transition-duration: 0.2s;
+	border-radius: 0;
+}
+
+#view-block #btns .btn:hover,
+#view-block #video .btn:hover {
+	background: white;
+	color: rgb(6, 48, 58);
+}
+
+/*eavluation*/
 #test {
 	background: white;
 	text-align: left;
@@ -193,4 +393,85 @@ div#answer {
 
 .question input[type=radio]:checked + label > div {
 	background: cornflowerblue;
+}
+
+
+.thumbnail {
+	float: left;
+	width: 50%;
+	min-width: 400px;
+	display: inline-block;
+	text-align: center;
+	background: transparent;
+	border: none;
+}
+
+.thumbnail img {
+	width: auto;
+	height: auto;
+	max-width: 100%;
+	max-height: 250px;
+}
+
+.thumbnail .play-btn {
+	position: relative;
+	cursor: pointer;
+}
+
+.thumbnail .play-btn:before {
+	content: "";
+	position: absolute;
+	background: rgba(0, 0, 0, 0.7);;
+	width: 16%;
+	height: 50px;
+	border-radius: 20%;
+	left: 42%;
+	top: 100px;
+}
+
+.thumbnail .play-btn:after {
+	content: "";
+	position: absolute;
+	background: white;
+	width: 16%;
+	height: 50px;
+	left: 42%;
+	top: 100px;
+	-webkit-clip-path: polygon(64% 50%, 36% 32%, 36% 68%);
+	clip-path: polygon(64% 50%, 36% 32%, 36% 68%);
+}
+
+.thumbnail .play-btn:hover:before {
+	background: rgb(5, 38, 46);
+}
+
+.thumbnail .text {
+	padding: 10px;
+	padding-top: 5px;
+	font-size: 18px;
+	font-weight: 900;
+}
+
+.thumbnail .text .go {
+	display: inline-block;
+	width: 100px;
+	height: 25px;
+	line-height: 25px;
+	text-align: center;
+	background: rgb(92, 129, 255);
+	color: white;
+	cursor: pointer;
+	box-shadow: 2px 2px 0px 0px gray;
+}
+
+.thumbnail .text .go:hover {
+	background: rgb(63, 97, 213);
+	color: rgb(245, 245, 245);
+}
+
+.thumbnail .text .go:active {
+	box-shadow: 0px 0px 0px 0px gray;
+	transform: translate(2px, 2px);
+	user-select: none;
+	-webkit-user-select: none;
 }

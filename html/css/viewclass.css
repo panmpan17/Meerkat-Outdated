@@ -1,123 +1,254 @@
 div.classview-card {
-  width: 100%;
-  height: 210px;
-  overflow-y: scroll;
-  background-color:rgba(245,245,245,1);
-  border-radius: 7px;
-  box-shadow: 3px 2px 5px 0px rgba(25,85,109,0.7);
-  padding: 20px;
-  padding-left: 0px;
+	width: 100%;
+	height: 280px;
+	overflow-y: scroll;
+	background-color:rgba(245,245,245,1);
+	border-radius: 7px;
+	box-shadow: 3px 2px 5px 0px rgba(25,85,109,0.7);
+	padding: 20px;
+	padding-left: 0px;
+	cursor: pointer;
 }
 
 img.card-image {
-  border-radius: 50%;
-  background-color: #454d59;
-  max-height: 100px;
-  padding: 10px;
-  transform: translate(0, 27px);
+	border-radius: 50%;
+	background-color: #454d59;
+	max-height: 100px;
+	padding: 10px;
+	transform: translate(0, 27px);
 }
 
 div.title {
-  color: black;
-  font-size: 20px;
-  color: #3a91c4;
-  font-weight: 400;
+	color: black;
+	font-size: 20px;
+	color: #3a91c4;
+	font-weight: 400;
 }
 
 div.describe {
-  font-weight: 200;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  color: black;
-  font-size: 18px;
+	font-weight: 200;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	color: black;
+	font-size: 18px;
 }
 
 div.col-md-6 {
-  padding-bottom: 20px;
+	padding-bottom: 20px;
 }
 
 div.container {
-  width: 80%;
+	width: 80%;
 }
 
 div.col-sm-4 {
-  padding-bottom: 50px;
-  vertical-align: middle;
+	padding-bottom: 50px;
+	vertical-align: middle;
 }
 
 div.col-sm-8 {
-  padding-top: 20px;
-  text-align: left;
+	padding-top: 20px;
+	text-align: left;
 }
 
 span#time {
-  color: rgba(160, 160, 160, 1);
-  font-weight: 200;
-  font-size: 16px;
+	color: rgba(160, 160, 160, 1);
+	font-weight: 200;
+	font-size: 16px;
 }
 
 span#price {
-  color:rgba(220, 185, 99, 1);
+	color:rgba(220, 185, 99, 1);
 }
 
 button#description {
-  padding-left: 30px;
-  padding-right: 30px;
-  background-color: #f2c037;
-  border: none;
-  text-decoration: none;
-  cursor: pointer;
+	padding-left: 30px;
+	padding-right: 30px;
+	background-color: #f2c037;
+	border: none;
+	text-decoration: none;
+	cursor: pointer;
 }
 
 @media (max-width: 768px) {
-  div.classview-card {
-    /*height: 400px;*/
-    max-height: 1000px;
-  }
+	div.classview-card {
+		/*height: 400px;*/
+		max-height: 1000px;
+	}
 
-  div.col-sm-8 {
-    padding-top: 0px;
-    text-align: center;
-  }
+	div.col-sm-8 {
+		padding-top: 0px;
+		text-align: center;
+	}
 }
 
 button#goclass {
-  background-color: rgb(43,142,183);
-  border-radius: 5px;
-  width: 150px;
-  height: 50px;
-  font-size: 24px;
-  color: white;
+	background-color: rgb(43,142,183);
+	border-radius: 5px;
+	width: 150px;
+	height: 50px;
+	font-size: 24px;
+	color: white;
 }
 
 span#describe-title {
-  font-size: 20px;
-  color: CornflowerBlue;
+	font-size: 20px;
+	color: CornflowerBlue;
 }
 
 span#describe-content {
-  padding-left: 20px;
-  display: block;
+	padding-left: 20px;
+	display: block;
 }
 
 span#indent {
-  color: rgb(200, 200, 200);
-  letter-spacing: -1px;
-  padding-right: 6px;
+	color: rgb(200, 200, 200);
+	letter-spacing: -1px;
+	padding-right: 6px;
 }
 
 #describe-content a{
-  padding-left: 5px;
-  padding-right: 5px;
-  color: Coral;
-  text-decoration: none;
+	padding-left: 5px;
+	padding-right: 5px;
+	color: Coral;
+	text-decoration: none;
 }
 
 #describe-content ul {
-    list-style: none;
+		list-style: none;
 }
 
 #describe-content li:before {
-    content: "• ";
-    color: rgb(160, 160, 160);
+		content: "• ";
+		color: rgb(160, 160, 160);
+}
+
+#blackscreen {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background: rgba(30,30,30,0.9);
+	z-index: 5;
+}
+
+#classroom-confirm {
+	position: fixed;
+	left: calc(50% - 150px);
+	top: 100px;
+	bottom: 100px;
+	width: 300px;
+	min-height: 200px;
+	background: white;
+	z-index: 10;
+}
+
+#classroom-confirm .close-blackscreen {
+	cursor: pointer;
+	margin: 5px;
+	margin-bottom: 15px;
+	width: 18px;
+	height: 18px;
+	line-height: 18px;
+	font-size: 10px;
+	text-align: center;
+	border-radius: 50%;
+	background: rgb(252, 101, 95);
+	color: transparent;
+}
+
+#classroom-confirm .close-blackscreen:hover {
+	color: white;
+}
+
+#classroom-confirm #info {
+	text-align: center;
+	line-height: 26px;
+}
+
+#classroom-confirm #list {
+	position: relative;
+	height: 300px;
+	overflow-y: scroll;
+}
+
+#classroom-confirm #list .class {
+	position: relative;
+	cursor: pointer;
+	width: calc(100%- 10px);
+	height: 50px;
+	line-height: 50px;
+	margin: 5px;
+	padding-left: 15px;
+	border: 2px solid rgb(6, 48, 59);
+	border-left: 5px solid rgb(6, 48, 59);
+}
+
+#classroom-confirm #list .class:hover {
+	border: 2px solid rgb(22, 106, 130);
+	border-left: 5px solid rgb(22, 106, 130);
+}
+
+#classroom-confirm #list .class::after {
+	content: "進入 →";
+	position: absolute;
+	right: 10px;
+	z-index: 2;
+}
+
+#classroom-confirm #list .class:hover::after {
+	color: gray;
+}
+
+#alert {
+	position: fixed;
+	left: calc(50% - 175px);
+	top: 200px;
+	width: 350px;
+	min-height: 200px;
+	background: white;
+	z-index: 1000000;
+}
+
+#alert #title {
+	font-size: 22px;
+	/*text-align: center;*/
+	padding: 10px;
+}
+
+#alert #describe {
+	padding: 10px 20px;
+}
+
+#alert #btns {
+	position: absolute;
+	bottom: 0;
+	text-align: center;
+	padding: 10px;
+}
+
+#alert #btns .mybtn {
+	min-width: 80px;
+	height: 30px;
+	border: none;
+	background: rgb(200, 200, 200);
+}
+
+#alert #btns .mybtn:hover {
+	background: rgb(175, 175, 175);
+}
+
+#alert #btns .mybtn:active {
+	background: rgb(150, 150, 150);
+}
+
+#alert #btns .mybtn.primary {
+	background: rgb(6, 48, 59);
+	color: white;
+}
+
+#alert #btns .mybtn.primary:hover {
+	background: white;
+	color: rgb(6, 48, 59);
 }

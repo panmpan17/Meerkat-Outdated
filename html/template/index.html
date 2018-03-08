@@ -1,81 +1,257 @@
 {% extends "base.html" %}
 {% block title %}Coding for Fun{% endblock %}
 {% block css %}
+<link rel="stylesheet" href="/html/stylecss/index.css">
 <style>
-	.info-bottom {
-		position: fixed;
-		bottom: 0px;
-		width:100%;
-		height:70px;
-		background-color: rgba(43,142,183,1);
-		padding: 10px;
-	}
-
-	span#contact-icon {
-		position: absolute;
-		top: 50%;
-		font-size: 36px;
-		transform: translate(0,-18px);
-	}
-	img.scene {
-		padding-top:0px;
+	div#carousel-example-generic.mixblend ol.carousel-indicators {
+		mix-blend-mode: difference;
 	}
 </style>
 {% endblock %}
 {% block content %}
+	<main class="index">
 
-<!-- <div id="fullpage"> -->
-	<div class="section " id="section0">
-		<img src="/html/images/scene_1.png" class="scene" alt="" style="width:100%;min-height:100%;">
+		<div class="container-fluid">
+			<div class="row">
+				<!--首頁輪播圖-->
+				<div id="carousel-example-generic" class="carousel slide mixblend" data-ride="carousel">
+				  <!-- Indicators -->
+				  <ol class="carousel-indicators">
+					<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+					<li data-target="#carousel-example-generic" data-slide-to="1"></li>
+					<li data-target="#carousel-example-generic" data-slide-to="2"></li>
+					<li data-target="#carousel-example-generic" data-slide-to="3"></li>
+				  </ol>
+				  <!-- Wrapper for slides -->
+				  <div class="carousel-inner" role="listbox">
 
-		<div class="info-bottom">
-			<center>
-				<a href="https://www.facebook.com/kidscodingtw" target="_blank"><img src="html/images/facebook.png" width="36" alt=""></a>
-				<div class="fb-like" style="top: 5px" data-href="https://www.facebook.com/kidscodingtw/?fref=ts" data-layout="button_count" data-action="like" data-size="large" data-show-faces="false"></div>
-				<a href="http://www.kidscoding.tw" target="_blank"><img src="html/images/blog.png" width="36" alt=""></a><br>
-				<span style="color:white">&copy; 2017 由樂學科技股份有限公司維護網站<span>
-			</center>
+					<!-- youtube 影片語法 -->
+					<!-- <div class="video-container">
+						<iframe width="560" height="300" src="https://www.youtube.com/embed/ObQ2DheGOKA?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+					</div>
+					</div>
+					<div class="item">
+						<div class="video-container">
+							<iframe width="560" height="300" src="https://www.youtube.com/embed/qdKzSq_t8k8?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+						</div>
+					</div> -->
+
+
+					<div class="item active">
+						<a href="/classes">
+							<img src="/html/images/index/carousel-1.jpg" width="100%" alt="...">
+						</a>
+					</div>
+					<div class="item">
+						<img src="/html/images/index/carousel-2.jpg" width="100%" alt="...">
+					</div>
+					 <div class="item">
+						<img src="/html/images/index/carousel-3.jpg" width="100%" alt="...">
+					</div>
+					 <div class="item">
+						<img src="/html/images/index/carousel-4.jpg" width="100%" alt="...">
+					</div>
+				  </div>
+				  <!-- Controls -->
+				  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+					<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+					<span class="sr-only">Previous</span>
+				  </a>
+				  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+					<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					<span class="sr-only">Next</span>
+				  </a>
+				</div>
+			</div>
 		</div>
-	</div>
-	<!-- <div class="section" id="section1">
-		<br><br><br><br>
-		<center>
-			<h2 style="font-family:fonta">
-				Coding for Fun <br>
-				孩子學習「程式設計」的第一哩路 <br>
-				善用新世代探索的本性 <br>
-				快樂地學習程式語言 <br>
-				適合小學五年級以上 <br>
-				完全免費 <br>
-				<img src="/html/images/scratch.png" style="width:300px">
-			</h1>
-		</center>
-	</div>
-	<div class="section" id="section2">
-		<center>
-			<br><br><br>
-			<img src="/html/images/student_cup.png" style="border-radius:115px;background-color:red" alt="">
-			<br>
-			<img src="/html/images/teacher_cup.png" style="border-radius:115px;background-color:red" alt="">
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<img src="/html/images/parent_cup.png" style="border-radius:115px;background-color:red" alt="">
-		</center>
-	</div>
-</div> -->
+			<!--快樂學程式區塊-->
 
-{% endblock %}
-{% block script %}
-<!-- <script src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.9&appId=167727563701655"></script> -->
-<script id="facebook-jssdk" src="//connect.facebook.net/en_US/sdk.js"></script>
-<script>
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '1926987694209598',
-      cookie     : true,
-      xfbml      : true,
-      version    : 'v2.8'
-    });
-    FB.AppEvents.logPageView();   
-  };
-</script>
+
+			<div class="FunLearning_bg">
+				<div class="index_funlearning_center">
+					<img src="/html/images/index/fun_learning_center.png" alt="">
+				</div>
+			</div>
+
+
+			<!-- <div class="row">
+				<div class="col-xs-12">
+					<h1 class="h2 tc dimgray">快樂學程式</h1>
+				</div>
+
+				<div class="FunLearning_bg">
+					<div class="index_funlearning_center">
+						<img src="/html/images/index/fun_learning_center.png" alt="">
+					</div>
+				</div>
+			</div> -->
+
+			<!--樂學優勢區塊-->
+		<div class="container-fluid">
+			<div class="row advantage bp-4">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-4 col-sm-offset-0 col-xs-8 col-xs-offset-2">
+							<img src="/html/images/index/advantage-1-min.png" alt="">
+							<div class="advantagblock bp-4">
+								<h2>學生優勢</h2>
+								<p class="tp-2 rp-4">
+									<ul>
+										<li>可以按照我的步調學習並養成自學的好習慣</li>
+										<li>讓我一次就學會學寫程式而且英文也進步了</li>
+										<li>Coding for Fun教材讓我自信快樂學習程式</li>
+									</ul>
+								</p>
+							</div>
+						</div>
+						<div class="col-sm-4 col-sm-offset-0 col-xs-8 col-xs-offset-2">
+							<img src="/html/images/index/advantage-2-min.png" alt="">
+							<div class="advantagblock bp-4">
+								<h2 style="background-color: #93D500;">家長優勢</h2>
+								<p class="tp-2 rp-4">
+									<ul>
+										<li>讓我的孩子能按照自己的節奏學習，提高學習興趣並且增加自信心</li>
+										<li>透過探索和主動思考的非填鴨式教學，讓孩子擁有解決問題的能力</li>
+										<li>Coding for Fun培養孩子帶得走的程式自學力又能提高學英文動機</li>
+									</ul>
+								</p>
+							</div>
+						</div>
+						<div class="col-sm-4 col-sm-offset-0 col-xs-8 col-xs-offset-2">
+							<img src="/html/images/index/advantage-3-min.png" alt="">
+							<div class="advantagblock bp-4">
+								<h2 style="background-color: #F3801F;">教師優勢</h2>
+								<p class="tp-2 rp-4">
+									<ul>
+										<li>提供教學技巧與專業素養之認證培訓，滿足程式語言設計教學的師資需求</li>
+										<li>老師引導和鼓勵孩子勇敢嘗試，配合Coding for Fun教材增強程式自學力</li>
+										<li>Coding for Fun完整的基礎應用與進階的師資培訓是老師教學的最佳後盾</li>
+									</ul>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+			<!--三大學習程式系統區塊-->
+			<!-- <div class="row">
+				<img src="/html/images/index/banner1.jpg" width="100%" alt="">
+			</div> -->
+			<!-- <div class="LearningSystem">
+				<div class="LearningSystem_up_bg">
+					<img src="/html/images/index/LearningSystem_up.png">
+				</div>
+				<div class="LearningSystem_down_bg">
+					<img src="/html/images/index/LearningSystem_down.png">
+				</div>
+			</div> -->
+			<div class="LearningSystem">
+				<div class="LearningSystem_up_bg">
+					<div class="LearningSystem_up">
+						<img src="/html/images/index/LearningSystem_up.png">
+					</div>
+					<div class="LearningSystem_MD">
+						<img src="/html/images/index/LearningSystem_MDcs.png">
+						<img src="/html/images/index/LearningSystem_MDcp.png">
+						<img src="/html/images/index/LearningSystem_MDcp.png">
+					</div>
+				</div>
+
+				<div class="LearningSystem_down_bg">
+					<div class="LearningSystem_DO">
+						<img src="/html/images/index/LearningSystem_DOcs.png">
+						<img src="/html/images/index/LearningSystem_DOcp.png">
+						<img src="/html/images/index/LearningSystem_DOcu.png">
+					</div>
+				</div>
+			</div>
+
+		<div class="container-fluid">
+			<!--各班簡介課程區塊-->
+			<div class="container classup">
+				<div class="row classtop">
+					<div class="col-sm-4 class">
+						<img src="/html/images/index/scratch.png" width="80%">
+						<h1>基礎班</h1>
+						<ul>
+							<li>唯一使用翻轉教室教學</li>
+							<li>入手快，短時間就能學會並應用</li>
+							<li>運用動畫和遊戲提高學習意願與樂趣</li>
+						</ul>
+						<a href="scratchcs1.html">
+							<button type="button" class="btn btn-orange">課程細節</button>
+						</a>
+					</div>
+					<div class="col-sm-4 class">
+						<img src="/html/images/index/python.png" width="80%">
+						<h1>密集班</h1>
+						<ul>
+							<li>唯一使用翻轉教室教學模式</li>
+							<li>最實用，語法簡單而且易學易懂</li>
+							<li>美國頂尖大學常用的入門程式語言</li>
+						</ul>
+						<a href="pythonpc1.html">
+							<button type="button" class="btn btn-orange">課程細節</button>
+						</a>
+					</div>
+					<div class="col-sm-4 class">
+						<img src="/html/images/index/udacity.png" width="80%">
+						<h1>工作坊</h1>
+						<ul>
+							<li>讓學生擁有實用的技能，成為國際頂尖人才</li>
+							<li>根據學生個人特質及興趣，建議適合的課程</li>
+							<li>程式自主學習，老師從旁輔助學生克服英文障礙</li>
+						</ul>
+						<a href="udacity.html">
+							<button type="button" class="btn btn-orange">課程細節</button>
+						</a>
+					</div>
+				</div>
+			</div><!--class end-->
+
+			<!--程式logo區塊-->
+			<!-- <div class="row code">
+				<div class="col-xs-6 col-sm-3 tp-5 tm-5">
+					<figcaption>
+						<img src="/html/images/index/scratch2.png" alt="">
+					</figcaption>
+				</div>
+				<div class="col-xs-6 col-sm-3 tp-5 tm-5">
+					<figcaption>
+						<img src="/html/images/index/python.png" alt="">
+					</figcaption>
+				</div>
+				<div class="clearfix visible-xs-block"></div>
+				<div class="col-xs-6 col-sm-3">
+					<figcaption>
+						<img src="/html/images/index/html5.png" alt="">
+					</figcaption>
+				</div>
+				<div class="col-xs-6 col-sm-3">
+					<figcaption>
+						<img src="/html/images/index/css3.png" alt="">
+					</figcaption>
+				</div>
+			</div> -->
+		</div><!--container-fluid end-->
+
+		<div class="under_logo_bg">
+			<div class="under_logo">
+				<div class="under_logo1">
+					<img src="/html/images/index/scratch2.png" alt="">
+				</div>
+				<div class="under_logo2">
+					<img src="/html/images/index/python.png" alt="">
+				</div>
+				<div class="under_logo3">
+					<img src="/html/images/index/html5.png" alt="">
+				</div>
+				<div class="under_logo4">
+					<img src="/html/images/index/css3.png" alt="">
+				</div>
+			</div>
+		</div>
+	</main>
 {% endblock %}

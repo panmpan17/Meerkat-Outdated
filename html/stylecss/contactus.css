@@ -1,0 +1,17 @@
+@charset "utf-8";
+
+.conteact01 p, strong{
+	font-family: 'xingothic-tc';
+	font-weight: 300 !important;
+	font-size: 18px;
+  line-height: 1.5em !important;
+}
+.contect_name label{
+  font-weight: 300 !important;
+}
+.contect_mail label{
+  font-weight: 300 !important;
+}
+.contect_message label{
+  font-weight: 300 !important;
+}

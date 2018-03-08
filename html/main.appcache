@@ -1,19 +1,4 @@
 CACHE MANIFEST
-/html/font/1.ttf
-/html/images/scene_1.png
-/html/images/kidcodingicon.png
-/html/javascript/jquery.min.js
-/html/javascript/sha256.js
-/html/bootstrap/js/bootstrap.js
-/html/slick/slick.js
-/html/javascript/loginsignupframe.js
-/html/javascript/base.js
-/html/javascript/class.js
-/html/bootstrap/css/bootstrap.css
-/html/slick/slick.css
-/html/slick/slick-theme.css
-/html/css/theme.css
-http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css
 NETWORK:
 *
-#2.4.12
+#3-beta1
