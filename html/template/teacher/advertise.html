@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}教師廣告{% endblock %}
+{% block title %}授權名單{% endblock %}
 {% block css %}
 <style>
 	div.mynav-sidebar {
@@ -95,16 +95,20 @@
 		line-height: 30px;
 	}
 
-	#cards .card .info #name {
+	#cards .card .info .name {
 		color: rgb(48, 79, 79);
 		font-size: 20px;
 		font-weight: 900;
 	}
 
-	#cards .card .info #contact {
+	#cards .card .info .phone {
 		font-size: 13px;
 		font-weight: 100;
 		color: #AAA;
+	}
+
+	#cards .card .contact-link > * {
+		margin: 0px 5px;
 	}
 
 	#cards .card .describe {
@@ -136,8 +140,7 @@
 			</div>
 			<br>
 		</div>
-		<div id="cards" class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
-		</div>
+		<div id="cards" class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12"></div>
 	</div>
 </main>
 <br>
@@ -181,13 +184,23 @@
 		CARD_F = `<button class="card">
 			<img src="http://www.iconninja.com/files/373/611/612/person-user-profile-male-man-avatar-account-icon.svg" >
 			<div class="info">
-				<span id="name">{0}</span><br>
-				<span id="contact">{1}</span>
+				<span class="name">{0}</span><br>
+				<span class="phone">{1}</span>
+				<div class="contact-link">{2}</div>
 			</div>
 			<br>
-			<div class="describe">{2}</div>
+			<br>
+			<div class="describe">{3}</div>
 			<div class="btn btn-orange">更多</div>
 		</button>`
+
+		CONTACT_LINK_POPOVER_F = `<div type="button" class="btn btn-orange" data-container="body" data-toggle="popover" data-placement="bottom" data-content="{1}">
+			{0}
+		</div>`
+
+		CONTACT_LINK_HREF_F = `<a href="{1}" class="btn btn-orange" target="_blank">
+			{0}
+		</a>`
 
 		cities_teachers = {}
 		teachers_data = {}
@@ -201,7 +214,6 @@
 					method: "GET",
 					data: {"city": city_index},
 					success: function (msg) {
-						console.log(msg)
 						cities_teachers[city_index] = {}
 
 						$.each(msg, function (_, teacher) {
@@ -217,6 +229,7 @@
 									"name": teacher["name"],
 									"phone": teacher["phone"],
 									"summary": teacher["summary"],
+									"contact_link": teacher["contact_link"],
 									"adclass": {}
 								}
 							}
@@ -292,15 +305,44 @@
 			html = ""
 			$.each(Array.from(teachers_ids), function (_, t_id) {
 				t_data = teachers_data[t_id]
+				contact_link = ""
+				$.each(t_data["contact_link"], function (k, v) {
+					if (k == "Email") {
+						contact_link += format(
+							CONTACT_LINK_HREF_F,
+							k,
+							"mailto: " + v,
+							)
+					}
+					else {
+						if (v.startsWith("http://") || v.startsWith("https://")) {
+							contact_link += format(
+								CONTACT_LINK_HREF_F,
+								k,
+								v,
+								)
+						}
+						else {
+							contact_link += format(
+								CONTACT_LINK_POPOVER_F,
+								k,
+								v,
+								)
+						}
+					}
+				})
+
 				html += format(
 					CARD_F,
 					t_data["name"],
 					t_data["phone"],
+					contact_link,
 					t_data["summary"].replace(/\n/g, "<br>"),
 					)
 			})
 
-			$("#cards")[0].innerHTML = html
+			$("#cards")[0].innerHTML = html;
+			$('[data-toggle="popover"]').popover()
 		}
 
 		function summary_add_link (summary) {
@@ -321,16 +363,6 @@
 		}
 
 		$(document).ready(function () {
-			// html = ""
-			// $.each(cities, function (i, city) {
-			// 	html += format(
-			// 		`<li onclick="change_city('{0}', {1})">{0}</li>`,
-			// 		city,
-			// 		i,
-			// 		)
-			// })
-
-			// $("#cities")[0].innerHTML = html;
 			change_city(cities[0], -1);
 		})
 	</script>

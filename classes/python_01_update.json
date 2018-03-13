@@ -1,5 +1,5 @@
 {"description": "",
- "description-video": "",
+ "description-video": "http://storage.googleapis.com/coding4fun-class-video/python-01/description-video.mp4",
  "id": "python_01",
  "lessons": [
     {"title": "第一課 與 Python 相遇",
@@ -677,7 +677,7 @@
         "class_name": "5-1 什麼是function",
         "description": "",
         "video": "http://storage.googleapis.com/coding4fun-class-video/python-01/5-1.mp4"},
-       {"answer": "http://storage.googleapis.com/coding4fun-class-video/python-01/5-2-answer.mp4",
+       {"answer": "",
         "type": "video",
         "buttons": [],
         "class_name": "5-2 內建 functions",
@@ -833,7 +833,7 @@
         "class_name": "5-27 區域變數",
         "description": "",
         "video": "http://storage.googleapis.com/coding4fun-class-video/python-01/5-27.mp4"},
-       {"answer": "",
+       {"answer": "http://storage.googleapis.com/coding4fun-class-video/python-01/5-28-answer.mp4",
         "type": "video",
         "buttons": [],
         "class_name": "5-28 全域變數",
@@ -1350,7 +1350,7 @@
         "class_name": "9-6 range()",
         "description": "",
         "video": "http://storage.googleapis.com/coding4fun-class-video/python-01/9-6.mp4"},
-       {"answer": "http://storage.googleapis.com/coding4fun-class-video/python-01/9-7-answer.mp4",
+       {"answer": "",
         "type": "video",
         "buttons": [],
         "class_name": "9-7 小試身手-1",
@@ -1581,7 +1581,7 @@
     ]}
     ],
  "permission": "class",
- "subject": "Python 入門課程",
+ "subject": "Python 基礎課程",
  "summary": "從 Scratch 邁向 Python<br>以 Scratch 為基礎<br>請使用 Google Chrome 瀏覽器",
  "time": "10 堂課 (實體課程)",
  "style": {

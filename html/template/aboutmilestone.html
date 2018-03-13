@@ -1,9 +1,10 @@
 {% extends "base.html" %}
-{% block title %}Coding for Fun{% endblock %}
+{% block title %}樂學記事{% endblock %}
 {% block css %}
 	<link href="/html/stylecss/about.css" rel="stylesheet" type="text/css">
 {% endblock %}
 {% block content %}
+
 	<main class="milestone bm-5">
 		<div class="aboutnote_bg">
 			<div class="aboutnote">
@@ -20,22 +21,24 @@
 						<!-- Nav tabs -->
 						<ul class="nav nav-pills" role="tablist">
 							<li role="presentation" class="active">
-								<a href="#year2015" aria-controls="year2015" role="tab" data-toggle="tab">2012-2015</a>
-							</li>
-							<li role="presentation">
-								<a href="#year2016" aria-controls="year2016" role="tab" data-toggle="tab">2016</a>
+								<a href="#year2018" aria-controls="year2018" role="tab" data-toggle="tab">2018</a>
 							</li>
 							<li role="presentation">
 								<a href="#year2017" aria-controls="year2017" role="tab" data-toggle="tab">2017</a>
 							</li>
 							<li role="presentation">
-								<a href="#year2018" aria-controls="year2018" role="tab" data-toggle="tab">2018</a>
+								<a href="#year2016" aria-controls="year2016" role="tab" data-toggle="tab">2016</a>
+							</li>
+							<li role="presentation">
+								<a href="#year2015" aria-controls="year2015" role="tab" data-toggle="tab">2012-2015</a>
 							</li>
 						</ul>
 						<!-- Tab panes -->
 						<div class="tab-content">
-							<div role="tabpanel" class="tab-pane active" id="year2015">
+							<div role="tabpanel" class="tab-pane" id="year2015">
+								<div class="aboutmilestone_contect">
 									<h2 class="h4">2012-2015</h2>
+								</div>
 							</div>
 
 							<div role="tabpanel" class="tab-pane" id="year2016">
@@ -51,7 +54,7 @@
 
 								<div class="aboutmilestone_contect">
 									<h2 class="h4">2016年 7月</h2>
-									<p>推出第二代Python初級課程;「讓孩子快樂學程式」一書出版,三采文化。</p>
+									<p>推出第二代Python基礎課程;「讓孩子快樂學程式」一書出版,三采文化。</p>
 								</div>
 
 								<div class="aboutmilestone_contect">
@@ -71,15 +74,21 @@
 
 							</div>
 							<div role="tabpanel" class="tab-pane" id="year2017">
-								<h2 class="h4">2017</h2>
+								<div class="aboutmilestone_contect">
+									<h2 class="h4">2017</h2>
+								</div>
 							</div>
-							<div role="tabpanel" class="tab-pane" id="year2018">
-								<h2 class="h4">2018</h2>
+							<div role="tabpanel" class="tab-pane active" id="year2018">
+								<div class="aboutmilestone_contect">
+									<h2 class="h4">2018</h2>
+								</div>
 							</div>
 						</div>
 					</div>
+
 				</div>
 			</div>
 		</div><!--container-fluid end-->
 	</main>
+
 {% endblock %}

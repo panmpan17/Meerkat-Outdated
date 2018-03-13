@@ -1,0 +1,748 @@
+@charset "utf-8";
+/* CSS Document */
+a ,a:hover ,a:focus {
+	color:white;
+}
+.ourteam h1 {
+	margin-bottom: 0px;
+}
+/*區塊顏色*/
+.bg {
+	color: white;
+	border-radius: 10px;
+	border: 3px white solid;
+	margin: 20px auto;
+	padding: 0px 40px;
+}
+.bgword {
+	padding: 10px 30px 10px 30px;
+}
+.strongtop {
+	padding-top: 40px;
+}
+.bg hr {
+	margin-top: 0px;
+}
+.bg p {
+	line-height: 2em;
+}
+.bg1 {
+	background-color: rgb(26,171,165);
+}
+.bg2 {
+	background-color: rgb(153,198,23);
+}
+.bg3 {
+	background-color: rgb(73,74,167);
+}
+.bg4 {
+	background-color: rgb(239,130,1);
+}
+.bg5 {
+	background-color: rgb(26,171,165);
+}
+/*設定milestone切換頁css*/
+.milestone li a{
+	color:darkslategray;
+}
+.milestone .nav-pills>li{
+	background: linear-gradient(whitesmoke, lightgray);;
+}
+.milestone .nav-pills>li.active>a,.nav-pills>li.active>a:hover{
+	color:white;
+	background-color:darkslategray;
+}
+.milestone .nav>li>a:hover,.nav-pills>li.active>a:hover{
+	color:white;
+	background-color:darkslategray;
+}
+.tab-pane .h4 {
+	color:darkslategray;
+	font-weight:bolder;
+}
+
+.TeacherTraining_sign_up_bg{
+	background-image: url(../images/TeacherTraining/banner_content_bg.png);
+	clear: both;
+	background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.TeacherTraining_sign_up_bg::after{
+	display:table;
+	content: "";
+}
+.TeacherTraining_sign_up{
+	width: 1200px;
+	margin: 0 auto;
+	/* border-style: solid;
+	border-width: 2px; */
+}
+.TeacherTraining_sign_up_center{
+	height: 500px;
+}
+.TeacherTraining_sign_up_center img{
+	width: 60%;
+	float: left;
+	margin-top: 5%;
+	margin-left: 20%;
+}
+.TeacherTraining_sign_up_text{
+	position: absolute;
+	margin-left: 620px;
+	margin-top: -130px;
+}
+.TeacherTraining_sign_up_text a{
+	color: black;
+	font-family: 'xingothic-tc';
+	font-size: 28pt;
+	font-weight: 300;
+	line-height: 20pt;
+}
+.TeacherTraining_sign_up_button{
+	margin-left: 870px;
+	margin-top: -80px;
+	position: absolute;
+}
+.TeacherTraining_sign_up_button button{
+
+}
+.btn-whitesmoke {
+	background-color: whitesmoke;
+}
+.btn-orange {
+	color: white;
+	background-color: rgb(255,131,0);
+	border-color: rgb(255,131,0);
+}
+/*課程區塊按鈕滑鼠滑入樣式*/
+.btn:hover {
+	color: white;
+	background-color: rgb(149,214,0);
+	border-color: rgb(149,214,0);
+}
+
+
+
+.aboutnote_bg{
+	background-color: #CEDE00;
+	clear: both;
+	height: 270px;
+}
+.aboutnote_bg::after{
+	clear: both;
+	content: '';
+	display: block;
+}
+.aboutnote{
+	margin: 0 auto;
+	width: 1200px;
+	padding-left: 5%;
+  padding-right: 5%;
+}
+.aboutnote_content{}
+.aboutnote_content img{
+	float:left;
+	width: 100%;
+	margin-bottom: 5%;
+}
+
+
+.aboutmedia_bg{
+	background-color: #D8D1C9;
+	height: 270px;
+}
+.aboutmedia_bg::after{
+	clear: both;
+	content: '';
+	display: block;
+}
+.aboutmedia{
+	margin: 0 auto;
+	width: 1200px;
+	padding-left: 5%;
+  padding-right: 5%;
+}
+.aboutmedia_left{}
+.aboutmedia_left img{
+	width: 30%;
+	float: left;
+	margin-top: 6%;
+	margin-left: 10%;
+	margin-bottom: 4%;
+}
+.aboutmedia_right{}
+.aboutmedia_right img{
+	width: 35%;
+  margin-left: 15%;
+  margin-top: 6%;
+}
+.aboutdream_contect{
+	margin-bottom: 6em;
+}
+
+.aboutdream_contect p{
+	font-size: 18px !important;
+	line-height: 2em !important;
+	font-weight: 300 !important;
+  margin-bottom: 1em;
+}
+.aboutdream_contect h2{
+	color: #002F3B;
+	font-size: 24px !important;
+	line-height: 2em !important;
+	margin-bottom: 0em !important;
+	font-family: 'xingothic-tc';
+	font-weight: 600 !important;
+}
+.aboutdream_contect a{
+	font-size: 18px !important;
+	line-height: 2em !important;
+	margin-bottom: 0.5em !important;
+	font-family: 'xingothic-tc';
+	font-weight: 500 !important;
+	color: #FF8300;
+}
+.aboutmilestone_contect{
+	margin-bottom: 40px;
+}
+.aboutmilestone_contect h1, h2{
+  margin-bottom: 1.5em !important;
+	font-family: 'xingothic-tc';
+	font-weight: 500 !important;
+}
+.aboutmilestone_contect h2{
+	color: rgb(255, 147, 0) !important;
+}
+.aboutmilestone_contect h1{
+	text-align: left;
+}
+.aboutmilestone_contect P{
+	font-family: 'xingothic-tc';
+	font-weight: 500 !important;
+	font-size: 14px !important;
+	line-height: 1.5em !important;
+}
+.nav {
+    padding-left: 0 ;
+    /* margin-bottom: 5% !important; */
+    list-style: none;
+}
+.aboutmilestone_border{
+	margin: 0 5%;
+}
+.outteam_Introduction{}
+.outteam_Introduction p{
+	font-weight: 300 !important;
+}
+.outteam_Introduction a{
+	font-weight: 500 !important;
+}
+.outteam_Introduction strong{
+	font-weight: 300 !important;
+}
+.outteam_Introduction h1{
+  margin-top: 35px !important;
+}
+.aboutmedia_contect{
+	margin-bottom: 40px;
+}
+.aboutmedia_contect h2{
+	font-weight: 700 !important;
+}
+.aboutmedia_contect h1{
+	font-weight: 500 !important;
+}
+.aboutmedia_contect p{
+	font-weight: 300 !important;
+	font-size: 16px;
+	line-height: 1.5em !important;
+  padding-right: 40px;
+}
+.aboutmedia_contect a{
+	font-weight: 700 !important;
+	font-size: 18px;
+  color: darkslategray;
+}
+.top_member2{
+	display: none;
+}
+.top_member2 img{
+	visibility: hidden;
+}
+.top_member4{
+	display:none;
+}
+.top_member4 img{
+	visibility: hidden;
+}
+.down_member2{
+	display:block;
+}
+.down_member2 img{
+	visibility: visible;
+}
+.down_member4{
+	display: block;
+}
+.down_member4 img{
+	visibility: visible;
+}
+.class_map{
+	position:relative;
+  margin-top: 30px;
+}
+.class_map img{
+  width: 550px;
+}
+.class_map_supplement{
+	position: absolute;
+	margin-top: -520px;
+	margin-left: 450px;
+}
+.class_map_supplement img{}
+	
+.TeacherTraining_sign_up_text_02 {
+	display: none;
+}
+.TeacherTraining_sign_up_button_02 {
+	display: none;
+}
+
+@media screen and (min-width: 960px) and (max-width: 1199px){
+	.aboutdreambanner{
+		width: 960px;
+	}
+	.aboutnote_bg{
+		background-color: #CEDE00;
+		clear: both;
+		height: 220px;
+	}
+	.aboutnote{
+		width: 960px;
+	}
+	.aboutmedia_bg{
+		background-color: #D8D1C9;
+		height: 210px;
+	}
+	.aboutmedia{
+		width: 960px;
+	}
+	.TeacherTraining_sign_up {
+    width: 960px;
+    margin: 0 auto;
+	}
+	.TeacherTraining_sign_up_center {
+    height: 400px;
+	}
+	.TeacherTraining_sign_up_center img {
+	    width: 55%;
+	    float: left;
+	    margin-top: 7%;
+	    margin-left: 20%;
+	}
+	.TeacherTraining_sign_up_text {
+    position: absolute;
+    margin-left: 470px;
+    margin-top: -130px;
+	}
+	.TeacherTraining_sign_up_button {
+    margin-left: 720px;
+    margin-top: -80px;
+    position: absolute;
+	}
+	.TeacherTraining_sign_up_text_02 {
+		display: none;
+	}
+	.TeacherTraining_sign_up_button_02 {
+		display: none;
+	}
+	.class_map img {
+    width: 500px;
+	}
+	.class_map_supplement {
+    position: absolute;
+    margin-top: -480px;
+    margin-left: 310px;
+	}
+	.class_map_supplement img {
+    width: 200px;
+	}
+}
+@media screen and (min-width: 768px) and (max-width: 959px){
+	.aboutdreambanner{
+		width: 768px;
+	}
+	.aboutnote_bg{
+		background-color: #CEDE00;
+		clear: both;
+		height: 180px;
+	}
+	.aboutnote{
+		width: 768px;
+	}
+	.aboutmedia_bg{
+		background-color: #D8D1C9;
+		height: 190px;
+	}
+	.aboutmedia{
+		width: 768px;
+	}
+	.aboutmedia_left img{
+		width: 35%;
+    float: left;
+    margin-top: 6%;
+    margin-left: 5%;
+    margin-bottom: 4%;
+	}
+	.aboutmedia_right img{
+		width: 40%;
+    margin-left: 15%;
+    margin-top: 6%;
+	}
+	.TeacherTraining_sign_up {
+    width: 768px;
+    margin: 0 auto;
+	}
+	.TeacherTraining_sign_up_center {
+    height: 400px;
+	}
+	.TeacherTraining_sign_up_center img {
+    width: 65%;
+    float: left;
+    margin-top: 5%;
+    margin-left: 18%;
+	}
+	.TeacherTraining_sign_up_text {
+		display: none;
+	}
+	.TeacherTraining_sign_up_button{
+		display: none;
+	}
+	.TeacherTraining_sign_up_text_02 {
+		display: block;
+	}
+	.TeacherTraining_sign_up_button_02{
+		display: block;
+	}
+	.class_map img {
+    width: 450px;
+	}
+	.class_map_supplement {
+	    position: relative;
+	    margin-top: 40px;
+	    margin-left: 0px;
+	}
+	.class_map_supplement img {
+    width: 180px;
+	}
+}
+@media screen and (min-width: 480px) and (max-width: 767px){
+	.aboutdreambanner{
+		width: 480px;
+	}
+	.tr {
+		text-align: left;
+	}
+	.strongtop {
+		padding-top: 10px;
+	}
+	.aboutnote_bg{
+		background-color: #CEDE00;
+		clear: both;
+		height: 100px;
+	}
+	.aboutnote{
+		width: 480px;
+	}
+	.aboutnote_content img{
+		float: left;
+		width: 100%;
+		margin-bottom: 8%;
+	}
+	.aboutmedia_bg{
+		background-color: #D8D1C9;
+		height: 110px;
+	}
+	.aboutmedia{
+		width: 480px;
+	}
+	.aboutmedia_left img{
+		width: 35%;
+		float: left;
+		margin-top: 6%;
+		margin-left: 5%;
+		margin-bottom: 4%;
+	}
+	.aboutmedia_right img{
+		width: 40%;
+		margin-left: 15%;
+		margin-top: 6%;
+	}
+	.aboutmedia_contect p{
+	  padding-right: 0px;
+	}
+	.aboutmedia_contect h1{
+		text-align: left;
+	}
+	.TeacherTraining_sign_up {
+    width: 480px;
+    margin: 0 auto;
+	}
+	.TeacherTraining_sign_up_center {
+    height: 200px;
+	}
+	.TeacherTraining_sign_up_center img {
+    width: 75%;
+    float: left;
+    margin-top: 2%;
+    margin-left: 15%;
+    margin-bottom: 40px;
+	}
+	.TeacherTraining_sign_up_text {
+		display: none;
+	}
+	.TeacherTraining_sign_up_button{
+		display: none;
+	}
+	.TeacherTraining_sign_up_text_02 {
+		display: block;
+	}
+	.TeacherTraining_sign_up_button_02{
+		display: block;
+	}
+	.class_map img {
+    width: 350px;
+	}
+	.class_map_supplement {
+	    position: relative;
+	    margin-top: 40px;
+	    margin-left: 0px;
+	}
+	.class_map_supplement img {
+    width: 180px;
+	}
+	.aboutdream_contect h2 {
+		line-height: 1.8em !important;
+	}
+}
+@media screen and (min-width: 390px) and (max-width: 479px){
+	.aboutdreambanner{
+		width: 390px;
+	}
+	.aboutnote_bg{
+		background-color: #CEDE00;
+		clear: both;
+		height: 80px;
+	}
+	.aboutnote{
+		width: 390px;
+	}
+	.aboutnote_content img{
+		float: left;
+		width: 100%;
+		margin-bottom: 8%;
+	}
+	.aboutmedia_bg{
+		background-color: #D8D1C9;
+		height: 120px;
+	}
+	.aboutmedia{
+		width: 390px;
+	}
+	.aboutmedia_left img{
+		width: 35%;
+		float: left;
+		margin-top: 6%;
+		margin-left: 5%;
+		margin-bottom: 4%;
+	}
+	.aboutmedia_right img{
+		width: 40%;
+		margin-left: 15%;
+		margin-top: 6%;
+	}
+	.aboutmedia_contect p{
+	  padding-right: 0px;
+	}
+	.aboutmedia_contect h1{
+		text-align: left;
+	}
+
+	.top_member2{
+		display:block;
+	}
+	.top_member2 img{
+		visibility: visible;
+	}
+	.top_member4{
+		display:block;
+	}
+	.top_member4 img{
+		visibility: visible;
+	}
+	.down_member2{
+		display:none;
+	}
+	.down_member2 img{
+		visibility: hidden;
+	}
+	.down_member4{
+		display:none;
+	}
+	.down_member4 img{
+		visibility: hidden;
+	}
+	.TeacherTraining_sign_up {
+		width: 390px;
+		margin: 0 auto;
+	}
+	.TeacherTraining_sign_up_center {
+    height: 200px;
+	}
+	.TeacherTraining_sign_up_center img {
+    width: 75%;
+    float: left;
+    margin-top: 2%;
+    margin-left: 15%;
+    margin-bottom: 40px;
+	}
+	.TeacherTraining_sign_up_text {
+		display: none;
+	}
+	.TeacherTraining_sign_up_button{
+		display: none;
+	}
+	.TeacherTraining_sign_up_text_02 {
+		display: block;
+	}
+	.TeacherTraining_sign_up_text_02 h1{
+		font-size: 30px;
+	}
+	.TeacherTraining_sign_up_button_02{
+		display: block;
+	}
+	.class_map img {
+		width: 300px;
+	}
+	.class_map_supplement {
+			position: relative;
+			margin-top: 40px;
+			margin-left: 0px;
+	}
+	.class_map_supplement img {
+		width: 150px;
+	}
+	.aboutdream_contect h2 {
+		line-height: 1.5em !important;
+		font-size: 20px;
+	}
+}
+@media screen and (min-width: 350px) and (max-width: 389px){
+	.aboutdreambanner{
+		width: 350px;
+	}
+	.aboutnote_bg{
+		background-color: #CEDE00;
+		clear: both;
+		height: 80px;
+	}
+	.aboutnote{
+		width: 350px;
+	}
+	.aboutnote_content img{
+		float: left;
+		width: 100%;
+		margin-bottom: 8%;
+	}
+	.aboutmedia_bg{
+		background-color: #D8D1C9;
+		height: 90px;
+	}
+	.aboutmedia{
+		width: 350px;
+	}
+	.aboutmedia_left img{
+		width: 35%;
+		float: left;
+		margin-top: 6%;
+		margin-left: 5%;
+		margin-bottom: 4%;
+	}
+	.aboutmedia_right img{
+		width: 40%;
+		margin-left: 15%;
+		margin-top: 6%;
+	}
+	.aboutmedia_contect p{
+	  padding-right: 0px;
+	}
+
+		.top_member2{
+			display:block;
+		}
+		.top_member2 img{
+			visibility: visible;
+		}
+		.top_member4{
+			display:block;
+		}
+		.top_member4 img{
+			visibility: visible;
+		}
+		.down_member2{
+			display:none;
+		}
+		.down_member2 img{
+			visibility: hidden;
+		}
+		.down_member4{
+			display:none;
+		}
+		.down_member4 img{
+			visibility: hidden;
+		}
+		.TeacherTraining_sign_up {
+			width: 350px;
+			margin: 0 auto;
+		}
+		.TeacherTraining_sign_up_center {
+	    height: 200px;
+		}
+		.TeacherTraining_sign_up_center img {
+			width: 85%;
+	    float: left;
+	    margin-top: 6%;
+	    margin-left: 5%;
+	    margin-bottom: 40px;
+		}
+		.TeacherTraining_sign_up_text {
+			display: none;
+		}
+		.TeacherTraining_sign_up_button{
+			display: none;
+		}
+		.TeacherTraining_sign_up_text_02 {
+			display: block;
+		}
+		.TeacherTraining_sign_up_text_02 h1{
+			font-size: 30px;
+		}
+		.TeacherTraining_sign_up_button_02{
+			display: block;
+		}
+		.class_map img {
+			width: 300px;
+		}
+		.class_map_supplement {
+				position: relative;
+				margin-top: 40px;
+				margin-left: 0px;
+		}
+		.class_map_supplement img {
+			width: 150px;
+		}
+		.aboutdream_contect h2 {
+			line-height: 1.5em !important;
+			font-size: 20px;
+		}
+}

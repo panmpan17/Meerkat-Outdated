@@ -1362,13 +1362,23 @@ class TeacherRestView(View):
             if "teacher" in data:
                 teacher = self.check_login_teacher(data)
 
-                self.check_key(data, ("summary", ))
+                if "summary" in data:
+                    stmt = teachers.update().where(
+                        teachers.c.id==teacher["id"]).values(
+                        summary=data["summary"])
+                    conn.execute(stmt)
+                    return {"success": True}
+                elif "contact_link" in data:
+                    if not isinstance(data["contact_link"], dict):
+                        raise cherrypy.HTTPError(400)
 
-                stmt = teachers.update().where(
-                    teachers.c.id==teacher["id"]).values(
-                    summary=data["summary"])
-                conn.execute(stmt)
-                return {"success": True}
+                    stmt = teachers.update().where(
+                        teachers.c.id==teacher["id"]).values(
+                        contact_link=data["contact_link"])
+                    conn.execute(stmt)
+                    return {"success": True}
+                else:
+                    raise cherrypy.HTTPError(400)
             else:
                 user = self.check_login_u(data)
                 if not user["admin"]:
@@ -1571,6 +1581,7 @@ class AdAreaRestView(View):
                         teachers.c.id,
                         teachers.c.phone,
                         teachers.c.summary,
+                        teachers.c.contact_link,
 
                         adareas.c.city,
                         adareas.c.town,
@@ -1590,6 +1601,7 @@ class AdAreaRestView(View):
                         teachers.c.id,
                         teachers.c.phone,
                         teachers.c.summary,
+                        teachers.c.contact_link,
 
                         adareas.c.city,
                         adareas.c.town,

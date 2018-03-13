@@ -1,40 +1,39 @@
 {% extends "base.html" %}
-{% block title %}Coding for Fun{% endblock %}
+{% block title %}實證{% endblock %}
 {% block css %}
 <link href="/html/stylecss/class.css" rel="stylesheet" type="text/css">
 {% endblock %}
 {% block content %}
-	<main class="milestone bm-5">
-		<div class="class8BG">
-			<div class="class1">
-				<!-- <img src="/html
-					/images/class/scratch-sm-min.png" alt=""> -->
-				<div class="class1_img08">
-					<img src="/html
-					/images/class/classprove_min.png" alt="">
-				</div>
-			</div>
-		</div>
-        <div class="container">
-        	<div class="row">
-            	<div class="col-xs-12 col-sm-8 col-sm-offset-2 youtube">
-                	<div class="embed-responsive embed-responsive-16by9">
-					  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/nKIu9yen5nc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-					</div>
+
+    <main class="milestone bm-5">
+        <div class="class8BG">
+            <div class="class1">
+                <!-- <img src="/html/images/class/scratch-sm-min.png" alt=""> -->
+                <div class="class1_img08">
+                    <img src="/html/images/class/classprove_min.png" alt="">
                 </div>
             </div>
-			<div class="row">
-				<div class="col-xs-8 col-xs-offset-2">
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-8 col-sm-offset-2 youtube">
+                    <div class="embed-responsive embed-responsive-16by9">
+                      <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/nKIu9yen5nc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-8 col-xs-offset-2">
                       <!-- Nav tabs -->
                       <ul class="nav nav-pills" role="tablist">
                         <li role="presentation" class="active">
-                        	<a href="#studentprove" aria-controls="studentprove" role="tab" data-toggle="tab">學生</a>
+                            <a href="#studentprove" aria-controls="studentprove" role="tab" data-toggle="tab">學生</a>
                         </li>
                         <li role="presentation">
-                        	<a href="#parentsprove" aria-controls="parentsprove" role="tab" data-toggle="tab">家長</a>
+                            <a href="#parentsprove" aria-controls="parentsprove" role="tab" data-toggle="tab">家長</a>
                         </li>
                         <li role="presentation">
-                        	<a href="#teacherprove" aria-controls="teacherprove" role="tab" data-toggle="tab">老師</a>
+                            <a href="#teacherprove" aria-controls="teacherprove" role="tab" data-toggle="tab">老師</a>
                         </li>
                       </ul>
                 </div>
@@ -45,11 +44,13 @@
                     <div class="row">
                         <div class="col-sm-4 provediv">
                             <button type="button prove" class="btn-whitesmoke" data-toggle="modal" data-target="#studentprove1">
-																	<div class="classprove_contect">
-																		<h2 class="h4">媽媽：俞曉琳a</h2>
-	                                  <p class="orange">10/2017</p>
-	                                  <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織...</p>
-																	</div>
+                                                                    <div class="classprove_contect">
+                                                                        <h2 class="h4">媽媽：俞曉琳a</h2>
+                                                                        <div class="classprove_mom">
+                                                                            <p class="orange">10/2017</p>
+                                                                        </div>
+                                      <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織...</p>
+                                                                    </div>
                              </button>
                              <!-- Modal -->
                             <div class="modal fade" id="studentprove1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -57,22 +58,24 @@
                                 <div class="modal-content">
                                   <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-																			<span aria-hidden="true">&Chi;</span>
-																		</button>
+                                                                            <span aria-hidden="true">&Chi;</span>
+                                                                        </button>
                                   </div>
                                   <div class="modal-body">
-									  <div class="row">
-										  <div class="col-sm-12">
-											  <div class="layoutprove">
-													<div class="classprove_contect">
-											  		<h2 class="h4">媽媽：俞曉琳a</h2>
+                                      <div class="row">
+                                          <div class="col-sm-12">
+                                              <div class="layoutprove">
+                                                    <div class="classprove_contect">
+                                                    <h2 class="h4">媽媽：俞曉琳a</h2>
 
-														<p class="orange">10/2017</p>
-														<p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
-													</div>
-											  </div>
-										  </div>
-									  </div>
+                                                        <div class="classprove_mom">
+                                                            <p class="orange">10/2017</p>
+                                                        </div>
+                                                        <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
+                                                    </div>
+                                              </div>
+                                          </div>
+                                      </div>
                                   </div>
                                 </div>
                               </div>
@@ -80,11 +83,13 @@
                         </div>
                         <div class="col-sm-4 provediv">
                             <button type="button prove" class="btn-whitesmoke" data-toggle="modal" data-target="#studentprove2">
-															<div class="classprove_contect">
-																<h2 class="h4">媽媽：俞曉琳b</h2>
-																<p class="orange">10/2017</p>
-																<p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織...</p>
-															</div>
+                                                            <div class="classprove_contect">
+                                                                <h2 class="h4">媽媽：俞曉琳b</h2>
+                                                                <div class="classprove_mom">
+                                                                    <p class="orange">10/2017</p>
+                                                                </div>
+                                                                <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織...</p>
+                                                            </div>
                              </button>
                              <!-- Modal -->
                             <div class="modal fade" id="studentprove2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -92,21 +97,23 @@
                                 <div class="modal-content">
                                   <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&Chi;</span>
-									</button>
+                                        <span aria-hidden="true">&Chi;</span>
+                                    </button>
                                   </div>
                                   <div class="modal-body">
-									  <div class="row">
-										  <div class="col-sm-12">
-											  <div class="layoutprove">
-													<div class="classprove_contect">
-														<h2 class="h4">媽媽：俞曉琳b</h2>
-														<p class="orange">10/2017</p>
-														<p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
-													</div>
-											  </div>
-										  </div>
-									  </div>
+                                      <div class="row">
+                                          <div class="col-sm-12">
+                                              <div class="layoutprove">
+                                                    <div class="classprove_contect">
+                                                        <h2 class="h4">媽媽：俞曉琳b</h2>
+                                                        <div class="classprove_mom">
+                                                            <p class="orange">10/2017</p>
+                                                        </div>
+                                                        <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
+                                                    </div>
+                                              </div>
+                                          </div>
+                                      </div>
                                   </div>
                                 </div>
                               </div>
@@ -114,11 +121,13 @@
                         </div>
                         <div class="col-sm-4 provediv">
                             <button type="button prove" class="btn-whitesmoke" data-toggle="modal" data-target="#studentprove3">
-																<div class="classprove_contect">
-																	<h2 class="h4">媽媽：俞曉琳c</h2>
-                                  <p class="orange">10/2017</p>
+                                                                <div class="classprove_contect">
+                                                                    <h2 class="h4">媽媽：俞曉琳c</h2>
+                                                                    <div class="classprove_mom">
+                                                                        <p class="orange">10/2017</p>
+                                                                    </div>
                                   <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織...</p>
-																</div>
+                                                                </div>
                              </button>
                              <!-- Modal -->
                             <div class="modal fade" id="studentprove3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -126,35 +135,39 @@
                                 <div class="modal-content">
                                   <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&Chi;</span>
-									</button>
+                                        <span aria-hidden="true">&Chi;</span>
+                                    </button>
                                   </div>
                                   <div class="modal-body">
-									  <div class="row">
-										  <div class="col-sm-12">
-											  <div class="layoutprove">
-													<div class="classprove_contect">
-														<h2 class="h4">媽媽：俞曉琳c</h2>
-														<p class="orange">10/2017</p>
-														<p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
-													</div>
-											  </div>
-										  </div>
-									  </div>
+                                      <div class="row">
+                                          <div class="col-sm-12">
+                                              <div class="layoutprove">
+                                                    <div class="classprove_contect">
+                                                        <h2 class="h4">媽媽：俞曉琳c</h2>
+                                                        <div class="classprove_mom">
+                                                            <p class="orange">10/2017</p>
+                                                        </div>
+                                                        <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
+                                                    </div>
+                                              </div>
+                                          </div>
+                                      </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
                         </div>
                     </div><!--第一列row end-->
-					<div class="row">
+                    <div class="row">
                         <div class="col-sm-4 provediv">
                             <button type="button prove" class="btn-whitesmoke" data-toggle="modal" data-target="#studentprove4">
-																<div class="classprove_contect">
-																	<h2 class="h4">媽媽：俞曉琳d</h2>
-                                  <p class="orange">10/2017</p>
+                                                                <div class="classprove_contect">
+                                                                    <h2 class="h4">媽媽：俞曉琳d</h2>
+                                                                    <div class="classprove_mom">
+                                                                        <p class="orange">10/2017</p>
+                                                                    </div>
                                   <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織...</p>
-																</div>
+                                                                </div>
                              </button>
                              <!-- Modal -->
                             <div class="modal fade" id="studentprove4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -162,21 +175,23 @@
                                 <div class="modal-content">
                                   <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&Chi;</span>
-									</button>
+                                        <span aria-hidden="true">&Chi;</span>
+                                    </button>
                                   </div>
                                   <div class="modal-body">
-									  <div class="row">
-										  <div class="col-sm-12">
-											  <div class="layoutprove">
-													<div class="">
-														<h2 class="h4">媽媽：俞曉琳d</h2>
-														<p class="orange">10/2017</p>
-														<p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
-													</div>
-											  </div>
-										  </div>
-									  </div>
+                                      <div class="row">
+                                          <div class="col-sm-12">
+                                              <div class="layoutprove">
+                                                    <div class="">
+                                                        <h2 class="h4">媽媽：俞曉琳d</h2>
+                                                        <div class="classprove_mom">
+                                                            <p class="orange">10/2017</p>
+                                                        </div>
+                                                        <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
+                                                    </div>
+                                              </div>
+                                          </div>
+                                      </div>
                                   </div>
                                 </div>
                               </div>
@@ -184,11 +199,13 @@
                         </div>
                         <div class="col-sm-4 provediv">
                             <button type="button prove" class="btn-whitesmoke" data-toggle="modal" data-target="#studentprove5">
-																<div class="classprove_contect">
-																	<h2 class="h4">媽媽：俞曉琳e</h2>
-                                  <p class="orange">10/2017</p>
+                                                                <div class="classprove_contect">
+                                                                    <h2 class="h4">媽媽：俞曉琳e</h2>
+                                                                    <div class="classprove_mom">
+                                                                        <p class="orange">10/2017</p>
+                                                                    </div>
                                   <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織...</p>
-																</div>
+                                                                </div>
                              </button>
                              <!-- Modal -->
                             <div class="modal fade" id="studentprove5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -196,21 +213,23 @@
                                 <div class="modal-content">
                                   <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&Chi;</span>
-									</button>
+                                        <span aria-hidden="true">&Chi;</span>
+                                    </button>
                                   </div>
                                   <div class="modal-body">
-									  <div class="row">
-										  <div class="col-sm-12">
-											  <div class="layoutprove">
-													<div class="classprove_contect">
-														<h2 class="h4">媽媽：俞曉琳e</h2>
-														<p class="orange">10/2017</p>
-														<p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
-													</div>
-											  </div>
-										  </div>
-									  </div>
+                                      <div class="row">
+                                          <div class="col-sm-12">
+                                              <div class="layoutprove">
+                                                    <div class="classprove_contect">
+                                                        <h2 class="h4">媽媽：俞曉琳e</h2>
+                                                        <div class="classprove_mom">
+                                                            <p class="orange">10/2017</p>
+                                                        </div>
+                                                        <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
+                                                    </div>
+                                              </div>
+                                          </div>
+                                      </div>
                                   </div>
                                 </div>
                               </div>
@@ -218,11 +237,13 @@
                         </div>
                         <div class="col-sm-4 provediv">
                             <button type="button prove" class="btn-whitesmoke" data-toggle="modal" data-target="#studentprove6">
-																<div class="classprove_contect">
-																	<h2 class="h4">媽媽：俞曉琳f</h2>
-                                  <p class="orange">10/2017</p>
+                                                                <div class="classprove_contect">
+                                                                    <h2 class="h4">媽媽：俞曉琳f</h2>
+                                                                    <div class="classprove_mom">
+                                                                        <p class="orange">10/2017</p>
+                                                                    </div>
                                   <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織...</p>
-																</div>
+                                                                </div>
                              </button>
                              <!-- Modal -->
                             <div class="modal fade" id="studentprove6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -230,35 +251,39 @@
                                 <div class="modal-content">
                                   <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&Chi;</span>
-									</button>
+                                        <span aria-hidden="true">&Chi;</span>
+                                    </button>
                                   </div>
                                   <div class="modal-body">
-									  <div class="row">
-										  <div class="col-sm-12">
-											  <div class="layoutprove">
-													<div class="classprove_contect">
-														<h2 class="h4">媽媽：俞曉琳f</h2>
-														<p class="orange">10/2017</p>
-														<p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
-													</div>
-											  </div>
-										  </div>
-									  </div>
+                                      <div class="row">
+                                          <div class="col-sm-12">
+                                              <div class="layoutprove">
+                                                    <div class="classprove_contect">
+                                                        <h2 class="h4">媽媽：俞曉琳f</h2>
+                                                        <div class="classprove_mom">
+                                                            <p class="orange">10/2017</p>
+                                                        </div>
+                                                        <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
+                                                    </div>
+                                              </div>
+                                          </div>
+                                      </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
                         </div>
                     </div><!--第二列row end-->
-                   	<div class="row">
+                    <div class="row">
                         <div class="col-sm-4 provediv">
                             <button type="button prove" class="btn-whitesmoke" data-toggle="modal" data-target="#studentprove7">
-																<div class="classprove_contect">
-																	<h2 class="h4">媽媽：俞曉琳g</h2>
-                                  <p class="orange">10/2017</p>
+                                                                <div class="classprove_contect">
+                                                                    <h2 class="h4">媽媽：俞曉琳g</h2>
+                                                                    <div class="classprove_mom">
+                                                                        <p class="orange">10/2017</p>
+                                                                    </div>
                                   <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織...</p>
-																</div>
+                                                                </div>
                              </button>
                              <!-- Modal -->
                             <div class="modal fade" id="studentprove7" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -266,21 +291,23 @@
                                 <div class="modal-content">
                                   <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&Chi;</span>
-									</button>
+                                        <span aria-hidden="true">&Chi;</span>
+                                    </button>
                                   </div>
                                   <div class="modal-body">
-									  <div class="row">
-										  <div class="col-sm-12">
-											  <div class="layoutprove">
-													<div class="classprove_contect">
-														<h2 class="h4">媽媽：俞曉琳g</h2>
-														<p class="orange">10/2017</p>
-														<p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
-													</div>
-											  </div>
-										  </div>
-									  </div>
+                                      <div class="row">
+                                          <div class="col-sm-12">
+                                              <div class="layoutprove">
+                                                    <div class="classprove_contect">
+                                                        <h2 class="h4">媽媽：俞曉琳g</h2>
+                                                        <div class="classprove_mom">
+                                                            <p class="orange">10/2017</p>
+                                                        </div>
+                                                        <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
+                                                    </div>
+                                              </div>
+                                          </div>
+                                      </div>
                                   </div>
                                 </div>
                               </div>
@@ -288,11 +315,13 @@
                         </div>
                         <div class="col-sm-4 provediv">
                             <button type="button prove" class="btn-whitesmoke" data-toggle="modal" data-target="#studentprove8">
-																<div class="classprove_contect">
-																	<h2 class="h4">媽媽：俞曉琳h</h2>
-                                  <p class="orange">10/2017</p>
+                                                                <div class="classprove_contect">
+                                                                    <h2 class="h4">媽媽：俞曉琳h</h2>
+                                                                    <div class="classprove_mom">
+                                                                        <p class="orange">10/2017</p>
+                                                                    </div>
                                   <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織...</p>
-																</div>
+                                                                </div>
                              </button>
                              <!-- Modal -->
                             <div class="modal fade" id="studentprove8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -300,21 +329,23 @@
                                 <div class="modal-content">
                                   <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&Chi;</span>
-									</button>
+                                        <span aria-hidden="true">&Chi;</span>
+                                    </button>
                                   </div>
                                   <div class="modal-body">
-									  <div class="row">
-										  <div class="col-sm-12">
-											  <div class="layoutprove">
-													<div class="classprove_contect">
-														<h2 class="h4">媽媽：俞曉琳h</h2>
-														<p class="orange">10/2017</p>
-														<p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
-													</div>
-											  </div>
-										  </div>
-									  </div>
+                                      <div class="row">
+                                          <div class="col-sm-12">
+                                              <div class="layoutprove">
+                                                    <div class="classprove_contect">
+                                                        <h2 class="h4">媽媽：俞曉琳h</h2>
+                                                        <div class="classprove_mom">
+                                                            <p class="orange">10/2017</p>
+                                                        </div>
+                                                        <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
+                                                    </div>
+                                              </div>
+                                          </div>
+                                      </div>
                                   </div>
                                 </div>
                               </div>
@@ -322,11 +353,13 @@
                         </div>
                         <div class="col-sm-4 provediv">
                             <button type="button prove" class="btn-whitesmoke" data-toggle="modal" data-target="#studentprove9">
-																<div class="classprove_contect">
-																	<h2 class="h4">媽媽：俞曉琳i</h2>
-                                  <p class="orange">10/2017</p>
+                                                                <div class="classprove_contect">
+                                                                    <h2 class="h4">媽媽：俞曉琳i</h2>
+                                                                    <div class="classprove_mom">
+                                                                        <p class="orange">10/2017</p>
+                                                                    </div>
                                   <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織...</p>
-																</div>
+                                                                </div>
                              </button>
                              <!-- Modal -->
                             <div class="modal fade" id="studentprove9" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -334,21 +367,23 @@
                                 <div class="modal-content">
                                   <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&Chi;</span>
-									</button>
+                                        <span aria-hidden="true">&Chi;</span>
+                                    </button>
                                   </div>
                                   <div class="modal-body">
-									  <div class="row">
-										  <div class="col-sm-6">
-											  <div class="layoutprove">
-													<div class="classprove_contect">
-														<h2 class="h4">媽媽：俞曉琳i</h2>
-														<p class="orange">10/2017</p>
-														<p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
-													</div>
-											  </div>
-										  </div>
-									  </div>
+                                      <div class="row">
+                                          <div class="col-sm-6">
+                                              <div class="layoutprove">
+                                                    <div class="classprove_contect">
+                                                        <h2 class="h4">媽媽：俞曉琳i</h2>
+                                                        <div class="classprove_mom">
+                                                            <p class="orange">10/2017</p>
+                                                        </div>
+                                                        <p>第一次聽到【 Coding4fun】是在 2016年 4月從一個自學孩子介紹 Scratch的學習。當時只知道是免費網站,有影片教學,馬上引起我的好奇心去了解。接著透過 FB 資訊知道蔡老師有開講座,當下就報名去了解這是一個什麼樣的組織。蔡老師的演講深深打動我的心。她說 : 她是以一個媽媽的心態去思考家長會有的疑慮來辦樂學科技。她說他是以一個孩子的學習歷程來思考影片的設計。應該更直接的說是她不想家長花了大把的鈔票,而沒有相對的學習回報。 回到家後,趕緊跟孩子分享網站。接著就是設定目標要把10 堂課上完。宸睿, 當時是四下的年齡。這 10 堂課我陪著孩子上。但是我的腳步無法跟上他,腦子轉的沒有他快。所以只能陪伴。【 Coding4fund】不只提供教學影片,還有教師手冊,更有線上回答的功能。教學影片內容上深入淺出的觀念,一步一步地透過影片詳細的介紹。每一個課程又細分成很多小單元。有任何卡關的地方, 隨時可以再回到不熟習的單元重看,直到了解為止。每個課程後都有作業,老師有交代一定要寫作業。透過寫作業才可以知道自己是不是真的融會貫通。若是有任何疑問, 也可以線上詢問老師。再加上老師溫柔的聲音,帶來一股非常安定的力量。對看影片有很大的助益!這十堂課的自學影片。不只引燃了孩子對 Scratch的熱情,更重要的是透過影片【自學】,我發現孩子有別於學校1對多傳授知識的盲點。因為自學,他會有自己的進度。透過寫作業知道 “ 自以為了解 “ 的內容,其實還是不夠清晰,自己會去找出卡關的地方。我最常聽到他說 : 【為什麼會這樣 ? 】【啊! 我知道了,原來問題出在這! 】這是一種自我探索發現、自我尋求答案的過程。所以這 10 堂課是紮實的功夫,是往後進階的重要墊石。表面上看來只是學習電腦程式, 但這已經不光是教學影片帶來的效益,而是讓孩子自己跟我看到學習上的的盲點。 讓我更清楚如何在孩子的學習過程上陪伴他。</p>
+                                                    </div>
+                                              </div>
+                                          </div>
+                                      </div>
                                   </div>
                                 </div>
                               </div>
@@ -363,6 +398,7 @@
 
                 </div>
               </div>
-		</div><!--container-fluid end-->
-	</main>
+        </div><!--container-fluid end-->
+    </main>
+
 {% endblock %}

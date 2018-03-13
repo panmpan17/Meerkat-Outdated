@@ -25,11 +25,13 @@
 	<link rel="stylesheet" href="/html/css/bootstrap.css">
 	<link rel="stylesheet" href="/html/stylecss/base.css">
 	<link rel="stylesheet" href="/html/stylecss/site.css">
+
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 	<link href="/html/css/popup.css" rel="stylesheet">
 
 	{% block css %}{% endblock %}
 	<script src="//s3-ap-northeast-1.amazonaws.com/justfont-user-script/jf-54162.js"></script>
+	<script src="/html/js/jquery.min.js"></script>
 </head>
 	<script type="text/javascript">var _jf = _jf || [];_jf.push(['p','54162']);_jf.push(['_setFont','xingothic-tc-w5','css','.xingothic-tc-w5']);_jf.push(['_setFont','xingothic-tc-w5','alias','xingothic-tc']);_jf.push(['_setFont','xingothic-tc-w5','weight',500]);_jf.push(['_setFont','xingothic-tc-w2','css','.xingothic-tc-w2']);_jf.push(['_setFont','xingothic-tc-w2','alias','xingothic-tc']);_jf.push(['_setFont','xingothic-tc-w2','weight',200]);_jf.push(['_setFont','xingothic-tc-w7','css','.xingothic-tc-w7']);_jf.push(['_setFont','xingothic-tc-w7','alias','xingothic-tc']);_jf.push(['_setFont','xingothic-tc-w7','weight',700]);(function(f,q,c,h,e,i,r,d){var k=f._jf;if(k.constructor===Object){return}var l,t=q.getElementsByTagName("html")[0],a=function(u){for(var v in k){if(k[v][0]==u){if(false===k[v][1].call(k)){break}}}},j=/\S+/g,o=/[\t\r\n\f]/g,b=/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,g="".trim,s=g&&!g.call("\uFEFF\xA0")?function(u){return u==null?"":g.call(u)}:function(u){return u==null?"":(u+"").replace(b,"")},m=function(y){var w,z,v,u,x=typeof y==="string"&&y;if(x){w=(y||"").match(j)||[];z=t[c]?(" "+t[c]+" ").replace(o," "):" ";if(z){u=0;while((v=w[u++])){if(z.indexOf(" "+v+" ")<0){z+=v+" "}}t[c]=s(z)}}},p=function(y){var w,z,v,u,x=arguments.length===0||typeof y==="string"&&y;if(x){w=(y||"").match(j)||[];z=t[c]?(" "+t[c]+" ").replace(o," "):"";if(z){u=0;while((v=w[u++])){while(z.indexOf(" "+v+" ")>=0){z=z.replace(" "+v+" "," ")}}t[c]=y?s(z):""}}},n;k.push(["_eventActived",function(){p(h);m(e)}]);k.push(["_eventInactived",function(){p(h);m(i)}]);k.addScript=n=function(u,A,w,C,E,B){E=E||function(){};B=B||function(){};var x=q.createElement("script"),z=q.getElementsByTagName("script")[0],v,y=false,D=function(){x.src="";x.onerror=x.onload=x.onreadystatechange=null;x.parentNode.removeChild(x);x=null;a("_eventInactived");B()};if(C){v=setTimeout(function(){D()},C)}x.type=A||"text/javascript";x.async=w;x.onload=x.onreadystatechange=function(G,F){if(!y&&(!x.readyState||/loaded|complete/.test(x.readyState))){y=true;if(C){clearTimeout(v)}x.src="";x.onerror=x.onload=x.onreadystatechange=null;x.parentNode.removeChild(x);x=null;if(!F){setTimeout(function(){E()},200)}}};x.onerror=function(H,G,F){if(C){clearTimeout(v)}D();return true};x.src=u;z.parentNode.insertBefore(x,z)};a("_eventPreload");m(h);n(r,"text/javascript",false,3000)})(this,this.document,"className","jf-loading","jf-active","jf-inactive","//d3gc6cgx8oosp4.cloudfront.net/js/stable/v/5.0.3/id/229417479829");</script>
 <body>
@@ -62,11 +64,11 @@
 		  	<li class="dropdown">
 			  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">核心課程<span class="caret"></span></a>
 			  <ul class="dropdown-menu">
-				<li><a href="/scratchcs1">C-Scratch初級班</a></li>
+				<li><a href="/scratchcs1">C-Scratch基礎班</a></li>
 				<li><a href="/scratchcs2">C-Scratch動畫班</a></li>
 				<li><a href="/scratchcs3">C-Scratch應用班</a></li>
 				<li><a href="/scratchcs4">C-Scratch進階班</a></li>
-				<li><a href="/pythonpc1">C-Python初級班</a></li>
+				<li><a href="/pythonpc1">C-Python基礎班</a></li>
 				<li><a href="/pythonpc2">C-Python進階班</a></li>
 				<li><a href="/udacity">C-Udacity工作坊</a></li>
 				<li><a href="/classprove">實證</a></li>
@@ -85,7 +87,7 @@
 				<li><a href="/aboutdream">願景使命</a></li>
 				<li><a href="/ourteam">樂學團隊</a></li>
                 <li><a href="/aboutmilestone">樂學事記</a></li>
-				<li><a href="https://www.pixnet.net/" target="_blank">部落格</a></li>
+				<li><a href="https://coding4funblog.wordpress.com/" target="_blank">部落格</a></li>
 				<li><a href="/aboutmedia">媒體報導</a></li>
 			  </ul>
 			</li>
@@ -132,8 +134,10 @@
 				<div class="col-lg-offset-1 col-lg-2 col-xs-8 col-xs-offset-2">
 					<div class="row">
 						<div class="col-xxs-12">
-							<img src="/html/images/main/logo.png" width="100%" alt="cording for fun logo">
-							<p style="text-align: right">彈指之間  創見未來</p>
+							<div class="codingforfun">
+								<img src="/html/images/main/logo.png" width="100%" alt="cording for fun logo">
+								<p style="text-align: right">彈指之間  創見未來</p>
+							</div>
 						</div>
 					</div>
 					<div class="row social">
@@ -143,8 +147,11 @@
 							</a>
 						</div>
 						<div class="col-xs-4">
-							<a href="https://www.youtube.com" target="_blank" title="youtube">
-								<img src="/html/images/main/youtube.png" width="50px" alt="cording for fun logo">
+							<!-- <a href="https://www.youtube.com" target="_blank" title="youtube">
+								<img src="images/main/youtube.png" width="50px" alt="cording for fun logo">
+							</a> -->
+							<a href="" target="_blank" title="youtube">
+								<img src="/html/images/main/line.png" width="50px" alt="cording for fun logo">
 							</a>
 						</div>
 						<div class="col-xs-4">
@@ -153,56 +160,58 @@
 							</a>
 						</div>
 					</div>
-					<div class="row social">
-						<div><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>&nbsp;&nbsp;coding4fun.tw@gmail.com</div>
+					<div class="row social new_mailto">
+						<div><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span><a href="mailto: coding4fun.tw@gmail.com ">&nbsp;&nbsp;coding4fun.tw@gmail.com </a></div>
 					</div>
 				</div>
-				<div class="col-lg-1 col-lg-offset-1 footernavlg">
-					<h2 class="h4">最新消息</h2>
-					<p><a href="/news">訊息公告</a></p>
-					<p><a href="/teacher/advertise">近期開課</a></p>
-				</div>
-				<div class="col-lg-1 footernavlg">
-					<h2 class="h4">核心課程</h2>
-					<p><a href="/scratchcs1">Scratch初級班</a></p>
-					<p><a href="/scratchcs2">Scratch動畫班</a></p>
-					<p><a href="/scratchcs3">Scratch應用班</a></p>
-					<p><a href="/scratchcs4">Scratch進階班</a></p>
-					<p><a href="/pythonpc1">Python初級班</a></p>
-					<p><a href="/pythonpc2">Python進階班</a></p>
-					<p><a href="/udacity">Udacity工作坊</a></p>
-					<p><a href="/classprove">實證</a></p>
-				</div>
-				<div class="col-lg-1 footernavlg">
-					<h2 class="h4">師資培訓</h2>
-					<p><a href="/teacher/advertise">授權名單</a></p>
-					<p><a href="/presentation">說明會報名</a></p>
-				</div>
-				<div class="col-lg-1 footernavlg">
-					<h2 class="h4">關於樂學</h2>
-					<p><a href="/aboutdream">願景使命</a></p>
-					<p><a href="/ourteam">樂學團隊</a></p>
-                    <p><a href="/aboutmilestone">樂學事記</a></p>
-					<p><a href="https://www.pixnet.net/" target="_blank">部落格</a></p>
-					<p><a href="/aboutmedia">媒體報導</a></p>
-				</div>
-				<div class="col-lg-1 footernavlg">
-					<h2 class="h4">我要發問</h2>
-					<p><a href="/faq">FAQ</a></p>
-					<p><a href="/contactus">聯絡我們</a></p>
-					<p><a href="/question">討論區</a></p>
-				</div>
-				<div class="col-lg-1 footernavlg">
-					<h2 class="h4">會員登入</h2>
-					<p class="non-login-menu"><a onclick="show_popup('signup-frame')">新會員註冊</a></p>
-					<p class="non-login-menu"><a onclick="show_popup('login-frame')">舊會員登入</a></p>
-					<p class="non-login-menu"><a onclick="show_popup('signup-frame')">免費線上體驗</a></p>
-					<p class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></p>
+				<div class="footer_padding">
+					<div class="col-lg-1 col-lg-offset-1 footernavlg">
+						<h2 class="h4">最新消息</h2>
+						<p><a href="/news">訊息公告</a></p>
+						<p><a href="/teacher/advertise">近期開課</a></p>
+					</div>
+					<div class="col-lg-1 footernavlg">
+						<h2 class="h4">核心課程</h2>
+						<p><a href="/scratchcs1">Scratch基礎班</a></p>
+						<p><a href="/scratchcs2">Scratch動畫班</a></p>
+						<p><a href="/scratchcs3">Scratch應用班</a></p>
+						<p><a href="/scratchcs4">Scratch進階班</a></p>
+						<p><a href="/pythonpc1">Python基礎班</a></p>
+						<p><a href="/pythonpc2">Python進階班</a></p>
+						<p><a href="/udacity">Udacity工作坊</a></p>
+						<p><a href="/classprove">實證</a></p>
+					</div>
+					<div class="col-lg-1 footernavlg">
+						<h2 class="h4">師資培訓</h2>
+						<p><a href="/teacher/advertise">授權名單</a></p>
+						<p><a href="/presentation">說明會報名</a></p>
+					</div>
+					<div class="col-lg-1 footernavlg">
+						<h2 class="h4">關於樂學</h2>
+						<p><a href="/aboutdream">願景使命</a></p>
+						<p><a href="/ourteam">樂學團隊</a></p>
+	                    <p><a href="/aboutmilestone">樂學事記</a></p>
+						<p><a href="https://coding4funblog.wordpress.com/" target="_blank">部落格</a></p>
+						<p><a href="/aboutmedia">媒體報導</a></p>
+					</div>
+					<div class="col-lg-1 footernavlg">
+						<h2 class="h4">我要發問</h2>
+						<p><a href="/faq">FAQ</a></p>
+						<p><a href="/contactus">聯絡我們</a></p>
+						<p><a href="/question">討論區</a></p>
+					</div>
+					<div class="col-lg-1 footernavlg">
+						<h2 class="h4">會員登入</h2>
+						<p class="non-login-menu"><a onclick="show_popup('signup-frame')">新會員註冊</a></p>
+						<p class="non-login-menu"><a onclick="show_popup('login-frame')">舊會員登入</a></p>
+						<p class="non-login-menu"><a onclick="show_popup('signup-frame')">免費線上體驗</a></p>
+						<p class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></p>
 
-					<p class="login-menu"><a name="account-name"></a></p>
-					<p class="login-menu"><a onclick="showinfo()">帳號資訊</a></p>
-					<p class="login-menu"><a href="/classes">課程列表</a></p>
-					<p class="login-menu"><a onclick="logout()">登出</a></p>
+						<p class="login-menu"><a name="account-name"></a></p>
+						<p class="login-menu"><a onclick="showinfo()">帳號資訊</a></p>
+						<p class="login-menu"><a href="/classes">課程列表</a></p>
+						<p class="login-menu"><a onclick="logout()">登出</a></p>
+					</div>
 				</div>
 			</div>
 			<div class="row footernavmd">
@@ -233,11 +242,11 @@
 						</div>
 						<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 						  <div class="panel-body">
-							<p><a href="/scratchcs1">Scratch初級班</a></p>
+							<p><a href="/scratchcs1">Scratch基礎班</a></p>
 							<p><a href="/scratchcs2">Scratch動畫班</a></p>
 							<p><a href="/scratchcs3">Scratch應用班</a></p>
 							<p><a href="/scratchcs4">Scratch進階班</a></p>
-							<p><a href="/pythonpc1">Python初級班</a></p>
+							<p><a href="/pythonpc1">Python基礎班</a></p>
 							<p><a href="/pythonpc2">Python進階班</a></p>
 							<p><a href="/udacity">Udacity工作坊</a></p>
 							<p><a href="/classprove">實證</a></p>
@@ -272,7 +281,7 @@
 							<p><a href="/aboutdream">願景使命</a></p>
 							<p><a href="/ourteam">樂學團隊</a></p>
 							<p><a href="/aboutmilestone">樂學事記</a></p>
-							<p><a href="https://www.pixnet.net/" target="_blank">部落格</a></p>
+							<p><a href="https://coding4funblog.wordpress.com/" target="_blank">部落格</a></p>
 							<p><a href="/aboutmedia">媒體報導</a></p>
 						  </div>
 						</div>
@@ -446,7 +455,6 @@
 
 	{% block bcontent %}{% endblock %}
 
-	<script src="/html/js/jquery.min.js"></script>
 	<script src="/html/js/sha256.js"></script>
 	<script src="/html/js/bootstrap.js"></script>
 	<!-- <script src="/html/slick/slick.js" type="text/javascript" charset="utf-8"></script> -->

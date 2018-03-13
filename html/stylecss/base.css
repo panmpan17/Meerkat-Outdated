@@ -139,6 +139,6 @@
 
 .dimgray{color:dimgray;}
 .warning{color:rgb(255,131,0);}
-.warning body,p{line-height: 30pt !important; font-size: 16pt; font-family: 'xingothic-tc'; font-weight: 500!important;}
+.warning body,p{line-height: 30pt !important; font-size: 16px; font-family: 'xingothic-tc'; font-weight: 500!important;}
 .darkslategray{color:darkslategray;}
 a:hover{text-decoration: none;}

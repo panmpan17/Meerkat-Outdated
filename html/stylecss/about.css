@@ -8,13 +8,15 @@ a ,a:hover ,a:focus {
 }
 /*區塊顏色*/
 .bg {
-	color: white;
-	border-radius: 10px;
-	border: 3px white solid;
-	margin: 20px auto;
+	/* color: white; */
+	/* border-radius: 10px; */
+	/* border: 3px white solid; */
+	margin: 0px auto;
+	padding: 0px 40px;
+	padding-top: 0px;
 }
 .bgword {
-	padding: 10px 30px 10px 30px;
+	padding: 10px 30px 0px 30px;
 }
 .strongtop {
 	padding-top: 40px;
@@ -26,19 +28,23 @@ a ,a:hover ,a:focus {
 	line-height: 2em;
 }
 .bg1 {
-	background-color: rgb(26,171,165);
+	/* background-color: rgb(26,171,165); */
+	/* background-color: #DAD8D6; */
+	background-color: #DAD8D6;
 }
 .bg2 {
-	background-color: rgb(153,198,23);
+	/* background-color: rgb(153,198,23); */
 }
 .bg3 {
-	background-color: rgb(73,74,167);
+	/* background-color: rgb(73,74,167); */
+	background-color: #DAD8D6;
 }
 .bg4 {
-	background-color: rgb(239,130,1);
+	/* background-color: rgb(239,130,1); */
 }
 .bg5 {
-	background-color: rgb(26,171,165);
+	/* background-color: rgb(26,171,165); */
+	background-color: #DAD8D6;
 }
 /*設定milestone切換頁css*/
 .milestone li a{
@@ -140,6 +146,7 @@ a ,a:hover ,a:focus {
 .aboutdream_contect{
 	margin-bottom: 40px;
 }
+
 .aboutdream_contect p{
 	font-size: 14px !important;
 	line-height: 2em !important;
@@ -147,9 +154,15 @@ a ,a:hover ,a:focus {
 .aboutmilestone_contect{
 	margin-bottom: 40px;
 }
-.aboutmilestone_contect h2{
+.aboutmilestone_contect h1, h2{
 	font-family: 'xingothic-tc';
 	font-weight: 500 !important;
+}
+.aboutmilestone_contect h2{
+	color: rgb(255, 147, 0) !important;
+}
+.aboutmilestone_contect h1{
+	text-align: left;
 }
 .aboutmilestone_contect P{
 	font-family: 'xingothic-tc';
@@ -157,26 +170,46 @@ a ,a:hover ,a:focus {
 	font-size: 14px !important;
 	line-height: 1.5em !important;
 }
-/*.nav {
+.nav {
     padding-left: 0 ;
-    margin-bottom: 5% !important;
+    /* margin-bottom: 5% !important; */
     list-style: none;
-}*/
+}
 .aboutmilestone_border{
 	margin: 0 5%;
 }
-.outteam_Introduction{}
+.outteam_Introduction{
+	padding-top: 1em;
+}
 .outteam_Introduction p{
+	color: #403F41;
 	font-weight: 300 !important;
+	font-size: 14pt;
+	line-height: 1.8em !important;
 }
 .outteam_Introduction a{
+	color: black;
 	font-weight: 500 !important;
 }
 .outteam_Introduction strong{
 	font-weight: 300 !important;
 }
 .outteam_Introduction h1{
-  margin-top: 35px !important;
+  margin-top: 10px !important;
+	font-size: 20pt !important;
+	color: #002E3A !important;
+}
+.outteam_Introduction h2{
+	color: #FF8300;
+	font-size: 16pt;
+  margin: 0.2em 0 !important;
+	font-weight: 700 !important;
+}
+.outteam_Introduction h3{
+	color: #191919;
+	font-size: 12pt;
+	margin: 0.2em 0 !important;
+	font-weight: 300;
 }
 .aboutmedia_contect{
 	margin-bottom: 40px;
@@ -184,9 +217,12 @@ a ,a:hover ,a:focus {
 .aboutmedia_contect h2{
 	font-weight: 700 !important;
 }
-.aboutmedia_contect p{
+.aboutmedia_contect h1{
 	font-weight: 500 !important;
-	font-size: 18px;
+}
+.aboutmedia_contect p{
+	font-weight: 300 !important;
+	font-size: 16px;
 	line-height: 1.5em !important;
   padding-right: 40px;
 }
@@ -194,6 +230,60 @@ a ,a:hover ,a:focus {
 	font-weight: 700 !important;
 	font-size: 18px;
   color: darkslategray;
+}
+.top_member2{
+	display: none;
+}
+.top_member2 img{
+	visibility: hidden;
+}
+.top_member4{
+	display:none;
+}
+.top_member4 img{
+	visibility: hidden;
+}
+.down_member2{
+	display:block;
+}
+.down_member2 img{
+	visibility: visible;
+}
+.down_member4{
+	display: block;
+}
+.down_member4 img{
+	visibility: visible;
+}
+.ourteam_width_gray{
+	width: 100%;
+	background-color: #DAD8D6;
+}
+.ourteam_width_lightgray{
+	width: 100%;
+	background-color: #F1F1F2;
+}
+.image_member1 img{
+	margin-top: 6% !important;
+	margin-left: 30%;
+	width: 70%;
+}
+.image_member2 img{
+	margin-left: 0%;
+	width: 70%;
+}
+.image_member3 img{
+	margin-left: 30%;
+	width: 70%;
+}
+.image_member4 img{
+	margin-left: 0%;
+	width: 70%;
+}
+.image_member5 img{
+	margin-left: 30%;
+	width: 70%;
+  margin-top: 30px;
 }
 
 
@@ -215,6 +305,26 @@ a ,a:hover ,a:focus {
 	}
 	.aboutmedia{
 		width: 960px;
+	}
+	.image_member1 img{
+		width: 80%;
+    margin-top: 17% !important;
+	}
+	.image_member2 img{
+		width: 80%;
+    margin-top: 17% !important;
+	}
+	.image_member3 img{
+		width: 80%;
+    margin-top: 17% !important;
+	}
+	.image_member4 img{
+		width: 80%;
+    margin-top: 17% !important;
+	}
+	.image_member5 img{
+		width: 80%;
+    margin-top: 32% !important;
 	}
 }
 @media screen and (min-width: 768px) and (max-width: 959px){
@@ -247,6 +357,29 @@ a ,a:hover ,a:focus {
 		width: 40%;
     margin-left: 15%;
     margin-top: 6%;
+	}
+	.image_member1 img{
+		margin-top: 41% !important;
+		margin-left: 0;
+    width: 120%;
+	}
+	.image_member2 img{
+		margin-top: 67% !important;
+		width: 100%;
+	}
+	.image_member3 img{
+		margin-top: 34% !important;
+		margin-left: 0;
+		width: 100%;
+	}
+	.image_member4 img{
+		margin-top: 0px !important;
+    width: 142%;
+	}
+	.image_member5 img{
+		margin-top: 65% !important;
+		margin-left: 0;
+		width: 100%;
 	}
 }
 @media screen and (min-width: 480px) and (max-width: 767px){
@@ -294,8 +427,47 @@ a ,a:hover ,a:focus {
 	.aboutmedia_contect p{
 	  padding-right: 0px;
 	}
+	.aboutmedia_contect h1{
+		text-align: left;
+	}
+	.image_member1 img{
+		margin-top: 46% !important;
+    width: 120%;
+		margin-left: 0;
+	}
+	.image_member2 img{
+		margin-top: 102% !important;
+    width: 140%;
+		margin-left: -20%;
+	}
+	.image_member3 img{
+		margin-top: 38% !important;
+		width: 100%;
+		margin-left: 0;
+	}
+	.image_member4 img{
+		margin-top: 0px !important;
+    width: 104%;
+		margin-left: 0;
+	}
+	.image_member5 img{
+		margin-top: 66% !important;
+    width: 105%;
+		margin-left: 0;
+	}
+	.bgword {
+		padding: 10px 30px 40px 30px;
+	}
 }
 @media screen and (min-width: 390px) and (max-width: 479px){
+	.bg1{
+		padding-top: 20px;
+    PADDING-BOTTOM: 30PX;
+	}
+	.bg2{
+		padding-top: 20px;
+		PADDING-BOTTOM: 30PX;
+	}
 	.aboutdreambanner{
 		width: 390px;
 	}
@@ -334,8 +506,65 @@ a ,a:hover ,a:focus {
 	.aboutmedia_contect p{
 	  padding-right: 0px;
 	}
+	.aboutmedia_contect h1{
+		text-align: left;
+	}
+
+		.top_member2{
+			display:block;
+		}
+		.top_member2 img{
+			visibility: visible;
+		}
+		.top_member4{
+			display:block;
+		}
+		.top_member4 img{
+			visibility: visible;
+		}
+		.down_member2{
+			display:none;
+		}
+		.down_member2 img{
+			visibility: hidden;
+		}
+		.down_member4{
+			display:none;
+		}
+		.down_member4 img{
+			visibility: hidden;
+		}
+		.image_member1 img{
+			margin-top: 6% !important;
+			margin-left: 0%;
+			width: 100%;
+		}
+		.image_member2 img{
+			margin-left: 0%;
+			width: 100%;
+		}
+		.image_member3 img{
+			margin-left: 0%;
+			width: 100%;
+		}
+		.image_member4 img{
+			margin-left: 0%;
+			width: 100%;
+		}
+		.image_member5 img{
+			margin-left: 0%;
+			width: 100%;
+		}
 }
 @media screen and (min-width: 350px) and (max-width: 389px){
+	.bg1{
+		padding-top: 20px;
+		PADDING-BOTTOM: 30PX;
+	}
+	.bg2{
+		padding-top: 20px;
+		PADDING-BOTTOM: 30PX;
+	}
 	.aboutdreambanner{
 		width: 350px;
 	}
@@ -374,4 +603,50 @@ a ,a:hover ,a:focus {
 	.aboutmedia_contect p{
 	  padding-right: 0px;
 	}
+
+		.top_member2{
+			display:block;
+		}
+		.top_member2 img{
+			visibility: visible;
+		}
+		.top_member4{
+			display:block;
+		}
+		.top_member4 img{
+			visibility: visible;
+		}
+		.down_member2{
+			display:none;
+		}
+		.down_member2 img{
+			visibility: hidden;
+		}
+		.down_member4{
+			display:none;
+		}
+		.down_member4 img{
+			visibility: hidden;
+		}
+		.image_member1 img{
+			margin-top: 6% !important;
+			width: 100%;
+	    margin-left: 0px !important;
+		}
+		.image_member2 img{
+			margin-left: 0%;
+			width: 100%;
+		}
+		.image_member3 img{
+			margin-left: 0%;
+			width: 100%;
+		}
+		.image_member4 img{
+			margin-left: 0%;
+			width: 100%;
+		}
+		.image_member5 img{
+			margin-left: 0%;
+			width: 100%;
+		}
 }

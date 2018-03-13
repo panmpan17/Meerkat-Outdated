@@ -1,34 +1,83 @@
 {% extends "base.html" %}
-{% block title %}Coding for Fun / 授權說明會{% endblock %}
+{% block title %}說明會報名{% endblock %}
 {% block css %}
-	<link rel="stylesheet" href="/html/css/about.css">
+	<link href="/html/stylecss/TeacherTraining.css" rel="stylesheet" type="text/css">
 {% endblock %}
 {% block content %}
-<br>
-<div class="container">
-	<div class="row">
-		<div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1" style="background: white">
-			<div id="presentation"></div>
-			<a href="https://docs.google.com/forms/d/e/1FAIpQLSfygaw6eTXjLQtqeY_4kDsk85EbnoBZ3WDBhCb1aapTZKseGA/viewform" target="_blank">
-				<!-- <button class="btn btn-orange">我要報名</button> -->
-				<button class="btn btn-orange">按此報名</button>
-			</a>
+<main class="bm-5">
+		<div class="TeacherTraining_sign_up_bg">
+			<div class="TeacherTraining_sign_up">
+				<div class="TeacherTraining_sign_up_center">
+					<img src="/html/images/TeacherTraining/banner_content.png" alt="師資培訓">
+				</div>
+				<div class="TeacherTraining_sign_up_text">
+					<a href="TeacherTraining_sign_up.html">師資培訓說明會報名</a>
+				</div>
+				<div class="TeacherTraining_sign_up_button">
+					<button onclick=window.open("https://goo.gl/forms/tC8FEeovv15MOOkB3") class="btn btn-orange">我要報名</button>
+				</div>
+			</div>
 		</div>
-	</div>
-</div>
-<br>
-{% endblock %}
-{% block script %}
-<script>
-	$(document).ready(function () {
-		$.ajax({
-			url: host + "presentation/",
-			success: function (msg) {
-				if (msg["success"]) {
-					$("#presentation")[0].innerHTML = msg["success"]
-				}
-			}
-		})
-	})
-</script>
+
+		<div class="container-fluid">
+			<!-- <div class="row">
+				<img src="/html/images/about/aboutdream.jpg" width="100%" alt="關於樂學">
+			</div> -->
+			<div class="row" style="clear:both">
+				<div class="col-lg-3 col-md-3 col-sm-2 col-xs-1"></div>
+				<div class="col-lg-7 col-md-7 col-sm-8 col-xs-10">
+					<div class="aboutdream_contect">
+						<div class="TeacherTraining_sign_up_text_02">
+							<h1>師資培訓說明會報名</h1>
+						</div>
+						<div class="TeacherTraining_sign_up_button_02">
+							<button onclick=window.open("https://goo.gl/forms/tC8FEeovv15MOOkB3") class="btn btn-orange">我要報名</button>
+						</div>
+
+						<h2>為什麼要加入樂學程式學院，成為授權老師?</h2>
+						<p>
+							樂學科技自2012 年起累積多年的兒童程式教學經驗，長久以來受到家長的肯定與支持。創辦人與樂學團隊從事偏鄉、公部門與商業化的師資培訓已累積 300 人以上。
+						</p>
+						<p>
+							除了創辦人 Shalley Tsay 具備16年科技業程式專業之外，樂學科技更了解如何克服程式初學者的心理障礙，不僅有效地啟發學生學習程式的興趣，更協助學生建立自信與自學力。
+						</p>
+						<p>
+							現在，樂學科技將這些教學技術與課程授權給有志於程式教學的老師、家長或志工，只要參加師資培訓並通過師資認證，就可以取得樂學的授權（免加盟費），依據上課人次收取授權金（包含紙本教材與線上教材）。讓學生更有機會學習到程式設計的精髓，進入程式設計的創作世界！
+						</p>
+					</div>
+
+					<div class="aboutdream_contect">
+						<h2>樂學程式學院的課程地圖</h2>
+						<div class="class_map">
+							<img src="/html/images/TeacherTraining/class_map.png" alt="樂學程式學院的課程地圖">
+						</div>
+						<div class="class_map_supplement">
+							<img src="/html/images/TeacherTraining/class_map_supplement.png" alt="樂學程式學院的課程地圖">
+						</div>
+					</div>
+
+					<div class="aboutdream_contect">
+						<h2>師資培訓</h2>
+						<p>
+							實體課程：目前只在北部地區辦理實體課程。</br>
+							線上課程：非北部地區或無法配合實體課程時間的老師，可以選擇「線上課程」。我們錄製實體課程, 將課程放在網路上，供遠端存取。
+						</p>
+					</div>
+
+					<div class="aboutdream_contect">
+						<h2>師資認證</h2>
+						<a>三個月辦理一次，預計有下列各場次：</a>
+						<p>
+							<a>北部地區</a>：107年2~3月、107年6月、107年9月、107年12月。</br>
+							<a>中部地區</a>：107年6月、107年9月、107年12月。</br>
+							<a>南部地區</a>：107年6月、107年9月、107年12月。</br>
+							<a>東部地區</a>：107年9月。</br>
+						</p>
+					</div>
+
+
+				</div>
+			</div>
+		</div><!--container-fluid end-->
+	</main>
 {% endblock %}

@@ -174,13 +174,13 @@ class UserCaseHandler(object):
             return render("question.html")
         # return cherrypy.request.method
 
-    @cherrypy.expose
-    def about(self):
-        return render("about.html")
+    # @cherrypy.expose
+    # def about(self):
+    #     return render("about.html")
 
-    @cherrypy.expose
-    def mission(self):
-        return render("mission.html")
+    # @cherrypy.expose
+    # def mission(self):
+    #     return render("mission.html")
 
     @cherrypy.expose
     def classes(self):
@@ -198,9 +198,9 @@ class UserCaseHandler(object):
     def scratch(self):
         raise cherrypy.HTTPRedirect("/class/c/scratch_1")
 
-    @cherrypy.expose
-    def resource(self):
-        return render("resource.html")
+    # @cherrypy.expose
+    # def resource(self):
+    #     return render("resource.html")
 
     @cherrypy.expose
     def classattend(self, *args, **kwargs):
@@ -230,9 +230,9 @@ class UserCaseHandler(object):
 
         return render("active.html")
 
-    @cherrypy.expose
-    def mission(self):
-        return render("mission.html")
+    # @cherrypy.expose
+    # def mission(self):
+    #     return render("mission.html")
 
     @cherrypy.expose
     def report(self):

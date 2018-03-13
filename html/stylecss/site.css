@@ -14,7 +14,6 @@ body,p {
 a, a:focus, a:hover {
 	color:white;
 	text-decoration: none;
-	cursor: pointer;
 }
 /* 全站連結底線 */
 a:focus {
@@ -173,24 +172,43 @@ footer .myMOUSE:hover{
   font-weight: 300 !important;
 }
 .classprove_contect{}
+
 .classprove_contect h2{
 	padding: 0 20px;
 	color: darkslategray;
 	font-weight: bolder;
+	font-size: 16px;
 }
 .classprove_contect p{
   padding: 0 20px;
   font-weight: 500 !important;
-  font-size: 16px !important;
+  font-size: 14px !important;
   line-height: 20pt !important;
+	font-weight: 300 !important;
+	padding-bottom: 0px;
 }
+.footer_padding div{
+	padding-right: 0px !important;
+}
+.new_mailto a:link {
+    color: rgb(255,255,255) !important;
+}
+.new_mailto a:visited {
+    color: rgb(255,255,255) !important;
+}
+.new_mailto a:hover {
+    color: rgb(255,255,255) !important;
+}
+.new_mailto a:active {
+    color: rgb(255,255,255) !important;
+}
+
 @media (min-width:1199px){
 	.footernavmd {
 		display: none;
 	}
 	.codingforfun img{
-		wid
-		th: 100%;
+		width: 100%;
 	}
 	.codingforfun p{
 		font-size: 1vw;
@@ -262,7 +280,7 @@ footer .myMOUSE:hover{
 		width: 50%;
 	}
 	.codingforfun p{
-		font-size: 2vw;
+		font-size: 2.5vw;
 		font-weight: 300 !important;
 		margin-right: 25%;
 	}
@@ -312,16 +330,19 @@ footer .myMOUSE:hover{
 		line-height: 18px !important;
 	}
 	.codingforfun img{
-		width: 50%;
+		width: 80%;
 	}
 	.codingforfun p{
-		font-size: 2vw;
-		font-weight: 300 !important;
-		margin-right: 25%;
+		font-size: 3.5vw;
+    font-weight: 300 !important;
+    margin-right: 10%;
 	}
 }
 @media (max-width: 480px){
 	/*Logo置中*/
+	.navbar-brand {
+    padding: 8px 0px 5px 23%;
+	}
 	.logobefore{
 		position:absolute;
 		left:20%;
@@ -408,16 +429,19 @@ footer .myMOUSE:hover{
 		line-height: 18px !important;
 	}
 	.codingforfun img{
-		width: 50%;
+		width: 80%;
 	}
 	.codingforfun p{
-		font-size: 2vw;
-		font-weight: 300 !important;
-		margin-right: 25%;
+		font-size: 3.5vw;
+    font-weight: 300 !important;
+    margin-right: 10%;
+	}
+	.footer_Icon_Center{
+		width: 100% !important;
+    padding: 0 75px;
 	}
 }
-
-
+/*課程區塊按鈕樣式*/
 .btn-orange {
 	color: white;
 	background-color: rgb(255,131,0);
@@ -428,8 +452,4 @@ footer .myMOUSE:hover{
 	color: white;
 	background-color: rgb(149,214,0);
 	border-color: rgb(149,214,0);
-}
-
-.pointer {
-	cursor: pointer;
 }

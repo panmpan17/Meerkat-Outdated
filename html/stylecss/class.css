@@ -9,6 +9,8 @@ a ,a:hover ,a:focus {
 .nav-pills li {
 	width: 100px;
 	text-align: center;
+	margin-right: 10px;
+
 }
 .i-item {
 	padding-top: 20px;
@@ -16,14 +18,14 @@ a ,a:hover ,a:focus {
 	text-align: right;
 	margin-right: 30px;
 }
-/*課程區塊按鈕樣式*/
-/*.btn-orange {
+/*/*課程區塊按鈕樣式
+.btn-orange {
 	color: white;
 	background-color: rgb(255,131,0);
 	border-color: rgb(255,131,0);
-}*/
-/*課程區塊按鈕滑鼠滑入樣式*/
-/*.btn:hover {
+}
+課程區塊按鈕滑鼠滑入樣式
+.btn:hover {
 	color: white;
 	background-color: rgb(149,214,0);
 	border-color: rgb(149,214,0);
@@ -66,6 +68,9 @@ a ,a:hover ,a:focus {
 	color:rgb(255,131,0);
 	font-weight: bold;
 }
+.classprove_mom p{
+	margin-bottom: 0px;
+}
 .btn-whitesmoke {
 	background-color: whitesmoke;
 }
@@ -94,7 +99,6 @@ a ,a:hover ,a:focus {
 	margin: 10px auto;
 	margin-bottom: 30px;
 	clear: both;
-
 }
 .class1BG{
   background-image: url("../images/class/scratch-sm-min_bg_01.jpg");
@@ -223,6 +227,13 @@ a ,a:hover ,a:focus {
 	width: 1%;
 	margin-top: -53% !important;
 }
+.class1_content_title{
+
+}
+.class1_content_title h1{
+	font-size: 28px !important;
+  font-weight: 600 !important;
+}
 
 .class1_content{}
 
@@ -231,11 +242,12 @@ a ,a:hover ,a:focus {
 }
 .scratchcs_content span{
 	font-size: 24px !important;
-	font-weight: 500 !important;
+	font-weight: 600 !important;
 }
 .scratchcs_content p{
 	font-size: 16px !important;
-	line-height: 2em !important;
+	line-height: 1.8em !important;
+	font-weight: 300 !important;
 }
 
 
@@ -298,6 +310,7 @@ a ,a:hover ,a:focus {
 	}
 	.nav-pills li {
 		width: 70px;
+		margin-right: 10px;
 	}
 	.classbutton {
 		padding-top: 0px;
@@ -347,6 +360,9 @@ a ,a:hover ,a:focus {
 }
 
 @media screen and (min-width: 480px) and (max-width: 767px) {
+	.col-xs-offset-2 {
+    margin-left: 0% !important;
+	}
 	.class1BG, .class2BG, .class3BG, .class4BG, .class5BG, .class7BG{
 		background-size: 70%;
 		background-position-x:65%;
@@ -368,6 +384,7 @@ a ,a:hover ,a:focus {
 	}
 	.nav-pills li {
 		width: 70px;
+		margin-right: 10px;
 	}
 	.classbutton {
 		padding-top: 0px;
@@ -423,6 +440,19 @@ a ,a:hover ,a:focus {
 }
 
 @media screen and (min-width: 390px) and (max-width: 479px){
+	.col-xs-offset-2 {
+		margin-left: 0% !important;
+	}
+	.col-xs-8 {
+    /* width: 100% !important; */
+}
+	.nav-pills {
+		width: 120%;
+	}
+	.nav-pills li {
+		width: 70px;
+		margin-right: 10px;
+	}
 	.class1BG, .class2BG, .class3BG, .class4BG, .class5BG, .class6BG{
 		background-position-x: 50px;
 		background-position-y:0%;
@@ -496,6 +526,16 @@ a ,a:hover ,a:focus {
 }
 
 @media screen and (min-width: 350px) and (max-width: 389px){
+	.col-xs-offset-2 {
+		margin-left: 0% !important;
+	}
+	.nav-pills{
+		width: 120%;
+	}
+	.nav-pills li {
+		width: 60px;
+		margin-right: 10px;
+	}
 	.class1BG, .class2BG, .class3BG, .class4BG, .class5BG, .class6BG{
 		background-position-x: 50px;
 		background-position-y:0%;

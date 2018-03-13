@@ -413,7 +413,7 @@ class Teacher(object):
             Column("disabled", Boolean, default=False, nullable=True, autoincrement=True),
             Column("class_permission", ARRAY(String), nullable=False, autoincrement=False),
             Column("summary", Text, nullable=False, autoincrement=False),
-            Column("contact", Text, nullable=False, autoincrement=True, default=""),
+            Column("contact_link", JSON, nullable=False, autoincrement=True, default={}),
             )
         cls.teacher_t.create(db_engine, checkfirst=True)
         return cls.teacher_t
@@ -430,6 +430,7 @@ class Teacher(object):
             "disabled": row["disabled"],
             "class_permission": row["class_permission"],
             "summary": row["summary"],
+            "contact_link": row["contact_link"],
             }
 
     @classmethod
@@ -451,6 +452,7 @@ class Teacher(object):
             "name": row["name"],
             "phone": row["phone"],
             "summary": row["summary"],
+            "contact_link": row["contact_link"],
 
             "city": row["city"],
             "town": row["town"],

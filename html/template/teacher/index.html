@@ -131,20 +131,20 @@
 					<div class="col-md-2 col-xs-12">
 						<b>變更聯絡資訊</b>
 						<br><br>
+						<span style="color: lightgray;font-size:10px">電話已經記錄了<br>不需要再新增電話</span>
 					</div>
 					<div class="col-md-8 col-xs-12" class="changepasswordframe">
 						<h4>FB</h4>
-						<input class="form-control" type="text">
+						<input id="cl_FB" name="contact_link" class="form-control" type="text">
 						<h4>Line</h4>
-						<input class="form-control" type="text">
+						<input id="cl_Line" name="contact_link" class="form-control" type="text">
 						<h4>Blog</h4>
-						<input class="form-control" type="text">
+						<input id="cl_Blog" name="contact_link" class="form-control" type="text">
 						<h4>Email</h4>
-						<input class="form-control" type="text">
-						<h4>聯絡時間</h4>
-						<input class="form-control" type="text">
+						<input id="cl_Email" name="contact_link" class="form-control" type="text">
+						<div id="extra_cl"></div>
 						<br>
-						<button class="btn btn-success" >更改聯絡資訊</button>
+						<button class="btn btn-success" onclick="change_contact_link()">更改聯絡資訊</button>
 					</div>
 				</div>
 			</div>
@@ -585,34 +585,6 @@
 
 		classroom_name = null;
 
-		$(document).on('ready', function() {
-			tkey = getCookie("teacher-key")
-			if (tkey == "") {location.pathname = "/teacher/login"}
-			$.ajax({
-				url: host + "teacher/",
-				data: {"tkey": tkey},
-				success: function (msg) {
-					advertise_limit = 5 + msg["ext_area"]
-					$("#teacher-name").html(msg["name"])
-					$("#ext_area").html(advertise_limit)
-					$("#whole_city").html(msg["whole_city"])
-					$("#self-intro").html(msg["summary"])
-
-					$.each(msg["class_permission"], function (_, v) {
-						$.each($("[name=class_permission]"), function (_, c) {
-							c.innerHTML += format(class_fromat,
-								v,
-								CLASS_TO[v])
-						})
-					})
-					changeclassroomtype(msg["class_permission"][0]);
-				},
-				error: function (err) {location.pathname = "/teacher/login"}
-			})
-
-			loadallclassroom();
-		});
-
 		function change_page(d) {
 			$("[class=active]")[0].classList.remove("active");
 			$("#button-" + d)[0].classList.add("active");
@@ -637,12 +609,12 @@
 		advertise_limit = 5;
 		advertise_num = 0;
 		advertise_format = `
-		<tr>
-		<td>{0}</td>
-		<td>{1}</td>
-		<td class="b-close" onclick="deletearea('{2}')"><i class="fa fa-times"></i></td>
-		</tr>
-		`
+			<tr>
+			<td>{0}</td>
+			<td>{1}</td>
+			<td class="b-close" onclick="deletearea('{2}')"><i class="fa fa-times"></i></td>
+			</tr>
+			`
 
 		function newarea() {
 			if (advertise_num >= advertise_limit) {
@@ -788,6 +760,7 @@
 			json = {
 				"tkey": getCookie("teacher-key"),
 				"summary": summary,
+				"teacher": true,
 			}
 
 			$.ajax({
@@ -824,14 +797,89 @@
 			}
 		}
 
-		$(document).ready(function () {
+		function disaply_contact_link (contact_link) {
+			console.log(contact_link)
+			var extra_field = ""
+			$.each(contact_link, function (k, v) {
+				cl_ele = $("#cl_" + k)
+				if (cl_ele.length != 0) {
+					cl_ele[0].value = v
+				}
+				else {
+					extra_field += format(`<h4>{0}</h4>
+						<input id="cl_{0}" name="contact_link" class="form-control" type="text" value="{1}">`,
+						k,
+						v
+						)
+				}
+			})
+			$("#extra_cl")[0].innerHTML = extra_field
+		}
+
+		function change_contact_link () {
+			var contact_link = {}
+			$.each($("[name=contact_link]"), function (_, e) {
+				var key = e.id.replace("cl_", "")
+				if (e.value != "") {
+					contact_link[key] = e.value
+				}
+			})
+
+			json = {
+				"tkey": getCookie("teacher-key"),
+				"contact_link": contact_link,
+				"teacher": true,
+			}
+			$.ajax({
+				url: host + "teacher/",
+				type: "PUT",
+				dataType: "json",
+				data: JSON.stringify(json),
+				contentType: "application/json; charset=utf-8",
+				success: function (msg) {
+					alert("聯絡資訊已改變");
+				},
+				error: function (err) {
+					console.log(err)
+				}
+			})
+		}
+
+		$(document).on('ready', function() {
+			tkey = getCookie("teacher-key")
+			if (tkey == "") {location.pathname = "/teacher/login"}
+			$.ajax({
+				url: host + "teacher/",
+				data: {"tkey": tkey},
+				success: function (msg) {
+					disaply_contact_link(msg["contact_link"])
+					advertise_limit = 5 + msg["ext_area"]
+					$("#teacher-name").html(msg["name"])
+					$("#ext_area").html(advertise_limit)
+					$("#whole_city").html(msg["whole_city"])
+					$("#self-intro").html(msg["summary"])
+
+					$.each(msg["class_permission"], function (_, v) {
+						$.each($("[name=class_permission]"), function (_, c) {
+							c.innerHTML += format(class_fromat,
+								v,
+								CLASS_TO[v])
+						})
+					})
+					changeclassroomtype(msg["class_permission"][0]);
+				},
+				error: function (err) {location.pathname = "/teacher/login"}
+			})
+
+			loadallclassroom();
+
 			try {
 				if (!!window.chrome & !!window.chrome.webstore) {
 					$("#suggest_chrome").hide()
 				}
 			}
 			catch (err) {}
-		})
+		});
 	</script>
 
 	<script src="html/js/teacher/classroom.js" type="text/javascript" charset="utf-8"></script>
