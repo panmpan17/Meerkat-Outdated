@@ -9,390 +9,437 @@
 </style>
 {% endblock %}
 {% block content %}
-	<main class="index">
+<main class="index">
 
-		<div class="container-fluid">
-			<div class="row">
-				<!--首頁輪播圖-->
-				<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-				  <!-- Indicators -->
-				  <ol class="carousel-indicators">
-					<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-					<li data-target="#carousel-example-generic" data-slide-to="1"></li>
-					<li data-target="#carousel-example-generic" data-slide-to="2"></li>
-					<li data-target="#carousel-example-generic" data-slide-to="3"></li>
-				  </ol>
-				  <!-- Wrapper for slides -->
-				  <div class="carousel-inner" role="listbox">
+	<div class="container-fluid">
+		<div class="row">
+			<!--首頁輪播圖-->
+			<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+			  <!-- Indicators -->
+			  <ol class="carousel-indicators">
+				<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+				<li data-target="#carousel-example-generic" data-slide-to="1"></li>
+				<li data-target="#carousel-example-generic" data-slide-to="2"></li>
+				<li data-target="#carousel-example-generic" data-slide-to="3"></li>
+			  </ol>
+			  <!-- Wrapper for slides -->
+			  <div class="carousel-inner" role="listbox">
 
-					<!-- youtube 影片語法 -->
-					<!-- <div class="video-container">
-						<iframe width="560" height="300" src="https://www.youtube.com/embed/ObQ2DheGOKA?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-					</div>
-					</div>
-					<div class="item">
-						<div class="video-container">
-							<iframe width="560" height="300" src="https://www.youtube.com/embed/qdKzSq_t8k8?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-						</div>
-					</div> -->
-
-
-					<div class="item active">
-					  <img src="/html/images/index/carousel-1.jpg" width="100%" alt="...">
-					</div>
-					<div class="item">
-					  <img src="/html/images/index/carousel-2.jpg" width="100%" alt="...">
-					</div>
-					 <div class="item">
-					  <img src="/html/images/index/carousel-3.jpg" width="100%" alt="...">
-					</div>
-					 <div class="item">
-					  <img src="/html/images/index/carousel-4.jpg" width="100%" alt="...">
-					</div>
-				  </div>
-				  <!-- Controls -->
-				  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-					<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-					<span class="sr-only">Previous</span>
-				  </a>
-				  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-					<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-					<span class="sr-only">Next</span>
-				  </a>
+				<!-- youtube 影片語法 -->
+				<!-- <div class="video-container">
+					<iframe width="560" height="300" src="https://www.youtube.com/embed/ObQ2DheGOKA?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 				</div>
+				</div>
+				<div class="item">
+					<div class="video-container">
+						<iframe width="560" height="300" src="https://www.youtube.com/embed/qdKzSq_t8k8?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+					</div>
+				</div> -->
+
+
+				<div class="item active">
+				  <img src="/html/images/index/carousel-1.jpg" width="100%" alt="...">
+				</div>
+				<div class="item">
+				  <img src="/html/images/index/carousel-2.jpg" width="100%" alt="...">
+				</div>
+				 <div class="item">
+				  <img src="/html/images/index/carousel-3.jpg" width="100%" alt="...">
+				</div>
+				 <div class="item">
+				  <img src="/html/images/index/carousel-4.jpg" width="100%" alt="...">
+				</div>
+			  </div>
+			  <!-- Controls -->
+			  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+				<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+				<span class="sr-only">Previous</span>
+			  </a>
+			  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+				<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+				<span class="sr-only">Next</span>
+			  </a>
 			</div>
 		</div>
-			<!--快樂學程式區塊-->
+	</div>
+		<!--快樂學程式區塊-->
 
+
+	<div class="FunLearning_bg">
+		<div class="index_funlearning_center">
+			<div class="index_funlearning_imge">
+				<div class="FunLearning_main">
+					<img src="/html/images/index/fun_learning_center.png" alt="什麼是翻轉教室">
+				</div>
+			</div>						<!-- <button id="videoLink" type="button prove" class="btn-whitesmoke" data-toggle="modal" data-target="#studentprove1" style="border:0; background-color:#f5f5f500 !important"> -->
+			<div href="javascript:;" onClick="toggleVideo();" id="videoLink" type="button prove" data-toggle="modal" data-target="#studentprove1">
+				<div class="index_funlearning_left">
+					<!-- <a ></a> -->
+				</div>
+			</div>
+
+			 <!-- Modal -->
+
+			<div class="modal fade" id="studentprove1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<a href="javascript:;" onClick="toggleVideo('hide');"><span aria-hidden="true" style="color: black;">&Chi;</span></a>
+							</button>
+						</div>
+
+						<div class="modal-body" id="yt-player">
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="layoutprove">
+
+										<div class="embed-responsive embed-responsive-16by9">
+											<div id="popupVid">
+												 <iframe class="embed-responsive-item allowfullscreen" src="https://www.youtube.com/embed/Y-IQr3ZDdEM?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+											</div>
+										</div>
+
+										<div class="classprove_contect">
+											<br>
+											<p>
+												在我們成長的過程中，對「教學」的認知，就是老師站在前面講課。<br>
+												老師也許會詢問大家「聽懂了嗎？」「有沒有問題？」當老師認為同學跟上進度時，老師會繼續往下授課。
+												<br><br>
+
+												但是
+												<ol>
+													<li>老師允許學生提問嗎？</li>
+													<li>學生會不會因為同儕壓力而裝懂？</li>
+													<li>老師何時繼續往下教？所有的學生都懂了？八成的學生懂了？還是大家不出聲，就繼續往下教？</li>
+												</ol>
+											</p>
+											<p>
+												不同的課程，不同的老師，我們會得到不同的答案。<br><br>
+
+												到底要如何教，可以讓孩子學得更好，學得快樂有自信呢？<br><br>
+
+												首先，我們必須承認每個人的學習方式是不同的，也有各自學習的步調。<br><br>
+
+												比方說，有些人理解得快，忘得也快；有些人理解得慢，但懂了就永遠忘不了。如何塑造一個環境，孩子可以自在的學習、有效的學習呢？<br><br>
+
+												<a tabindex="0" role="button" data-trigger="focus" class="btn btn-orange" data-toggle="popover" title="什麼是翻轉教室？" data-content="維基百科：翻轉教室由學生在家中看老師或其他人準備的課程內容，到學校時，學生和老師一起完成作業，並且進行問題及討論。由於學生及老師的角色對調，而在家學習，在學校完成作業的方式也和傳統教學不同，因此稱為「翻轉教室」。">翻轉教室是一種不錯的方式。</a><br><br>
+
+												樂學科技的翻轉教室結合程式設計學習的特性，已有相當好的教學成效。<br><br>
+
+												首先，我們依據孩子思考的脈絡與學習心裡，設計了程式基礎課程教學課程。<br><br>
+
+												在課堂上，老師引導孩子每看完一段影片，隨即動手嘗試與體驗。<br>
+												若有看不懂的部分，孩子可以反覆觀看影片。<br>
+												即使分心了，很快地又可以回到課程中。<br><br>
+
+												老師的角色，並不是催趕孩子的進度，而是隨時救援，為孩子講解或排除狀況。<br>
+												聰明的孩子則一路往前學習，完全不需要等待老師下一個指令，順暢地完成學習。<br><br>
+
+												在課堂上，每個孩子都沈浸在課程中。看似平淡、不熱絡，但每個孩子的學習都是滿滿的收穫。<br><br>
+
+												我們的 Scratch 基礎課程與Python基礎課程都是這樣的模式，為孩子建立最扎實的程式能力根基。孩子不僅學得好，學得有自信，更學到自學的能力！<br>
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</a>
+					</div>
+				</div>
+			</div>
+				<!--第一列row end-->
+
+
+				<!-- <button id="videoLink" type="button prove" class="btn-whitesmoke" data-toggle="modal" data-target="#studentprove1" style="border:0; background-color:#f5f5f500 !important"> -->
+			<div href="javascript:;" onClick="toggleVideo2();" id="videoLink" type="button prove" data-toggle="modal" data-target="#studentprove12">
+				<div class="index_funlearning_right">
+					<!-- <a ></a> -->
+				</div>
+			</div>
+
+			 <!-- Modal -->
+
+			<div class="modal fade" id="studentprove12" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<a href="javascript:;" onClick="toggleVideo2('hide');"><span aria-hidden="true" style="color: black;">&Chi;</span></a>
+							</button>
+						</div>
+
+						<div class="modal-body" id="yt-player">
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="layoutprove">
+										<div class="embed-responsive embed-responsive-16by9">
+											<div id="popupVid2">
+												 <iframe class="embed-responsive-item allowfullscreen" src="https://www.youtube.com/embed/93FIj3CQils?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+											</div>
+										</div>
+										<div class="classprove_contect">
+											<br>
+											<p>
+												美國勞動部在2015年的研究報告〈未來工作—21世紀工作的趨勢與挑戰〉中預測，孩子未來從事的工作，有65％現在還不存在。<br><br>
+
+												目前是資訊爆炸的時代，在網路搜尋就能取得知識與訊息。傳統背誦、記憶、反覆練習的學習方式, 能幫助孩子面對未來嗎？<br><br>
+
+												傳統的學習方式並非全然無用, 但孩子還需要「學習的能力」。也就是「自學力」。<br><br>
+
+												自學力包括
+												<ol>
+													<li>嘗試的能力</li>
+													<li>思考、思辨的能力</li>
+													<li>找尋答案、解決問題的能力</li>
+													<li>閱讀能力，包括英文能力</li>
+												</ol>
+											</p>
+											<p>
+												樂學科技的程式課程, 啟發學生的學習動機, 發展自信心，讓孩子養成自學力。<br><br>
+
+												有別於一般課程, 樂學以翻轉教室啟動孩子的自學力, 讓孩子擺脫被動的學習心態, 逐漸轉為主動探索與思考。<br>
+												我們不以標準答案限制孩子的思維, 開啟孩子的創意與天賦。<br><br>
+
+												這個帶得走的自學力不僅適用於程式學習, 也可以應用於各領域的學習。<br>
+											</p>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</a>
+					</div>
+				</div>
+			</div>
+			<!--第二列row end-->
+
+
+
+		<!-- <div class="row">
+			<div class="col-xs-12">
+				<h1 class="h2 tc dimgray">快樂學程式</h1>
+			</div>
 
 			<div class="FunLearning_bg">
 				<div class="index_funlearning_center">
-					<div class="index_funlearning_imge">
-						<div class="FunLearning_main">
-							<img src="/html/images/index/fun_learning_center.png" alt="什麼是翻轉教室">
-						</div>
-					</div>						<!-- <button id="videoLink" type="button prove" class="btn-whitesmoke" data-toggle="modal" data-target="#studentprove1" style="border:0; background-color:#f5f5f500 !important"> -->
-					<div href="javascript:;" onClick="toggleVideo();" id="videoLink" type="button prove" data-toggle="modal" data-target="#studentprove1">
-						<div class="index_funlearning_left">
-							<!-- <a ></a> -->
-						</div>
-					</div>
-
-					 <!-- Modal -->
-
-					<div class="modal fade" id="studentprove1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-						<div class="modal-dialog" role="document">
-							<div class="modal-content">
-								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<a href="javascript:;" onClick="toggleVideo('hide');"><span aria-hidden="true" style="color: black;">&Chi;</span></a>
-									</button>
-								</div>
-
-								<div class="modal-body" id="yt-player">
-									<div class="row">
-										<div class="col-sm-12">
-											<div class="layoutprove">
-
-												<div class="embed-responsive embed-responsive-16by9">
-													<!-- <iframe class="embed-responsive-item allowfullscreen" src = 'https://www.youtube.com/embed/qdKzSq_t8k8?enablejsapi=1;rel=0&amp;controls=0&amp;showinfo=0'></iframe> -->
-													<!-- <iframe class="embed-responsive-item allowfullscreen" src="https://www.youtube.com/embed/qdKzSq_t8k8?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
-													<div id="popupVid">
-														 <iframe class="embed-responsive-item allowfullscreen" src="https://www.youtube.com/embed/qdKzSq_t8k8?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
-													</div>
-												</div>
-
-												<div class="classprove_contect">
-													<h2 class="h4">媽媽：俞曉琳a</h2>
-													<div class="classprove_mom">
-														<p class="orange">10/2017</p>
-													</div>
-													<p>教學到底是什麼？當我們說我們在「教」別人東西時是什麼意思？教學時主要面臨的問題是什麼？我們應該用什麼教學方法？為什麼用這種方法？什麼是有助於學生學習的方法？又是什麼會讓學生不想學習？以下幾個案例可以幫助教師認識對教學的不同理解方式，並且可以鼓勵授課者從不同的觀點進行自我反思，從而了解自己的問題。</p>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</a>
-							</div>
-						</div>
-					</div>
-					<!--第一列row end-->
-
-
-					<!-- <button id="videoLink" type="button prove" class="btn-whitesmoke" data-toggle="modal" data-target="#studentprove1" style="border:0; background-color:#f5f5f500 !important"> -->
-				<div href="javascript:;" onClick="toggleVideo2();" id="videoLink" type="button prove" data-toggle="modal" data-target="#studentprove12">
-					<div class="index_funlearning_right">
-						<!-- <a ></a> -->
-					</div>
+					<img src="/html/images/index/fun_learning_center.png" alt="">
 				</div>
+			</div>
+		</div> -->
+		<script type="text/javascript">
 
-				 <!-- Modal -->
-
-				<div class="modal fade" id="studentprove12" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-					<div class="modal-dialog" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<a href="javascript:;" onClick="toggleVideo2('hide');"><span aria-hidden="true" style="color: black;">&Chi;</span></a>
-								</button>
-							</div>
-
-							<div class="modal-body" id="yt-player">
-								<div class="row">
-									<div class="col-sm-12">
-										<div class="layoutprove">
-											<div class="embed-responsive embed-responsive-16by9">
-												<!-- <iframe class="embed-responsive-item allowfullscreen" src = 'https://www.youtube.com/embed/qdKzSq_t8k8?enablejsapi=1;rel=0&amp;controls=0&amp;showinfo=0'></iframe> -->
-												<!-- <iframe class="embed-responsive-item allowfullscreen" src="https://www.youtube.com/embed/qdKzSq_t8k8?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
-												<div id="popupVid2">
-													 <iframe class="embed-responsive-item allowfullscreen" src="https://www.youtube.com/embed/ObQ2DheGOKA?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
-												</div>
-											</div>
-											<div class="classprove_contect">
-												<h2 class="h4">媽媽：俞曉琳a</h2>
-												<div class="classprove_mom">
-													<p class="orange">10/2017</p>
-												</div>
-												<p>教學到底是什麼？當我們說我們在「教」別人東西時是什麼意思？教學時主要面臨的問題是什麼？我們應該用什麼教學方法？為什麼用這種方法？什麼是有助於學生學習的方法？又是什麼會讓學生不想學習？以下幾個案例可以幫助教師認識對教學的不同理解方式，並且可以鼓勵授課者從不同的觀點進行自我反思，從而了解自己的問題。</p>
-											</div>
-
-										</div>
-									</div>
-								</div>
-							</div>
-						</a>
-						</div>
-					</div>
-				</div>
-				<!--第二列row end-->
+			function toggleVideo(state) {
+				// if state == 'hide', hide. Else: show video
+				var div = document.getElementById("popupVid");
+				var iframe = div.getElementsByTagName("iframe")[0].contentWindow;
+				div.style.display = state == 'hide' ? 'none' : '';
+				func = state == 'hide' ? 'pauseVideo' : 'playVideo';
+				iframe.postMessage('{"event":"command","func":"' + func + '","args":""}','*');
+			}
+			function toggleVideo2(state) {
+				// if state == 'hide', hide. Else: show video
+				var div = document.getElementById("popupVid2");
+				var iframe = div.getElementsByTagName("iframe")[0].contentWindow;
+				div.style.display = state == 'hide' ? 'none' : '';
+				func = state == 'hide' ? 'pauseVideo' : 'playVideo';
+				iframe.postMessage('{"event":"command","func":"' + func + '","args":""}','*');
+			}
 
 
+			$(document).ready(function(){
+				$('[data-toggle="popover"]').popover()
 
-			<!-- <div class="row">
-				<div class="col-xs-12">
-					<h1 class="h2 tc dimgray">快樂學程式</h1>
-				</div>
-
-				<div class="FunLearning_bg">
-					<div class="index_funlearning_center">
-						<img src="/html/images/index/fun_learning_center.png" alt="">
-					</div>
-				</div>
-			</div> -->
-			<script type="text/javascript">
-
-				function toggleVideo(state) {
-					// if state == 'hide', hide. Else: show video
-					var div = document.getElementById("popupVid");
-					var iframe = div.getElementsByTagName("iframe")[0].contentWindow;
-					div.style.display = state == 'hide' ? 'none' : '';
-					func = state == 'hide' ? 'pauseVideo' : 'playVideo';
-					iframe.postMessage('{"event":"command","func":"' + func + '","args":""}','*');
-				}
-				function toggleVideo2(state) {
-					// if state == 'hide', hide. Else: show video
-					var div = document.getElementById("popupVid2");
-					var iframe = div.getElementsByTagName("iframe")[0].contentWindow;
-					div.style.display = state == 'hide' ? 'none' : '';
-					func = state == 'hide' ? 'pauseVideo' : 'playVideo';
-					iframe.postMessage('{"event":"command","func":"' + func + '","args":""}','*');
-				}
-
-
-				$(document).ready(function(){
-
-
-					$('body').click(function() {
-						console.log("1111");
-						if ($(".modal-backdrop").is(":visible")) {
-							console.log("2222");
-							toggleVideo('hide');
-							toggleVideo2('hide');
-						}
-					});
+				$('body').click(function() {
+					if ($(".modal-backdrop").is(":visible")) {
+						toggleVideo('hide');
+						toggleVideo2('hide');
+					}
 				});
+			});
 
 
 
-				// $(".modal-backdrop").error(function(){
-				// 	toggleVideo('hide');
-				// 	toggleVideo2('hide');
-			  // });
+			// $(".modal-backdrop").error(function(){
+			// 	toggleVideo('hide');
+			// 	toggleVideo2('hide');
+		  // });
 
 
-			</script>
+		</script>
 
 <div>
 
 </div>
-			<!--樂學優勢區塊-->
-		<div class="container-fluid">
-			<div class="row advantage bp-4">
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-4 col-sm-offset-0 col-xs-8 col-xs-offset-2">
-							<img src="/html/images/index/advantage-1-min.png" alt="">
-							<div class="advantagblock bp-4">
-								<h2>學生優勢</h2>
-								<p class="tp-2 rp-4">
-									<ul>
-										<li>可以按照我的步調學習並養成自學的好習慣</li>
-										<li>讓我一次就學會學寫程式而且英文也進步了</li>
-										<li>Coding for Fun教材讓我自信快樂學習程式</li>
-									</ul>
-								</p>
-							</div>
+		<!--樂學優勢區塊-->
+	<div class="container-fluid">
+		<div class="row advantage bp-4">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-4 col-sm-offset-0 col-xs-8 col-xs-offset-2">
+						<img src="/html/images/index/advantage-1-min.png" alt="">
+						<div class="advantagblock bp-4">
+							<h2>學生優勢</h2>
+							<p class="tp-2 rp-4">
+								<ul>
+									<li>可以按照我的步調學習並養成自學的好習慣</li>
+									<li>讓我一次就學會學寫程式而且英文也進步了</li>
+									<li>Coding for Fun教材讓我自信快樂學習程式</li>
+								</ul>
+							</p>
 						</div>
-						<div class="col-sm-4 col-sm-offset-0 col-xs-8 col-xs-offset-2">
-							<img src="/html/images/index/advantage-2-min.png" alt="">
-							<div class="advantagblock bp-4">
-								<h2 style="background-color: #93D500;">家長優勢</h2>
-								<p class="tp-2 rp-4">
-									<ul>
-										<li>讓我的孩子能按照自己的節奏學習，提高學習興趣並且增加自信心</li>
-										<li>透過探索和主動思考的非填鴨式教學，讓孩子擁有解決問題的能力</li>
-										<li>Coding for Fun培養孩子帶得走的程式自學力又能提高學英文動機</li>
-									</ul>
-								</p>
-							</div>
+					</div>
+					<div class="col-sm-4 col-sm-offset-0 col-xs-8 col-xs-offset-2">
+						<img src="/html/images/index/advantage-2-min.png" alt="">
+						<div class="advantagblock bp-4">
+							<h2 style="background-color: #93D500;">家長優勢</h2>
+							<p class="tp-2 rp-4">
+								<ul>
+									<li>讓我的孩子能按照自己的節奏學習，提高學習興趣並且增加自信心</li>
+									<li>透過探索和主動思考的非填鴨式教學，讓孩子擁有解決問題的能力</li>
+									<li>Coding for Fun培養孩子帶得走的程式自學力又能提高學英文動機</li>
+								</ul>
+							</p>
 						</div>
-						<div class="col-sm-4 col-sm-offset-0 col-xs-8 col-xs-offset-2">
-							<img src="/html/images/index/advantage-3-min.png" alt="">
-							<div class="advantagblock bp-4">
-								<h2 style="background-color: #F3801F;">教師優勢</h2>
-								<p class="tp-2 rp-4">
-									<ul>
-										<li>提供教學技巧與專業素養之認證培訓，滿足程式語言設計教學的師資需求</li>
-										<li>老師引導和鼓勵孩子勇敢嘗試，配合Coding for Fun教材增強程式自學力</li>
-										<li>Coding for Fun完整的基礎應用與進階的師資培訓是老師教學的最佳後盾</li>
-									</ul>
-								</p>
-							</div>
+					</div>
+					<div class="col-sm-4 col-sm-offset-0 col-xs-8 col-xs-offset-2">
+						<img src="/html/images/index/advantage-3-min.png" alt="">
+						<div class="advantagblock bp-4">
+							<h2 style="background-color: #F3801F;">教師優勢</h2>
+							<p class="tp-2 rp-4">
+								<ul>
+									<li>提供教學技巧與專業素養之認證培訓，滿足程式語言設計教學的師資需求</li>
+									<li>老師引導和鼓勵孩子勇敢嘗試，配合Coding for Fun教材增強程式自學力</li>
+									<li>Coding for Fun完整的基礎應用與進階的師資培訓是老師教學的最佳後盾</li>
+								</ul>
+							</p>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
 
-			<!--三大學習程式系統區塊-->
-			<!-- <div class="row">
-				<img src="/html/images/index/banner1.jpg" width="100%" alt="">
-			</div> -->
-			<!-- <div class="LearningSystem">
-				<div class="LearningSystem_up_bg">
+		<!--三大學習程式系統區塊-->
+		<!-- <div class="row">
+			<img src="/html/images/index/banner1.jpg" width="100%" alt="">
+		</div> -->
+		<!-- <div class="LearningSystem">
+			<div class="LearningSystem_up_bg">
+				<img src="/html/images/index/LearningSystem_up.png">
+			</div>
+			<div class="LearningSystem_down_bg">
+				<img src="/html/images/index/LearningSystem_down.png">
+			</div>
+		</div> -->
+		<div class="LearningSystem">
+			<div class="LearningSystem_up_bg">
+				<div class="LearningSystem_up">
 					<img src="/html/images/index/LearningSystem_up.png">
 				</div>
-				<div class="LearningSystem_down_bg">
-					<img src="/html/images/index/LearningSystem_down.png">
-				</div>
-			</div> -->
-			<div class="LearningSystem">
-				<div class="LearningSystem_up_bg">
-					<div class="LearningSystem_up">
-						<img src="/html/images/index/LearningSystem_up.png">
-					</div>
-					<div class="LearningSystem_MD">
-						<img src="/html/images/index/LearningSystem_MDcs.png">
-						<img src="/html/images/index/LearningSystem_MDcp.png">
-						<img src="/html/images/index/LearningSystem_MDcu.png">
-					</div>
-				</div>
-
-				<div class="LearningSystem_down_bg">
-					<div class="LearningSystem_DO">
-						<img src="/html/images/index/LearningSystem_DOcs.png">
-						<img src="/html/images/index/LearningSystem_DOcp.png">
-						<img src="/html/images/index/LearningSystem_DOcu.png">
-					</div>
+				<div class="LearningSystem_MD">
+					<img src="/html/images/index/LearningSystem_MDcs.png">
+					<img src="/html/images/index/LearningSystem_MDcp.png">
+					<img src="/html/images/index/LearningSystem_MDcu.png">
 				</div>
 			</div>
 
-		<div class="container-fluid">
-			<!--各班簡介課程區塊-->
-			<div class="container classup">
-				<div class="row classtop">
-					<div class="col-sm-4 class">
-						<img src="/html/images/index/scratch.png" width="80%">
-						<h1>基礎班</h1>
-						<ul>
-							<li>唯一使用翻轉教室教學</li>
-							<li>入手快，短時間就能學會並應用</li>
-							<li>運用動畫和遊戲提高學習意願與樂趣</li>
-						</ul>
-						<a href="/scratchcs1">
-							<button type="button" class="btn btn-orange">課程細節</button>
-						</a>
-					</div>
-					<div class="col-sm-4 class">
-						<img src="/html/images/index/python.png" width="80%">
-						<h1>密集班</h1>
-						<ul>
-							<li>唯一使用翻轉教室教學模式</li>
-							<li>最實用，語法簡單而且易學易懂</li>
-							<li>美國頂尖大學常用的入門程式語言</li>
-						</ul>
-						<a href="/pythonpc1">
-							<button type="button" class="btn btn-orange">課程細節</button>
-						</a>
-					</div>
-					<div class="col-sm-4 class">
-						<img src="/html/images/index/udacity.png" width="80%">
-						<h1>工作坊</h1>
-						<ul>
-							<li>讓學生擁有實用的技能，成為國際頂尖人才</li>
-							<li>根據學生個人特質及興趣，建議適合的課程</li>
-							<li>程式自主學習，老師從旁輔助學生克服英文障礙</li>
-						</ul>
-						<a href="/udacity">
-							<button type="button" class="btn btn-orange">課程細節</button>
-						</a>
-					</div>
-				</div>
-			</div><!--class end-->
-
-			<!--程式logo區塊-->
-			<!-- <div class="row code">
-				<div class="col-xs-6 col-sm-3 tp-5 tm-5">
-					<figcaption>
-						<img src="/html/images/index/scratch2.png" alt="">
-					</figcaption>
-				</div>
-				<div class="col-xs-6 col-sm-3 tp-5 tm-5">
-					<figcaption>
-						<img src="/html/images/index/python.png" alt="">
-					</figcaption>
-				</div>
-				<div class="clearfix visible-xs-block"></div>
-				<div class="col-xs-6 col-sm-3">
-					<figcaption>
-						<img src="/html/images/index/html5.png" alt="">
-					</figcaption>
-				</div>
-				<div class="col-xs-6 col-sm-3">
-					<figcaption>
-						<img src="/html/images/index/css3.png" alt="">
-					</figcaption>
-				</div>
-			</div> -->
-		</div><!--container-fluid end-->
-
-		<div class="under_logo_bg">
-			<div class="under_logo">
-				<div class="under_logo1">
-					<img src="/html/images/index/scratch2.png" alt="">
-				</div>
-				<div class="under_logo2">
-					<img src="/html/images/index/python.png" alt="">
-				</div>
-				<div class="under_logo3">
-					<img src="/html/images/index/html5.png" alt="">
-				</div>
-				<div class="under_logo4">
-					<img src="/html/images/index/css3.png" alt="">
+			<div class="LearningSystem_down_bg">
+				<div class="LearningSystem_DO">
+					<img src="/html/images/index/LearningSystem_DOcs.png">
+					<img src="/html/images/index/LearningSystem_DOcp.png">
+					<img src="/html/images/index/LearningSystem_DOcu.png">
 				</div>
 			</div>
 		</div>
-	</main>
+
+	<div class="container-fluid">
+		<!--各班簡介課程區塊-->
+		<div class="container classup">
+			<div class="row classtop">
+				<div class="col-sm-4 class">
+					<img src="/html/images/index/scratch.png" width="80%">
+					<h1>基礎班</h1>
+					<ul>
+						<li>唯一使用翻轉教室教學</li>
+						<li>入手快，短時間就能學會並應用</li>
+						<li>運用動畫和遊戲提高學習意願與樂趣</li>
+					</ul>
+					<a href="/scratchcs1">
+						<button type="button" class="btn btn-orange">課程細節</button>
+					</a>
+				</div>
+				<div class="col-sm-4 class">
+					<img src="/html/images/index/python.png" width="80%">
+					<h1>密集班</h1>
+					<ul>
+						<li>唯一使用翻轉教室教學模式</li>
+						<li>最實用，語法簡單而且易學易懂</li>
+						<li>美國頂尖大學常用的入門程式語言</li>
+					</ul>
+					<a href="/pythonpc1">
+						<button type="button" class="btn btn-orange">課程細節</button>
+					</a>
+				</div>
+				<div class="col-sm-4 class">
+					<img src="/html/images/index/udacity.png" width="80%">
+					<h1>工作坊</h1>
+					<ul>
+						<li>讓學生擁有實用的技能，成為國際頂尖人才</li>
+						<li>根據學生個人特質及興趣，建議適合的課程</li>
+						<li>程式自主學習，老師從旁輔助學生克服英文障礙</li>
+					</ul>
+					<a href="/udacity">
+						<button type="button" class="btn btn-orange">課程細節</button>
+					</a>
+				</div>
+			</div>
+		</div><!--class end-->
+
+		<!--程式logo區塊-->
+		<!-- <div class="row code">
+			<div class="col-xs-6 col-sm-3 tp-5 tm-5">
+				<figcaption>
+					<img src="/html/images/index/scratch2.png" alt="">
+				</figcaption>
+			</div>
+			<div class="col-xs-6 col-sm-3 tp-5 tm-5">
+				<figcaption>
+					<img src="/html/images/index/python.png" alt="">
+				</figcaption>
+			</div>
+			<div class="clearfix visible-xs-block"></div>
+			<div class="col-xs-6 col-sm-3">
+				<figcaption>
+					<img src="/html/images/index/html5.png" alt="">
+				</figcaption>
+			</div>
+			<div class="col-xs-6 col-sm-3">
+				<figcaption>
+					<img src="/html/images/index/css3.png" alt="">
+				</figcaption>
+			</div>
+		</div> -->
+	</div><!--container-fluid end-->
+
+	<div class="under_logo_bg">
+		<div class="under_logo">
+			<div class="under_logo1">
+				<img src="/html/images/index/scratch2.png" alt="">
+			</div>
+			<div class="under_logo2">
+				<img src="/html/images/index/python.png" alt="">
+			</div>
+			<div class="under_logo3">
+				<img src="/html/images/index/html5.png" alt="">
+			</div>
+			<div class="under_logo4">
+				<img src="/html/images/index/css3.png" alt="">
+			</div>
+		</div>
+	</div>
+</main>
 
 {% endblock %}

@@ -279,8 +279,8 @@
 	display: inline-block;
 }
 
-#view-block #btns .btn,
-#view-block #video .btn {
+#view-block #btns .btn:not(.bts),
+#view-block #video .btn:not(.bts) {
 	margin-top: -15px;
 	background: rgb(6, 48, 58);
 	color: white;
@@ -288,8 +288,8 @@
 	border-radius: 0;
 }
 
-#view-block #btns .btn:hover,
-#view-block #video .btn:hover {
+#view-block #btns .btn:not(.bts):hover,
+#view-block #video .btn:not(.bts):hover {
 	background: white;
 	color: rgb(6, 48, 58);
 }
@@ -397,13 +397,15 @@
 
 
 .thumbnail {
-	float: left;
-	width: 50%;
-	min-width: 400px;
+	/*float: left;*/
+	width: 40%;
+	margin: 4%;
+	min-width: 250px;
 	display: inline-block;
-	text-align: center;
-	background: transparent;
+	background: lightgray;
 	border: none;
+	padding: 5px;
+	text-align: left;
 }
 
 .thumbnail img {
@@ -413,65 +415,23 @@
 	max-height: 250px;
 }
 
-.thumbnail .play-btn {
+.thumbnail .title {
+	float: left;
+	text-align: left;
 	position: relative;
-	cursor: pointer;
+	width: 100%;
+	height: 0;
+	word-break: keep-all;
+	font-family: 'xingothic-tc';
+	font-size: 20px;
+	color: rgb(6, 48, 58);
 }
 
-.thumbnail .play-btn:before {
-	content: "";
+.thumbnail .btns {
+	position: relative;
+	top: -35px;
+}
+
+.thumbnail .btns .btn {
 	position: absolute;
-	background: rgba(0, 0, 0, 0.7);;
-	width: 16%;
-	height: 50px;
-	border-radius: 20%;
-	left: 42%;
-	top: 100px;
-}
-
-.thumbnail .play-btn:after {
-	content: "";
-	position: absolute;
-	background: white;
-	width: 16%;
-	height: 50px;
-	left: 42%;
-	top: 100px;
-	-webkit-clip-path: polygon(64% 50%, 36% 32%, 36% 68%);
-	clip-path: polygon(64% 50%, 36% 32%, 36% 68%);
-}
-
-.thumbnail .play-btn:hover:before {
-	background: rgb(5, 38, 46);
-}
-
-.thumbnail .text {
-	padding: 10px;
-	padding-top: 5px;
-	font-size: 18px;
-	font-weight: 900;
-}
-
-.thumbnail .text .go {
-	display: inline-block;
-	width: 100px;
-	height: 25px;
-	line-height: 25px;
-	text-align: center;
-	background: rgb(92, 129, 255);
-	color: white;
-	cursor: pointer;
-	box-shadow: 2px 2px 0px 0px gray;
-}
-
-.thumbnail .text .go:hover {
-	background: rgb(63, 97, 213);
-	color: rgb(245, 245, 245);
-}
-
-.thumbnail .text .go:active {
-	box-shadow: 0px 0px 0px 0px gray;
-	transform: translate(2px, 2px);
-	user-select: none;
-	-webkit-user-select: none;
 }

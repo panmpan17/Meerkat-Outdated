@@ -17,15 +17,18 @@ var lsn_bar_vid = `<div id="vid-{1}-{2}" class="video{3}" onclick="video_jump({1
 var lsn_bar_section_vid = `<div id="vid-{1}-{2}-{3}" class="video" onclick="section_video_jump({1}, {2}, {3})">{0}</div>`
 
 var chose_video_div = `<div class="thumbnail">
-	<div class="play-btn" onclick="show_pop_video('{3}')"></div>
 	<center>
+		<div class="title">
+			{1}
+		</div>
 		<img src="{0}">
 	</center>
-	<div class="text">
-		{1}
-		<br><br>
-		<div class="go" onclick="redirect_lesson('{2}')">
-			進入挑戰 <i class="fa fa-arrow-right" aria-hidden="true"></i>
+	<div class="btns">
+		<div class="btn bts btn-default" onclick="show_pop_video('{3}')">
+			了解功能
+		</div>
+		<div class="btn bts btn-orange" onclick="redirect_lesson('{2}')" style="right: 0">
+			進入挑戰
 		</div>
 	</div>
 </div>`
@@ -113,6 +116,7 @@ function loadclass (classname, qlesson=-1) {
 		type: "GET",
 		data: j,
 		success: function (msg) {
+			console.log(msg)
 			if (msg["success"] != undefined) {
 				if (!msg["success"]) {
 					if (msg["reason"] == "trial key") {
@@ -214,7 +218,16 @@ function display_lessons_bar() {
 function show_description() {
 	lesson = -1
 
-	video_html = format(videoblock, class_["description-video"])
+	if (class_["description-video"].indexOf("youtube") != -1) {
+		video_html = format(videoblock, class_["description-video"])
+	}
+	else {
+		video_html = format(privatevideoblock,
+			window.location.host,
+			class_["key"],
+			class_["description-video"])
+	}
+	
 	$("#view-block #title")[0].innerHTML = "介紹";
 	$("#view-block #video")[0].innerHTML = video_html;
 	$("#btns")[0].innerHTML = ""
@@ -395,7 +408,7 @@ function redirect_lesson (lesson_name) {
 }
 
 function show_pop_video (video_url) {
-	show_popup("intro-video-frame");
+	$("#intro-video-frame").modal("show");
 	$("#intro-video")[0].src = format(
 		"http://{0}/video/{1}?video={2}",
 		window.location.host,

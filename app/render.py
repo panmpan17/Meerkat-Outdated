@@ -259,7 +259,7 @@ class UserCaseHandler(object):
     # new page
     @cherrypy.expose
     def faq(self):
-        return render("faq.html")
+        return render("faq2.html")
 
     @cherrypy.expose
     def scratchcs1(self):

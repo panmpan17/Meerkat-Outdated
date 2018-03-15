@@ -6,7 +6,7 @@ card_format = `<button class="card">
         {1}
     </div>
     <div class="btn-group">
-        <div class="full-btn" onclick="window.location.href='/class/c/{2}'">進入完整課程</div>
+        <div class="full-btn" onclick="to_class('{2}')">進入完整課程</div>
     </div>
 </button>`
 
@@ -99,6 +99,11 @@ function start_trial (cls_type) {
     }
 }
 
+function to_class (cls_type) {
+    storeCookie("clsrid", Object.keys(classroom_in[cls_type])[0])
+    window.location.href = "/class/c/" + cls_type
+}
+
 function apply_class (cls_type) {
     window.location.href = "/teacher/advertise"
 }
@@ -140,6 +145,17 @@ $.ajax({
                         )
                 }
             })
+
+            if (getCookie("key") == "" || getCookie("teacher-key") == "") {
+                storeCookie("key", "");
+                storeCookie("userid", "");
+                storeCookie("id", "");
+                storeCookie("teacher-key", "");
+                storeCookie("teacher-id", "");
+                storeCookie("teacher-userid", "");
+                $(".non-login-menu").show();
+                $(".login-menu").hide();
+            }
         }
         else {
             classroom_in = msg["classroom"]

@@ -23,12 +23,30 @@
 <br><br>
 {% endblock %}
 {% block bcontent %}
-<div id="intro-video-frame" class="popup-frame" hidden>
-	<a class="close" onclick="hide_popup('intro-video-frame');$('#intro-video')[0].src=''">X</a>
-	<br>
-	<center>
-		<iframe id="intro-video" style="border: none;" width="800" height="500"></iframe>
-	</center>
+<div class="modal fade" id="intro-video-frame" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<a href="javascript:;" onClick="toggleVideo2('hide');"><span aria-hidden="true" style="color: black;">&Chi;</span></a>
+				</button>
+			</div>
+
+			<div class="modal-body" id="yt-player">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="layoutprove">
+							<div class="embed-responsive embed-responsive-16by9">
+								<div id="popupVid2">
+									<iframe id="intro-video" class="embed-responsive-item allowfullscreen" frameborder="0" allowfullscreen></iframe>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 {% endblock %}
 {% block script %}
