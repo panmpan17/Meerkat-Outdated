@@ -171,13 +171,14 @@ function loadclass (classname, qlesson=-1) {
 				lesson_html[0].classList.toggle("shrink")
 			}
 		},
-		error: function (error) {
+		error: function (err) {
 			storeCookie("teacher-id", "")
 			storeCookie("teacher-key", "")
 			storeCookie("teacher-userid", "")
 			storeCookie("id", "")
 			storeCookie("key", "")
 			storeCookie("userid", "")
+			// console.log(err)
 			window.location.pathname = "/classes"
 		}
 	})

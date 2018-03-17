@@ -58,9 +58,9 @@ class User(object):
             Column("disabled", Boolean, default=False, nullable=True, autoincrement=True),
             )
         cls.user_t.create(db_engine, checkfirst=True)
-        cls.creat_user(db_meta, db_engine)
-        if euf:
-            cls.creat_user(db_meta, db_engine, filename=euf)
+        # cls.creat_user(db_meta, db_engine)
+        # if euf:
+        #     cls.creat_user(db_meta, db_engine, filename=euf)
         return cls.user_t
 
     @classmethod

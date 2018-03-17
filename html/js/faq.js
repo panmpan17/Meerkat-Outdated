@@ -9,3 +9,7 @@ $(".my-sidebar .item").on("click", function (e) {
 	console.log($(".question[name=FAQ-" + e.currentTarget.id + "]"))
 	$(".question[name=FAQ-" + e.currentTarget.id + "]").show();
 })
+
+$(document).ready(function () {
+	$(".question[name=FAQ-1]").show();
+})

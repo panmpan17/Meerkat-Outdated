@@ -402,7 +402,7 @@
 	margin: 4%;
 	min-width: 250px;
 	display: inline-block;
-	background: lightgray;
+	background: rgb(240, 240, 240);
 	border: none;
 	padding: 5px;
 	text-align: left;

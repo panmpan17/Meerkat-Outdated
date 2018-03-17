@@ -1086,14 +1086,17 @@ class ClassesRestView(View):
                                 class_["key_type"] = key_type
                                 return class_
 
-                            ss = select([classrooms.c.progress, classrooms.c.folder]).where(
-                                classrooms.c.id==clsr_id,
-                                )
+                            ss = select([
+                                classrooms.c.progress,
+                                classrooms.c.folder,
+                                classrooms.c.students_cid]).where(
+                                    classrooms.c.id==clsr_id,
+                                    )
                             rst = conn.execute(ss)
                             row = rst.fetchone()
 
                             if row:
-                                if user["id"] not in row:
+                                if user["id"] not in row["students_cid"]:
                                     raise Exception("not in class")
 
                                 key_type = "user"
@@ -1102,7 +1105,8 @@ class ClassesRestView(View):
                             else:
                                 raise Exception("clsrid wrong")
 
-                        except:
+                        except Exception as e:
+                            print(e)
                             teacher = self.check_login_teacher(kwargs)
                             if kwargs["class"] not in teacher["class_permission"]:
                                 raise cherrypy.HTTPError(400)
