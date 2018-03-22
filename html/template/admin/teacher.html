@@ -92,17 +92,18 @@
 </style>
 {% endblock %}
 {% block content %}
+<main>
 	<br><br>
-	<a href="/admin/" style="padding-left: 14%"><button id="submit">< 回去</button></a>
+	<a href="/admin/" style="padding-left: 14%"><button class="btn btn-orange">< 回去</button></a>
 	<br><br>
 	<div class="container text-center">
-		<input type="text" name="userid" placeholder="帳號">
+		<input class="form-control" type="text" name="userid" placeholder="帳號">
 		<br><br>
-		<input type="text" name="password" placeholder="密碼">
+		<input class="form-control" type="text" name="password" placeholder="密碼">
 		<br><br>
-		<input type="text" name="name" placeholder="名字">
+		<input class="form-control" type="text" name="name" placeholder="名字">
 		<br><br>
-		<input type="text" name="phone" placeholder="電話">
+		<input class="form-control" type="text" name="phone" placeholder="電話">
 		<br><br>
 		<dl class="check-list-right" id="classlist">
 			<dt>教學課程權限</dt>
@@ -126,6 +127,7 @@
 		</table>
 	</div>
 	<br><br><br><br><br>
+</main>
 {% endblock %}
 {% block bcontent %}
 <div id="change-frame" class="loginsignup-frame" hidden>

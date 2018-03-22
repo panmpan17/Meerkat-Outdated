@@ -20,37 +20,59 @@
 		color: red;
 		cursor: pointer;
 	}
+
+	.multi-files td {
+		padding: 3px;
+	}
+
+	.multi-files td.delete-file:after {
+		content: "X 刪除";
+		cursor: pointer;
+		color: coral;
+		font-weight: 900;
+	}
+
+	.notes {
+		color: lightgray;
+	}
+
+	/*.multi-files td.filename {
+		
+	}*/
 </style>
 {% endblock %}
 {% block content %}
-<br><br>
-<div id="page-control"></div>
-<div class="mynav-sidebar">
-	<div id="question-range-btn" class="item" onclick="toggle('question-range')"> 問題範圍</div>
-	<ul id="question-range" class="nav-dropdown">
-		<li onclick="getallquestion('all', null)">所有問題</li>
-		<li onclick="getallquestion('solved', 'True')">已解問題 <div id="green-dot"></div></li>
-		<li onclick="getallquestion('solved', 'False')">未解問題 <div id="red-dot"></div></li>
-		<li onclick="getallquestion('writer', getCookie('id'))"> 我的問題 </li>
-		<li onclick="getallquestion('answer', getCookie('id'))"> 回答過的問題 </li>
-	</ul>
-	<div id="question-type-btn" class="item" onclick="toggle('question-type')"> 問題種類</div>
-	<ul id="question-type" class="nav-dropdown">
-		<li onclick="addfilter('type', null)">全部</li>
-		<li onclick="addfilter('type', 0)">Scratch</li>
-		<li onclick="addfilter('type', 1)">Python</li>
-		<li onclick="addfilter('type', 2)">Other</li>
-	</ul>
-	<div class="item" onclick="openask()">
-		<i class="fa fa-pencil-square-o" aria-hidden="true"></i> 問問題
+<main>
+	<br><br>
+	<div id="page-control"></div>
+	<div class="mynav-sidebar">
+		<div id="question-range-btn" class="item" onclick="toggle('question-range')"> 問題範圍</div>
+		<ul id="question-range" class="nav-dropdown">
+			<li onclick="getallquestion('all', null)">所有問題</li>
+			<li onclick="getallquestion('solved', 'True')">已解問題 <div id="green-dot"></div></li>
+			<li onclick="getallquestion('solved', 'False')">未解問題 <div id="red-dot"></div></li>
+			<li onclick="getallquestion('writer', getCookie('id'))"> 我的問題 </li>
+			<!-- <li onclick="getallquestion('answer', getCookie('id'))"> 我的問題被回答過 </li> -->
+			<li onclick="getallquestion('answer', getCookie('id'))"> 我回答別人的問題 </li>
+		</ul>
+		<div id="question-type-btn" class="item" onclick="toggle('question-type')"> 問題種類</div>
+		<ul id="question-type" class="nav-dropdown">
+			<li onclick="addfilter('type', null)">全部</li>
+			<li onclick="addfilter('type', 0)">Scratch</li>
+			<li onclick="addfilter('type', 1)">Python</li>
+			<li onclick="addfilter('type', 2)">Other</li>
+		</ul>
+		<div class="item" onclick="openask()">
+			<i class="fa fa-pencil-square-o" aria-hidden="true"></i> 問問題
+		</div>
+		<div class="item" onclick="$('#helpquestion-frame').modal('show');playVideo()">
+			<i class="fa fa-info-circle" aria-hidden="true"></i> 如何提問
+		</div>
 	</div>
-	<div class="item" onclick="show_popup('helpquestion-frame');playVideo()">
-		<i class="fa fa-info-circle" aria-hidden="true"></i> 如何提問
+	<div id="cards" hidden>
+		<span style="font-size:48px;color:#aaa">請稍等</span>
 	</div>
-</div>
-<div id="cards">
-	<span style="font-size:48px;color:#aaa">請稍等</span>
-</div>
+</main>
 {% endblock %}
 {% block bcontent %}
 <div id="question-frame" class="popup-frame" hidden>
@@ -70,8 +92,13 @@
 			<br>
 			<textarea id="answer-content" placeholder="請在這裡回答問題"></textarea><br>
 			<label id="answer-upload" class="multi-file-btn" for-list="f1-a f2-a f3-a">
-				<button class="btn btn-orange">+ 上傳</button>
-			</label><br>
+				<button class="btn btn-orange">+ 上傳檔案</button>
+			</label>
+			<div class="notes">
+				* 只能上傳 3 個檔案 <br>
+				* 每個檔案大小不能超過 10 mb<br>
+				* 支援檔案類型: .py .sb .sb2 .png .gif .jpeg .jpg
+			</div>
 			<table id="answer-upload-files" class="multi-files"></table>
 
 			<form method="post" enctype="multipart/form-data" id="answerform" hidden>
@@ -91,9 +118,10 @@
 	<a class="close" onclick="hide_popup('ask-frame')">X</a><br>
 	<div style="padding-top: 5%;">
 		<div class="row">
-			<div class="col-md-1 col-xs-12"></div>
-			<div class="col-md-7 col-xs-8" style="padding-left: 30px">
-				<input id="ask-title" class="form-control" placeholder="標題" type="text"><br>
+			<div class="col-md-7 col-md-offset-1 col-xs-8 col-xs-offset-0" style="padding-left: 30px">
+				<div class="form-group">
+					<input id="ask-title" class="form-control" placeholder="標題" type="text" maxlength="50"><!--  oninput="checktitle(this)"> --><br>
+				</div>
 			</div>
 			<div class="col-md-3 col-xs-4">
 				<div class="dropdown">
@@ -109,21 +137,24 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-1 col-xs-12"></div>
-			<div class="col-md-10 col-xs-12" style="padding-left: 30px">
-				<textarea id="ask-content" class="form-control" rows="10"></textarea><br>
+			<div class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0" style="padding-left: 30px;padding-right: 30px">
+				<center>
+					<textarea id="ask-content" class="form-control" rows="10" style="min-width: 100%"></textarea><br>
+				</center>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-xs-1"></div>
-			<div class="col-xs-5">
+			<div class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0" style="padding-left: 30px;padding-right: 30px">
+				<button class="btn btn-orange" onclick="ask()" style="float:right;">發問</button>
 				<label id="question-upload" class="multi-file-btn" for-list="f1-q f2-q f3-q">
-					<button class="btn btn-orange">+ 上傳</button>
-				</label><br>
+					<button class="btn btn-orange">+ 上傳檔案</button>
+				</label>
+				<div class="notes">
+					* 只能上傳 3 個檔案 <br>
+					* 每個檔案大小不能超過 10 mb<br>
+					* 支援檔案類型: .py .sb .sb2 .png .gif .jpeg .jpg
+				</div>
 				<table id="question-upload-files" class="multi-files"></table>
-			</div>
-			<div class="col-xs-3">
-				<button class="btn btn-orange" onclick="ask()">發問</button>
 			</div>
 		</div>
 		<form method="post" enctype="multipart/form-data" id="questionform" hidden>
@@ -135,12 +166,31 @@
 	</div>
 </div>
 
-<div id="helpquestion-frame" class="popup-frame" hidden>
-	<a class="close" onclick="hide_popup('helpquestion-frame');stopVideo()">X</a><br>
-	<div style="padding-top: 5%;">
-		<center>
-			<div id="player"></div>
-		</center>
+<div class="modal fade" id="helpquestion-frame" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<a href="javascript:;" onclick="stopVideo()"><span aria-hidden="true" style="color: black;">&Chi;</span></a>
+				</button>
+			</div>
+
+			<div class="modal-body" id="yt-player">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="layoutprove">
+
+							<div class="embed-responsive embed-responsive-16by9">
+								<div id="popupVid">
+									 <iframe id="player" class="embed-responsive-item allowfullscreen" frameborder="0" allowfullscreen></iframe>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</a>
+		</div>
 	</div>
 </div>
 
@@ -152,33 +202,17 @@
 		</center>
 	</div>
 </div>
+<button id="file-full" onclick="file_full()" hidden></button>
 {% endblock %}
 {% block script %}
 <script src="/html/js/question.js"></script>
 <script src="http://www.youtube.com/iframe_api"></script>
 <script>
-	function onYouTubeIframeAPIReady() {
-		player = new YT.Player('player', {
-			height: '600',
-			width: '800',
-			videoId: 'epJKYQiJP8w',
-			playerVars: {"rel": 0},
-			events: {
-			'onStateChange': onPlayerStateChange
-			}
-		});
-	}
-	function onPlayerStateChange(event) {
-		if (event.data == YT.PlayerState.PLAYING && !done) {
-			setTimeout(stopVideo, 6000);
-			done = true;
-		}
-	}
 	function playVideo() {
-		player.playVideo();
+		$('#player')[0].src = "https://www.youtube.com/embed/epJKYQiJP8w?enablejsapi=1";
 	}
 	function stopVideo() {
-		player.stopVideo();
+		$('#player')[0].src = '';
 	}
 </script>
 {% endblock %}

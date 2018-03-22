@@ -63,7 +63,7 @@ function loadallclassroom () {
 	$.ajax({
 		url: host + "classroom/",
 		type: "GET",
-		data: {"tkey": getCookie("teacher-key")},
+		data: {"key": getCookie("key"), "teacher": true},
 		success: function (msg) {
 			if (msg.length == 0) {
 				return;
@@ -242,7 +242,7 @@ function loadPythonHomework () {
 		url: host + "classroom/check_folder",
 		data: {
 			"folder": classroom["folder"],
-			"tkey": getCookie("teacher-key"),
+			"key": getCookie("key"),
 			"student": true},
 		success: function (msg) {
 			files_records = msg
@@ -500,7 +500,7 @@ function loadTeacherFiles () {
 		url: host + "classroom/check_folder",
 		data: {
 			"folder": classroom["folder"],
-			"tkey": getCookie("teacher-key")},
+			"key": getCookie("key")},
 		success: function (msg) {
 			$("#filelist")[0].innerHTML = ""
 			$.each(msg, function (_, i) {
@@ -517,7 +517,7 @@ function loadStudentsGrade () {
 	$.ajax({
 		url: host + "classroom/form",
 		data: {
-			"tkey": getCookie("teacher-key"),
+			"key": getCookie("key"),
 			"folder": classroom["folder"],
 			"evaluation": true,
 			"type": classroom["type"],
@@ -527,7 +527,7 @@ function loadStudentsGrade () {
 			$.ajax({
 				url: host + "classroom/form",
 				data: {
-					"tkey": getCookie("teacher-key"),
+					"key": getCookie("key"),
 					"folder": classroom["folder"],
 				},
 				success: function (msg) {
@@ -572,7 +572,8 @@ function loadStudentsGrade () {
 
 function loadChangeClassroom () {
 	json = {
-		"tkey":getCookie("teacher-key")
+		"key": getCookie("key"),
+		"teacher": true,
 	}
 	if (!(classroom["students"] instanceof Array)) {
 		json["ids"] = Object.keys(classroom["students"])
@@ -581,7 +582,6 @@ function loadChangeClassroom () {
 		json["ids"] = []
 		$.each(classroom["students"], function (_, i) {
 			json["ids"].push(i[1])
-			// seqs[i[1]] = _
 		})
 	}
 
@@ -589,6 +589,7 @@ function loadChangeClassroom () {
 		url: host + "classroom/",
 		data: json,
 		success: function (msg) {
+			console.log(msg)
 			classroom["student_real_id"] = msg
 			resetChangeClassroomField()
 		}
@@ -869,7 +870,7 @@ function deleteClassroom () {
 	}
 	else {
 		json = {
-			"tkey": getCookie("teacher-key"),
+			"key": getCookie("key"),
 			"clsid": classroom["id"],
 		}
 		$.ajax({
@@ -914,7 +915,7 @@ function checkChangeStudent () {
 
 		$.ajax({
 			url: host + "teacher/user",
-			data: {"tkey": getCookie("teacher-key"), "users": c_cids},
+			data: {"key": getCookie("key"), "users": c_cids, "teacher": true},
 			success: function (msg) {
 				$("#bg").hide()
 				if (msg["none"].length >= 1) {
@@ -975,8 +976,9 @@ function checkChangeStudent () {
 		// check userid exist
 		$.ajax({
 			url: host + "teacher/user",
-			data: {"tkey": getCookie("teacher-key"), "users": c_cids},
+			data: {"key": getCookie("key"), "users": c_cids, "teacher": true},
 			success: function (msg) {
+				console.log(msg)
 				$.each(msg["none"], function (_, i) {
 					$("#cid" + i)[0].classList.remove("bg-success")
 					$("#cid" + i)[0].classList.add("bg-danger")
@@ -1023,7 +1025,7 @@ function changeStudents() {
 		"students_name": c_names,
 		"students_cid": c_cids,
 		"students_sid": c_sids,
-		"tkey": getCookie("teacher-key")
+		"key": getCookie("key")
 	}
 	$.ajax({
 		url: host + "classroom/",
@@ -1066,7 +1068,7 @@ function playScratchProject (project_id, hw_s, student_id) {
 			return;
 		}
 		json = {
-			"tkey": getCookie("teacher-key"),
+			"key": getCookie("key"),
 			"cls_id": classroom["id"],
 			"student": student_id,
 			"hw": hw_s,
@@ -1157,7 +1159,7 @@ function showFile (file, student_id) {
 			return;
 		}
 		json = {
-			"tkey": getCookie("teacher-key"),
+			"key": getCookie("key"),
 			"cls_id": classroom["id"],
 			"student": student_id,
 			"hw": file,
@@ -1221,7 +1223,7 @@ function saveLinks() {
 	json = {
 		"clsid": classroom["id"],
 		"links": links,
-		"tkey": getCookie("teacher-key")
+		"key": getCookie("key")
 	}
 	$.ajax({
 		url: host + "classroom/",

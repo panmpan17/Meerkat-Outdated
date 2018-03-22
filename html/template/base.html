@@ -88,7 +88,7 @@
 				<li><a href="/ourteam">樂學團隊</a></li>
                 <li><a href="/aboutmilestone">樂學事記</a></li>
 				<li><a href="https://coding4funblog.wordpress.com/" target="_blank">部落格</a></li>
-				<li><a href="/aboutmedia">媒體報導</a></li>
+				<li><a href="/report">媒體報導</a></li>
 			  </ul>
 			</li>
 		  </ul>
@@ -104,6 +104,7 @@
 			<li class="dropdown">
 			  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 				  <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+				  <span name="account-name"></span>
 				  <span class="caret"></span>
 			  </a>
 			  <ul class="dropdown-menu">
@@ -112,7 +113,6 @@
 				<li class="non-login-menu"><a onclick="show_popup('signup-frame')">免費線上體驗</a></li>
 				<li class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></li>
 
-				<li class="login-menu"><a name="account-name"></a></li>
 				<li class="login-menu"><a onclick="showinfo()">帳號資訊</a></li>
 				<li class="login-menu"><a href="/classes">課程列表</a></li>
 				<li class="login-menu"><a onclick="logout()">登出</a></li>
@@ -207,7 +207,6 @@
 						<p class="non-login-menu"><a onclick="show_popup('signup-frame')">免費線上體驗</a></p>
 						<p class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></p>
 
-						<p class="login-menu"><a name="account-name"></a></p>
 						<p class="login-menu"><a onclick="showinfo()">帳號資訊</a></p>
 						<p class="login-menu"><a href="/classes">課程列表</a></p>
 						<p class="login-menu"><a onclick="logout()">登出</a></p>
@@ -317,7 +316,6 @@
 							<p class="non-login-menu"><a onclick="show_popup('signup-frame')">免費線上體驗</a></p>
 							<p class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></p>
 
-							<p class="login-menu"><a name="account-name"></a></p>
 							<p class="login-menu"><a onclick="showinfo()">帳號資訊</a></p>
 							<p class="login-menu"><a href="/classes">課程列表</a></p>
 							<p class="login-menu"><a onclick="logout()">登出</a></p>
@@ -377,65 +375,84 @@
 		</div>
 	</div>
 	<!-- info frame -->
-	<div id="info-frame" class="popup-frame" hidden>
-		<a class="close" onclick="hide_popup('info-frame')">X</a><br>
-		<div>
-			<center>
-				<table id="userinfo" class="table" style="width:90%">
-					<tr>
-						<td>帳號</td>
-						<td id="info-userid"></td>		
-					</tr>
-					<tr>
-						<td>密碼更改</td>
-						<td>
-							<input class="my-form-small" type="password" id="change_password" placeholder="舊密碼">
-							<br>
-							<input class="my-form-small" type="password" id="change_newpassword" placeholder="新密碼 8-16 (英文字母, 數字, @.)">
-							<br>
-							<input class="my-form-small" type="password" id="change_check_password" placeholder="新密碼確認">
-							<br>
-							<button class="btn btn-success" onclick="changepassword()">更改密碼</button>
-						</td>		
-					</tr>
-					<tr>
-						<td>積分</td>
-						<td id="info-point"></td>		
-					</tr>
-					<tr>
-						<td>等級</td>
-						<td id="info-level"></td>		
-					</tr>
-					<tr>
-						<td>暱稱</td>
-						<td id="info-nick"></td>		
-					</tr>
-					<tr>
-						<td>Email</td>
-						<td id="info-email"></td>		
-					</tr>
-					<tr id="info-active">
-						<td>Email 認證</td>
-						<td>
-							<input class="my-form-small" type="text" placeholder="驗證碼" id="code" style="width: 100px">
-							<button class="btn btn-success" onclick="checkenumber()">檢查驗證碼</button>
-							<button class="btn btn-info" onclick="resentmail()">重送 Email</button>
-						</td>
-					</tr>
-					<tr>
-						<td>出生年</td>
-						<td id="info-birth"></td>		
-					</tr>
-					<tr>
-						<td>工作</td>
-						<td id="info-job"></td>		
-					</tr>
-					<tr id="info-admin">
-						<td>Admin</td>
-						<td><a href="/admin" style="color: Coral">管理員頁面</a></td>		
-					</tr>
-				</table>
-			</center>
+	<div class="modal fade" id="info-frame" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<a href="javascript:;"><span aria-hidden="true" style="color: black;">&Chi;</span></a>
+					</button>
+				</div>
+
+				<div class="modal-body" id="yt-player">
+					<center>
+						<table id="userinfo" class="table" style="width:90%">
+							<tr>
+								<td>帳號</td>
+								<td id="info-userid"></td>		
+							</tr>
+							<tr>
+								<td>密碼更改</td>
+								<td>
+									<div class="input-group">
+										<input class="form-control" type="password" id="change_password" placeholder="舊密碼">
+									</div>
+
+									<div class="input-group">
+										<input class="form-control" type="password" id="change_newpassword" placeholder="新密碼 8-16 (英文字母, 數字, @.)" oninput="checknewpassword(this)" maxlength="16">
+										<span class="input-group-addon" id="newpasvalind"></span>
+									</div>
+
+									<div class="input-group">
+										<input class="form-control" type="password" id="change_check_password" placeholder="新密碼確認" maxlength="16" oninput="checknewrepassword(this)">
+										<span class="input-group-addon" id="newrepasvalind"></span>
+									</div>
+									<br>
+									<button class="btn btn-success" onclick="changepassword()">更改密碼</button>
+								</td>		
+							</tr>
+							<tr>
+								<td>暱稱</td>
+								<td id="info-nick"></td>		
+							</tr>
+							<tr>
+								<td>Email</td>
+								<td id="info-email"></td>		
+							</tr>
+							<tr id="info-active">
+								<td>Email 認證</td>
+								<td id="checkcode">
+									<input class="my-form-small" type="text" placeholder="驗證碼" id="code" style="width: 100px">
+									<button class="btn btn-success" onclick="checkenumber()">檢查驗證碼</button>
+								</td>
+								<td id="resent">
+									<button class="btn btn-info" onclick="resentmail()">重送 Email</button>
+								</td>
+								<td id="success">
+									成功
+								</td>
+							</tr>
+							<tr>
+								<td>出生年</td>
+								<td id="info-birth"></td>		
+							</tr>
+							<tr>
+								<td>工作</td>
+								<td id="info-job"></td>		
+							</tr>
+							<tr id="info-teacher">
+								<td>教師頁面</td>
+								<td><a href="/teacher" style="color: coral">/teacher</a></td>		
+							</tr>
+							<tr id="info-admin">
+								<td>管理員頁面</td>
+								<td><a href="/admin" style="color: coral">/admin</a></td>		
+							</tr>
+						</table>
+					</center>
+				</div>
+			</a>
+			</div>
 		</div>
 	</div>
 	<!-- forget password -->

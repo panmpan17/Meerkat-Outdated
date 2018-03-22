@@ -26,9 +26,9 @@ class KeyMgrPlugin(plugins.SimplePlugin):
     def get_key(self, key):
         value = self.keydict.get(key)
         if value != None:
-            timedelta = datetime.now() - value["date"]
+            timedelta = datetime.utcnow() - value["date"]
             if timedelta.seconds < KEYTIMEOUT:
-                value["date"] = datetime.now()
+                value["date"] = datetime.utcnow()
                 return (True, value["requester"])
             else:
                 self.keydict.pop(key)
@@ -38,7 +38,7 @@ class KeyMgrPlugin(plugins.SimplePlugin):
 
     def update_key(self, key, requester):
         self.keydict[key] = {
-            "date": datetime.now(),
+            "date": datetime.utcnow(),
             "requester": requester,
             }
 
@@ -53,7 +53,7 @@ class KeyMgrPlugin(plugins.SimplePlugin):
 
     def update_cls_per_key(self, key, key_type, clsr_id):
         self.cls_per[key] = {
-            "date": datetime.now(),
+            "date": datetime.utcnow(),
             "type": key_type,
             "clsr_id": clsr_id
             }
@@ -76,9 +76,9 @@ class KeyMgrTool(cherrypy.Tool):
             sleep(DAY)
             print('start key cleaning')
             keys = []
-            now = datetime.now()
+            utcnow = datetime.utcnow()
             for k, i in self.key_plugin.keydict.items():
-                timedelta = now - i["date"]
+                timedelta = utcnow - i["date"]
 
                 if timedelta.seconds > KEYTIMEOUT:
                     keys.append(k)
@@ -90,7 +90,7 @@ class KeyMgrTool(cherrypy.Tool):
 
             keys = []
             for k, i in self.key_plugin.cls_per.items():
-                timedelta = now - i["date"]
+                timedelta = utcnow - i["date"]
 
                 if timedelta.seconds > 2 * HOUR:
                     keys.append(k)

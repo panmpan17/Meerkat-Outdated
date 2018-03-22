@@ -26,6 +26,8 @@ class ErrMsg:
 
 class User(object):
     TABLE_NAME = "tb_user"
+    TEACHER = 1
+    ADMIN = 2
     user_t = None
 
     def __init__(self):
@@ -49,13 +51,14 @@ class User(object):
             Column("nickname", String, nullable=False, autoincrement=False),
             Column("job", String, nullable=True, autoincrement=False),
             Column("point", Integer, default=0, nullable=True, autoincrement=True),
-            Column("admin", Boolean, default=False, nullable=True, autoincrement=True),
+            # Column("admin", Boolean, default=False, nullable=True, autoincrement=True),
             Column("expert", Integer, default=0, nullable=True, autoincrement=True),
             Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
             Column("last_login", DateTime, default=datetime.utcnow, onupdate=datetime.utcnow,
                 autoincrement=True),
             Column("active", Boolean, default=False, nullable=True, autoincrement=True),
             Column("disabled", Boolean, default=False, nullable=True, autoincrement=True),
+            Column("type", Integer, nullable=True, autoincrement=True, default=0),
             )
         cls.user_t.create(db_engine, checkfirst=True)
         # cls.creat_user(db_meta, db_engine)
@@ -111,7 +114,7 @@ class User(object):
             "nickname": row["nickname"],
             "job": row["job"],
             "point": row["point"],
-            "admin": row["admin"], 
+            "admin": row["type"]==cls.ADMIN, 
             "expert": row["expert"],
             "create_at": GMT(row["create_at"]),
             "last_login": GMT(row["last_login"]),
@@ -120,8 +123,8 @@ class User(object):
             }
 
     @classmethod
-    def mk_dict_classes(cls, row):
-        d = {
+    def mk_dict_teacher(cls, row):
+        return {
             "id": row["id"],
             "userid": row["userid"],
             "email": row["email"],
@@ -129,16 +132,50 @@ class User(object):
             "nickname": row["nickname"],
             "job": row["job"],
             "point": row["point"],
-            "admin": row["admin"], 
+            "admin": row["type"]==cls.ADMIN, 
             "expert": row["expert"],
             "create_at": GMT(row["create_at"]),
             "last_login": GMT(row["last_login"]),
             "active": row["active"],
             "disabled": row["disabled"],
+
+            "name": row["name"],
+            "phone": row["phone"],
+            "ext_area": row["ext_area"],
+            "whole_city": row["whole_city"],
+            "class_permission": row["class_permission"],
+            "summary": row["summary"],
+            "contact_link": row["contact_link"],
             }
-        for c in row["class_access"]:
-            d[c] = True
-        return d
+    # users,
+    # teacherinfos.name,
+    # teacherinfos.phone,
+    # teacherinfos.whole_city,
+    # teacherinfos.ext_area,
+    # teacherinfos.class_permission,
+    # teacherinfos.summary,
+    # teacherinfos.contact_link,
+
+    # @classmethod
+    # def mk_dict_classes(cls, row):
+    #     d = {
+    #         "id": row["id"],
+    #         "userid": row["userid"],
+    #         "email": row["email"],
+    #         "birth_year": row["birth_year"],
+    #         "nickname": row["nickname"],
+    #         "job": row["job"],
+    #         "point": row["point"],
+    #         "admin": row["admin"], 
+    #         "expert": row["expert"],
+    #         "create_at": GMT(row["create_at"]),
+    #         "last_login": GMT(row["last_login"]),
+    #         "active": row["active"],
+    #         "disabled": row["disabled"],
+    #         }
+    #     for c in row["class_access"]:
+    #         d[c] = True
+    #     return d
 
     @classmethod
     def mk_info(cls, row):
@@ -246,6 +283,7 @@ class Question(object):
             return {
                 "id": row["id"],
                 "title": row["title"],
+                "writer": row["writer_nickname"],
                 "type": row["type"],
                 "solved": row["solved"],
                 "create_at": GMT(row["create_at"]),
@@ -256,6 +294,7 @@ class Question(object):
         return {
                 "id": row["id"],
                 "title": row["title"],
+                "writer": row["writer_nickname"],
                 "type": row["type"],
                 "solved": row["solved"],
                 "create_at": GMT(row["create_at"]),
@@ -381,19 +420,19 @@ class Post(object):
             "create_at": GMT(row["create_at"]),
             }
 
-class ClassManage(object):
-    TABLE_NAME = "tb_classmanage"
-    classmanage_t = None
+# class ClassManage(object):
+#     TABLE_NAME = "tb_classmanage"
+#     classmanage_t = None
 
-    @classmethod
-    def create_schema(cls, db_engine, db_meta):
-        cls.classmanage_t = Table(cls.TABLE_NAME, db_meta,
-            Column("uid", Integer, ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
-            Column("class_access", ARRAY(String), nullable=True, default=[], autoincrement=True),
-            Column("class_record", JSON, nullable=True, default={}, autoincrement=True),
-            )
-        cls.classmanage_t.create(db_engine, checkfirst=True)
-        return cls.classmanage_t
+#     @classmethod
+#     def create_schema(cls, db_engine, db_meta):
+#         cls.classmanage_t = Table(cls.TABLE_NAME, db_meta,
+#             Column("uid", Integer, ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
+#             Column("class_access", ARRAY(String), nullable=True, default=[], autoincrement=True),
+#             Column("class_record", JSON, nullable=True, default={}, autoincrement=True),
+#             )
+#         cls.classmanage_t.create(db_engine, checkfirst=True)
+#         return cls.classmanage_t
 
 ########################################
 class Teacher(object):
@@ -467,6 +506,25 @@ class Teacher(object):
             "weekdays": row["weekdays"],
             }
 
+class TeacherInfo(object):
+    TABLE_NAME = "tb_teacherinfo"
+    teacherinfo_t = None
+
+    @classmethod
+    def create_schema(cls, db_engine, db_meta):
+        cls.teacherinfo_t = Table(cls.TABLE_NAME, db_meta,
+            Column("id", Integer, primary_key=False, autoincrement=False, nullable=False),
+            Column("name", String, nullable=False, autoincrement=False),
+            Column("phone", String, nullable=False, autoincrement=False),
+            Column("ext_area", Integer, nullable=True, autoincrement=True, default=0),
+            Column("whole_city", Integer, nullable=True, autoincrement=True, default=0),
+            Column("class_permission", ARRAY(String), nullable=False, autoincrement=False),
+            Column("summary", Text, nullable=False, autoincrement=False),
+            Column("contact_link", JSON, nullable=False, autoincrement=True, default={}),
+            )
+        cls.teacherinfo_t.create(db_engine, checkfirst=True)
+        return cls.teacherinfo_t
+
 class Classroom(object):
     TABLE_NAME = "tb_classroom"
     classroom_t = None
@@ -476,7 +534,7 @@ class Classroom(object):
         cls.classroom_t = Table(cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
             Column("name", String, nullable=False, autoincrement=False),
-            Column("teacher", ForeignKey("tb_teacher.id"), nullable=False, autoincrement=False),
+            Column("teacher", ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
             Column("students_name", ARRAY(String), nullable=False, autoincrement=False),
             Column("students_cid", ARRAY(Integer), nullable=False, autoincrement=False),
             Column("students_sid", ARRAY(String), nullable=False, autoincrement=False),
@@ -565,7 +623,7 @@ class AdArea(object):
     def create_schema(cls, db_engine, db_meta):
         cls.advertise_t = Table(cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
-            Column("teacher", ForeignKey("tb_teacher.id"), nullable=False, autoincrement=False),
+            Column("teacher", ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
             Column("city", Integer, nullable=False, autoincrement=False),
             Column("town", Integer, nullable=False, autoincrement=False),
             )
@@ -589,11 +647,11 @@ class AdClass(object):
     def create_schema(cls, db_engine, db_meta):
         cls.advertise_t = Table(cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
-            Column("teacher", ForeignKey("tb_teacher.id"), nullable=False, autoincrement=False),
+            Column("teacher", ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
             Column("address", String, nullable=False, autoincrement=False),
             Column("type", String, nullable=False, autoincrement=False),
             Column("date", Date, nullable=False, autoincrement=False),
-            Column("enddate", Date, nullable=False, autoincrement=False),
+            Column("enddate", Date, nullable=True, autoincrement=False),
             Column("start_time", Time, nullable=False, autoincrement=False),
             Column("end_time", Time, nullable=False, autoincrement=False),
             Column("weekdays", ARRAY(Integer), nullable=False, autoincrement=False)

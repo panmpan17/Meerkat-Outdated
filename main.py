@@ -119,9 +119,10 @@ class App():
             model.Question,
             model.Answer,
             model.Post,
-            model.ClassManage,
+            # model.ClassManage,
 
             model.Teacher,
+            model.TeacherInfo,
             model.Classroom,
             model.AdArea,
             model.AdClass,

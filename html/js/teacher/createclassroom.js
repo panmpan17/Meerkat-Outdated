@@ -87,7 +87,7 @@ function check_students_scratch() {
 	// check userid exist
 	$.ajax({
 		url: host + "teacher/user",
-		data: {"tkey": getCookie("teacher-key"), "users": cids},
+		data: {"key": getCookie("key"), "users": cids, "teacher": true},
 		success: function (msg) {
 			for (i=0;i<msg["none"].length;i++) {
 				document.getElementById("cid-" + msg["none"][i]).classList.remove("bg-success")
@@ -154,7 +154,7 @@ function check_students_python() {
 	// check student id exist
 	$.ajax({
 		url: host + "teacher/user",
-		data: {"tkey": getCookie("teacher-key"), "users": cids},
+		data: {"key": getCookie("key"), "users": cids, "teacher": true},
 		success: function (msg) {
 			if (msg["none"].length >= 1) {
 				$.each(msg["none"], function (_, i) {
@@ -186,7 +186,7 @@ function create_classroom() {
 	c = confirm("創建教室");
 	if (c) {
 		json = {
-			"tkey": getCookie("teacher-key"),
+			"key": getCookie("key"),
 			"students_name": names,
 			"students_cid": cids,
 			"students_sid": sids,

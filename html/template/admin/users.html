@@ -5,7 +5,12 @@
 	table {
 		font-family: arial, sans-serif;
 		border-collapse: collapse;
-		width: 100%;
+		width: auto;
+	}
+
+	td {
+		min-width: 100px;
+		height: 40px;
 	}
 
 	#userstable td,
@@ -30,105 +35,196 @@
 	div#search-bar {
 		position: absolute;
 		text-align: center;
-		top: 110px;
-		left: 400px;
+		top: 107px;
+		left: calc(10% + 80px);
 		width: 500px;
 		height: 50px;
 		transition-duration: 0.5s;
 	}
 
-	div#search-bar.big {
-		top: calc(50% - 25px);
-		left: calc(50% - 250px);
+
+	.toggle-button {
+		max-width: 200px;
+		position: relative;
+		display: inline-block;
+		color: black;
+		margin-left: -15px;
 	}
+	.toggle-button label {
+		margin-top: -2px;
+		display: inline-block;
+		cursor: pointer;
+		text-align: left;
+	}
+	.toggle-button input {display: none}
+	.toggle-button__icon {
+		cursor: pointer;
+		pointer-events: none;
+	}
+	.toggle-button__icon:before, .toggle-button__icon:after {
+		content: "";
+		position: absolute;
+		top: 45%;
+		left: 36%;
+		transition: 0.2s ease-out;
+	}
+
+	.toggle-button--tuli label {
+		line-height: 20px;
+		text-indent: 30px;
+		opacity: 0;
+	}
+
+	.toggle-button--tuli input:checked ~ .toggle-button__icon {background: #fff;}
+
+	.toggle-button--tuli input:checked ~ .toggle-button__icon:before,
+	.toggle-button--tuli input:checked ~ .toggle-button__icon:after {
+		opacity: 1;
+	}
+
+	.toggle-button--tuli .toggle-button__icon {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 20px;
+		height: 20px;
+		transition: all 0.2s;
+		border: 2px solid #fff;
+		border-radius: 1px;
+		box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+	}
+
+	.toggle-button--tuli .toggle-button__icon:before,
+	.toggle-button--tuli .toggle-button__icon:after {
+		top: 5px;
+		left: 4px;
+		width: 12px;
+		height: 2px;
+		border-radius: 3px;
+		background: #fff;
+		box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+		top: 35%;
+		background: #FF8300;
+		opacity: 0;
+		transform-origin: left center;
+	}
+
+	.toggle-button--tuli .toggle-button__icon:before {transform: translate(0, 0) rotate(45deg) scale(0.6, 1)}
+
+	.toggle-button--tuli .toggle-button__icon:after {transform: translate(4px, 6px) rotate(-45deg)}
+
+	.toggle-button--tuli input ~ .toggle-button__icon {
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+		text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+	}
+
+	.toggle-button--tuli input:checked ~ label {color: #FF8300}
 </style>
 {% endblock %}
 {% block content %}
-<div style="width: 90%;padding-left: 10%">
-	<br><br>
-	<a href="/admin/"><button id="submit">< 回去</button></a>
-	<br><br>
-	<div id="search-bar" class="big">
-		<input id="userid-field" type="text" width="400" placeholder="Search: ">
+<main>
+	<div style="width: 90%;padding-left: 10%">
+		<br><br>
+		<a href="/admin/"><button class="btn btn-orange">< 回去</button></a>
+		<br><br>
+		<div id="search-bar">
+			<input id="userid-field" class="form-control" type="text" width="400" placeholder="Search: ">
+		</div>
+		<table id="userstable">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>帳號</th>
+					<th>Email</th>
+					<th>暱稱</th>
+					<th>註冊日期</th>
+				</tr>
+			</thead>
+			<tbody id="users"></tbody>
+		</table> 
 	</div>
-	<table id="userstable" hidden>
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>帳號</th>
-				<th>Email</th>
-				<th>暱稱</th>
-				<th>註冊日期</th>
-			</tr>
-		</thead>
-		<tbody id="users"></tbody>
-	</table> 
-	<!-- <br><br> -->
-</div>
+	<br><br>
+</main>
 {% endblock %}
 {% block bcontent %}
-<div id="userinfo-frame" class="loginsignup-frame" hidden>
-	<div class="loginsignup-frame-inside">
-		<a id="closeloginframe" onclick="hide('userinfo-frame');" style="">X</a>
-		<br>
-		<div class="frame-content" style="padding-top: 0%;">
-			<table id="userinfo2" style="width:90%">
-				<tr>
-					<td>Id</td>
-					<td id="userinfo-id"></td>		
-				</tr>
-				<tr>
-					<td>帳號</td>
-					<td id="userinfo-userid"></td>		
-				</tr>
-				<tr>
-					<td>積分</td>
-					<td id="userinfo-point"></td>		
-				</tr>
-				<tr>
-					<td>等級</td>
-					<td id="userinfo-level"></td>		
-				</tr>
-				<tr>
-					<td>暱稱</td>
-					<td id="userinfo-nick"></td>		
-				</tr>
-				<tr>
-					<td>Email</td>
-					<td id="userinfo-email"></td>		
-				</tr>
-				<tr>
-					<td>出生年</td>
-					<td id="userinfo-birth"></td>		
-				</tr>
-				<tr>
-					<td>註冊日期</td>
-					<td id="userinfo-createat"></td>		
-				</tr>
-				<tr>
-					<td>工作</td>
-					<td id="userinfo-job"></td>		
-				</tr>
-				<tr>
-					<td>管理者</td>
-					<td id="userinfo-admin"></td>		
-				</tr>
-				<tr>
-					<td>Email 認證</td>
-					<td id="userinfo-active"></td>		
-				</tr>
-				<tr>
-					<td>被封鎖</td>
-					<td id="userinfo-disabled">
-						<button id="disable" class="btn btn-danger btn-lg">
-							封鎖使用者
-						</button>
-						<button id="undisable" class="btn btn-success btn-lg">
-							解鎖使用者
-						</button>
-					</td>		
-				</tr>
-			</table>
+<div class="modal fade" id="userinfo-frame" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<a href="javascript:;"><span aria-hidden="true" style="color: black;">&Chi;</span></a>
+				</button>
+			</div>
+
+			<div class="modal-body">
+				<table id="userinfo2" style="padding-left: 5%">
+					<tr>
+						<td>Id</td>
+						<td id="userinfo-id"></td>		
+					</tr>
+					<tr>
+						<td>帳號</td>
+						<td id="userinfo-userid"></td>		
+					</tr>
+					<tr>
+						<td>積分</td>
+						<td id="userinfo-point"></td>		
+					</tr>
+					<tr>
+						<td>等級</td>
+						<td id="userinfo-level"></td>		
+					</tr>
+					<tr>
+						<td>暱稱</td>
+						<td id="userinfo-nick"></td>		
+					</tr>
+					<tr>
+						<td>Email</td>
+						<td id="userinfo-email"></td>		
+					</tr>
+					<tr>
+						<td>Email 認證</td>
+						<td>
+							<div class="container">
+								<div class="toggle-button toggle-button--tuli">
+									<input id="userinfo-active" type="checkbox">
+									<label for="userinfo-active">.</label>
+									<div class="toggle-button__icon"></div>
+								</div>
+							</div>
+						</td>		
+					</tr>
+					<tr>
+						<td>出生年</td>
+						<td id="userinfo-birth"></td>		
+					</tr>
+					<tr>
+						<td>註冊日期</td>
+						<td id="userinfo-createat"></td>		
+					</tr>
+					<tr>
+						<td>工作</td>
+						<td id="userinfo-job"></td>		
+					</tr>
+					<tr>
+						<td>管理者</td>
+						<td id="userinfo-admin"></td>		
+					</tr>
+					<tr>
+						<td>被封鎖</td>
+						<td>
+							<div class="container">
+								<div class="toggle-button toggle-button--tuli">
+									<input id="userinfo-disabled" type="checkbox">
+									<label for="userinfo-disabled">.</label>
+									<div class="toggle-button__icon"></div>
+								</div>
+							</div>
+						</td>		
+					</tr>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>
@@ -137,10 +233,9 @@
 <script>
 var users = {};
 var alphabet_index = {};
-// var users_table = $("#users")[0]
 
 user_format = `\
-<tr class="i">
+<tr class="i" style="cursor:pointer" onclick="showdetail({0})">
 	<td>{0}</td>
 	<td><a onclick="showdetail({0})">{1}</a></td>
 	<td>{2}</td>
@@ -155,7 +250,8 @@ function showdetail (uid) {
 		type: "GET",
 		data: {"key": getCookie("key"), "id": uid},
 		success: function (msg) {
-			show('userinfo-frame');
+			console.log(msg)
+			$("#userinfo-frame").modal("show");
 			$("#userinfo-id")[0].innerHTML = msg["id"];
 			$("#userinfo-userid")[0].innerHTML = msg["userid"];
 			$("#userinfo-point")[0].innerHTML = msg["point"];
@@ -165,61 +261,20 @@ function showdetail (uid) {
 			$("#userinfo-createat")[0].innerHTML = msg["create_at"];
 			$("#userinfo-job")[0].innerHTML = msg["job"];
 			$("#userinfo-admin")[0].innerHTML = msg["admin"];
-			$("#userinfo-active")[0].innerHTML = msg["active"]
+			$("#userinfo-active")[0].checked = msg["active"]
+			$("#userinfo-disabled")[0].checked = msg["disabled"];
 
 			$("#userinfo-level")[0].innerHTML = "一般";
 			point = msg["point"];
 			if (point > 200) {$("#userinfo-level")[0].innerHTML = "鑽石"}
 			else if (point > 100) {$("#userinfo-level")[0].innerHTML = "白金"}
 			else if (point > 20) {$("#userinfo-level")[0].innerHTML = "黃金"}
-
-			if (msg["disabled"]) {
-				$("#undisable").show();
-				$("#disable").hide();
-
-				$("#undisable")[0].onclick = function () {
-					disableuser(msg["id"], false)
-				}
-			}
-			else {
-				$("#undisable").hide();
-				$("#disable").show();
-
-				$("#disable")[0].onclick = function () {
-					disableuser(msg["id"], true)
-				}
-			}
-		}
-	})
-}
-
-function disableuser (uid, disabled) {
-	$.ajax({
-		url: host + "user/",
-		type: "PUT",
-		dataType: "json",
-		data: JSON.stringify({"key": getCookie("key"), "uid":uid, "disabled": disabled}),
-		contentType: "application/json; charset=utf-8",
-		success: function (msg) {
-			showdetail(uid);
-		},
-		error: function (err) {
-			console.log(err)
 		}
 	})
 }
 
 $("#userid-field").on("input change", function (e) {
 	value = e.currentTarget.value
-	if (value == "") {
-		$("#search-bar")[0].classList.add("big")
-		$("#userstable").hide(600)
-	}
-	else {
-		$("#search-bar")[0].classList.remove("big")	
-		$("#userstable").show(600)
-	}
-
 	first_chr = String(value[0])
 
 	$("#users").html("")

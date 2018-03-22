@@ -83,7 +83,7 @@ div.changepasswordframe {
 	}
 }
 
-button {
+button:not(.btn):not(.card) {
 	border-radius: 50px;
 	padding: 10px 50px;
 	border: 2px solid #DC6180;
@@ -92,7 +92,7 @@ button {
 	background-color: white;
 }
 
-button:hover {
+button:not(.btn):not(.card):hover {
 	color: white;
 	background: #DC6180;
 	cursor: pointer;
@@ -126,4 +126,53 @@ li.filelist:hover {
 	background-color: lightgray;
 	text-decoration: underline;
 	cursor: pointer;
+}
+
+#cards .card {
+	cursor: default;
+	float: left;
+	display: inline-block;
+	background: rgb(240, 240, 240);
+	min-width: 350px;
+	height: auto;
+	margin: 4px 4px;
+	text-align: left;
+}
+
+#cards .card img {
+	width: 100px;
+	float: left;
+}
+
+#cards .card .info {
+	float: left;
+	margin-top: 20px;
+	margin-left: 20px;
+	line-height: 30px;
+}
+
+#cards .card .info .name {
+	color: rgb(48, 79, 79);
+	font-size: 20px;
+	font-weight: 900;
+}
+
+#cards .card .info .phone {
+	font-size: 13px;
+	font-weight: 100;
+	color: #AAA;
+}
+
+#cards .card .contact-link > * {
+	margin: 0px 5px;
+	margin-left: 0px;
+}
+
+#cards .card .describe {
+	clear: left;
+	padding: 0px 15px;
+}
+
+#cards .card .btn {
+	float: right;
 }

@@ -31,9 +31,6 @@ function login () {
 				storeCookie("userid", msg["userid"]);
 				storeCookie("key", msg["key"]);
 
-				// hide_popup("login-frame");
-				// $(".non-login-menu").show();
-				// $(".login-menu").hide();
 				window.location.reload();
 			},
 			error: function (error) {
@@ -123,9 +120,6 @@ function signup () {
 			storeCookie("userid", msg["userid"]);
 			storeCookie("key", msg["key"]);
 
-			// hide_popup("signup-frame");
-			// $(".non-login-menu").hide();
-			// $(".login-menu").show();
 			window.location.reload();
 		},
 		error: function (error) {
@@ -152,43 +146,6 @@ function logout () {
 	window.location.reload();
 }
 
-function to_html (dict) {
-	$("#info-userid")[0].innerHTML = dict["userid"];
-	$("#info-point")[0].innerHTML = dict["point"];
-	$("#info-nick")[0].innerHTML = dict["nickname"];
-	$("#info-birth")[0].innerHTML = dict["birth_year"];
-	$("#info-job")[0].innerHTML = dict["job"];
-
-	if (dict["active"]) {
-		$("#info-email")[0].innerHTML = dict["email"] + CHANGE_E_BTN;
-	}
-	else {
-		$("#info-email")[0].innerHTML = dict["email"];
-	}
-
-	$("#info-level")[0].innerHTML = "一般";
-	point = dict["point"];
-	if (point > 200) {$("#info-level")[0].innerHTML = "鑽石"}
-	else if (point > 100) {$("#info-level")[0].innerHTML = "白金"}
-	else if (point > 20) {$("#info-level")[0].innerHTML = "黃金"}
-
-	if (dict["active"]) {
-        try {
-            $("#userinfo")[0].childNodes[1].removeChild(
-				$("#info-active")[0])
-        }
-        catch(err) {}
-	}
-
-	if (!dict["admin"]) {
-        try {
-			$("#userinfo")[0].childNodes[1].removeChild(
-				$("#info-admin")[0])
-        }
-        catch(err) {}
-	}
-}
-
 function showinfo () {
 	key = getCookie("key");
 	id = getCookie("id");
@@ -198,8 +155,57 @@ function showinfo () {
 		type: "GET",
 		data: string_param,
 		success: function (msg) {
-			to_html(msg);
-			show_popup('info-frame');
+			$("#info-userid")[0].innerHTML = msg["userid"];
+			// $("#info-point")[0].innerHTML = msg["point"];
+			$("#info-nick")[0].innerHTML = msg["nickname"];
+			$("#info-birth")[0].innerHTML = msg["birth_year"];
+			$("#info-job")[0].innerHTML = msg["job"];
+
+			if (msg["active"]) {
+				$("#info-email")[0].innerHTML = msg["email"] + CHANGE_E_BTN;
+			}
+			else {
+				$("#info-email")[0].innerHTML = msg["email"];
+			}
+
+			// $("#info-level")[0].innerHTML = "一般";
+			// point = msg["point"];
+			// if (point > 200) {$("#info-level")[0].innerHTML = "鑽石"}
+			// else if (point > 100) {$("#info-level")[0].innerHTML = "白金"}
+			// else if (point > 20) {$("#info-level")[0].innerHTML = "黃金"}
+
+			if (msg["active"]) {
+				$("#info-active #success").show();
+				$("#info-active #resent").hide();
+				$("#info-active #checkcode").hide();
+			}
+			else {
+				console.log(msg)
+				$("#info-active #success").hide();
+
+				if (msg["email_valid"]) {
+					$("#info-active #checkcode").show();
+					$("#info-active #resent").hide();
+				}
+				else {
+					$("#info-active #checkcode").hide();
+					$("#info-active #resent").show();
+				}
+			}
+
+			if (!msg["admin"]) {
+				try {
+					$("#userinfo")[0].childNodes[1].removeChild($("#info-admin")[0])
+				}
+				catch(err) {}
+			}
+			else if (msg["type"] == 0) {
+				try {
+					$("#userinfo")[0].childNodes[1].removeChild($("#info-teacher")[0])
+				}
+				catch(err) {}
+			}
+			$("#info-frame").modal("show");
 		},
 		error: function (msg) {
 			reload = confirm("請重新登錄");
@@ -223,7 +229,7 @@ function resentmail () {
 		error: function (msg) {
 			reload = confirm("請重新登錄");
 			if (reload) {
-				hide_popup('info-frame');
+				$("#info-frame").modal("hide");
 				show_popup("login-frame");
 			}
 		}
@@ -232,9 +238,9 @@ function resentmail () {
 }
 
 function changepassword () {
-	password = $("#change_password")[0].value
-	newpassword = $("#change_newpassword")[0].value
-	check_password = $("#change_check_password")[0].value
+	password = $("#change_password")[0].value;
+	newpassword = $("#change_newpassword")[0].value;
+	check_password = $("#change_check_password")[0].value;
 
 	if (!(password && newpassword && check_password)) {
 		alert("不能留空");
@@ -270,7 +276,7 @@ function changepassword () {
 		contentType: "application/json; charset=utf-8",
 		success: function (msg) {
 			alert("密碼已改變, 請重新登錄");
-			hide_popup('info-frame');
+			$("#info-frame").modal("hide");
 			show_popup("login-frame");
 		},
 		error: function (error) {
@@ -307,4 +313,33 @@ function hide_popup (pop_id) {
 function show_popup (pop_id) {
 	$("#black-bg").show();
 	$("#" + pop_id).show();
+}
+
+function checknewpassword (e) {
+	pass_valid = matchRE(id_pass_re, e.value);
+	if (pass_valid) {
+		$("#newpasvalind")[0].innerHTML = "✔";
+		$("#newpasvalind")[0].style.color = "rgb(62, 117, 63)";
+		$("#newpasvalind")[0].style.backgroundColor = "rgb(223, 240, 217)";
+
+	}
+	else {
+		$("#newpasvalind")[0].innerHTML = "✖";
+		$("#newpasvalind")[0].style.color = "rgb(167, 69, 68)";
+		$("#newpasvalind")[0].style.backgroundColor = "rgb(242, 222, 222)";
+	}
+}
+
+function checknewrepassword (e) {
+	if (e.value == $("#change_newpassword")[0].value) {
+		$("#newrepasvalind")[0].innerHTML = "✔";
+		$("#newrepasvalind")[0].style.color = "rgb(62, 117, 63)";
+		$("#newrepasvalind")[0].style.backgroundColor = "rgb(223, 240, 217)";
+
+	}
+	else {
+		$("#newrepasvalind")[0].innerHTML = "✖";
+		$("#newrepasvalind")[0].style.color = "rgb(167, 69, 68)";
+		$("#newrepasvalind")[0].style.backgroundColor = "rgb(242, 222, 222)";
+	}
 }

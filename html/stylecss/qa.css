@@ -315,3 +315,13 @@ stylecss faq.css
 		margin: 0 20px;
 	}
 }
+
+a {
+	color: rgb(255,131,0);
+}
+
+.hashtag {
+	background: #95D600;
+	color: white;
+	padding: 2px 5px;
+}

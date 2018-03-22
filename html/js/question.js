@@ -1,5 +1,6 @@
 var question_id = null;
 var filter = {}
+var UPLOAD_LIMIT = 10 * 1024 * 1024;
 page_f = "<li class=\"paging{1}\" onclick=\"changepage({0})\"><a>{0}</a></li>"
 more_f = "<li class=\"paging\"\"><a>...</a></li>"
 
@@ -144,6 +145,7 @@ card_format = `
 <div class="card" onclick="openquestion({4})">
 	<div class="card-solved" style="background-color:{3}"></div><div class="card-title">{0}</div>
 	<br>
+	<div class="card-author">{7}</div>
 	<span class="card-time">{1}</span>
 	&nbsp;&nbsp;&nbsp;
 	<span class="card-type" style="background-color:{5}">{2}</span>
@@ -221,7 +223,8 @@ function to_questions (l) {
 				solved_color,
 				i["id"],
 				colormatch[i["type"]],
-				reply)
+				reply,
+				i["writer"])
 
 			cards += card;
 		})
@@ -607,7 +610,7 @@ function hidequestion() {
 
 multi_file_btn_data = {}
 input_2_label = {}
-files_format = `<tr><td>{0}</td><td class="delete-file" onclick="delete_file('{1}', '{2}')">X</td></tr>`
+files_format = `<tr><td class="filename">{0}</td><td class="delete-file" onclick="delete_file('{1}', '{2}')"></td></tr>`
 
 function format() {
     var s = arguments[0];
@@ -643,7 +646,7 @@ function find_input (lid) {
 	$("#" + lid + "-files")[0].innerHTML = files_html
 	// console.log(files_html)
 	if (!new_for) {
-		alert("滿了");
+		$("#" + lid)[0].setAttribute("for", "file-full");
 	}
 }
 
@@ -651,6 +654,22 @@ function delete_file (label_id, input_id) {
 	$("#" + input_id)[0].value = "";
 	find_input(label_id);
 }
+
+function file_full () {
+	alert("檔案上傳數量已達上限 !")
+}
+
+// title_re = /[a-zA-Z0-9!,.，。！\-\+=_]{1,50}/g;
+// function checktitle (e) {
+// 	if (matchRE(title_re, e.value)) {
+// 		e.parentNode.classList.remove("has-error")
+// 		e.parentNode.classList.add("has-success")
+// 	}
+// 	else {
+// 		e.parentNode.classList.add("has-error")
+// 		e.parentNode.classList.remove("has-success")
+// 	}
+// }
 
 $(document).ready(function () {
 	$.each($(".multi-file-btn"), function (_, btn) {
@@ -672,6 +691,12 @@ $(document).ready(function () {
 				if (!breaked) {
 				    alert("檔案格式不合");
 				    e.value = ""
+				    return;
+				}
+				else if (e.files[0].size > UPLOAD_LIMIT) {
+					alert("檔案過大");
+					e.value = ""
+					return
 				}
 				else {
 					find_input(input_2_label[e.id])

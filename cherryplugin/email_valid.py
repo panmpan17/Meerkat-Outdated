@@ -5,9 +5,7 @@ from datetime import datetime
 from uuid import uuid1 as uuid
 
 MINUTE = 60
-HOUR = 60
-DAY = 24
-KEYTIMEOUT = 2 * DAY * HOUR * MINUTE
+KEYTIMEOUT = 15 * MINUTE
 
 def generate_code():
 	code = str(uuid())
@@ -43,15 +41,22 @@ class EmailValidPlugin(plugins.SimplePlugin):
 		key = generate_code()
 		self.validdict[uid] = {
 			"key": key,
-			"datetime": datetime.now(),
+			"datetime": datetime.utcnow(),
 			}
 		return key
+
+	def get_status(self, uid):
+		try:
+			timedelta = datetime.utcnow() - self.validdict[uid]["datetime"]
+			return timedelta.seconds < KEYTIMEOUT
+		except Exception as e:
+			return False
 
 	def check_mail(self, uid, key):
 		value = self.validdict.get(uid)
 		if value:
 			if self.validdict[uid]["key"] == key:
-				timedelta = datetime.now() - self.validdict[uid]["datetime"]
+				timedelta = datetime.utcnow() - self.validdict[uid]["datetime"]
 				self.validdict.pop(uid)
 				if timedelta.seconds < KEYTIMEOUT:
 					return True

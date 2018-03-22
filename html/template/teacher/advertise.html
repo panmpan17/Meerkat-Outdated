@@ -79,7 +79,8 @@
 		display: inline-block;
 		background: rgb(240, 240, 240);
 		min-width: 350px;
-		width: 50%;
+		width: calc(50% - 10px);
+		height: 230px;
 		margin: 4px 4px;
 		text-align: left;
 	}
@@ -92,6 +93,7 @@
 	#cards .card .info {
 		float: left;
 		margin-top: 20px;
+		margin-left: 20px;
 		line-height: 30px;
 	}
 
@@ -109,6 +111,7 @@
 
 	#cards .card .contact-link > * {
 		margin: 0px 5px;
+		margin-left: 0px;
 	}
 
 	#cards .card .describe {
@@ -190,7 +193,7 @@
 		]
 
 		CARD_F = `<button class="card">
-			<img src="/html/images/unic/{4}" >
+			<img src="{4}" >
 			<div class="info">
 				<span class="name">{0}</span><br>
 				<span class="phone">{1}</span>
@@ -224,13 +227,13 @@
 					success: function (msg) {
 						cities_teachers[city_index] = {}
 
-						$.each(msg, function (_, teacher) {
+						$.each(msg["teachers"], function (_, teacher) {
 							if (cities_teachers[city_index][teacher["town"]] == undefined) {
 								cities_teachers[city_index][teacher["town"]] = new Set()
 							}
 							cities_teachers[city_index][teacher["town"]].add(teacher["id"])
 
-							t_id = teacher["id"]
+							var t_id = teacher["id"]
 							if (teachers_data[t_id] == undefined) {
 								teachers_data[t_id] = {
 									"id": teacher["id"],
@@ -242,7 +245,7 @@
 								}
 							}
 
-							adcls_id = teacher["adclassid"]
+							var adcls_id = teacher["adclassid"]
 							if (adcls_id != null) {
 								if (teachers_data[t_id]["adclass"][adcls_id] == undefined) {
 									teachers_data[t_id]["adclass"][adcls_id] = {
@@ -257,6 +260,11 @@
 									}
 								}
 							}
+						})
+
+						$.each(msg["avatar"], function (_, image) {
+							var id_ = parseInt(image.substring(0, image.indexOf(".")))
+							teachers_data[id_]["avatar"] = image
 						})
 						display_towns_btn(city, city_index);
 						display_teacher(city_index, -1);
@@ -341,18 +349,30 @@
 					}
 				})
 
+				if (contact_link == "") {
+					contact_link = `<div class="btn btn-orange" style="opacity:0">a</div>`
+				}
+
+				if (t_data["avatar"] != undefined) {
+					avatar = "/downloads/avatar/" + t_data["avatar"];
+				}
+				else {
+					avatar = "/html/images/unic/" + unic_images[unic_index];
+					unic_index ++;
+					if (unic_index == unic_images.length) {
+						unic_index = 0;
+					}
+				}
+
 				html += format(
 					CARD_F,
 					t_data["name"],
 					t_data["phone"],
 					contact_link,
 					t_data["summary"].replace(/\n/g, "<br>"),
-					unic_images[unic_index],
+					// unic_images[unic_index],
+					avatar,
 					)
-				unic_index ++
-				if (unic_index == unic_images.length) {
-					unic_index = 0
-				}
 			})
 
 			$("#cards")[0].innerHTML = html;

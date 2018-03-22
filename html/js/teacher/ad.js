@@ -52,7 +52,7 @@ function newadclass() {
 	}
 
 	json = {
-	    "tkey": getCookie("teacher-key"),
+	    "key": getCookie("key"),
 	    "address": address,
 	    "type": type,
 	    "date": date,
@@ -82,7 +82,7 @@ function deleteadclass(aid) {
 	if (!c) {
 		return;
 	}
-	json = {"tkey": getCookie("teacher-key"), "aid": aid}
+	json = {"key": getCookie("key"), "aid": aid}
 	$.ajax({
 		url: host + "adclass?" + $.param(json),
 		type: "DELETE",
@@ -97,17 +97,15 @@ function loadadclass() {
 		url: host + "adclass/",
 		type: "GET",
 		data: {"teacher": true,
-			"tkey": getCookie("teacher-key")},
+			"key": getCookie("key")},
 		success: function (msg) {
 			$("#tadclass")[0].innerHTML = "";
 
+			console.log(msg)
 			$.each(msg["adclasses"], function (_, i) {
 				c_weekdays = []
-				$.each(i["weekdays"], function (e) {
-					c_weekdays.push(
-						chinese_weekday[
-							e
-							])
+				$.each(i["weekdays"], function (_, weekday) {
+					c_weekdays.push(chinese_weekday[weekday])
 				})
 
 				enddate = ""

@@ -87,10 +87,13 @@ button#prevnext {
 }
 
 #cards {
-	margin-left: 200px;
-	margin-top: 30px;
-	margin-right: 30px;
+	/*position: relative;*/
+	/*float: left;*/
+	display: inline-block;
+	margin-left: 10px;
+	margin-top: 18px;
 	margin-bottom: 15px;
+	width: calc(100% - 285px);
 }
 
 .card {
@@ -196,12 +199,19 @@ span.ident {
 }
 
 div.mynav-sidebar {
+	/*float: left;*/
+	vertical-align: top;
+	display: inline-block;
 	color: white;
-	position: absolute;
+	/*position: relative;*/
 	width: 170px;
+	height: auto;
 	background: rgb(6, 48, 68);
 	left: 0;
-	top: 130px;
+	top: 20px;
+	margin-left: 50px;
+	margin-top: 20px;
+	margin-bottom: 10px;
 }
 
 div.mynav-sidebar .item {
@@ -232,6 +242,28 @@ div.mynav-sidebar .nav-dropdown li {
 div.mynav-sidebar .nav-dropdown li:hover {
 	color: rgb(6, 48, 68);
 	background: white;
+}
+
+@media (max-width: 786px) {
+	div.mynav-sidebar,
+	div#cards {
+		width: calc(100% - 20px);
+		margin-bottom: 10px;
+	}
+
+	div.mynav-sidebar {
+		margin-left: 10px;
+	}
+}
+
+@media (min-width: 1008px) {
+	div.mynav-sidebar {
+		margin-left: 70px;
+	}
+
+	div#cards {
+		width: calc(100% - 360px);
+	}
 }
 
 #page-control {

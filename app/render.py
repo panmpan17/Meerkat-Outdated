@@ -234,9 +234,9 @@ class UserCaseHandler(object):
     # def mission(self):
     #     return render("mission.html")
 
-    @cherrypy.expose
-    def report(self):
-        return render("report.html")
+    # @cherrypy.expose
+    # def report(self):
+    #     return render("report.html")
 
     @cherrypy.expose
     def presentation(self):
@@ -298,7 +298,7 @@ class UserCaseHandler(object):
         return render("aboutdream.html")
 
     @cherrypy.expose
-    def aboutmedia(self):
+    def report(self):
         return render("aboutmedia.html")
 
     @cherrypy.expose
@@ -331,27 +331,69 @@ class TeacherHandler(object):
     _root = "/teacher/"
     _cp_config = {
         "tools.keytool.on": True,
+        "tools.filetool.on": True,
         }
 
     @cherrypy.expose
-    def index(self):
-        return render("teacher/index.html")
-
-    @cherrypy.expose
-    def login(self):
+    def index(self, *args, **kwargs):
         cookie = cherrypy.request.cookie
-        try:
-            key = str(cookie["teacher-key"].value)
-        except:
-            key = ""
-
         key_mgr = cherrypy.request.key
+        path = cherrypy.request.file_mgr.get_download_path()
 
-        key_valid = key_mgr.get_key(key)
-        if key_valid[0]:
+        if cherrypy.request.method == "GET":
+            return render("teacher/index.html")
+        elif cherrypy.request.method == "POST":
+            if "avatar" not in kwargs:
+                raise cherrypy.HTTPError(404)
+
+            try:
+                key = str(cookie["key"].value)
+                id_ = str(cookie["id"].value)
+            except:
+                raise cherrypy.HTTPRedirect("/")
+
+            key_valid = key_mgr.get_key(key)
+            if not key_valid[0]:
+                raise cherrypy.HTTPRedirect("/")
+
+            avatar_file = kwargs["avatar"]
+            type_ = str(avatar_file.type)
+            type_ = type_[type_.find("/") + 1:]
+            try:
+                if not os.path.isdir(path + "avatar/"):
+                    os.mkdir(path + "avatar/")
+
+                filename = path + f"avatar/{id_}.{type_}"
+                f = open(filename, "wb")
+                while True:
+                    data = avatar_file.file.read(8192)
+                    if not data:
+                        break
+                    f.write(data)
+                f.close()
+            except:
+                if os.path.isfile(filename):
+                    os.remove(filename)
+
             raise cherrypy.HTTPRedirect("/teacher/")
+        else:
+            raise cherrypy.HTTPError(404)
 
-        return render("teacher/login.html")
+    # @cherrypy.expose
+    # def login(self):
+    #     cookie = cherrypy.request.cookie
+    #     try:
+    #         key = str(cookie["key"].value)
+    #     except:
+    #         key = ""
+
+    #     key_mgr = cherrypy.request.key
+
+    #     key_valid = key_mgr.get_key(key)
+    #     if key_valid[0]:
+    #         raise cherrypy.HTTPRedirect("/teacher/")
+
+    #     return render("teacher/login.html")
 
     @cherrypy.expose
     def advertise(self):

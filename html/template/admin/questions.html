@@ -5,7 +5,6 @@
 	table {
 		font-family: arial, sans-serif;
 		border-collapse: collapse;
-		width: 100%;
 	}
 
 	#userstable td,
@@ -30,26 +29,33 @@
 <link rel="stylesheet" href="/html/css/question.css">
 {% endblock %}
 {% block content %}
-<div style="width: 90%;padding-left: 10%">
-	<br><br>
-	<a href="/admin/"><button id="submit">< 回去</button></a>
-	<br><br>
-	<table id="userstable">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Title</th>
-				<th>Type</th>
-				<th>Solved</th>
-				<th>Create At</th>
-				<th>Delete</th>
-			</tr>
-		</thead>
-		<tbody id="users">
-		</tbody>
-	</table>
-	<br><br>
-</div>
+<main>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<br><br>
+				<a href="/admin/"><button class="btn btn-orange">< 回去</button></a>
+				<br><br>
+				<table id="userstable">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Title</th>
+							<th>Type</th>
+							<th>Solved</th>
+							<th>Create At</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody id="users">
+					</tbody>
+				</table>
+				<br><br>
+			</div>
+		</div>
+	</div>
+</main>
+
 {% endblock %}
 {% block bcontent %}
 <div id="question-frame" class="loginsignup-frame" hidden>

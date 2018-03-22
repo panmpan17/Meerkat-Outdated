@@ -233,6 +233,9 @@ function show_description() {
 	$("#view-block #video")[0].innerHTML = video_html;
 	$("#btns")[0].innerHTML = ""
 	resize_video_frame();
+
+	$("#prev")[0].style.opacity = "0";
+	$("#next")[0].style.opacity = "0";
 }
 
 // show single video
@@ -355,6 +358,15 @@ function show_video() {
 		}
 	}
 	resize_video_frame();
+
+	$("#prev")[0].style.opacity = "100";
+	$("#next")[0].style.opacity = "100";
+	if (video == 0) {
+		$("#prev")[0].style.opacity = "0";
+	}
+	else if (class_["lessons"][lesson]["content"].length == (video + 1)) {
+		$("#next")[0].style.opacity = "0";
+	}
 }
 
 function section_video_jump (lesson, video, section_index) {

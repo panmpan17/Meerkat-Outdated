@@ -38,24 +38,16 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/"><i class="fa fa-chevron-circle-left" aria-hidden="true"></i> 回首頁</a>
+				<a class="navbar-brand" href="/"><i class="fa fa-chevron-circle-left" aria-hidden="true"></i> 回網站</a>
 			</div>
 			<!-- Top Menu Items -->
-			<ul class="nav navbar-right top-nav">
-				<li class="dropdown">
-					<a href="#" data-toggle="dropdown" onclick="logout()">
-						登出
-					</a>
-				</li>
-			</ul>
-
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav side-nav" id="navbar">
 					<li id="button-main" class="active">
-						<a onclick="change_page('main')"><i class="fa fa-fw fa-home"></i> 資訊</a>
+						<a onclick="change_page('main')"><i class="fa fa-fw fa-home"></i> 首頁</a>
 					</li>
 					<li id="button-change">
-						<a onclick="change_page('change')"><i class="fa fa-fw fa-wrench"></i> 更改</a>
+						<a onclick="change_page('change')"><i class="fa fa-fw fa-wrench"></i> 基本資訊</a>
 					</li>
 					<li id="button-createclassroom">
 						<a onclick="change_page('createclassroom')"><i class="fa fa-fw fa-plus"></i> 建立一個新的教室</a>
@@ -102,38 +94,55 @@
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12">
-						<h3 id="teacher-name"></h3>
+						<h3 name="teacher-name"></h3>
 						<hr>
 					</div>
 					<div class="col-md-2 col-xs-12">
-						<b>變更密碼</b>
+						<b>變更頭貼</b>
 						<br><br>
 					</div>
-					<div class="col-md-8 col-xs-12" class="changepasswordframe">
-						<input type="password" class="form-control" placeholder="舊密碼" id="oldpassword"><br>
-						<input type="password" class="form-control" placeholder="新密碼 (建議 8-16 英文字母, 數字)" id="newpassword"><br>
-						<input type="password" class="form-control" placeholder="確認新密碼" id="renewpassword"><br>
-						<button class="btn btn-success" onclick="changepassword()">更改密碼</button>
-						<br><br>
+					<div class="col-md-8 col-xs-12">
+						<label for="uploadavatar">
+							<button>上傳頭貼</button>
+						</label>
+						<button id="confirmavatar" onclick="confirm_avatar()" hidden>確認上傳</button>
+						<form method="post" enctype="multipart/form-data" id="avatarform" hidden>
+							<input id="uploadavatar" name="avatar" type="file" accept="image/*" onchange="upload_avatar(event)">
+						</form>
+						
+
+						<div id="cards" hidden>
+							<button class="card">
+								<img id="output" >
+								<div class="info">
+									<span class="name" name="teacher-name"></span><br>
+									<span class="phone" name="teacher-phone"></span>
+								</div>
+								<br>
+								<br>
+								<div class="describe" name="teacher-summary"></div>
+							</button>
+						</div>
 					</div>
-					<div class="col-md-12 col-xs-12"></div>
+				</div>
+				<br>
+				<div class="row">
 					<div class="col-md-2 col-xs-12">
 						<b>變更自我介紹</b>
 						<br><br>
 					</div>
-					<div class="col-md-8 col-xs-12" class="changepasswordframe">
+					<div class="col-md-8 col-xs-12">
 						<textarea id="self-intro" class="form-control" maxlength="120" placeholder="自我介紹 (120 字以下)" cols="30" rows="10"></textarea><br>
 						<button class="btn btn-success" onclick="changesummary()">更改自我介紹</button>
 					</div>
-					<div class="col-md-12 col-xs-12">
-						<br><br>
-					</div>
+				</div>
+				<div class="row">
 					<div class="col-md-2 col-xs-12">
 						<b>變更聯絡資訊</b>
 						<br><br>
 						<span style="color: lightgray;font-size:10px">電話已經記錄了<br>不需要再新增電話</span>
 					</div>
-					<div class="col-md-8 col-xs-12" class="changepasswordframe">
+					<div class="col-md-8 col-xs-12">
 						<h4>FB</h4>
 						<input id="cl_FB" name="contact_link" class="form-control" type="text">
 						<h4>Line</h4>
@@ -421,7 +430,7 @@
 				<label style="cursor: pointer;color:dodgerblue;font-weight:700" for="annocefile">上傳 <i class="fa fa-cloud-upload" aria-hidden="true"></i></label>
 				<form action="/rest/1/upload/teacherfile" method="post" enctype="multipart/form-data" id="annoceform" hidden>
 					<input type="file" accept=".py,.sb,.sb2,.png,.gif,.jpeg,.jpg" name="annoce" id="annocefile" type="file" onchange="upload_annoce()">
-					<input type="text" name="tkey" id="annoce-tkey">
+					<input type="text" name="key" id="annoce-tkey">
 					<input type="text" name="clsrid" id="annoce-clsrid">
 				</form>
 				<br>
@@ -572,6 +581,7 @@
 	</div>
 
 	<script>
+		adareas = []
 		CLASS_TO = {
 			"python_01": "Python 初級",
 			"scratch_1": "Scratch 初級",
@@ -596,13 +606,6 @@
 				loadadarea();
 				loadadclass();
 			}
-		}
-
-		function logout() {
-			storeCookie("teacher-key", "");
-			storeCookie("teacher-userid", "");
-			storeCookie("teacher-id", "");
-			location.reload();
 		}
 
 		// advertise
@@ -642,7 +645,7 @@
 			}
 
 			json = {
-				"tkey": getCookie("teacher-key"),
+				"key": getCookie("key"),
 				"city": city,
 				"town": town,
 				}
@@ -664,7 +667,7 @@
 				type: "GET",
 				data: {
 					"teacher": true,
-					"tkey": getCookie("teacher-key")},
+					"key": getCookie("key")},
 				success: function (msg) {
 					$("#tadvertise")[0].innerHTML = "";
 
@@ -689,7 +692,7 @@
 		}
 
 		function deletearea(aid) {
-			json = {"tkey": getCookie("teacher-key"), "aid": aid}
+			json = {"key": getCookie("key"), "aid": aid}
 			$.ajax({
 				url: host + "adarea?" + $.param(json),
 				type: "DELETE",
@@ -697,52 +700,6 @@
 					loadadarea();
 				}
 			});
-		}
-
-		function changepassword() {
-			password = $("#oldpassword")[0].value
-			newpassword = $("#newpassword")[0].value
-			check_password = $("#renewpassword")[0].value
-
-			if (!(password && newpassword && check_password)) {
-				alert("不能留空");
-				return;
-			}
-			if (password == newpassword) {
-				alert("密碼沒有改變");
-				return;
-			}
-			if (newpassword != check_password) {
-				alert("請確定密碼一致");
-				return;
-			}
-			password = sha256(password);
-			newpassword = sha256(newpassword);
-
-			json = {
-				"tkey": getCookie("teacher-key"),
-				"password": password,
-				"newpassword": newpassword,
-			}
-			$.ajax({
-				url: host + "teacher/password",
-				type: "PUT",
-				dataType: "json",
-				data: JSON.stringify(json),
-				contentType: "application/json; charset=utf-8",
-				success: function (msg) {
-					alert("密碼已改變, 請重新登錄");
-					logout();
-				},
-				error: function (error) {
-					p1 = error.responseText.indexOf("<p>") + 3
-					errortype = error.responseText.substring(p1, error.responseText.indexOf("</p>", p1))
-					if (errortype == "Username or password wrong") {
-						alert("密碼不正確");
-						return;
-					}
-				}
-			})
 		}
 
 		function changesummary() {
@@ -758,7 +715,7 @@
 			}
 
 			json = {
-				"tkey": getCookie("teacher-key"),
+				"key": getCookie("key"),
 				"summary": summary,
 				"teacher": true,
 			}
@@ -791,14 +748,13 @@
 				} 
 			})
 			if (breaked) {
-				$("#annoce-tkey")[0].value = getCookie("teacher-key");
+				$("#annoce-tkey")[0].value = getCookie("key");
 				$("#annoce-clsrid")[0].value = classroom["id"];
 				$("#annoceform")[0].submit();
 			}
 		}
 
 		function disaply_contact_link (contact_link) {
-			console.log(contact_link)
 			var extra_field = ""
 			$.each(contact_link, function (k, v) {
 				cl_ele = $("#cl_" + k)
@@ -826,7 +782,7 @@
 			})
 
 			json = {
-				"tkey": getCookie("teacher-key"),
+				"key": getCookie("key"),
 				"contact_link": contact_link,
 				"teacher": true,
 			}
@@ -845,19 +801,35 @@
 			})
 		}
 
+		function upload_avatar (event) {
+			$("#cards").show();
+			$("#confirmavatar").show();
+			var output = document.getElementById('output');
+			output.src = URL.createObjectURL(event.target.files[0]);
+		}
+
+		function confirm_avatar () {
+			if ($("#uploadavatar")[0].files.length != 0) {
+				$("#avatarform")[0].submit();
+			}
+			// avatarform
+		}
+
 		$(document).on('ready', function() {
-			tkey = getCookie("teacher-key")
-			if (tkey == "") {location.pathname = "/teacher/login"}
+			key = getCookie("key")
+			if (key == "") {location.pathname = "/"}
 			$.ajax({
 				url: host + "teacher/",
-				data: {"tkey": tkey},
+				data: {"key": key, "teacher": true},
 				success: function (msg) {
 					disaply_contact_link(msg["contact_link"])
 					advertise_limit = 5 + msg["ext_area"]
-					$("#teacher-name").html(msg["name"])
+					$("[name=teacher-name]").html(msg["name"])
+					$("[name=teacher-phone]").html(msg["phone"])
 					$("#ext_area").html(advertise_limit)
 					$("#whole_city").html(msg["whole_city"])
 					$("#self-intro").html(msg["summary"])
+					$("[name=teacher-summary]").html(msg["summary"])
 
 					$.each(msg["class_permission"], function (_, v) {
 						$.each($("[name=class_permission]"), function (_, c) {

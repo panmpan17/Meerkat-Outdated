@@ -38,9 +38,9 @@ class AdminHandler(object):
         if not key_valid[0]:
             return False
 
-        ss = select([users.c.admin]).where(and_(
-            users.c.id == key_valid[1],
-            users.c.admin == True))
+        ss = select([users.c.type]).where(and_(
+            users.c.id==key_valid[1],
+            users.c.type==User.ADMIN))
         rst = conn.execute(ss)
         row = rst.fetchone()
         if not row:

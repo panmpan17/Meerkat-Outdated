@@ -100,8 +100,13 @@ function start_trial (cls_type) {
 }
 
 function to_class (cls_type) {
-    storeCookie("clsrid", Object.keys(classroom_in[cls_type])[0])
-    window.location.href = "/class/c/" + cls_type
+    if (login_as == "user") {
+        storeCookie("clsrid", Object.keys(classroom_in[cls_type])[0]);
+        window.location.href = "/class/c/" + cls_type;
+    }
+    else {
+        window.location.href = "/class/c/" + cls_type;
+    }
 }
 
 function apply_class (cls_type) {
