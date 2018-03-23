@@ -54,9 +54,6 @@ function goclass(id) {
 function leadtoclass(id, price) {
     if (price != 0) {
         json = {"class": id, "key": getCookie("key")}
-        if (getCookie("teacher-key") != "") {
-            json["tkey"] = getCookie("teacher-key")
-        }
         $.ajax({
             url: host + "classroom/student_permission",
             type: "GET",

@@ -11,4 +11,4 @@ ALTER TABLE tb_user DROP admin;
 
 # need to start server first and close it
 INSERT INTO tb_teacherinfo (id, name, phone, ext_area, whole_city, class_permission, summary, contact_link) select id, name, phone, ext_area, whole_city, class_permission, summary, contact_link from tb_teacher;
-DORP TABLE tb_adarea, tb_adclass, tb_classroom;
+DORP TABLE tb_adarea, tb_adclass, tb_classroom, tb_classmanage;

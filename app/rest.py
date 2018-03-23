@@ -177,6 +177,7 @@ class View(object):
             ])\
             .select_from(join(teacherinfos, users, teacherinfos.c.id==users.c.id))\
             .where(teacherinfos.c.id==key_valid[1])
+        print(ss)
         rst = conn.execute(ss)
         row = rst.fetchone()
         if row["disabled"]:
@@ -1313,6 +1314,7 @@ class TeacherRestView(View):
                 rows = rst.fetchall()
 
                 return {"teachers": [Teacher.mk_dict(row) for row in rows]}
+
         elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
 
@@ -1342,6 +1344,7 @@ class TeacherRestView(View):
                 return {"success": True}
             else:
                 raise cherrypy.HTTPError(503)
+
         elif cherrypy.request.method == "PUT":
             data = cherrypy.request.json
 
@@ -1471,7 +1474,6 @@ class TeacherRestView(View):
     @cherrypy.expose
     def user(self, *args, **kwargs):
         meta, conn = cherrypy.request.db
-        teachers = meta.tables[Teacher.TABLE_NAME]
         users = meta.tables[User.TABLE_NAME]
 
         if cherrypy.request.method == "GET":
@@ -1968,55 +1970,55 @@ class ClassroomRestView(View):
         else:
             raise cherrypy.HTTPError(404)
 
-    @cherrypy.expose
-    def student_permission(self, *args, **kwargs):
-        meta, conn = cherrypy.request.db
-        classrooms = meta.tables[Classroom.TABLE_NAME]
+    # @cherrypy.expose
+    # def student_permission(self, *args, **kwargs):
+    #     meta, conn = cherrypy.request.db
+    #     classrooms = meta.tables[Classroom.TABLE_NAME]
 
-        if cherrypy.request.method == "GET":
-            self.check_key(kwargs, ("class", ))
-            clsr_id = None
+    #     if cherrypy.request.method == "GET":
+    #         self.check_key(kwargs, ("class", ))
+    #         clsr_id = None
 
-            # test user login
-            try:
-                user = self.check_login_u(kwargs)
+    #         # test user login
+    #         try:
+    #             user = self.check_login_u(kwargs)
 
-                ss = select([classrooms.c.id, classrooms.c.name]).where(and_(
-                    classrooms.c.students_cid.any(user["id"]),
-                    classrooms.c.type==kwargs["class"]
-                    ))
-                rst = conn.execute(ss)
-                rows = rst.fetchall()
-                if rows:
-                    return {
-                        "class": [{"id": row["id"], "name": row["name"]} 
-                            for row in rows],
-                        "success": True,
-                        "key": "user",
-                        }
-                return {"success": False, "reason": "not in class"}
-            except:
-                pass
+    #             ss = select([classrooms.c.id, classrooms.c.name]).where(and_(
+    #                 classrooms.c.students_cid.any(user["id"]),
+    #                 classrooms.c.type==kwargs["class"]
+    #                 ))
+    #             rst = conn.execute(ss)
+    #             rows = rst.fetchall()
+    #             if rows:
+    #                 return {
+    #                     "class": [{"id": row["id"], "name": row["name"]} 
+    #                         for row in rows],
+    #                     "success": True,
+    #                     "key": "user",
+    #                     }
+    #             return {"success": False, "reason": "not in class"}
+    #         except:
+    #             pass
 
-            #user login failed try teacher
-            teacher = self.check_login_teacher(kwargs)
-            teachers = meta.tables[Teacher.TABLE_NAME]
+    #         #user login failed try teacher
+    #         teacher = self.check_login_teacher(kwargs)
+    #         teachers = meta.tables[Teacher.TABLE_NAME]
 
-            ss = select([teachers.c.class_permission]).where(
-                teachers.c.id==teacher["id"])
-            rst = conn.execute(ss)
-            row = rst.fetchone()
+    #         ss = select([teachers.c.class_permission]).where(
+    #             teachers.c.id==teacher["id"])
+    #         rst = conn.execute(ss)
+    #         row = rst.fetchone()
 
-            if kwargs["class"] not in row["class_permission"]:
-                return {"success": False, "reason": "no permission"}
+    #         if kwargs["class"] not in row["class_permission"]:
+    #             return {"success": False, "reason": "no permission"}
 
-            return {
-                "permission": row["class_permission"],
-                "success": True,
-                "key": "teacher",
-                }
-        else:
-            raise cherrypy.HTTPError(404)
+    #         return {
+    #             "permission": row["class_permission"],
+    #             "success": True,
+    #             "key": "teacher",
+    #             }
+    #     else:
+    #         raise cherrypy.HTTPError(404)
 
     @cherrypy.expose
     def progress(self, *args, **kwargs):
@@ -2553,114 +2555,114 @@ class ActivityRestView(View):
         else:
             raise cherrypy.HTTPError(404)
 
-class ReportRestView(View):
-    _root = rest_config["url_root"] + "report/"
+# class ReportRestView(View):
+#     _root = rest_config["url_root"] + "report/"
 
-    @cherrypy.expose
-    def index(self, *args, **kwargs):
-        meta, conn = cherrypy.request.db
-        reports = meta.tables[Report.TABLE_NAME]
-        users = meta.tables[User.TABLE_NAME]
+#     @cherrypy.expose
+#     def index(self, *args, **kwargs):
+#         meta, conn = cherrypy.request.db
+#         reports = meta.tables[Report.TABLE_NAME]
+#         users = meta.tables[User.TABLE_NAME]
 
-        if cherrypy.request.method == "GET":
-            j = join(reports, users)
-            ss = select([reports, users.c.nickname]).select_from(j)
-            rst = conn.execute(ss)
-            rows = rst.fetchall()
+#         if cherrypy.request.method == "GET":
+#             j = join(reports, users)
+#             ss = select([reports, users.c.nickname]).select_from(j)
+#             rst = conn.execute(ss)
+#             rows = rst.fetchall()
 
-            return [Report.mk_dict(row) for row in rows]
-        elif cherrypy.request.method == "POST":
-            data = cherrypy.request.json
-            user = self.check_login_u(data)
+#             return [Report.mk_dict(row) for row in rows]
+#         elif cherrypy.request.method == "POST":
+#             data = cherrypy.request.json
+#             user = self.check_login_u(data)
 
-            self.check_key(data,(
-                "title",
-                "summary",
-                ))
+#             self.check_key(data,(
+#                 "title",
+#                 "summary",
+#                 ))
 
-            json = {
-                "title": data["title"],
-                "summary": data["summary"],
-                "writer": user["id"],
-                }
-            ins = reports.insert().returning(reports.c.id)
-            rst = conn.execute(ins, json)
+#             json = {
+#                 "title": data["title"],
+#                 "summary": data["summary"],
+#                 "writer": user["id"],
+#                 }
+#             ins = reports.insert().returning(reports.c.id)
+#             rst = conn.execute(ins, json)
 
-            if rst.is_insert:
-                cherrypy.response.status = 201
+#             if rst.is_insert:
+#                 cherrypy.response.status = 201
 
-                return {"success": True, "rid": rst.fetchone()["id"]}
-            else:
-                 raise cherrypy.HTTPError(503)
-        elif cherrypy.request.method == "PUT":
-            data = cherrypy.request.json
-            user = self.check_login_u(data)
+#                 return {"success": True, "rid": rst.fetchone()["id"]}
+#             else:
+#                  raise cherrypy.HTTPError(503)
+#         elif cherrypy.request.method == "PUT":
+#             data = cherrypy.request.json
+#             user = self.check_login_u(data)
 
-            if not user["admin"]:
-                raise cherrypy.HTTPError(401)
-        else:
-            raise cherrypy.HTTPError(404)
+#             if not user["admin"]:
+#                 raise cherrypy.HTTPError(401)
+#         else:
+#             raise cherrypy.HTTPError(404)
 
-    @cherrypy.expose
-    def fileattach(self, *args, **kwargs):
-        meta, conn = cherrypy.request.db
-        reports = meta.tables[Report.TABLE_NAME]
+#     @cherrypy.expose
+#     def fileattach(self, *args, **kwargs):
+#         meta, conn = cherrypy.request.db
+#         reports = meta.tables[Report.TABLE_NAME]
 
-        if cherrypy.request.method == "PUT":
-            data = cherrypy.request.json
-            user = self.check_login_u(data)
+#         if cherrypy.request.method == "PUT":
+#             data = cherrypy.request.json
+#             user = self.check_login_u(data)
 
-            self.check_key(data, (
-                "rid",
-                "file",
-                ))
+#             self.check_key(data, (
+#                 "rid",
+#                 "file",
+#                 ))
 
-            try:
-                rid = int(data["rid"])
-            except:
-                raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("qid"))
+#             try:
+#                 rid = int(data["rid"])
+#             except:
+#                 raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("qid"))
 
-            # TODO: if file exist then the file upload THIS TIME will be delete
+#             # TODO: if file exist then the file upload THIS TIME will be delete
 
-            # TODO: check file exist
+#             # TODO: check file exist
 
-            stmt = update(reports).where(and_(
-                reports.c.id == rid,
-                reports.c.writer == user["id"]
-                )).values(file=data["file"])
-            ins = conn.execute(stmt)
+#             stmt = update(reports).where(and_(
+#                 reports.c.id == rid,
+#                 reports.c.writer == user["id"]
+#                 )).values(file=data["file"])
+#             ins = conn.execute(stmt)
 
-            if ins.rowcount != 0:
-                cherrypy.response.status = 201
-                return {"success": True}
-            else:
-                raise cherrypy.HTTPError(400,
-                    ErrMsg.WRONG_WRITER.format(str(uid)))
-        else:
-            raise cherrypy.HTTPError(404)
+#             if ins.rowcount != 0:
+#                 cherrypy.response.status = 201
+#                 return {"success": True}
+#             else:
+#                 raise cherrypy.HTTPError(400,
+#                     ErrMsg.WRONG_WRITER.format(str(uid)))
+#         else:
+#             raise cherrypy.HTTPError(404)
 
-class PresentationRestView(View):
-    _root = rest_config["url_root"] + "presentation/"
+# class PresentationRestView(View):
+#     _root = rest_config["url_root"] + "presentation/"
 
-    @cherrypy.expose
-    def index(self, *args, **kwargs):
-        file_mgr = cherrypy.request.file_mgr
+#     @cherrypy.expose
+#     def index(self, *args, **kwargs):
+#         file_mgr = cherrypy.request.file_mgr
 
-        if cherrypy.request.method == "GET":
-            success = file_mgr.read_sys_file("presentation.html")
-            return {"success": success}
-        elif cherrypy.request.method == "POST":
-            data = cherrypy.request.json
-            user = self.check_login_u(data)
+#         if cherrypy.request.method == "GET":
+#             success = file_mgr.read_sys_file("presentation.html")
+#             return {"success": success}
+#         elif cherrypy.request.method == "POST":
+#             data = cherrypy.request.json
+#             user = self.check_login_u(data)
 
-            if not user["admin"]:
-                raise cherrypy.HTTPError(401)
+#             if not user["admin"]:
+#                 raise cherrypy.HTTPError(401)
 
-            self.check_key(data, ("presentation", ))
+#             self.check_key(data, ("presentation", ))
 
-            success = file_mgr.write_sys_file("presentation.html",
-                data["presentation"])
-            return {"success": success}
-        else:
-            raise cherrypy.HTTPError(400)
+#             success = file_mgr.write_sys_file("presentation.html",
+#                 data["presentation"])
+#             return {"success": success}
+#         else:
+#             raise cherrypy.HTTPError(400)
 
