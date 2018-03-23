@@ -2555,6 +2555,61 @@ class ActivityRestView(View):
         else:
             raise cherrypy.HTTPError(404)
 
+class TeacherMergeView(View):
+    _root = rest_config["url_root"] + "teachermerge/"
+
+    @cherrypy.expose
+    def index(self, *args, **kwargs):
+        meta, conn = cherrypy.request.db
+        teachers = meta.tables[Teacher.TABLE_NAME]
+        adareas = meta.tables[AdArea.TABLE_NAME]
+        adclasses = meta.tables[AdClass.TABLE_NAME]
+        classrooms = meta.tables[Classroom.TABLE_NAME]
+        users = meta.tables[User.TABLE_NAME]
+
+        if cherrypy.request.method == "GET":
+            user = self.check_login_u(kwargs)
+
+            ss = select([teachers]).where(teachers.c.disabled==False)
+            rst = conn.execute(ss)
+            rows = rst.fetchall()
+
+            teachers_data = {}
+            teachers_id = []
+            for row in rows:
+                teachers_data[row["id"]] = Teacher.mk_dict(row)
+                teachers_data[row["id"]]["adclasses"] = []
+                teachers_data[row["id"]]["adareas"] = []
+                teachers_data[row["id"]]["classrooms"] = []
+                teachers_data[row["id"]]["dangerous"] = False
+                teachers_id.append(row["id"])
+
+            ada_ss = select([adareas]).where(adareas.c.teacher.in_(teachers_id))
+            rst = conn.execute(ada_ss)
+            rows = rst.fetchall()
+            for row in rows:
+                teachers_data[row["teacher"]]["adareas"].append(AdArea.mk_dict(row))
+
+            adc_ss = select([adclasses]).where(adclasses.c.teacher.in_(teachers_id))
+            rst = conn.execute(adc_ss)
+            rows = rst.fetchall()
+            for row in rows:
+                teachers_data[row["teacher"]]["adclasses"].append(AdClass.mk_dict(row))
+
+            clsr_ss = select([classrooms]).where(classrooms.c.teacher.in_(teachers_id))
+            rst = conn.execute(clsr_ss)
+            rows = rst.fetchall()
+            for row in rows:
+                teachers_data[row["teacher"]]["classrooms"].append(Classroom.mk_dict(row))
+
+            ss = select([users.c.id]).where(users.c.id.in_(teachers_id))
+            rst = conn.execute(ss)
+            rows = rst.fetchall()
+            for row in rows:
+                teachers_data[row["id"]]["dangerous"] = True
+
+            return teachers_data
+
 # class ReportRestView(View):
 #     _root = rest_config["url_root"] + "report/"
 
