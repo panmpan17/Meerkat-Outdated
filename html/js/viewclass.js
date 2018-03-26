@@ -185,11 +185,20 @@ $.ajax({
                                 )
                         }
                         else {
-                            cardstext += format(card_noaccess_format,
-                                i["subject"],
-                                i["summary"],
-                                i["id"],
-                                )
+                            if (i["permission"] == null) {
+                                cardstext += format(card_format,
+                                    i["subject"],
+                                    i["summary"],
+                                    i["id"],
+                                    )
+                            }
+                            else {
+                                cardstext += format(card_noaccess_format,
+                                    i["subject"],
+                                    i["summary"],
+                                    i["id"],
+                                    )
+                            }
                         }
                     }
                 })

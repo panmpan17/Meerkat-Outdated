@@ -440,16 +440,16 @@ $(document).ready(function () {
 				alphabet_index[first_chr].push(i["id"])
 			})
 
-			$.each(users, function (_, user) {
-				$("#users")[0].innerHTML += format(
-					user_format,
-					user["id"],
-					user["userid"],
-					user["email"],
-					user["nickname"],
-					user["create_at"],
-					)
-			})
+			// $.each(users, function (_, user) {
+			// 	$("#users")[0].innerHTML += format(
+			// 		user_format,
+			// 		user["id"],
+			// 		user["userid"],
+			// 		user["email"],
+			// 		user["nickname"],
+			// 		user["create_at"],
+			// 		)
+			// })
 		}
 	})
 })
