@@ -83,12 +83,17 @@ class AdminHandler(object):
 
         files = {}
         path = os.getcwd()
+        if path.endswith("/"):
+            path = path[:-1]
         for i, e, g in os.walk(path):
             if ".git" in i:
                 continue
             if "__pycache__" in i:
                 continue
+
             filepath = i.replace(path, "")
+            if filepath == "":
+                filepath = "/"
             files[filepath] = {}
             files[filepath]["dir"] = e
             files[filepath]["files"] = g

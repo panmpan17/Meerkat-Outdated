@@ -124,7 +124,8 @@
 			</div>
 
 			<div class="modal-body" id="yt-player">
-				<input id="dangerous" type="checkbox">  Id 有沒有跟 User 重複
+				<input id="dangerous" type="checkbox">  Id 有沒有跟 User 重複<br>
+				<input id="selectall" onclick="selectall(this)" type="checkbox"> 全選 <br>
 				<table>
 					<thead>
 						<tr>
@@ -155,7 +156,9 @@
 						</tr>
 					</thead>
 					<tbody id="classroom"></tbody>
-				</table>
+				</table><br>
+				<input id="newuserid" type="text" placeholder="要連到的使用者帳號">
+				<button class="btn btn-orange" onclick="update()">更改</button>
 			</div>
 		</a>
 		</div>
@@ -165,6 +168,7 @@
 {% block script %}
 <script src="/html/js/taiwan_town.js"></script>
 <script>
+	selected_teacher = null;
 	teachers_info_format = `<tr class="i" onclick="openteacher({0})">
 		<td>{0}</td>
 		<td>{1}</td>
@@ -173,19 +177,31 @@
 	</tr>`
 
 	tow_field_format = `<tr>
+		<td><input id="{2}" class="update-select" type="checkbox" /></td>
 		<td>{0}</td>
 		<td>{1}</td>
 	</tr>`
 
 	three_field_format = `<tr>
+		<td><input id="{3}" class="update-select" type="checkbox" /></td>
 		<td>{0}</td>
 		<td>{1}</td>
 		<td>{2}</td>
 	</tr>`
 
 	function openteacher (id) {
+		selected_teacher = id;
 		$("#teacher-info-frame").modal("show");
 		$("#dangerous")[0].checked = teachers[id]["dangerous"];
+		$("#selectall")[0].checked = false;
+		$("#selectall")[0].name = id
+
+		if (teachers[id]["suggest"] != undefined) {
+			$("#newuserid")[0].value = teachers[id]["suggest"]
+		}
+		else {
+			$("#newuserid")[0].value = ""
+		}
 		
 		var adareas_html = "";
 		var adclasses_html = "";
@@ -196,6 +212,8 @@
 			adareas_html += format(tow_field_format,
 				city,
 				city_towns[city][adarea["town"]],
+				"adarea-" + adarea["id"],
+				id,
 				)
 		})
 
@@ -204,6 +222,8 @@
 				adclass["address"],
 				adclass["date"],
 				adclass["type"],
+				"adclass-" + adclass["id"],
+				id,
 				)
 		})
 
@@ -212,12 +232,72 @@
 				classroom["name"],
 				classroom["type"],
 				classroom["create_at"],
+				"classroom-" + classroom["id"],
+				id,
 				)
 		})
 
 		$("#adarea")[0].innerHTML = adareas_html;
 		$("#adclass")[0].innerHTML = adclasses_html;
 		$("#classroom")[0].innerHTML = classrooms_html;
+	}
+
+	function selectall (e) {
+		console.log(e.checked)
+		$.each($(".update-select"), function (_, i) {
+			i.checked = e.checked
+		})
+	}
+
+	function update () {
+		var newuserid = $("#newuserid")[0].value
+		var classrooms_id = [];
+		var adarea_id = [];
+		var adclass_id = [];
+
+		if (newuserid == "") {
+			alert("不可留空");
+			return;
+		}
+
+		$.each($(".update-select"), function (_, i) {
+			select_id = i.id
+			type = select_id.substring(0, select_id.indexOf("-"));
+			var id = select_id.substring(select_id.indexOf("-") + 1);
+			id = parseInt(id);
+			if (type == "adarea") {
+				adarea_id.push(id);
+			}
+			else if (type == "adclass") {
+				adclass_id.push(id);
+			}
+			else {
+				classrooms_id.push(id);
+			}
+		})
+		json = {
+			"key": getCookie("key"),
+			"teacher": selected_teacher,
+			"classrooms": classrooms_id,
+			"adarea": adarea_id,
+			"adclass": adclass_id,
+			"newuserid": newuserid,
+		}
+
+		console.log(classrooms_id, adarea_id, adclass_id)
+		$.ajax({
+			url: host + "teachermerge/",
+			type: "PUT",
+			dataType: "json",
+			data: JSON.stringify(json),
+			contentType: "application/json; charset=utf-8",
+			success: function (msg) {
+				console.log(msg)
+			},
+			error: function (err) {
+				console.log(err)
+			}
+		})
 	}
 
 	teachers = null

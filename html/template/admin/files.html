@@ -43,7 +43,7 @@
 {% block content %}
 <div style="width: 90%;padding-left: 10%">
 	<br><br>
-	<a href="/admin/"><button id="submit">< 回去</button></a>
+	<a href="/admin/"><button class="btn btn-orange">< 回去</button></a>
 	<br><br>
 	<table id="filetable">
 		<!-- <thead>
@@ -65,14 +65,19 @@
 {% block script %}
 <script>
 	files = {{ files }}
-	dirnow = ""
-	FOLDER_FORMAT = `<tr class="folder" onclick="showdirectory(dirnow + '/{0}')"><td>{0}</td></tr>`
+	dirnow = "/"
+	FOLDER_FORMAT = `<tr class="folder" onclick="showdirectory('{0}')"><td>{0}</td></tr>`
 	FILE_FORMAT = `<tr class="file"><td>{0}</td></tr>`
 
 	function showdirectory (dir) {
-		dirnow = dir
+		if (dirnow.endsWith("/")) {
+			dirnow += dir
+		}
+		else {
+			dirnow += "/" + dir
+		}
 
-		if (dirnow == "") {
+		if (dirnow == "/") {
 			$("#files")[0].innerHTML = "";
 		}
 		else {
@@ -94,6 +99,9 @@
 
 	function previous () {
 		dirnow = dirnow.substring(0, dirnow.lastIndexOf("/"))
+		if (dirnow == "") {
+			dirnow = "/"
+		}
 
 		if (dirnow == "") {
 			$("#files")[0].innerHTML = "";

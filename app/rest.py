@@ -180,6 +180,8 @@ class View(object):
         print(ss)
         rst = conn.execute(ss)
         row = rst.fetchone()
+        if not row:
+            raise cherrypy.HTTPError(401)
         if row["disabled"]:
             key_mgr.drop_key(json["key"])
             raise cherrypy.HTTPError(401)
@@ -1309,11 +1311,19 @@ class TeacherRestView(View):
                 if not user["admin"]:
                     raise cherrypy.HTTPError(401)
 
-                ss = select([teachers]).order_by(teachers.c.id)
-                rst = conn.execute(ss)
-                rows = rst.fetchall()
+                try:
+                    uid = int(kwargs["uid"])
+                except:
+                    raise cherrypy.HTTPError(400)
 
-                return {"teachers": [Teacher.mk_dict(row) for row in rows]}
+                ss = select([teacherinfos]).where(teacherinfos.c.id==uid)
+                rst = conn.execute(ss)
+                row = rst.fetchone()
+
+                if not row:
+                    raise cherrypy.HTTPError(400)
+
+                return {"teacherinfo": TeacherInfo.mk_dict(row)}
 
         elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
@@ -1374,38 +1384,45 @@ class TeacherRestView(View):
                     raise cherrypy.HTTPError(401)
 
                 self.check_key(data, (
-                    "userid",
-                    "name",
-                    "phone",
+                    # "userid",
+                    # "name",
+                    # "phone",
                     "class_permission",
-                    "ext_area",
-                    "whole_city",
-                    "summary",
+                    # "ext_area",
+                    # "whole_city",
+                    # "summary",
                     ))
 
                 try:
-                    ext_area = int(data["ext_area"])
-                    whole_city = int(data["whole_city"])
+                    uid = int(data["uid"])
                 except:
                     raise cherrypy.HTTPError(400)
 
+                # try:
+                #     ext_area = int(data["ext_area"])
+                #     whole_city = int(data["whole_city"])
+                # except:
+                #     raise cherrypy.HTTPError(400)
+
+                if not isinstance(data["class_permission"], list):
+                    raise cherrypy.HTTPError(400)
+
                 json = {
-                    "userid": data["userid"],
-                    "name": data["name"],
-                    "phone": data["phone"],
+                    # "userid": data["userid"],
+                    # "name": data["name"],
+                    # "phone": data["phone"],
                     "class_permission": data["class_permission"],
-                    "ext_area": ext_area,
-                    "whole_city": whole_city,
-                    "summary": data["summary"],
+                    # "ext_area": ext_area,
+                    # "whole_city": whole_city,
+                    # "summary": data["summary"],
                     }
 
-                if "password" in data:
-                    json["password"] = data["password"]
+                # if "password" in data:
+                #     json["password"] = data["password"]
 
-                stmt = teachers.update().where(
-                    teachers.c.id==data["tid"]).values(json)
+                stmt = teacherinfos.update().where(
+                    teacherinfos.c.id==uid).values(json)
                 conn.execute(stmt)
-
                 return {"success": True}
 
         elif cherrypy.request.method == "DELETE":
@@ -2569,46 +2586,128 @@ class TeacherMergeView(View):
 
         if cherrypy.request.method == "GET":
             user = self.check_login_u(kwargs)
+            if not user["admin"]:
+                raise cherrypy.HTTPError(401)
 
             ss = select([teachers]).where(teachers.c.disabled==False)
             rst = conn.execute(ss)
             rows = rst.fetchall()
 
             teachers_data = {}
-            teachers_id = []
+            teachers_query = {}
             for row in rows:
                 teachers_data[row["id"]] = Teacher.mk_dict(row)
                 teachers_data[row["id"]]["adclasses"] = []
                 teachers_data[row["id"]]["adareas"] = []
                 teachers_data[row["id"]]["classrooms"] = []
                 teachers_data[row["id"]]["dangerous"] = False
-                teachers_id.append(row["id"])
+                teachers_query[row["userid"]] = row["id"]
 
-            ada_ss = select([adareas]).where(adareas.c.teacher.in_(teachers_id))
+            ada_ss = select([adareas]).where(adareas.c.teacher.in_(list(teachers_query.values())))
             rst = conn.execute(ada_ss)
             rows = rst.fetchall()
             for row in rows:
                 teachers_data[row["teacher"]]["adareas"].append(AdArea.mk_dict(row))
 
-            adc_ss = select([adclasses]).where(adclasses.c.teacher.in_(teachers_id))
+            adc_ss = select([adclasses]).where(adclasses.c.teacher.in_(list(teachers_query.values())))
             rst = conn.execute(adc_ss)
             rows = rst.fetchall()
             for row in rows:
                 teachers_data[row["teacher"]]["adclasses"].append(AdClass.mk_dict(row))
 
-            clsr_ss = select([classrooms]).where(classrooms.c.teacher.in_(teachers_id))
+            clsr_ss = select([classrooms]).where(classrooms.c.teacher.in_(list(teachers_query.values())))
             rst = conn.execute(clsr_ss)
             rows = rst.fetchall()
             for row in rows:
                 teachers_data[row["teacher"]]["classrooms"].append(Classroom.mk_dict(row))
 
-            ss = select([users.c.id]).where(users.c.id.in_(teachers_id))
+            ss = select([users.c.id]).where(and_(
+                users.c.id.in_(list(teachers_query.values())),
+                users.c.type!=User.NORMAL,
+                ))
             rst = conn.execute(ss)
             rows = rst.fetchall()
             for row in rows:
                 teachers_data[row["id"]]["dangerous"] = True
 
+            ss = select([users.c.userid]).where(
+                users.c.userid.in_(list(teachers_query.keys())))
+            rst = conn.execute(ss)
+            rows = rst.fetchall()
+            for row in rows:
+                teachers_data[teachers_query[row["userid"]]]["suggest"] = row["userid"]
+
             return teachers_data
+
+        elif cherrypy.request.method == "PUT":
+            teacherinfos = meta.tables[TeacherInfo.TABLE_NAME]
+            data = cherrypy.request.json
+
+            user = self.check_login_u(data)
+            if not user["admin"]:
+                raise cherrypy.HTTPError(401)
+
+            self.check_key(data, (
+                "teacher",
+                "classrooms",
+                "adarea",
+                "adclass",
+                "newuserid",
+                ))
+
+            try:
+                tid = int(data["teacher"])
+            except:
+                raise cherrypy.HTTPError(400)
+
+            ss = select([users]).where(users.c.userid==data["newuserid"])
+            rst = conn.execute(ss)
+            row = rst.fetchone()
+            if row:
+                target_user = User.mk_dict(row)
+            else:
+                raise cherrypy.HTTPError(400)
+
+            ss = select([teachers]).where(teachers.c.id==tid)
+            rst = conn.execute(ss)
+            row = rst.fetchone()
+            if not row:
+                raise cherrypy.HTTPError(400)
+            update_teacher = Teacher.mk_dict(row)
+
+            ss = select([teacherinfos]).where(and_(
+                teacherinfos.c.id==update_teacher["id"],
+                teacherinfos.c.phone==update_teacher["phone"],
+                teacherinfos.c.name==update_teacher["name"],
+                ))
+            print(update_teacher["id"],
+                update_teacher["phone"],
+                update_teacher["name"])
+
+            rst = conn.execute(ss)
+            rows = rst.fetchall()
+            if len(rows) != 1:
+                raise cherrypy.HTTPError(400)
+
+            conn.execute(update(teacherinfos).where(and_(
+                teacherinfos.c.id==update_teacher["id"],
+                teacherinfos.c.phone==update_teacher["phone"],
+                teacherinfos.c.name==update_teacher["name"],
+                )).values(id=target_user["id"]))
+
+            conn.execute(update(classrooms).where(
+                classrooms.c.id.in_(data["classrooms"])).values(teacher=target_user["id"]))
+            conn.execute(update(adareas).where(
+                adareas.c.id.in_(data["adarea"])).values(teacher=target_user["id"]))
+            conn.execute(update(adclasses).where(
+                adclasses.c.id.in_(data["adclass"])).values(teacher=target_user["id"]))
+            conn.execute(update(teachers).where(
+                teachers.c.id==tid).values(disabled=True))
+            conn.execute(update(users).where(and_(
+                users.c.id==target_user["id"],
+                users.c.type==0)).values(type=1))
+
+            return {"success": True}
 
 # class ReportRestView(View):
 #     _root = rest_config["url_root"] + "report/"

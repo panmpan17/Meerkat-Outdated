@@ -29,6 +29,7 @@ class ErrMsg:
 
 class User(object):
     TABLE_NAME = "tb_user"
+    NORMAL = 0
     TEACHER = 1
     ADMIN = 2
     user_t = None
@@ -117,7 +118,8 @@ class User(object):
             "nickname": row["nickname"],
             "job": row["job"],
             "point": row["point"],
-            "admin": row["type"]==cls.ADMIN, 
+            "admin": row["type"]==cls.ADMIN,
+            "type": row["type"],
             "expert": row["expert"],
             "create_at": GMT(row["create_at"]),
             "last_login": GMT(row["last_login"]),
@@ -135,7 +137,8 @@ class User(object):
             "nickname": row["nickname"],
             "job": row["job"],
             "point": row["point"],
-            "admin": row["type"]==cls.ADMIN, 
+            "admin": row["type"]==cls.ADMIN,
+            "type": row["type"],
             "expert": row["expert"],
             "create_at": GMT(row["create_at"]),
             "last_login": GMT(row["last_login"]),
@@ -527,6 +530,19 @@ class TeacherInfo(object):
             )
         cls.teacherinfo_t.create(db_engine, checkfirst=True)
         return cls.teacherinfo_t
+
+    @classmethod
+    def mk_dict(cls, row):
+        return {
+            "id": row["id"],
+            "name": row["name"],
+            "phone": row["phone"],
+            "ext_area": row["ext_area"],
+            "whole_city": row["whole_city"],
+            "class_permission": row["class_permission"],
+            "summary": row["summary"],
+            "contact_link": row["contact_link"],
+            }
 
 class Classroom(object):
     TABLE_NAME = "tb_classroom"

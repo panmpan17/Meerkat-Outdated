@@ -37,7 +37,7 @@
 		text-align: center;
 		top: 107px;
 		left: calc(10% + 80px);
-		width: 500px;
+		width: 200px;
 		height: 50px;
 		transition-duration: 0.5s;
 	}
@@ -65,7 +65,7 @@
 		content: "";
 		position: absolute;
 		top: 45%;
-		left: 36%;
+		left: 32%;
 		transition: 0.2s ease-out;
 	}
 
@@ -121,6 +121,7 @@
 
 	.toggle-button--tuli input:checked ~ label {color: #FF8300}
 </style>
+<link rel="stylesheet" href="/html/css/checklist.css">
 {% endblock %}
 {% block content %}
 <main>
@@ -129,8 +130,10 @@
 		<a href="/admin/"><button class="btn btn-orange">< 回去</button></a>
 		<br><br>
 		<div id="search-bar">
-			<input id="userid-field" class="form-control" type="text" width="400" placeholder="Search: ">
+			<input id="userid-field" class="form-control" type="text" placeholder="帳號: ">
+			<input id="id-field" class="form-control" type="text" placeholder="Id: ">
 		</div>
+		<br>
 		<table id="userstable">
 			<thead>
 				<tr>
@@ -152,6 +155,7 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
+				<button id="show-teacherinfo" class="btn btn-orange" data-toggle="modal" data-target="#teacherinfo-frame" onclick="show_teacher_detail()">更改教師資料</button>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<a href="javascript:;"><span aria-hidden="true" style="color: black;">&Chi;</span></a>
 				</button>
@@ -223,7 +227,45 @@
 							</div>
 						</td>		
 					</tr>
+					<tr>
+						<td>帳戶類型</td>
+						<td id="userinfo-type"></td>
+					</tr>
 				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="teacherinfo-frame" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<a href="javascript:;"><span aria-hidden="true" style="color: black;">&Chi;</span></a>
+				</button>
+			</div>
+
+			<div class="modal-body">
+				姓名: <span id="teacher-name"></span><br>
+				電話: <span id="teacher-phone"></span><br>
+				<br>
+				<dl class="check-list-right" id="classlist">
+					<dt>教學課程權限</dt>
+					<dd>
+						<input name="class_permission" type="checkbox" id="cls_per_scratch_1" value="scratch_1">
+						<label for="cls_per_scratch_1">Scratch 基礎班</label>
+					</dd>
+					<dd>
+						<input name="class_permission" type="checkbox" id="cls_per_python_01" value="python_01">
+						<label for="cls_per_python_01">Scratch 應用班</label>
+					</dd>
+					<dd>
+						<input name="class_permission" type="checkbox" id="cls_per_scratch_02" value="scratch_02">
+						<label for="cls_per_scratch_02">Python 基礎班</label>
+					</dd>
+				</dl>
+				<button class="btn btn-orange" onclick="change_teacherinfo()">更改</button>
 			</div>
 		</div>
 	</div>
@@ -233,24 +275,25 @@
 <script>
 var users = {};
 var alphabet_index = {};
+var selected_user = null;
 
 user_format = `\
-<tr class="i" style="cursor:pointer" onclick="showdetail({0})">
+<tr class="i" style="cursor:pointer" onclick="show_detail({0})">
 	<td>{0}</td>
-	<td><a onclick="showdetail({0})">{1}</a></td>
+	<td><a onclick="show_detail({0})">{1}</a></td>
 	<td>{2}</td>
 	<td>{3}</td>
 	<td>{4}</td>
 </tr>\
 `
 
-function showdetail (uid) {
+function show_detail (uid) {
+	selected_user = uid;
 	$.ajax({
 		url: host + "user/",
 		type: "GET",
 		data: {"key": getCookie("key"), "id": uid},
 		success: function (msg) {
-			console.log(msg)
 			$("#userinfo-frame").modal("show");
 			$("#userinfo-id")[0].innerHTML = msg["id"];
 			$("#userinfo-userid")[0].innerHTML = msg["userid"];
@@ -264,11 +307,72 @@ function showdetail (uid) {
 			$("#userinfo-active")[0].checked = msg["active"]
 			$("#userinfo-disabled")[0].checked = msg["disabled"];
 
+			if (msg["type"] == 0) {
+				$("#userinfo-type")[0].innerHTML = "一般使用者"
+				$("#show-teacherinfo").hide();
+			}
+			else if (msg["type"] == 1) {
+				$("#userinfo-type")[0].innerHTML = "老師"
+				$("#show-teacherinfo").show();
+			}
+			else if (msg["type"] == 2) {
+				$("#userinfo-type")[0].innerHTML = "管理者"
+				$("#show-teacherinfo").show();
+			}
+
 			$("#userinfo-level")[0].innerHTML = "一般";
 			point = msg["point"];
 			if (point > 200) {$("#userinfo-level")[0].innerHTML = "鑽石"}
 			else if (point > 100) {$("#userinfo-level")[0].innerHTML = "白金"}
 			else if (point > 20) {$("#userinfo-level")[0].innerHTML = "黃金"}
+		}
+	})
+}
+
+function show_teacher_detail () {
+	$.ajax({
+		url: host + "teacher/",
+		data: {"key": getCookie("key"), "uid": selected_user},
+		success: function (msg) {
+			info = msg["teacherinfo"];
+			$("#teacher-name")[0].innerHTML = info["name"];
+			$("#teacher-phone")[0].innerHTML = info["phone"];
+			$("#teacher-summary")[0].innerHTML = info["summary"];
+
+			$.each($("[name=class_permission]"), function (_, i) {i.checked=false})
+			$.each(info["class_permission"], function (_, type) {
+				$("#cls_per_" + type)[0].checked = true;
+			})
+		},
+		error: function (err) {
+			console.log(err)
+		}
+	})
+}
+
+function change_teacherinfo () {
+	var class_permission = []
+
+	$.each($("[name=class_permission]"), function (_, type) {
+		if (type.checked) {
+			class_permission.push(type.value);
+		}
+	})
+
+	$.ajax({
+		url: host + "teacher/",
+		type: "PUT",
+		dataType: "json",
+		data: JSON.stringify({
+			"key": getCookie("key"),
+			"uid": selected_user,
+			"class_permission": class_permission}),
+		contentType: "application/json; charset=utf-8",
+		success: function (msg) {
+			console.log(msg);
+		},
+		error: function (err) {
+			console.log(msg);
 		}
 	})
 }
@@ -299,6 +403,26 @@ $("#userid-field").on("input change", function (e) {
 	}
 })
 
+$("#id-field").on("input change", function (e) {
+	value = e.currentTarget.value
+	id = parseInt(value)
+
+	$("#users").html("")
+	$.each(users, function (_, user) {
+		if (user["id"] == id) {
+			$("#users")[0].innerHTML += format(
+				user_format,
+				user["id"],
+				user["userid"],
+				user["email"],
+				user["nickname"],
+				user["create_at"],
+				)
+			return false;
+		}
+	})
+})
+
 
 $(document).ready(function () {
 	$.ajax({
@@ -314,6 +438,17 @@ $(document).ready(function () {
 					alphabet_index[first_chr] = []
 				}
 				alphabet_index[first_chr].push(i["id"])
+			})
+
+			$.each(users, function (_, user) {
+				$("#users")[0].innerHTML += format(
+					user_format,
+					user["id"],
+					user["userid"],
+					user["email"],
+					user["nickname"],
+					user["create_at"],
+					)
 			})
 		}
 	})

@@ -14,7 +14,7 @@ class KeyMgrPlugin(plugins.SimplePlugin):
     def __init__(self, bus):
         plugins.SimplePlugin.__init__(self, bus)
         self.keydict = {}
-        # self.keydict = {"0fc467ca-2e64-11e8-a139-28cfe91c3f5f": {
+        # self.keydict = {"d018ead0-3000-11e8-9668-28cfe91c3f5f": {
         #     "date": datetime.utcnow(),
         #     "requester": "1",
         #     }}
