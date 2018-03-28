@@ -265,25 +265,25 @@ class UserCaseHandler(object):
     def scratchcs1(self):
         return render("scratchcs1.html")
 
-    @cherrypy.expose
-    def scratchcs2(self):
-        return render("scratchcs2.html")
+    # @cherrypy.expose
+    # def scratchcs2(self):
+    #     return render("scratchcs2.html")
 
     @cherrypy.expose
     def scratchcs3(self):
         return render("scratchcs3.html")
 
-    @cherrypy.expose
-    def scratchcs4(self):
-        return render("scratchcs4.html")
+    # @cherrypy.expose
+    # def scratchcs4(self):
+    #     return render("scratchcs4.html")
 
     @cherrypy.expose
     def pythonpc1(self):
         return render("pythonpc1.html")
 
-    @cherrypy.expose
-    def pythonpc2(self):
-        return render("pythonpc2.html")
+    # @cherrypy.expose
+    # def pythonpc2(self):
+    #     return render("pythonpc2.html")
 
     @cherrypy.expose
     def udacity(self):
@@ -357,13 +357,13 @@ class TeacherHandler(object):
                 raise cherrypy.HTTPRedirect("/")
 
             avatar_file = kwargs["avatar"]
-            type_ = str(avatar_file.type)
-            type_ = type_[type_.find("/") + 1:]
+            # type_ = str(avatar_file.type)
+            # type_ = type_[type_.find("/") + 1:]
             try:
                 if not os.path.isdir(path + "avatar/"):
                     os.mkdir(path + "avatar/")
 
-                filename = path + f"avatar/{id_}.{type_}"
+                filename = path + f"avatar/{id_}"#.{type_}"
                 f = open(filename, "wb")
                 while True:
                     data = avatar_file.file.read(8192)

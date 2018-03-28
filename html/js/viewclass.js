@@ -1,5 +1,13 @@
+unic_images = [
+    "unic-1.png",
+    "unic-2.png",
+    "unic-3.png",
+    "unic-4.png",
+    "unic-5.png",
+]
+
 card_format = `<button class="card">
-    <img src="http://www.iconninja.com/files/373/611/612/person-user-profile-male-man-avatar-account-icon.svg" >
+    <img src="{3}" >
     <br>
     <div class="title">{0}</div>
     <div class="description">
@@ -10,8 +18,20 @@ card_format = `<button class="card">
     </div>
 </button>`
 
+direct_card_format = `<button class="card">
+    <img src="{3}" >
+    <br>
+    <div class="title">{0}</div>
+    <div class="description">
+        {1}
+    </div>
+    <div class="btn-group">
+        <div class="full-btn" onclick="window.location.href='/class/c/{2}'">進入完整課程</div>
+    </div>
+</button>`
+
 card_noaccess_format = `<button class="card">
-    <img src="http://www.iconninja.com/files/373/611/612/person-user-profile-male-man-avatar-account-icon.svg" >
+    <img src="{3}" >
     <br>
     <div class="title">{0}</div>
     <div class="description">
@@ -24,7 +44,7 @@ card_noaccess_format = `<button class="card">
 </button>`
 
 card_notrial_format = `<button class="card">
-    <img src="http://www.iconninja.com/files/373/611/612/person-user-profile-male-man-avatar-account-icon.svg" >
+    <img src="{3}" >
     <br>
     <div class="title">{0}</div>
     <div class="description">
@@ -37,7 +57,7 @@ card_notrial_format = `<button class="card">
 </button>`
 
 card_noaccess_notrial_format = `<button class="card">
-    <img src="http://www.iconninja.com/files/373/611/612/person-user-profile-male-man-avatar-account-icon.svg" >
+    <img src="{3}" >
     <br>
     <div class="title">{0}</div>
     <div class="description">
@@ -119,10 +139,90 @@ $.ajax({
     data: {"key": getCookie("key"), "tkey": getCookie("teacher-key")},
     success: function (msg) {
         cardstext = "";
-        login_as = msg["login_as"]
 
-        if (msg["login_as"] == null) {
+        if (msg["login"]) {
+            available_class = msg["available_class"]
+
+            var unic_index = 0;
+            $.each(msg["info"], function (_, i) {
+                classess_info[i["id"]] = i
+                unic_index++;
+
+                if (available_class[i["id"]] != undefined) {
+                    cardstext += format(card_format,
+                        i["subject"],
+                        i["summary"],
+                        i["id"],
+                        "/html/images/unic/" + unic_images[unic_index],
+                        )
+                }
+                else {
+                    if (i["trial"].length == 0) {
+                        cardstext += format(card_noaccess_notrial_format,
+                            i["subject"],
+                            i["summary"],
+                            i["id"],
+                            "/html/images/unic/" + unic_images[unic_index],
+                            )
+                    }
+                    else {
+                        if (i["permission"] == null) {
+                            cardstext += format(direct_card_format,
+                                i["subject"],
+                                i["summary"],
+                                i["id"],
+                                "/html/images/unic/" + unic_images[unic_index],
+                                )
+                        }
+                        else {
+                            cardstext += format(card_noaccess_format,
+                                i["subject"],
+                                i["summary"],
+                                i["id"],
+                                "/html/images/unic/" + unic_images[unic_index],
+                                )
+                        }
+                    }
+                }
+            })
+            // else {
+            //     var unic_index = 0;
+            //     $.each(msg["info"], function (_, i) {
+            //         unic_index++;
+            //         classess_info[i["id"]] = i
+
+            //         if (classroom_in.indexOf(i["id"]) != -1) {
+            //             cardstext += format(card_format,
+            //                 i["subject"],
+            //                 i["summary"],
+            //                 i["id"],
+            //                 "/html/images/unic/" + unic_images[unic_index],
+            //                 )
+            //         }
+            //         else {
+            //             if (i["trial"].length == 0) {
+            //                 cardstext += format(card_noaccess_notrial_format,
+            //                     i["subject"],
+            //                     i["summary"],
+            //                     i["id"],
+            //                     "/html/images/unic/" + unic_images[unic_index],
+            //                     )
+            //             }
+            //             else {
+            //                 cardstext += format(card_noaccess_format,
+            //                     i["subject"],
+            //                     i["summary"],
+            //                     i["id"],
+            //                     "/html/images/unic/" + unic_images[unic_index],
+            //                     )
+            //             }
+            //         }
+            //     })
+            // }
+        } 
+        else {
             // no user or teacher login
+            var unic_index = 0;
             $.each(msg["info"], function (_, i) {
                 classess_info[i["id"]] = i
 
@@ -132,6 +232,7 @@ $.ajax({
                             i["subject"],
                             i["summary"],
                             i["id"],
+                            "/html/images/unic/" + unic_images[unic_index],
                             )
                     }
                     else {
@@ -139,6 +240,7 @@ $.ajax({
                             i["subject"],
                             i["summary"],
                             i["id"],
+                            "/html/images/unic/" + unic_images[unic_index],
                             )
                     }
                 }
@@ -147,8 +249,11 @@ $.ajax({
                         i["subject"],
                         i["summary"],
                         i["id"],
+                        "/html/images/unic/" + unic_images[unic_index],
                         )
                 }
+
+                unic_index ++
             })
 
             if (getCookie("key") == "" || getCookie("teacher-key") == "") {
@@ -160,77 +265,6 @@ $.ajax({
                 storeCookie("teacher-userid", "");
                 $(".non-login-menu").show();
                 $(".login-menu").hide();
-            }
-        }
-        else {
-            classroom_in = msg["classroom"]
-
-            if (login_as == "user") {
-                $.each(msg["info"], function (_, i) {
-                    classess_info[i["id"]] = i
-
-                    if (classroom_in.hasOwnProperty(i["id"])) {
-                        cardstext += format(card_format,
-                            i["subject"],
-                            i["summary"],
-                            i["id"],
-                            )
-                    }
-                    else {
-                        if (i["trial"].length == 0) {
-                            cardstext += format(card_noaccess_notrial_format,
-                                i["subject"],
-                                i["summary"],
-                                i["id"],
-                                )
-                        }
-                        else {
-                            if (i["permission"] == null) {
-                                cardstext += format(card_format,
-                                    i["subject"],
-                                    i["summary"],
-                                    i["id"],
-                                    )
-                            }
-                            else {
-                                cardstext += format(card_noaccess_format,
-                                    i["subject"],
-                                    i["summary"],
-                                    i["id"],
-                                    )
-                            }
-                        }
-                    }
-                })
-            }
-            else {
-                $.each(msg["info"], function (_, i) {
-                    classess_info[i["id"]] = i
-
-                    if (classroom_in.indexOf(i["id"]) != -1) {
-                        cardstext += format(card_format,
-                            i["subject"],
-                            i["summary"],
-                            i["id"],
-                            )
-                    }
-                    else {
-                        if (i["trial"].length == 0) {
-                            cardstext += format(card_noaccess_notrial_format,
-                                i["subject"],
-                                i["summary"],
-                                i["id"],
-                                )
-                        }
-                        else {
-                            cardstext += format(card_noaccess_format,
-                                i["subject"],
-                                i["summary"],
-                                i["id"],
-                                )
-                        }
-                    }
-                })
             }
         }
 

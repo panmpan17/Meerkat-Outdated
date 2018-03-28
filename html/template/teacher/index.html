@@ -103,24 +103,29 @@
 					</div>
 					<div class="col-md-8 col-xs-12">
 						<label for="uploadavatar">
-							<button>上傳頭貼</button>
+							<button class="mag">上傳頭貼</button>
 						</label>
-						<button id="confirmavatar" onclick="confirm_avatar()" hidden>確認上傳</button>
 						<form method="post" enctype="multipart/form-data" id="avatarform" hidden>
 							<input id="uploadavatar" name="avatar" type="file" accept="image/*" onchange="upload_avatar(event)">
 						</form>
 						
 
-						<div id="cards" hidden>
+						<div id="cards">
+							<h2>預覽</h2>
 							<button class="card">
-								<img id="output" >
+								<img id="output" onerror="outputnotexsit()">
 								<div class="info">
-									<span class="name" name="teacher-name"></span><br>
-									<span class="phone" name="teacher-phone"></span>
+									<span class="name" name="teacher-nickname"></span><br>
+									<span class="phone" name="teacher-email"></span>
+									<div class="contact-link" name="teacher-contact-link"></div>
 								</div>
 								<br>
 								<br>
 								<div class="describe" name="teacher-summary"></div>
+							</button>
+							<br>
+							<button class="btn btn-info">
+								<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 重整預覽
 							</button>
 						</div>
 					</div>
@@ -131,9 +136,8 @@
 						<b>變更自我介紹</b>
 						<br><br>
 					</div>
-					<div class="col-md-8 col-xs-12">
-						<textarea id="self-intro" class="form-control" maxlength="120" placeholder="自我介紹 (120 字以下)" cols="30" rows="10"></textarea><br>
-						<button class="btn btn-success" onclick="changesummary()">更改自我介紹</button>
+					<div class="col-md-6 col-xs-12">
+						<textarea id="self-intro" class="form-control" maxlength="120" oninput="checksummary(this)" placeholder="自我介紹 (120 字以下)" cols="30" rows="10"></textarea><br>
 					</div>
 				</div>
 				<div class="row">
@@ -142,18 +146,21 @@
 						<br><br>
 						<span style="color: lightgray;font-size:10px">電話已經記錄了<br>不需要再新增電話</span>
 					</div>
-					<div class="col-md-8 col-xs-12">
+					<div class="col-md-6 col-xs-12">
 						<h4>FB</h4>
 						<input id="cl_FB" name="contact_link" class="form-control" type="text">
 						<h4>Line</h4>
 						<input id="cl_Line" name="contact_link" class="form-control" type="text">
 						<h4>Blog</h4>
 						<input id="cl_Blog" name="contact_link" class="form-control" type="text">
-						<h4>Email</h4>
-						<input id="cl_Email" name="contact_link" class="form-control" type="text">
 						<div id="extra_cl"></div>
 						<br>
-						<button class="btn btn-success" onclick="change_contact_link()">更改聯絡資訊</button>
+						<!-- <button class="btn btn-success" onclick="change_contact_link()">更改聯絡資訊</button> -->
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<button class="btn btn-lg btn-block btn-orange" onclick="changeinfo()">更改資訊</button>
 					</div>
 				</div>
 			</div>
@@ -606,6 +613,9 @@
 				loadadarea();
 				loadadclass();
 			}
+			else if (d == "change") {
+				
+			}
 		}
 
 		// advertise
@@ -616,8 +626,15 @@
 			<td>{0}</td>
 			<td>{1}</td>
 			<td class="b-close" onclick="deletearea('{2}')"><i class="fa fa-times"></i></td>
-			</tr>
-			`
+			</tr>`
+
+		CONTACT_LINK_POPOVER_F = `<div type="button" class="btn btn-orange" data-container="body" data-toggle="popover" data-placement="bottom" data-content="{1}">
+			{0}
+		</div>`
+
+		CONTACT_LINK_HREF_F = `<a href="{1}" class="btn btn-orange" target="_blank">
+			{0}
+		</a>`
 
 		function newarea() {
 			if (advertise_num >= advertise_limit) {
@@ -702,38 +719,17 @@
 			});
 		}
 
-		function changesummary() {
-			summary = $("#self-intro")[0].value
-
-			if (summary == "") {
-				alert("自我介紹不可留空")
-				return;
-			}
-			if (summary.length > 120) {
-				alert("自解介紹過長")
-				return;
-			}
-
-			json = {
-				"key": getCookie("key"),
-				"summary": summary,
-				"teacher": true,
-			}
-
-			$.ajax({
-				url: host + "teacher/",
-				type: "PUT",
-				dataType: "json",
-				data: JSON.stringify(json),
-				contentType: "application/json; charset=utf-8",
-				success: function (msg) {
-					alert("自我介紹已改變")
-				},
-				error: function (error) {
-					console.log(error)
+		function checksummary (e) {
+			c = e.value.match(/\n/g)
+			if (c != null) {
+				if (c.length > 2) {
+					alert("不能超過三行");
+					return
 				}
-			})
+			}
+			$("[name=teacher-summary]").html(e.value.replace(/\n/g, "<br>"))
 		}
+
 
 		function upload_annoce () {
 			e = $("#annocefile")[0]
@@ -772,7 +768,42 @@
 			$("#extra_cl")[0].innerHTML = extra_field
 		}
 
-		function change_contact_link () {
+		function upload_avatar (event) {
+			$("#confirmavatar").show();
+			var output = document.getElementById('output');
+			output.src = URL.createObjectURL(event.target.files[0]);
+		}
+
+		function confirm_avatar () {
+			if ($("#uploadavatar")[0].files.length != 0) {
+				$("#avatarform")[0].submit();
+			}
+			// avatarform
+		}
+
+		function outputnotexsit () {
+			$("#output")[0].src = "/html/images/unic/unic-1.png"
+		}
+
+		function changeinfo () {
+			summary = $("#self-intro")[0].value
+
+			if (summary == "") {
+				alert("自我介紹不可留空")
+				return;
+			}
+			if (summary.length > 120) {
+				alert("自解介紹過長")
+				return;
+			}
+			c = summary.match(/\n/g)
+			if (c != null) {
+				if (c.length > 2) {
+					alert("不能超過三行");
+					return;
+				}
+			}
+
 			var contact_link = {}
 			$.each($("[name=contact_link]"), function (_, e) {
 				var key = e.id.replace("cl_", "")
@@ -784,6 +815,7 @@
 			json = {
 				"key": getCookie("key"),
 				"contact_link": contact_link,
+				"summary": summary,
 				"teacher": true,
 			}
 			$.ajax({
@@ -801,19 +833,48 @@
 			})
 		}
 
-		function upload_avatar (event) {
-			$("#cards").show();
-			$("#confirmavatar").show();
-			var output = document.getElementById('output');
-			output.src = URL.createObjectURL(event.target.files[0]);
-		}
+		$("[name=contact_link]").on("input", function () {
+			var contact_link = {}
+			$.each($("[name=contact_link]"), function (_, e) {
+				var key = e.id.replace("cl_", "")
+				if (e.value != "") {
+					contact_link[key] = e.value
+				}
+			})
 
-		function confirm_avatar () {
-			if ($("#uploadavatar")[0].files.length != 0) {
-				$("#avatarform")[0].submit();
+			contact_link_html = ""
+			$.each(contact_link, function (k, v) {
+				if (k == "Email") {
+					contact_link_html += format(
+						CONTACT_LINK_HREF_F,
+						k,
+						"mailto: " + v,
+						)
+				}
+				else {
+					if (v.startsWith("http://") || v.startsWith("https://")) {
+						contact_link_html += format(
+							CONTACT_LINK_HREF_F,
+							k,
+							v,
+							)
+					}
+					else {
+						contact_link_html += format(
+							CONTACT_LINK_POPOVER_F,
+							k,
+							v,
+							)
+					}
+				}
+			})
+
+			if (contact_link_html == "") {
+				contact_link_html = `<div class="btn btn-orange" style="opacity:0">a</div>`
 			}
-			// avatarform
-		}
+			$("[name=teacher-contact-link]")[0].innerHTML = contact_link_html
+			$('[data-toggle="popover"]').popover()
+		})
 
 		$(document).on('ready', function() {
 			key = getCookie("key")
@@ -822,14 +883,17 @@
 				url: host + "teacher/",
 				data: {"key": key, "teacher": true},
 				success: function (msg) {
+					console.log(msg)
 					disaply_contact_link(msg["contact_link"])
 					advertise_limit = 5 + msg["ext_area"]
 					$("[name=teacher-name]").html(msg["name"])
 					$("[name=teacher-phone]").html(msg["phone"])
+					$("[name=teacher-nickname]").html(msg["nickname"])
+					$("[name=teacher-email]").html(msg["email"])
 					$("#ext_area").html(advertise_limit)
 					$("#whole_city").html(msg["whole_city"])
 					$("#self-intro").html(msg["summary"])
-					$("[name=teacher-summary]").html(msg["summary"])
+					$("[name=teacher-summary]").html(msg["summary"].replace(/\n/g, "<br>"))
 
 					$.each(msg["class_permission"], function (_, v) {
 						$.each($("[name=class_permission]"), function (_, c) {
@@ -839,6 +903,9 @@
 						})
 					})
 					changeclassroomtype(msg["class_permission"][0]);
+
+					var output = document.getElementById('output');
+					output.src = "/downloads/avatar/" + msg["id"]
 				},
 				error: function (err) {location.pathname = ""}
 			})

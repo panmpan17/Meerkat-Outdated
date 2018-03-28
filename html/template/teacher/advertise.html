@@ -119,10 +119,6 @@
 		padding: 0px 15px;
 	}
 
-	#cards .card .btn {
-		float: right;
-	}
-
 	@media (max-width: 992px) {
 		#cards .card {
 			width: 100%;
@@ -202,7 +198,6 @@
 			<br>
 			<br>
 			<div class="describe">{3}</div>
-			<div class="btn btn-orange">更多</div>
 		</button>`
 
 		CONTACT_LINK_POPOVER_F = `<div type="button" class="btn btn-orange" data-container="body" data-toggle="popover" data-placement="bottom" data-content="{1}">
@@ -237,8 +232,8 @@
 							if (teachers_data[t_id] == undefined) {
 								teachers_data[t_id] = {
 									"id": teacher["id"],
-									"name": teacher["name"],
-									"phone": teacher["phone"],
+									"nickname": teacher["nickname"],
+									"email": teacher["email"],
 									"summary": teacher["summary"],
 									"contact_link": teacher["contact_link"],
 									"adclass": {}
@@ -366,8 +361,8 @@
 
 				html += format(
 					CARD_F,
-					t_data["name"],
-					t_data["phone"],
+					t_data["nickname"],
+					t_data["email"],
 					contact_link,
 					t_data["summary"].replace(/\n/g, "<br>"),
 					// unic_images[unic_index],

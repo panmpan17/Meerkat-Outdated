@@ -177,7 +177,6 @@ class View(object):
             ])\
             .select_from(join(teacherinfos, users, teacherinfos.c.id==users.c.id))\
             .where(teacherinfos.c.id==key_valid[1])
-        print(ss)
         rst = conn.execute(ss)
         row = rst.fetchone()
         if not row:
@@ -186,6 +185,30 @@ class View(object):
             key_mgr.drop_key(json["key"])
             raise cherrypy.HTTPError(401)
         return User.mk_dict_teacher(row)
+
+    def check_user_teacher(self, json):
+        meta, conn = cherrypy.request.db
+        key_mgr = cherrypy.request.key
+        users = meta.tables[User.TABLE_NAME]
+        teacherinfos = meta.tables[TeacherInfo.TABLE_NAME]
+
+        if "key" not in json:
+            return False
+        key_valid = key_mgr.get_key(json["key"])
+        if not key_valid[0]:
+            return False
+
+        ss = select([
+            users,
+            teacherinfos.c.class_permission,
+            ])\
+            .select_from(outerjoin(users, teacherinfos, users.c.id==teacherinfos.c.id))\
+            .where(users.c.id==key_valid[1])
+        rst = conn.execute(ss)
+        row = rst.fetchone()
+        if not row:
+            raise cherrypy.HTTPError(401)
+        return row
 
     def check_key(self, _dict, keys):
         for key in keys:
@@ -1015,126 +1038,116 @@ class ClassesRestView(View):
         clsrom_mgr = cherrypy.request.clsrom
 
         if cherrypy.request.method == "GET":
-            if len(kwargs) > 0:
-                self.check_key(kwargs, ("class", ))
-                class_ = classes.get_class(kwargs["class"])
+            self.check_key(kwargs, ("class", ))
+            class_ = classes.get_class(kwargs["class"])
 
-                if not class_:
-                    raise cherrypy.HTTPError(400,
-                        ErrMsg.WRONG_CLASS.format(kwargs["class"]))
+            if not class_:
+                raise cherrypy.HTTPError(400)
 
-                #if class is free
-                if class_["permission"] == None:
-                    logon = False
-                    try:
-                        user = self.check_login_u(kwargs)
-                        logon = True
-                    except:
-                        try:
-                            teacher = self.check_login_teacher(kwargs)
-                            logon = True
-                        except:
-                            pass
+            #if class is free
+            if class_["permission"] == None:
+                logon = False
+                try:
+                    user = self.check_login_u(kwargs)
+                    logon = True
+                except:
+                    pass
 
-                    try:
-                        lesson = int(kwargs["lesson"])
-                        if logon:
-                            return class_["lessons"][lesson]
-                        elif lesson >= len(class_["trial"]):
-                            return {"success": False, "reason": "trial key"}
-                        else:
-                            return class_["lessons"][lesson]
-                    except:
-                        pass
-
-                    class_ = class_.copy()
-                    class_["length"] = len(class_["lessons"])
-                    if not logon:
-                        class_["key_type"] = "trial"
-                    class_.pop("lessons")
-                    return class_
-                else:
-                    progress = None
-                    folder = None
-                    # check user have been checked before
-                    if "cls_per_key" in kwargs:
-                        key = kwargs["cls_per_key"]
-                        key_info = clsrom_mgr.get_cls_per_key(kwargs["cls_per_key"])
-                        if not key_info:
-                            raise cherrypy.HTTPError(400)
-
+                try:
+                    lesson = int(kwargs["lesson"])
+                    if logon:
+                        return class_["lessons"][lesson]
+                    elif lesson >= len(class_["trial"]):
+                        return {"success": False, "reason": "trial key"}
                     else:
-                        clsr_id = None
-                        key_type = None
-                        try:
-                            user = self.check_login_u(kwargs)
+                        return class_["lessons"][lesson]
+                except:
+                    pass
 
-                            try:
-                                clsr_id = int(kwargs["clsrid"])
-                            except:
-                                key_type = "trial"
-                                clsr_id = None
-                                key = str(uuid())
-                                clsrom_mgr.update_cls_per_key(key, key_type, clsr_id)
+                class_ = class_.copy()
+                class_["length"] = len(class_["lessons"])
+                if not logon:
+                    class_["key_type"] = "trial"
+                class_.pop("lessons")
+                return class_
+            else:
+                folder = None
+                clsr_id = None
+                key_type = None
+                # check user have been checked before
+                if "cls_per_key" in kwargs:
+                    key = kwargs["cls_per_key"]
+                    key_info = clsrom_mgr.get_cls_per_key(kwargs["cls_per_key"])
+                    if not key_info:
+                        raise cherrypy.HTTPError(400)
 
-                                class_ = class_.copy()
-                                class_["length"] = 1
-                                class_.pop("lessons")
-                                class_["key"] = key
-                                class_["key_type"] = key_type
-                                return class_
+                else:
+                    user_teacher = self.check_user_teacher(kwargs)
+                    if not user_teacher:
+                        raise cherrypy.HTTPError(400)
 
-                            ss = select([
-                                classrooms.c.progress,
-                                classrooms.c.folder,
-                                classrooms.c.students_cid]).where(
-                                    classrooms.c.id==clsr_id,
-                                    )
-                            rst = conn.execute(ss)
-                            row = rst.fetchone()
-
-                            if row:
-                                if user["id"] not in row["students_cid"]:
-                                    raise Exception("not in class")
-
-                                key_type = "user"
-                                folder = row["folder"]
-                                progress = row["progress"]
-                            else:
-                                raise Exception("clsrid wrong")
-
-                        except Exception as e:
-                            print(e)
-                            teacher = self.check_login_teacher(kwargs)
-                            if kwargs["class"] not in teacher["class_permission"]:
-                                raise cherrypy.HTTPError(400)
-
+                    if user_teacher["class_permission"] != None:
+                        if kwargs["class"] in user_teacher["class_permission"]:
                             key_type = "teacher"
-                        key = str(uuid())
+                            clsr_id = None
 
-                        clsrom_mgr.update_cls_per_key(key, key_type, clsr_id)
+                    if not key_type:
+                        try:
+                            clsr_id = int(kwargs["clsrid"])
+                        except Exception as e:
+                            key_type = "trial"
+                            clsr_id = None
+                            key = str(uuid())
+                            clsrom_mgr.update_cls_per_key(key, key_type, clsr_id)
 
-                    try:
-                        lesson = int(kwargs["lesson"])
-                        if key_info["type"] != "trial":
-                            return class_["lessons"][lesson]
-                        elif lesson >= len(class_["trial"]):
-                            return {"success": False, "reason": "trial key"}
+                            class_ = class_.copy()
+                            class_["length"] = 1
+                            class_.pop("lessons")
+                            class_["key"] = key
+                            class_["key_type"] = key_type
+                            return class_
+
+                        ss = select([
+                            classrooms.c.progress,
+                            classrooms.c.folder,
+                            classrooms.c.students_cid]).where(
+                                classrooms.c.id==clsr_id,
+                                )
+                        rst = conn.execute(ss)
+                        row = rst.fetchone()
+
+                        if row:
+                            if user_teacher["id"] not in row["students_cid"]:
+                                raise Exception("not in class")
+
+                            key_type = "user"
+                            folder = row["folder"]
+                            progress = row["progress"]
                         else:
-                            return class_["lessons"][lesson]
-                    except:
-                        pass
+                            raise Exception("clsrid wrong")
 
-                    class_ = class_.copy()
-                    class_["length"] = len(class_["lessons"])
-                    class_.pop("lessons")
-                    class_["key"] = key
-                    class_["key_type"] = key_type
-                    class_["progress"] = progress
-                    class_["folder"] = folder
-                    return class_
-            else: # return all class info
-                raise cherrypy.HTTPError(404)
+                    key = str(uuid())
+                    clsrom_mgr.update_cls_per_key(key, key_type, clsr_id)
+
+                try:
+                    lesson = int(kwargs["lesson"])
+                    if key_info["type"] != "trial":
+                        return class_["lessons"][lesson]
+                    elif lesson >= len(class_["trial"]):
+                        return {"success": False, "reason": "trial key"}
+                    else:
+                        return class_["lessons"][lesson]
+                except:
+                    pass
+
+                class_ = class_.copy()
+                class_["length"] = len(class_["lessons"])
+                class_.pop("lessons")
+                class_["key"] = key
+                class_["key_type"] = key_type
+                # class_["progress"] = progress
+                class_["folder"] = folder
+                return class_
         else:
             raise cherrypy.HTTPError(404)
 
@@ -1144,49 +1157,50 @@ class ClassesRestView(View):
         meta, conn = cherrypy.request.db
         classrooms = meta.tables[Classroom.TABLE_NAME]
 
-        classroom_in = {}
-        login_as = None
-        
-        try:
-            # test user login
-            user = self.check_login_u(kwargs)
-            login_as = "user"
+        if cherrypy.request.method == "GET":
+            user_teacher = self.check_user_teacher(kwargs)
+            if not user_teacher:
+                return {
+                   "available_class": {},
+                   "login": False,
+                   "info": classes.get_class_all_info()
+                   }
+            cls_per = user_teacher["class_permission"]
 
-            for cls_type in classes.get_subjects_name():
+            available_class = {}
+
+            # check user is teacher?
+            if cls_per != None:
+                for class_ in cls_per:
+                    available_class[class_] = "teacher"
+            else:
                 ss = select([
-                        classrooms.c.id,
-                        classrooms.c.name,
-                        classrooms.c.students_cid]).where(
-                            classrooms.c.type==cls_type
-                            )
+                    classrooms.c.id,
+                    classrooms.c.name,
+                    classrooms.c.type]).where(
+                        classrooms.c.students_cid.any(user_teacher["id"])
+                        )
                 rst = conn.execute(ss)
                 rows = rst.fetchall()
 
                 if rows:
                     for row in rows:
-                        if user["id"] in row["students_cid"]:
-                            if cls_type not in classroom_in:
-                                classroom_in[cls_type] = {}
+                        if row["type"] not in available_class:
+                            available_class[row["type"]] = {}
 
-                            classroom_in[cls_type][row["id"]] = {
-                                "id": row["id"],
-                                "name": row["name"],
-                                "type": cls_type,
-                                }
-        except:
-            try:
-                # user login failed try teacher
-                teacher = self.check_login_teacher(kwargs)
-                login_as = "teacher"
-                classroom_in = teacher["class_permission"]
-            except:
-                pass
+                        available_class[row["type"]][row["id"]] = {
+                            "id": row["id"],
+                            "name": row["name"],
+                            "type": row["type"],
+                            }
 
-        return {
-            "info": classes.get_class_all_info(),
-            "classroom": classroom_in,
-            "login_as": login_as,
-            }
+            return {
+                "available_class": available_class,
+                "login": True,
+                "info": classes.get_class_all_info()
+                }
+        else:
+            raise cherrypy.HTTPError(400)
 
     @cherrypy.expose
     def id(self, *args, **kwargs):
@@ -1361,23 +1375,19 @@ class TeacherRestView(View):
             if "teacher" in data:
                 user = self.check_login_teacher2(data)
 
+                json = {}
                 if "summary" in data:
-                    stmt = teacherinfos.update().where(
-                        teacherinfos.c.id==user["id"]).values(
-                        summary=data["summary"])
-                    conn.execute(stmt)
-                    return {"success": True}
-                elif "contact_link" in data:
+                    json["summary"] = data["summary"]
+                if "contact_link" in data:
                     if not isinstance(data["contact_link"], dict):
                         raise cherrypy.HTTPError(400)
 
-                    stmt = teacherinfos.update().where(
-                        teacherinfos.c.id==user["id"]).values(
-                        contact_link=data["contact_link"])
-                    conn.execute(stmt)
-                    return {"success": True}
-                else:
-                    raise cherrypy.HTTPError(400)
+                    json["contact_link"] = data["contact_link"]
+
+                stmt = teacherinfos.update().where(
+                    teacherinfos.c.id==user["id"]).values(json)
+                conn.execute(stmt)
+                return {"success": True}
             else:
                 user = self.check_login_u(data)
                 if not user["admin"]:
@@ -1574,6 +1584,7 @@ class AdAreaRestView(View):
             else:
                 teacherinfos = meta.tables[TeacherInfo.TABLE_NAME]
                 adclasses = meta.tables[AdClass.TABLE_NAME]
+                users = meta.tables[User.TABLE_NAME]
 
                 try:
                     city = int(kwargs["city"])
@@ -1582,9 +1593,11 @@ class AdAreaRestView(View):
 
                 if city == -1:
                     ss = select([
-                        teacherinfos.c.name,
+                        users.c.nickname,
+                        users.c.email,
+                        # teacherinfos.c.name,
                         teacherinfos.c.id,
-                        teacherinfos.c.phone,
+                        # teacherinfos.c.phone,
                         teacherinfos.c.summary,
                         teacherinfos.c.contact_link,
 
@@ -1602,9 +1615,11 @@ class AdAreaRestView(View):
                         ])
                 else:
                     ss = select([
-                        teacherinfos.c.name,
+                        users.c.nickname,
+                        users.c.email,
+                        # teacherinfos.c.name,
                         teacherinfos.c.id,
-                        teacherinfos.c.phone,
+                        # teacherinfos.c.phone,
                         teacherinfos.c.summary,
                         teacherinfos.c.contact_link,
 
@@ -1623,7 +1638,8 @@ class AdAreaRestView(View):
 
                 j1 = teacherinfos.outerjoin(
                     adareas, teacherinfos.c.id==adareas.c.teacher).outerjoin(
-                    adclasses, teacherinfos.c.id==adclasses.c.teacher)
+                    adclasses, teacherinfos.c.id==adclasses.c.teacher).outerjoin(
+                    users, teacherinfos.c.id==users.c.id)
                 ss = ss.select_from(j1)
                 rst = conn.execute(ss)
                 rows = rst.fetchall()
@@ -1632,7 +1648,10 @@ class AdAreaRestView(View):
                     return []
 
                 path = cherrypy.request.file_mgr.get_download_path()
-                return {"teachers": [Teacher.mk_dict_adarea_adclass(row) for row in rows], "avatar": os.listdir(path + "avatar/")}
+                try:
+                    return {"teachers": [Teacher.mk_dict_adarea_adclass(row) for row in rows], "avatar": os.listdir(path + "avatar/")}
+                except:
+                    return {"teachers": [Teacher.mk_dict_adarea_adclass(row) for row in rows], "avatar": []}
         elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
             user = self.check_login_teacher2(data)

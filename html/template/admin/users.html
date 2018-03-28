@@ -337,7 +337,7 @@ function show_teacher_detail () {
 			info = msg["teacherinfo"];
 			$("#teacher-name")[0].innerHTML = info["name"];
 			$("#teacher-phone")[0].innerHTML = info["phone"];
-			$("#teacher-summary")[0].innerHTML = info["summary"];
+			// $("#teacher-summary")[0].innerHTML = info["summary"];
 
 			$.each($("[name=class_permission]"), function (_, i) {i.checked=false})
 			$.each(info["class_permission"], function (_, type) {

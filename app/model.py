@@ -494,8 +494,10 @@ class Teacher(object):
             end_time = end_time.strftime("%I:%M %p")
         return {
             "id": row["id"],
-            "name": row["name"],
-            "phone": row["phone"],
+            # "name": row["name"],
+            # "phone": row["phone"],
+            "nickname": row["nickname"],
+            "email": row["email"],
             "summary": row["summary"],
             "contact_link": row["contact_link"],
 

@@ -83,7 +83,7 @@ div.changepasswordframe {
 	}
 }
 
-button:not(.btn):not(.card) {
+button.mag {
 	border-radius: 50px;
 	padding: 10px 50px;
 	border: 2px solid #DC6180;
@@ -92,7 +92,7 @@ button:not(.btn):not(.card) {
 	background-color: white;
 }
 
-button:not(.btn):not(.card):hover {
+button.mag:hover {
 	color: white;
 	background: #DC6180;
 	cursor: pointer;
@@ -128,13 +128,25 @@ li.filelist:hover {
 	cursor: pointer;
 }
 
+#cards {
+	position: fixed;
+	right: 0;
+	top: 60px;
+	background-color: rgba(150, 150, 150, .5);
+	/*background: red;*/
+
+	padding: 5px;
+	z-index: 10000000;
+}
+
 #cards .card {
 	cursor: default;
 	float: left;
 	display: inline-block;
 	background: rgb(240, 240, 240);
 	min-width: 350px;
-	height: auto;
+	width: calc(50% - 10px);
+	height: 230px;
 	margin: 4px 4px;
 	text-align: left;
 }
@@ -173,6 +185,18 @@ li.filelist:hover {
 	padding: 0px 15px;
 }
 
-#cards .card .btn {
+/*#cards .card .btn {
 	float: right;
+}*/
+
+.btn-orange {
+	color: white;
+	background-color: rgb(255,131,0);
+	border-color: rgb(255,131,0);
+}
+/*課程區塊按鈕滑鼠滑入樣式*/
+.btn:hover {
+	color: white;
+	background-color: rgb(149,214,0);
+	border-color: rgb(149,214,0);
 }

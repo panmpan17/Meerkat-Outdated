@@ -13,11 +13,16 @@ KEYTIMEOUT = WEEK #become seconds
 class KeyMgrPlugin(plugins.SimplePlugin):
     def __init__(self, bus):
         plugins.SimplePlugin.__init__(self, bus)
-        self.keydict = {}
-        # self.keydict = {"d018ead0-3000-11e8-9668-28cfe91c3f5f": {
-        #     "date": datetime.utcnow(),
-        #     "requester": "1",
-        #     }}
+        # self.keydict = {}
+        self.keydict = {
+            "28f347c2-315f-11e8-abb2-28cfe91c3f5f": {
+                "date": datetime.utcnow(),
+                "requester": "4678",
+                },
+            "d018ead0-3000-11e8-9668-28cfe91c3f5f": {
+                "date": datetime.utcnow(),
+                "requester": "1",
+            }}
 
         self.cls_per = {}
         self.cls_per_key = self.cls_per.keys()

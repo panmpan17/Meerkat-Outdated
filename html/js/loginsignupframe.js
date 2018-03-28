@@ -180,7 +180,6 @@ function showinfo () {
 				$("#info-active #checkcode").hide();
 			}
 			else {
-				console.log(msg)
 				$("#info-active #success").hide();
 
 				if (msg["email_valid"]) {
@@ -199,7 +198,7 @@ function showinfo () {
 				}
 				catch(err) {}
 			}
-			else if (msg["type"] == 0) {
+			if (msg["type"] == 0) {
 				try {
 					$("#userinfo")[0].childNodes[1].removeChild($("#info-teacher")[0])
 				}
