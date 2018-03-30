@@ -257,9 +257,9 @@
 							}
 						})
 
+						console.log(msg["avatar"])
 						$.each(msg["avatar"], function (_, image) {
-							var id_ = parseInt(image.substring(0, image.indexOf(".")))
-							teachers_data[id_]["avatar"] = image
+							teachers_data[parseInt(image)]["avatar"] = image
 						})
 						display_towns_btn(city, city_index);
 						display_teacher(city_index, -1);

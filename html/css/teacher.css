@@ -183,6 +183,7 @@ li.filelist:hover {
 #cards .card .describe {
 	clear: left;
 	padding: 0px 15px;
+	padding-top: 8px;
 }
 
 /*#cards .card .btn {

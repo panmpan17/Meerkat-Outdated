@@ -31,7 +31,7 @@ function check_students() {
 	}
 
 	type = $("#select-type")[0].value
-	if (type == "scratch_1" || type == "teacher_1" || type == "scratch_02") {
+	if (type == "scratch_1" || type == "teacher_1" || type == "scratch_03") {
 		check_students_scratch()
 	}
 	else if (type == 'python_01' || type == "python_trial") {

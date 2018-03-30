@@ -46,17 +46,21 @@
 					<li id="button-main" class="active">
 						<a onclick="change_page('main')"><i class="fa fa-fw fa-home"></i> 首頁</a>
 					</li>
-					<li id="button-change">
-						<a onclick="change_page('change')"><i class="fa fa-fw fa-wrench"></i> 基本資訊</a>
+					<li>
+						<a data-toggle="collapse" data-target="#teacherinfo" class="" aria-expanded="true">
+							教師資訊 <i class="fa fa-fw fa-caret-down"></i>
+						</a>
+						<ul id="teacherinfo" class="collapse" aria-expanded="true">
+							<li id="button-change">
+								<a onclick="change_page('change')"><i class="fa fa-fw fa-wrench"></i> 基本資訊</a>
+							</li>
+							<li id="button-advertise">
+								<a onclick="change_page('advertise')"><i class="fa fa-fw fa-edit"></i> 廣告管理</a>
+							</li>
+						</ul>
 					</li>
 					<li id="button-createclassroom">
 						<a onclick="change_page('createclassroom')"><i class="fa fa-fw fa-plus"></i> 建立一個新的教室</a>
-					</li>
-					<li id="button-advertise">
-						<a onclick="change_page('advertise')"><i class="fa fa-fw fa-edit"></i> 廣告管理</a>
-					</li>
-					<li>
-						<a href="mailto:shalley.tsay@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i> 聯絡我們</a>
 					</li>
 					<li>
 						<a data-toggle="collapse" data-target="#classrooms" class="" aria-expanded="true">
@@ -67,6 +71,9 @@
 								<a>你還沒有任何的教室</a>
 							</li>
 						</ul>
+					</li>
+					<li>
+						<a href="mailto:shalley.tsay@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i> 聯絡我們</a>
 					</li>
 				</ul>
 			</div>
@@ -103,10 +110,10 @@
 					</div>
 					<div class="col-md-8 col-xs-12">
 						<label for="uploadavatar">
-							<button class="mag">上傳頭貼</button>
+							<button class="mag">上傳頭貼 (100x100 .png 或 .jpg)</button>
 						</label>
 						<form method="post" enctype="multipart/form-data" id="avatarform" hidden>
-							<input id="uploadavatar" name="avatar" type="file" accept="image/*" onchange="upload_avatar(event)">
+							<input id="uploadavatar" name="avatar" type="file" accept=".png,.jpeg,.jpg" onchange="upload_avatar(event)">
 						</form>
 						
 
@@ -117,15 +124,11 @@
 								<div class="info">
 									<span class="name" name="teacher-nickname"></span><br>
 									<span class="phone" name="teacher-email"></span>
-									<div class="contact-link" name="teacher-contact-link"></div>
+									<div class="contact-link" name="teacher-contact-link"><a class="btn btn-orange" style="opacity: 0"></a></div>
 								</div>
 								<br>
 								<br>
 								<div class="describe" name="teacher-summary"></div>
-							</button>
-							<br>
-							<button class="btn btn-info">
-								<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 重整預覽
 							</button>
 						</div>
 					</div>
@@ -148,11 +151,11 @@
 					</div>
 					<div class="col-md-6 col-xs-12">
 						<h4>FB</h4>
-						<input id="cl_FB" name="contact_link" class="form-control" type="text">
+						<input id="cl_FB" name="contact_link" class="form-control" type="text" maxlength="70" placeholder="最長限制: 70 字">
 						<h4>Line</h4>
-						<input id="cl_Line" name="contact_link" class="form-control" type="text">
+						<input id="cl_Line" name="contact_link" class="form-control" type="text" maxlength="70" placeholder="最長限制: 70 字">
 						<h4>Blog</h4>
-						<input id="cl_Blog" name="contact_link" class="form-control" type="text">
+						<input id="cl_Blog" name="contact_link" class="form-control" type="text" maxlength="70" placeholder="最長限制: 70 字">
 						<div id="extra_cl"></div>
 						<br>
 						<!-- <button class="btn btn-success" onclick="change_contact_link()">更改聯絡資訊</button> -->
@@ -593,7 +596,7 @@
 			"python_01": "Python 初級",
 			"scratch_1": "Scratch 初級",
 			"python_trial": "Python 體驗課程",
-			"scratch_02": "Scratch 應用",
+			"scratch_03": "Scratch 應用",
 			"hourofcode": "Hour of Code",
 			"teacher_1": "教師訓練",
 		}
@@ -771,14 +774,12 @@
 		function upload_avatar (event) {
 			$("#confirmavatar").show();
 			var output = document.getElementById('output');
-			output.src = URL.createObjectURL(event.target.files[0]);
-		}
-
-		function confirm_avatar () {
-			if ($("#uploadavatar")[0].files.length != 0) {
-				$("#avatarform")[0].submit();
+			if (event.target.files[0].size > 10240) {
+				alert("照片顯示的解析度只有 100x100\n不要超過 1 MB");
+				event.target.value = ""
+				return;
 			}
-			// avatarform
+			output.src = URL.createObjectURL(event.target.files[0]);
 		}
 
 		function outputnotexsit () {
@@ -804,6 +805,11 @@
 				}
 			}
 
+			c = confirm("確定要更改資訊?")
+			if (!c) {
+				return;
+			}
+
 			var contact_link = {}
 			$.each($("[name=contact_link]"), function (_, e) {
 				var key = e.id.replace("cl_", "")
@@ -825,7 +831,12 @@
 				data: JSON.stringify(json),
 				contentType: "application/json; charset=utf-8",
 				success: function (msg) {
-					alert("聯絡資訊已改變");
+					if ($("#uploadavatar")[0].files.length != 0) {
+						$("#avatarform")[0].submit();
+					}
+					else {
+						alert("聯絡資訊已改變");
+					}
 				},
 				error: function (err) {
 					console.log(err)

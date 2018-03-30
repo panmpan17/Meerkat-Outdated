@@ -1,6 +1,6 @@
 {"description": "",
  "description-video": "",
- "id": "scratch_02",
+ "id": "scratch_03",
  "lessons": [
       {"title": "第一課 九九乘法快問快答",
       "content": [
@@ -465,6 +465,12 @@
             "class_name": "11 說出秒數",
             "description": "",
             "video": "http://storage.googleapis.com/coding4fun-class-video/scratch-02/3-11.mp4"},
+            {"answer": "",
+            "type": "video",
+            "buttons": [],
+            "class_name": "12 我要挑戰!",
+            "description": "",
+            "video": "https://storage.googleapis.com/coding4fun-class-video/scratch-02/0-0.mp4"},
             {"type": "chosevideo",
             "class_name": "挑戰",
             "choice": [
@@ -966,7 +972,7 @@
             "buttons": [],
             "class_name": "11 我要挑戰!",
             "description": "",
-            "video": "http://storage.googleapis.com/coding4fun-class-video/scratch-02/6-11.mp4"},
+            "video": "http://storage.googleapis.com/coding4fun-class-video/scratch-02/0-0.mp4"},
             {"type": "chosevideo",
             "class_name": "挑戰",
             "choice": [
@@ -1223,6 +1229,12 @@
             "class_name": "16 我要挑戰!",
             "description": "",
             "video": "http://storage.googleapis.com/coding4fun-class-video/scratch-02/5-16.mp4"},
+            {"answer": "",
+            "type": "video",
+            "buttons": [],
+            "class_name": "17 我要挑戰!",
+            "description": "",
+            "video": "https://storage.googleapis.com/coding4fun-class-video/scratch-02/0-0.mp4"},
             {"type": "chosevideo",
             "class_name": "挑戰",
             "choice": [
