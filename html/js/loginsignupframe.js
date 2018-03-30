@@ -2,7 +2,6 @@
 id_pass_re = new RegExp("[a-zA-Z0-9@\.]{8,32}");
 // file_re = new RegExp("[0-9]+_[0-9]+")
 email_re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-CHANGE_E_BTN = `&nbsp;<a href="/newemail"><button class="btn btn-danger">更改</button></a>`
 function matchRE(r, text) {
 	match = r.exec(text);
 	if (match == null) {
@@ -155,6 +154,7 @@ function showinfo () {
 		type: "GET",
 		data: string_param,
 		success: function (msg) {
+			$("#change-nickname")[0].value = msg["nickname"]
 			$("#info-userid")[0].innerHTML = msg["userid"];
 			// $("#info-point")[0].innerHTML = msg["point"];
 			$("#info-nick")[0].innerHTML = msg["nickname"];
@@ -162,7 +162,7 @@ function showinfo () {
 			$("#info-job")[0].innerHTML = msg["job"];
 
 			if (msg["active"]) {
-				$("#info-email")[0].innerHTML = msg["email"] + CHANGE_E_BTN;
+				$("#info-email")[0].innerHTML = msg["email"];
 			}
 			else {
 				$("#info-email")[0].innerHTML = msg["email"];
@@ -341,4 +341,46 @@ function checknewrepassword (e) {
 		$("#newrepasvalind")[0].style.color = "rgb(167, 69, 68)";
 		$("#newrepasvalind")[0].style.backgroundColor = "rgb(242, 222, 222)";
 	}
+}
+
+function show_change_page () {
+	if ($("#userinfochange")[0].hidden) {
+		$("#userinfochange")[0].hidden = false;
+		$("#userinfochange-txt")[0].innerHTML = "返回";
+		$("#userinfo").hide();
+	}
+	else {
+		$("#userinfochange")[0].hidden = true;
+		$("#userinfochange-txt")[0].innerHTML = "修改資料";
+		$("#userinfo").show();
+	}
+}
+
+function change_baseinfo () {
+	nickname = $("#change-nickname")[0].value
+	job = $("#change-job")[0].value
+
+	if (nickname == "") {
+		alert("暱稱必須填寫")
+		return;
+	}
+
+	json = {
+		"key": getCookie("key"),
+		"nickname": nickname,
+		"job": job,
+	}
+	$.ajax({
+		url: host + "user/",
+		type: "PUT",
+		dataType: "json",
+		data: JSON.stringify(json),
+		contentType: "application/json; charset=utf-8",
+		success: function (msg) {
+			alert("更改成功 (建議重新整理頁面)");
+		},
+		error: function (err) {
+			console.log(err)
+		}
+	})
 }

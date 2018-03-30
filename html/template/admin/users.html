@@ -369,7 +369,7 @@ function change_teacherinfo () {
 			"class_permission": class_permission}),
 		contentType: "application/json; charset=utf-8",
 		success: function (msg) {
-			console.log(msg);
+			alert("成功更改 !")
 		},
 		error: function (err) {
 			console.log(msg);
@@ -439,17 +439,6 @@ $(document).ready(function () {
 				}
 				alphabet_index[first_chr].push(i["id"])
 			})
-
-			// $.each(users, function (_, user) {
-			// 	$("#users")[0].innerHTML += format(
-			// 		user_format,
-			// 		user["id"],
-			// 		user["userid"],
-			// 		user["email"],
-			// 		user["nickname"],
-			// 		user["create_at"],
-			// 		)
-			// })
 		}
 	})
 })

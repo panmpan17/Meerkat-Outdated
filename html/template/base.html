@@ -359,7 +359,7 @@
 				<input class="my-form" placeholder="密碼 8-32 (英文字母, 數字, @.)" name="signup-password" type="password"><br><br>
 				<input class="my-form" placeholder="確認密碼" name="signup-repassword" type="password"><br><br>
 				<input class="my-form" placeholder="Email" name="signup-email" type="text"><br><br>
-				<input class="my-form" placeholder="暱稱 (請勿用真實姓名)" name="signup-nickname" type="text"><br><br>
+				<input class="my-form" placeholder="暱稱 (16 字以下)" name="signup-nickname" type="text" maxlength="16"><br><br>
 				<input id="number" class="my-form" max=2010 min=1950 value=2000 placeholder="出生年" name="signup-birth_year" type="number"><br><br>
 				<input class="my-form" placeholder="Job (可不填)" name="signup-job" type="text"><br><br>
 				<div class="g-recaptcha" data-sitekey="6LcSMwoUAAAAAJoZ5gXYx0b6Qv9Ag75o9rn3qpMw"></div>
@@ -376,38 +376,57 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<a href="javascript:;"><span aria-hidden="true" style="color: black;">&Chi;</span></a>
+					<span id="info-userid" style="font-size: 18px;font-weight: 900;padding-right: 20px;"></span>
+					<a style="color: lightgray;cursor: pointer;user-select: none;-webkit-user-select:none" onclick="show_change_page()">
+						<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+						<span id="userinfochange-txt">修改資料</span>
+					</a>
+					<button type="button" class="close">
+						<a href="javascript:;" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color: black;">&Chi;</span></a>
 					</button>
 				</div>
 
 				<div class="modal-body" id="yt-player">
 					<center>
-						<table id="userinfo" class="table" style="width:90%">
+						<table id="userinfochange" class="table" style="width: 90%" hidden>
 							<tr>
-								<td>帳號</td>
-								<td id="info-userid"></td>		
+								<td>資料修改</td>
+								<td>
+									<div class="input-group">
+										<span class="input-group-addon">新暱稱</span>
+										<input id="change-nickname" class="form-control" placeholder="16 字以下" maxlength="16">
+									</div>
+									<div class="input-group" style="margin-top: 10px">
+										<span class="input-group-addon">新工作</span>
+										<input id="change-job" class="form-control" placeholder="16 字以下 (可留白)" maxlength="16">
+									</div>
+									<button class="btn btn-orange" style="margin-top: 10px;" onclick="change_baseinfo()">修改資訊</button>
+								</td>
 							</tr>
 							<tr>
 								<td>密碼更改</td>
 								<td>
 									<div class="input-group">
-										<input class="form-control" type="password" id="change_password" placeholder="舊密碼">
+										<span class="input-group-addon">舊密碼</span>
+										<input class="form-control" type="password" id="change_password">
 									</div>
 
-									<div class="input-group">
-										<input class="form-control" type="password" id="change_newpassword" placeholder="新密碼 8-16 (英文字母, 數字, @.)" oninput="checknewpassword(this)" maxlength="16">
+									<div class="input-group" style="margin-top: 10px">
+										<span class="input-group-addon">新密碼</span>
+										<input class="form-control" type="password" id="change_newpassword" placeholder="8-16 英文字母、數字、@." oninput="checknewpassword(this)" maxlength="16">
 										<span class="input-group-addon" id="newpasvalind"></span>
 									</div>
 
-									<div class="input-group">
-										<input class="form-control" type="password" id="change_check_password" placeholder="新密碼確認" maxlength="16" oninput="checknewrepassword(this)">
+									<div class="input-group" style="margin-top: 10px">
+										<span class="input-group-addon">確認新密碼</span>
+										<input class="form-control" type="password" id="change_check_password" maxlength="16" oninput="checknewrepassword(this)">
 										<span class="input-group-addon" id="newrepasvalind"></span>
 									</div>
-									<br>
-									<button class="btn btn-success" onclick="changepassword()">更改密碼</button>
-								</td>		
+									<button class="btn btn-orange" style="margin-top: 10px" onclick="changepassword()">更改密碼</button>
+								</td>
 							</tr>
+						</table>
+						<table id="userinfo" class="table" style="width: 90%">
 							<tr>
 								<td>暱稱</td>
 								<td id="info-nick"></td>		

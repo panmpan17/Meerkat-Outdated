@@ -83,7 +83,7 @@ div.changepasswordframe {
 	}
 }
 
-button.mag {
+.mag {
 	border-radius: 50px;
 	padding: 10px 50px;
 	border: 2px solid #DC6180;
@@ -92,7 +92,7 @@ button.mag {
 	background-color: white;
 }
 
-button.mag:hover {
+.mag:hover {
 	color: white;
 	background: #DC6180;
 	cursor: pointer;
@@ -146,7 +146,7 @@ li.filelist:hover {
 	background: rgb(240, 240, 240);
 	min-width: 350px;
 	width: calc(50% - 10px);
-	height: 230px;
+	height: 220px;
 	margin: 4px 4px;
 	text-align: left;
 }
@@ -184,6 +184,21 @@ li.filelist:hover {
 	clear: left;
 	padding: 0px 15px;
 	padding-top: 8px;
+	line-height: 24px;
+}
+
+#cards .card .info[top=true] {
+	margin-top: 0px;
+}
+
+#cards .card .info[top=true] ~ .describe {
+	padding-top: 8px;
+}
+
+#morebtn {
+	height: 0;
+	float: right;
+	margin-top: -30px;
 }
 
 /*#cards .card .btn {

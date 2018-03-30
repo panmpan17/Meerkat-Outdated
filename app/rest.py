@@ -417,25 +417,38 @@ class UserRestView(View):
 
             user = self.check_login_u(data)
 
-            if not user["admin"]:
-                raise cherrypy.HTTPError(401)
-
-            try:
-                uid = int(data["uid"])
-            except:
-                raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("uid"))
-
             if "disabled" in data:
+                if not user["admin"]:
+                    raise cherrypy.HTTPError(401)
+
+                try:
+                    uid = int(data["uid"])
+                except:
+                    raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("uid"))
+
                 stmt = update(users).where(
-                    users.c.id == uid).values(
+                    users.c.id==uid).values(
                     {"disabled": data["disabled"]})
                 ins = conn.execute(stmt)
 
                 cherrypy.response.status = 201
                 return {"success": True}
             else:
-                raise cherrypy.HTTPError(400,
-                    ErrMsg.MISS_PARAM.format("disabled"))
+                json = {}
+                if "nickname" in data:
+                    json["nickname"] = data["nickname"]
+                if "job" in data:
+                    json["job"] = data["job"]
+
+                if json == {}:
+                    raise cherrypy.HTTPError(400)
+
+                stmt = update(users).where(
+                    users.c.id==user["id"]).values(json)
+                ins = conn.execute(stmt)
+
+                cherrypy.response.status = 201
+                return {"succes": True}
         else:
             raise cherrypy.HTTPError(404)
 
@@ -1640,7 +1653,7 @@ class AdAreaRestView(View):
                     adareas, teacherinfos.c.id==adareas.c.teacher).outerjoin(
                     adclasses, teacherinfos.c.id==adclasses.c.teacher).outerjoin(
                     users, teacherinfos.c.id==users.c.id)
-                ss = ss.select_from(j1)
+                ss = ss.where(users.c.disabled==False).select_from(j1)
                 rst = conn.execute(ss)
                 rows = rst.fetchall()
 

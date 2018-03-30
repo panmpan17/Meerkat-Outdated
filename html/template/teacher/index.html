@@ -51,10 +51,10 @@
 							教師資訊 <i class="fa fa-fw fa-caret-down"></i>
 						</a>
 						<ul id="teacherinfo" class="collapse" aria-expanded="true">
-							<li id="button-change">
+							<li id="button-change" style="cursor: pointer;">
 								<a onclick="change_page('change')"><i class="fa fa-fw fa-wrench"></i> 基本資訊</a>
 							</li>
-							<li id="button-advertise">
+							<li id="button-advertise" style="cursor: pointer;">
 								<a onclick="change_page('advertise')"><i class="fa fa-fw fa-edit"></i> 廣告管理</a>
 							</li>
 						</ul>
@@ -109,8 +109,8 @@
 						<br><br>
 					</div>
 					<div class="col-md-8 col-xs-12">
-						<label for="uploadavatar">
-							<button class="mag">上傳頭貼 (100x100 .png 或 .jpg)</button>
+						<label class="mag" for="uploadavatar">
+							<!-- <button> -->上傳頭貼 (100x100 .png 或 .jpg)<!-- </button> -->
 						</label>
 						<form method="post" enctype="multipart/form-data" id="avatarform" hidden>
 							<input id="uploadavatar" name="avatar" type="file" accept=".png,.jpeg,.jpg" onchange="upload_avatar(event)">
@@ -129,6 +129,9 @@
 								<br>
 								<br>
 								<div class="describe" name="teacher-summary"></div>
+								<div id="morebtn">
+									<a class="btn btn-orange">更多</a>
+								</div>
 							</button>
 						</div>
 					</div>
@@ -753,7 +756,7 @@
 			}
 		}
 
-		function disaply_contact_link (contact_link) {
+		function display_contact_link_field (contact_link) {
 			var extra_field = ""
 			$.each(contact_link, function (k, v) {
 				cl_ele = $("#cl_" + k)
@@ -844,15 +847,7 @@
 			})
 		}
 
-		$("[name=contact_link]").on("input", function () {
-			var contact_link = {}
-			$.each($("[name=contact_link]"), function (_, e) {
-				var key = e.id.replace("cl_", "")
-				if (e.value != "") {
-					contact_link[key] = e.value
-				}
-			})
-
+		function display_contact_link (contact_link) {
 			contact_link_html = ""
 			$.each(contact_link, function (k, v) {
 				if (k == "Email") {
@@ -881,10 +876,27 @@
 			})
 
 			if (contact_link_html == "") {
-				contact_link_html = `<div class="btn btn-orange" style="opacity:0">a</div>`
+				// contact_link_html = ``
+				$(".info")[0].setAttribute("top", "")
 			}
+			else {
+				$(".info")[0].setAttribute("top", "true")
+			}
+
 			$("[name=teacher-contact-link]")[0].innerHTML = contact_link_html
-			$('[data-toggle="popover"]').popover()
+		}
+
+		$("[name=contact_link]").on("input", function () {
+			var contact_link = {}
+			$.each($("[name=contact_link]"), function (_, e) {
+				var key = e.id.replace("cl_", "")
+				if (e.value != "") {
+					contact_link[key] = e.value;
+				}
+			})
+
+			display_contact_link(contact_link);
+			$('[data-toggle="popover"]').popover();
 		})
 
 		$(document).on('ready', function() {
@@ -895,7 +907,8 @@
 				data: {"key": key, "teacher": true},
 				success: function (msg) {
 					console.log(msg)
-					disaply_contact_link(msg["contact_link"])
+					display_contact_link_field(msg["contact_link"]);
+					display_contact_link(msg["contact_link"]);
 					advertise_limit = 5 + msg["ext_area"]
 					$("[name=teacher-name]").html(msg["name"])
 					$("[name=teacher-phone]").html(msg["phone"])
