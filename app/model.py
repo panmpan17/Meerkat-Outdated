@@ -403,14 +403,14 @@ class Post(object):
     post_t = None
 
     def __init__(self):
-        self.title = None
+        # self.title = None
         self.content = None
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
         cls.post_t = Table(cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
-            Column("title", String, nullable=False, autoincrement=False),
+            # Column("title", String, nullable=False, autoincrement=False),
             Column("content", Text, nullable=False, autoincrement=False),
             Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
             )
@@ -421,7 +421,7 @@ class Post(object):
     def mk_dict(cls, row):
         return {
             "id": row["id"],
-            "title": row["title"],
+            # "title": row["title"],
             "content": row["content"],
             "create_at": GMT(row["create_at"]),
             }

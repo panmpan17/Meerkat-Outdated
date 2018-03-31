@@ -2,29 +2,8 @@
 {% block title %}消息公告{% endblock %}
 {% block css %}
 	<!-- <link href="/html/stylecss/class.css" rel="stylesheet" type="text/css"> -->
+	<link href="/html/stylecss/qa.css" rel="stylesheet" type="text/css">
 	<style>
-		.mynav-sidebar {
-			color: white;
-			width: 100%;
-			background: rgb(6, 48, 68);
-			left: 0;
-			top: 130px;
-		}
-
-		.mynav-sidebar .item {
-			padding: 10px 15px;
-			cursor: pointer;
-			background: transparent;
-		}
-
-		.mynav-sidebar .item:hover {
-			background: rgb(40, 79, 88);
-		}
-
-		.item.active {
-			color: rgb(255,131,0);
-		}
-
 		.h4 {
 			color: darkslategray;
 			font-weight: bolder;
@@ -48,25 +27,48 @@
 		#cards h2 {
 			padding-left: 0px;
 		}
+
+		div.side_menu {
+			text-align: left;
+		}
+
+		div[role=presentation] {
+			padding: 0 10px;
+		}
 	</style>
 {% endblock %}
 {% block content %}
 <br>
 <main>
-	<div class="container-fluid">
+	<div class="container">
+		<div class="row" style="clear: both">
+			<div class="col-sm-4">
+				<div class="qabg">
+					<div role="tablist">
+						<div id="side_menu" class="side_menu">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-8" id="post">
+			</div>
+		</div>
+	</div>
+	<!-- <div class="container-fluid">
 		<div class="col-md-2 col-sm-1 col-xs-12"></div>
 		<div class="col-md-4 col-sm-10 col-xs-12" style="padding: 25px;padding-bottom: 10px">
 			<div id="post-title-bar" class="mynav-sidebar"></div>
 		</div>
 		<div id="cards" class="col-md-4 col-md-offset-0 col-sm-10 col-sm-offset-1 col-xs-12" style="padding: 25px;padding-top: 10px"></div>
-	</div>
+	</div> -->
 </main>
 <br>
 {% endblock %}
 {% block script %}
 <script>
-	posts = {}
-	title_bar_item_format = `<div class="item" onclick="show_post(this, {1})"> {0}</div>`
+	posts = {};
+	title_bar_item_format = `<a class="summaryitem" href="javascript:;" onclick="show_post(this, {1})"">
+	<div role="presentation">{0}</div></a>`;
 	news_format = `<button class="card">
 		<div class="classprove_contect">
 			<div>{0}</div>
@@ -84,18 +86,15 @@
 	</center>`
 
 	function show_post (e, post_id) {
-		active_item = $(".item.active")
-		if (active_item.length > 0) {
-			active_item[0].classList.remove("active")
-		}
-
-		console.log(e)
-		e.classList.add("active")
-		$("#cards")[0].innerHTML = format(
+		$("#post")[0].innerHTML = format(
 			news_format,
 			posts[post_id]["content"],
 			posts[post_id]["create_at"],
 			)
+	}
+
+	function remove_tag (text) {
+		return text.replace(RegExp("<[^\>]+>", "g"), "")
 	}
 
 	$(document).ready(function () {
@@ -106,6 +105,13 @@
 				html = ""
 				$.each(msg["posts"], function (_, post) {
 					posts[post["id"]] = post
+
+					let summary = remove_tag(post["content"])
+					post["title"] = summary.substring(0, 15)
+					if (summary.length > 15) {
+						post["title"] += "⋯⋯"
+					}
+					
 					html += format(
 						title_bar_item_format,
 						post["title"],
@@ -113,8 +119,8 @@
 						)
 				})
 
-				$("#post-title-bar")[0].innerHTML = html
-				$(".item")[0].onclick()
+				$("#side_menu")[0].innerHTML = html;
+				$(".summaryitem")[0].onclick();
 			}
 		})
 	})

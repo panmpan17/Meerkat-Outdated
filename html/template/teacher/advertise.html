@@ -103,10 +103,12 @@
 		font-weight: 900;
 	}
 
-	#cards .card .info .phone {
-		font-size: 13px;
+	#cards .card .info .phone a {
+		font-size: 15px;
 		font-weight: 100;
 		color: #AAA;
+		user-select: all;
+		-webkit-user-select: all;
 	}
 
 	#cards .card .contact-link > * {
@@ -134,12 +136,18 @@
 		}
 	}
 
-	#morebtn {
+	.morebtn {
+		display: none;
 		height: 0;
 		float: right;
 		margin-top: -30px;
 	}
-</style>
+
+	.morebtn.true {
+		display: inline-block;
+	}
+
+	</style>
 {% endblock %}
 {% block content %}
 <main>
@@ -209,14 +217,14 @@
 			<img src="{4}" >
 			<div class="info" top="{6}">
 				<span class="name">{0}</span><br>
-				<span class="phone">{1}</span>
+				<span class="phone"><a href="mailto:{1}">{1}</a></span>
 				<div class="contact-link">{2}</div>
 			</div>
 			<br>
 			<br>
 			<div class="describe">{3}</div>
-			<div id="morebtn">
-				<a class="btn btn-orange disabled" onclick="show_teacher_adclass({5})">更多</a>
+			<div class="morebtn {7}">
+				<a class="btn btn-orange" onclick="show_teacher_adclass({5})">更多</a>
 			</div>
 		</button>`
 
@@ -379,15 +387,41 @@
 					}
 				}
 
+				var summary = t_data["summary"]
+				var change_line = summary.match(/\n/g)
+				if (change_line != null) {
+					change_line = change_line.length
+				}
+				morebtn = false;
+				if (change_line > 3) {
+					morebtn = true;
+
+					var break_line_index = summary.indexOf("\n");
+					for (i=0;i<2;i++) {
+						break_line_index = summary.indexOf("\n", break_line_index + 1);
+					}
+					summary = summary.substring(0, break_line_index);
+				}
+				if (summary.length > 45) {
+					morebtn = true;
+					summary = summary.substring(0, 45);
+				}
+
+				if (morebtn) {
+					summary += "⋯⋯"
+				}
+				summary = summary.replace(/\n/g, "<br>");
+
 				html += format(
 					CARD_F,
 					t_data["nickname"],
 					t_data["email"],
 					contact_link,
-					t_data["summary"].replace(/\n/g, "<br>"),
+					summary,
 					avatar,
 					t_id,
 					toped,
+					morebtn,
 					)
 			})
 
@@ -434,6 +468,8 @@
 			else {
 				$("#teacher-contact-link").show();
 			}
+
+			$("#teacher-adclass-cards")[0].innerHTML = teacher["summary"].replace(/\n/g, "<br>")
 
 			// console.log(teachers_data[tid]["adclass"]);
 		}
