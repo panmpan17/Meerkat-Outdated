@@ -776,13 +776,13 @@
 
 		function upload_avatar (event) {
 			$("#confirmavatar").show();
-			var output = document.getElementById('output');
-			if (event.target.files[0].size > 10240) {
+			// console.log(event.target.files[0].size)
+			if (event.target.files[0].size > 1024000) {
 				alert("照片顯示的解析度只有 100x100\n不要超過 1 MB");
 				event.target.value = ""
 				return;
 			}
-			output.src = URL.createObjectURL(event.target.files[0]);
+			$("#output")[0].src = URL.createObjectURL(event.target.files[0]);
 		}
 
 		function outputnotexsit () {
