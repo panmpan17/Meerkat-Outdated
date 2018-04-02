@@ -1186,26 +1186,29 @@ class ClassesRestView(View):
             if cls_per != None:
                 for class_ in cls_per:
                     available_class[class_] = "teacher"
-            else:
-                ss = select([
-                    classrooms.c.id,
-                    classrooms.c.name,
-                    classrooms.c.type]).where(
-                        classrooms.c.students_cid.any(user_teacher["id"])
-                        )
-                rst = conn.execute(ss)
-                rows = rst.fetchall()
 
-                if rows:
-                    for row in rows:
-                        if row["type"] not in available_class:
-                            available_class[row["type"]] = {}
+            ss = select([
+                classrooms.c.id,
+                classrooms.c.name,
+                classrooms.c.type]).where(and_(
+                    not_(classrooms.c.type.in_(available_class.keys())),
+                    classrooms.c.students_cid.any(user_teacher["id"])
+                    ))
+            rst = conn.execute(ss)
+            rows = rst.fetchall()
 
-                        available_class[row["type"]][row["id"]] = {
-                            "id": row["id"],
-                            "name": row["name"],
-                            "type": row["type"],
-                            }
+            if rows:
+                for row in rows:
+                    if row["type"] not in available_class:
+                        available_class[row["type"]] = {}
+                    elif available_class[row["type"]] == "teacher":
+                        continue
+
+                    available_class[row["type"]][row["id"]] = {
+                        "id": row["id"],
+                        "name": row["name"],
+                        "type": row["type"],
+                        }
 
             return {
                 "available_class": available_class,
@@ -1328,6 +1331,7 @@ class TeacherRestView(View):
         meta, conn = cherrypy.request.db
         teachers = meta.tables[Teacher.TABLE_NAME]
         teacherinfos = meta.tables[TeacherInfo.TABLE_NAME]
+        users = meta.tables[User.TABLE_NAME]
 
         if cherrypy.request.method == "GET":
             if "teacher" in kwargs:
@@ -1359,24 +1363,42 @@ class TeacherRestView(View):
             if not user["admin"]:
                 raise cherrypy.HTTPError(401)
 
-            self.check_key(data, ("userid",
-                "password",
+            self.check_key(data, (
+                "id",
                 "name",
                 "phone",
-                "class_permission", ))
+                "class_permission",
+                ))
+
+            try:
+                uid = int(data["id"])
+            except:
+                raise cherrypy.HTTPError(400)
+
+            ss = select([users.c.id]).where(users.c.id==uid)
+            rst = conn.execute(ss)
+            usr = rst.fetchone()
+
+            if not usr:
+                raise cherrypy.HTTPError(400)
 
             j = {
-                "userid": data["userid"],
-                "password": data["password"],
+                "id": uid,
                 "name": data["name"],
                 "phone": data["phone"],
                 "class_permission": data["class_permission"],
                 "summary": "",
                 }
-            ins = teachers.insert()
+            ins = teacherinfos.insert()
             rst = conn.execute(ins, j)
 
             if rst.is_insert:
+                stmt = update(users).values({"type": 1}).where(and_(
+                    users.c.type==0,
+                    users.c.id==uid,
+                    ))
+                conn.execute(stmt)
+
                 cherrypy.response.status = 201
                 return {"success": True}
             else:

@@ -120,11 +120,11 @@ function start_trial (cls_type) {
 }
 
 function to_class (cls_type) {
-    if (login_as == "user") {
-        storeCookie("clsrid", Object.keys(classroom_in[cls_type])[0]);
+    if (available_class[cls_type] == "teacher") {
         window.location.href = "/class/c/" + cls_type;
     }
     else {
+        storeCookie("clsrid", Object.keys(available_class[cls_type])[0]);
         window.location.href = "/class/c/" + cls_type;
     }
 }

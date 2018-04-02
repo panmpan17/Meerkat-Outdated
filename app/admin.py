@@ -140,7 +140,13 @@ class AdminHandler(object):
 
         return render("admin/presentation.html")
 
+    @cherrypy.expose
+    def teacherinfo(self):
+        a = self.checkadmin()
+        if not a:
+            raise cherrypy.HTTPRedirect("/")
 
+        return render("admin/teacherinfo.html")
 
 
 

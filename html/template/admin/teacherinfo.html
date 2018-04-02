@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Admin 新的老師{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="/html/css/checklist.css">
+{% endblock %}
+{% block content %}
+<main>
+	<div class="container">
+		<div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12 col-xs-offset-0">
+			<br><br>
+			<a href="/admin/" style="padding-left: 14%"><button class="btn btn-orange">< 回去</button></a>
+			<br><br>
+			<input id="id" type="number" class="form-control" placeholder="User Id"><br>
+			<input id="name" type="text" class="form-control" placeholder="名稱"><br>
+			<input id="phone" type="text" class="form-control" placeholder="電話"><br>
+			<dl class="check-list-right" id="classlist">
+				<dt>教學課程權限</dt>
+				<dd>
+					<input name="class_permission" type="checkbox" id="cls_per_scratch_1" value="scratch_1">
+					<label for="cls_per_scratch_1">Scratch 基礎班</label>
+				</dd>
+				<dd>
+					<input name="class_permission" type="checkbox" id="cls_per_scratch_03" value="scratch_03">
+					<label for="cls_per_scratch_03">Scratch 應用班</label>
+				</dd>
+				<dd>
+					<input name="class_permission" type="checkbox" id="cls_per_python_01" value="python_01">
+					<label for="cls_per_python_01">Python 基礎班</label>
+				</dd>
+			</dl>
+			<br>
+			<button class="btn btn-orange" onclick="newTeacherInfo()">創建新老師</button>
+			<br><br>
+		</div>
+	</div>
+</main>
+{% endblock %}
+{% block script %}
+<script src="/html/js/taiwan_town.js"></script>
+<script>
+	function newTeacherInfo () {
+		id = $("#id")[0].value
+		name = $("#name")[0].value
+		phone = $("#phone")[0].value
+
+		if (!id || !name || !phone) {
+			alert("請不要留白");
+			return;
+		}
+
+		class_permission = [];
+		$.each($("[name=class_permission]"), function (_, permission) {
+			if (permission.checked) {
+				class_permission.push(permission.value)
+			}
+		})
+
+		json = {
+			"key": getCookie("key"),
+			"id": id,
+			"name": name,
+			"phone": phone,
+			"class_permission": class_permission,
+		}
+
+		$.ajax({
+			url: host + "teacher/",
+			type: "POST",
+			dataType: "json",
+			data: JSON.stringify(json),
+			contentType: "application/json; charset=utf-8",
+			success: function (msg) {
+				console.log(msg)
+			}
+		})
+	}
+</script>
+{% endblock %}
