@@ -69,7 +69,6 @@ card_noaccess_notrial_format = `<button class="card">
 </button>`
 
 classess_info = {}
-classroom_in = null
 login_as = null
 
 function goclass(id) {
@@ -88,6 +87,7 @@ function chose_classroome (clsid, id) {
 }
 
 function start_trial (cls_type) {
+    console.log(cls_type)
     if (classess_info[cls_type]["permission"] == null) {
         $("#alert #title")[0].innerHTML = format(`您還沒有登入`)
         $("#alert #describe")[0].innerHTML = format(
@@ -105,7 +105,7 @@ function start_trial (cls_type) {
         return;
     }
 
-    if (login_as != null) {
+    if (login_as) {
         window.location.href = "/class/c/" + cls_type;
     }
     else {
@@ -139,6 +139,8 @@ $.ajax({
     data: {"key": getCookie("key"), "tkey": getCookie("teacher-key")},
     success: function (msg) {
         cardstext = "";
+        login_as = msg["login"]
+        console.log(msg)
 
         if (msg["login"]) {
             available_class = msg["available_class"]
@@ -185,40 +187,6 @@ $.ajax({
                     }
                 }
             })
-            // else {
-            //     var unic_index = 0;
-            //     $.each(msg["info"], function (_, i) {
-            //         unic_index++;
-            //         classess_info[i["id"]] = i
-
-            //         if (classroom_in.indexOf(i["id"]) != -1) {
-            //             cardstext += format(card_format,
-            //                 i["subject"],
-            //                 i["summary"],
-            //                 i["id"],
-            //                 "/html/images/unic/" + unic_images[unic_index],
-            //                 )
-            //         }
-            //         else {
-            //             if (i["trial"].length == 0) {
-            //                 cardstext += format(card_noaccess_notrial_format,
-            //                     i["subject"],
-            //                     i["summary"],
-            //                     i["id"],
-            //                     "/html/images/unic/" + unic_images[unic_index],
-            //                     )
-            //             }
-            //             else {
-            //                 cardstext += format(card_noaccess_format,
-            //                     i["subject"],
-            //                     i["summary"],
-            //                     i["id"],
-            //                     "/html/images/unic/" + unic_images[unic_index],
-            //                     )
-            //             }
-            //         }
-            //     })
-            // }
         } 
         else {
             // no user or teacher login

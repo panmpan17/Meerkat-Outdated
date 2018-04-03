@@ -1067,27 +1067,8 @@ function playScratchProject (project_id, hw_s, student_id) {
 			alert("不能留空");
 			return;
 		}
-		json = {
-			"key": getCookie("key"),
-			"cls_id": classroom["id"],
-			"student": student_id,
-			"hw": hw_s,
-			"comment": comment,
-		}
-		$.ajax({
-			url: host + "classroom/comment",
-			type: "POST",
-			dataType: "json",
-			data: JSON.stringify(json),
-			contentType: "application/json; charset=utf-8",
-			success: function (msg) {
-				reloadComment(classroom["id"]);
-				alert("修改成功")
-			},
-			error: function (error) {
-				console.log(error)
-			}
-		})
+
+		changeComment(classroom["id"], student_id, hw_s, comment);
 	}
 }
 
@@ -1158,28 +1139,31 @@ function showFile (file, student_id) {
 			alert("不能留空");
 			return;
 		}
-		json = {
-			"key": getCookie("key"),
-			"cls_id": classroom["id"],
-			"student": student_id,
-			"hw": file,
-			"comment": comment,
-		}
-		$.ajax({
-			url: host + "classroom/comment",
-			type: "POST",
-			dataType: "json",
-			data: JSON.stringify(json),
-			contentType: "application/json; charset=utf-8",
-			success: function (msg) {
-				reloadComment(classroom["id"]);
-				alert("修改成功")
-			},
-			error: function (error) {
-				console.log(error)
-			}
-		})
+		changeComment(classroom["id"], student_id, file, comment);
 	}
+}
+
+function changeComment (clsr_id, student_id, homework, comment) {
+	$.ajax({
+		url: host + "classroom/comment",
+		type: "POST",
+		dataType: "json",
+		data: JSON.stringify({
+			"key": getCookie("key"),
+			"cls_id": clsr_id,
+			"student": student_id,
+			"hw": homework,
+			"comment": comment,
+			}),
+		contentType: "application/json; charset=utf-8",
+		success: function (msg) {
+			reloadComment(classroom["id"]);
+			alert("修改成功")
+		},
+		error: function (error) {
+			console.log(error)
+		}
+	})
 }
 
 function copyCode () {

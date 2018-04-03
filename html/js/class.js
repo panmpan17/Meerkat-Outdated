@@ -178,6 +178,7 @@ function loadclass (classname, qlesson=-1) {
 			storeCookie("id", "")
 			storeCookie("key", "")
 			storeCookie("userid", "")
+			storeCookie("clsrid", "")
 			// console.log(err)
 			window.location.pathname = "/classes"
 		}

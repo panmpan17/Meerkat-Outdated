@@ -2180,7 +2180,7 @@ class ClassroomRestView(View):
             return row["comment"]
         elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
-            self.check_login_teacher(data)
+            self.check_login_teacher2(data)
 
             self.check_key(data, ("cls_id", "student", "hw", "comment" ))
 

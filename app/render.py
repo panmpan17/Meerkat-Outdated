@@ -342,6 +342,7 @@ class TeacherHandler(object):
 
         if cherrypy.request.method == "GET":
             return render("teacher/index.html")
+
         elif cherrypy.request.method == "POST":
             if "avatar" not in kwargs:
                 raise cherrypy.HTTPError(404)
@@ -378,22 +379,6 @@ class TeacherHandler(object):
             raise cherrypy.HTTPRedirect("/teacher/")
         else:
             raise cherrypy.HTTPError(404)
-
-    # @cherrypy.expose
-    # def login(self):
-    #     cookie = cherrypy.request.cookie
-    #     try:
-    #         key = str(cookie["key"].value)
-    #     except:
-    #         key = ""
-
-    #     key_mgr = cherrypy.request.key
-
-    #     key_valid = key_mgr.get_key(key)
-    #     if key_valid[0]:
-    #         raise cherrypy.HTTPRedirect("/teacher/")
-
-    #     return render("teacher/login.html")
 
     @cherrypy.expose
     def advertise(self):

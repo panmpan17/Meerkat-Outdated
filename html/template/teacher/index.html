@@ -115,25 +115,6 @@
 						<form method="post" enctype="multipart/form-data" id="avatarform" hidden>
 							<input id="uploadavatar" name="avatar" type="file" accept=".png,.jpeg,.jpg" onchange="upload_avatar(event)">
 						</form>
-						
-
-						<div id="cards" hidden>
-							<h2>預覽</h2>
-							<button class="card">
-								<img id="output" onerror="outputnotexsit()">
-								<div class="info">
-									<span class="name" name="teacher-nickname"></span><br>
-									<span class="phone" name="teacher-email"></span>
-									<div class="contact-link" name="teacher-contact-link"><a class="btn btn-orange" style="opacity: 0"></a></div>
-								</div>
-								<br>
-								<br>
-								<div class="describe" name="teacher-summary"></div>
-								<div id="morebtn">
-									<a class="btn btn-orange">更多</a>
-								</div>
-							</button>
-						</div>
 					</div>
 				</div>
 				<br>
@@ -165,6 +146,25 @@
 					</div>
 				</div>
 				<div class="row">
+					<div class="col-xs-12">
+						<div id="cards">
+							<h2>預覽</h2>
+							<button class="card">
+								<img id="output" onerror="outputnotexsit()">
+								<div class="info">
+									<span class="name" name="teacher-nickname"></span><br>
+									<span class="phone" name="teacher-email"></span>
+									<div class="contact-link" name="teacher-contact-link"><a class="btn btn-orange" style="opacity: 0"></a></div>
+								</div>
+								<br>
+								<br>
+								<div class="describe" name="teacher-summary"></div>
+								<div id="morebtn">
+									<a class="btn btn-orange">更多</a>
+								</div>
+							</button>
+						</div>
+					</div>
 					<div class="col-xs-12">
 						<button class="btn btn-lg btn-block btn-orange" onclick="changeinfo()">更改資訊</button>
 					</div>
@@ -929,7 +929,7 @@
 					changeclassroomtype(msg["class_permission"][0]);
 
 					var output = document.getElementById('output');
-					output.src = "/downloads/avatar/" + msg["id"]
+					output.src = "/downloads/avatar/" + msg["id"] + "?timedummy=" + (new Date().getTime())
 				},
 				error: function (err) {location.pathname = ""}
 			})
