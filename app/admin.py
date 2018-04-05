@@ -2,7 +2,6 @@ import cherrypy
 import jinja2
 from app.model import User, Post
 import os
-import requests
 
 #from sqlalchemy import desc
 from sqlalchemy.sql import select, and_
