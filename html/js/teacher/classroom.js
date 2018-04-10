@@ -204,6 +204,7 @@ function loadScratchHomework (student_name, cid, student_id, seq) {
 	var ajaxTime = new Date().getTime();
 	$.ajax({
 		url: format(PROJECT_F, student_id),
+		cache: false,
 		success: function (msg) {
 			timesout = new Date().getTime() - ajaxTime;
 			text = msg;

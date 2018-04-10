@@ -159,7 +159,7 @@ function loadscratchhomwork(student_id, cls_id) {
 }
 
 function play_scratch_project(project_id, cls_id, hw_s) {
-	show("project")
+	$("#project").modal("show");
 	show("scratch_iframe")
 	hide("file")
 
@@ -312,7 +312,7 @@ function parse_file(Text) {
 
 record_format = "上傳次數: {0}<br>更新上傳時間: {1}"
 function show_file(file) {
-	show("project")
+	$("#project").modal("show");
 	$("#file").show();
 	$("#scratch_iframe").hide();
 
