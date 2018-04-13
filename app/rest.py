@@ -23,8 +23,8 @@ from sqlalchemy.exc import IntegrityError
 PY_FILE_RE = r"(test|hw)1?[0-9]-[0-9]{1,2}\.py"
 
 ADVERTISE_LIMIT = 5
-RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify"
-RECAPTCHA_SERCRET = "6LcSMwoUAAAAAEIO6z5s2FO4QNjz0pZqeD0mZqRZ"
+#RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify"
+#RECAPTCHA_SERCRET = "6LcSMwoUAAAAAEIO6z5s2FO4QNjz0pZqeD0mZqRZ"
 
 un = "cd4fun_u"
 pwd = "mlmlml"
@@ -368,14 +368,14 @@ class UserRestView(View):
         elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
 
-            self.check_key(data, ("recapcha", "users", ))
+            #self.check_key(data, ("recapcha", "users", ))
 
             # check gogle recaptch, human check
-            r = http_get(RECAPTCHA_URL, params={
-                "secret": RECAPTCHA_SERCRET,
-                "response": data["recapcha"]})
-            if not r.json()["success"]:
-                raise cherrypy.HTTPError(400, ErrMsg.NOT_HUMAN)
+            #r = http_get(RECAPTCHA_URL, params={
+            #    "secret": RECAPTCHA_SERCRET,
+            #    "response": data["recapcha"]})
+            #if not r.json()["success"]:
+            #    raise cherrypy.HTTPError(400, ErrMsg.NOT_HUMAN)
 
             # check create user json
             usersjson = data["users"]
@@ -385,6 +385,7 @@ class UserRestView(View):
             for user in usersjson:
                 u = User()
                 result = u.validate_json(user)
+                #print(user, "+", result, "\n")
                 if isinstance(result, Exception):
                     raise(result)
 
@@ -399,10 +400,14 @@ class UserRestView(View):
                 key = str(uuid())
                 uid = rst.fetchone()["id"]
 
-                key_mgr.update_key(key, uid)
-                ekey = email_valid.new_mail(uid)
-                send_email_valid(ekey,
-                    usersjson[0]["email"], usersjson[0]["userid"])
+                key_mgr.update_key(key, uid)                
+                
+                #ekey = email_valid.new_mail(uid)
+                #send_email_valid(ekey,
+                #    usersjson[0]["email"], usersjson[0]["userid"])
+                stmt = update(users).where(users.c.id==uid).values({"active": True, "type": "1"})
+                conn.execute(stmt)
+
 
                 return {
                     "key": key,
@@ -749,11 +754,11 @@ class QuestionRestView(View):
                 content = data["content"]
 
                 addrs = [
-                    "panmpan@gmail.com",
-                    "shalley.tsay@gmail.com",
-                    "joanie0610@gmail.com",
-                    "jskblack@gmail.com",
-                    "chienhsiang.chang@gmail.com",
+                    #"panmpan@gmail.com",
+                    #"shalley.tsay@gmail.com",
+                    #"joanie0610@gmail.com",
+                    #"jskblack@gmail.com",
+                    #"chienhsiang.chang@gmail.com",
                     ]
 
                 self.send_new_question_email(addrs, qid, title, content)

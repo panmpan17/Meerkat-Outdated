@@ -37,7 +37,7 @@ function login () {
 				p1 = error.responseText.indexOf("<p>") + 3
 				errortype = error.responseText.substring(p1, error.responseText.indexOf("</p>", p1))
 				if (errortype == "Username or password wrong") {
-					errormsg.innerHTML = "帳號密碼不正確";
+					errormsg.innerHTML = "帳號或密碼不正確";
 				}
 				else if (errortype.indexOf("disable") > -1) {
 					errormsg.innerHTML = "帳號已被封鎖"
@@ -47,7 +47,7 @@ function login () {
 		})
 	}
 	else {
-		errormsg.innerHTML = "請不要留空白"
+		errormsg.innerHTML = "帳號或密碼欄位請不要留空白"
 		show("login-errormsg");
 		return 
 	}
@@ -63,9 +63,11 @@ function signup () {
 	birth = $("[name=signup-birth_year]")[0].value;
 	nickname = $("[name=signup-nickname]")[0].value;
 	job = $("[name=signup-job]")[0].value;
-
-	human = grecaptcha.getResponse()
-
+	
+	//human = grecaptcha.getResponse()
+	//active = "True";
+	type = "1";
+	
 	// check every things is not empty and valid
 	if (userid && password && repassword && email && birth && nickname) {
 		id_valid = matchRE(id_pass_re, userid);
@@ -88,7 +90,7 @@ function signup () {
 		errormsg.innerHTML = "請不要留空白";
 		return
 	}
-
+	
 	password = sha256(password);
 	repassword = sha256(repassword);
 	if (password != repassword) {
@@ -102,6 +104,8 @@ function signup () {
 		"email":email,
 		"birth_year":birth,
 		"nickname":nickname,
+		//"active":active,
+		//"type":type,
 	}
 
 	if (job) {
@@ -112,13 +116,14 @@ function signup () {
 		url: host + "user/",
 		type: "POST",
 		dataType: "json",
-		data: JSON.stringify({"recapcha": human, users: [json]}),
+		//data: JSON.stringify({"recapcha": human, users: [json]}),
+		data: JSON.stringify({users: [json]}),
 		contentType: "application/json; charset=utf-8",
 		success: function (msg) {
 			storeCookie("id", msg["lastrowid"]);
 			storeCookie("userid", msg["userid"]);
 			storeCookie("key", msg["key"]);
-
+			
 			window.location.reload();
 		},
 		error: function (error) {
@@ -135,6 +140,7 @@ function signup () {
 			return 
 		}
 	})
+	
 }
 
 function logout () {
