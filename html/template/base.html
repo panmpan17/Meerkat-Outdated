@@ -357,18 +357,20 @@
 		<a id="closeloginframe" onclick="hide_popup('signup-frame')">X</a><br>
 		<div>
 			<center>
-				<h1>註冊</h1><br><br>
-				<input class="my-form" placeholder="帳號 8-32 (英文字母, 數字, @.)" name="signup-userid" type="text"><br><br>
-				<input class="my-form" placeholder="密碼 8-32 (英文字母, 數字, @.)" name="signup-password" type="password"><br><br>
-				<input class="my-form" placeholder="確認密碼" name="signup-repassword" type="password"><br><br>
-				<input class="my-form" placeholder="Email" name="signup-email" type="text"><br><br>
-				<input class="my-form" placeholder="暱稱 (16 字以下)" name="signup-nickname" type="text" maxlength="16"><br><br>
-				<input id="number" class="my-form" max=2010 min=1950 value=2000 placeholder="出生年" name="signup-birth_year" type="number"><br><br>
-				<input class="my-form" placeholder="Job (可不填)" name="signup-job" type="text"><br><br>
+				<h1>註冊一個新帳號</h1><br><br>
+				<font color="Red">*</font> <input class="my-form" placeholder="帳號 3-16 (最少3個英文字母)" name="signup-userid" type="text"><br><br>
+				<font color="Red">*</font> <input class="my-form" placeholder="密碼 8-32 (必須包含英文字母和數字)" name="signup-password" type="password"><br><br>
+				<font color="Red">*</font> <input class="my-form" placeholder="確認密碼" name="signup-repassword" type="password"><br><br>
+				<font color="Red">*</font> <input class="my-form" placeholder="Email" name="signup-email" type="text"><br><br>
+				<font color="Red">*</font> <input class="my-form" placeholder="暱稱 (16 字以下)" name="signup-nickname" type="text" maxlength="16"><br><br>
+				<font color="Red">*</font> <input id="number" class="my-form" max=2010 min=1950 placeholder="出生年" name="signup-birth_year" type="number"><br><br>
+				<input class="my-form" placeholder="你的職業, 若在學請填學校&年級" name="signup-job" type="text"><br><br>
 				<!-- <div class="g-recaptcha" data-sitekey="6LcSMwoUAAAAAJoZ5gXYx0b6Qv9Ag75o9rn3qpMw"></div> -->
 				<div id="signup-errormsg" class="login-errorms">
 				</div><br>
 				<button class="btn btn-orange" onclick="signup();">註冊</button>
+				<br><br>
+				前有星號代表必填項目
 				<br><br>
 				<a onclick="hide_popup('signup-frame');show_popup('login-frame');" style="cursor: pointer;color:gray;font-size: 16px;">登入</a>
 			</center>
