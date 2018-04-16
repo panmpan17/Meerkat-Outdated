@@ -889,6 +889,7 @@ function checkChangeStudent () {
 	c_names = [];
 	c_sids = []
 
+	// check python account data
 	if (classroom["type"].startsWith("python")) {
 		data = $("#change-students")[0].value.split("\n")
 
@@ -937,6 +938,7 @@ function checkChangeStudent () {
 		$("#change-students-table").show()
 		$("#bg").show()
 	}
+	// check scratch, scratch advance data
 	else {
 		data = $("#change-students")[0].value.split("\n")
 

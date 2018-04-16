@@ -187,14 +187,18 @@
 						<select id="select-type" class="form-control" name="class_permission" onchange="changeclassroomtype()"></select>
 						<br>
 					</div>
-					<div class="col-md-12" id="students_info">
+					<div id="studentINFO" class="col-md-6" style="height:160px">
 						<h3>
-							學生資料
-							<small onmouseover="$('#hoverimg').show();" onmouseout="$('#hoverimg').hide();">
-								建議利用 Excel, Number 編輯後再貼上 (?)
-							</small>
-							<img hidden id="hoverimg" src="html/images/scratch_table.png" height="150px" alt="" />
+							<br><br><br>學生資料<br>
+							<!-- <small onmouseover="$('#hoverimg').show();" onmouseout="$('#hoverimg').hide();"> -->
+							<small>建議先利用 Microsoft Excel 或 Mac Number 編輯後再貼上</small>
 						</h3>
+					</div>
+					<div class="col-md-6">
+						<img id="hoverimg" src="html/images/scratch_table.png" height="150px"/>
+					</div>
+					<div class="col-md-12" id="students_info">
+						<br>
 						<textarea class="form-control" rows="10" id="field" onkeyup="$('#create_classroom_b')[0].disabled = true;remove_blank(this)"></textarea>
 						<br>
 					</div>
@@ -431,10 +435,11 @@
 			</h3>
 			
 			<div class="btn-group" role="group" >
+				<h3>教室管理工具</h3>
 				<button type="button" class="btn btn-default" onclick="showClassroomJob('publish')">公佈事項</button>
 				<button type="button" class="btn btn-default" onclick="showClassroomJob('homework')">功課</button>
 				<button type="button" class="btn btn-default" onclick="showClassroomJob('grade')">評量成績</button>
-				<button type="button" class="btn btn-default" onclick="showClassroomJob('alter')">教室更改</button>
+				<button type="button" class="btn btn-default" onclick="showClassroomJob('alter')">教室設定, 更改學生資料</button>
 			</div>
 			<hr>
 
@@ -519,7 +524,7 @@
 					<i class="fa fa-wrench" aria-hidden="true"></i> 更新教室
 				</button>
 				<br>
-				<button style="padding: 9px 10px" onclick="deleteClassroom()"><i class="fa fa-fw fa-times"></i></button>
+				<button style="padding: 9px 10px" onclick="deleteClassroom()"><i class="fa fa-fw fa-times"></i> 刪除此教室</button>
 			</div>
 		</div>
 	</div>
