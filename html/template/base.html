@@ -2,7 +2,12 @@
 <html lang="zh-TW"><!--  manifest="/html/main.appcache"> -->
 <head>
 	<meta charset="utf-8">
+	<!-- http-equiv -->
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- <meta name="author" content="林宏一"> -->
 	<meta name="copyright" content="樂學科技">
@@ -165,7 +170,7 @@
 						</div>
 					</div>
 					<div class="row social new_mailto">
-						<div><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span><a href="mailto: coding4fun.tw@gmail.com ">&nbsp;&nbsp;coding4fun.tw@gmail.com </a></div>
+						<div><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span><a href="mailto: coding4fun.info@gmail.com ">&nbsp;&nbsp;coding4fun.info@gmail.com </a></div>
 					</div>
 				</div>
 				<div class="footer_padding">
@@ -327,7 +332,8 @@
 			</div>
 			<div class="row">
 				<div class="col-sm-12 copyright">
-					<p>Copyright © 2017 Coding For Fun 樂學科技股份有限公司,All Rights Reserved</p>
+					<p>Copyright © 2017 Coding For Fun 樂學科技股份有限公司, All Rights Reserved</p>
+					<p>v3.2.2</p>
 				</div>
 			</div>
 		</div>
@@ -365,7 +371,7 @@
 				<font color="Red">*</font> <input class="my-form" placeholder="暱稱 (16 字以下)" name="signup-nickname" type="text" maxlength="16"><br><br>
 				<font color="Red">*</font> <input id="number" class="my-form" max=2010 min=1950 placeholder="出生年" name="signup-birth_year" type="number"><br><br>
 				<input class="my-form" placeholder="你的職業, 若在學請填學校&年級" name="signup-job" type="text"><br><br>
-				<!-- <div class="g-recaptcha" data-sitekey="6LcSMwoUAAAAAJoZ5gXYx0b6Qv9Ag75o9rn3qpMw"></div> -->
+				<div class="g-recaptcha" data-sitekey="6LcSMwoUAAAAAJoZ5gXYx0b6Qv9Ag75o9rn3qpMw"></div>
 				<div id="signup-errormsg" class="login-errorms">
 				</div><br>
 				<button class="btn btn-orange" onclick="signup();">註冊</button>
@@ -497,9 +503,7 @@
 	<script>
 		// JavaScript Document
 		$(function(){
-			// 幫 a.scrolltop 加上 click 事件
 			$('a.scrolltop').click(function(){
-				// 讓捲軸用動畫的方式移動到 0 的位置
 				var $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $('html') : $('body')) : $('html,body');
 				$body.animate({
 					scrollTop: 0

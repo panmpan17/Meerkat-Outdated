@@ -23,8 +23,8 @@ from sqlalchemy.exc import IntegrityError
 PY_FILE_RE = r"(test|hw)1?[0-9]-[0-9]{1,2}\.py"
 
 ADVERTISE_LIMIT = 5
-#RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify"
-#RECAPTCHA_SERCRET = "6LcSMwoUAAAAAEIO6z5s2FO4QNjz0pZqeD0mZqRZ"
+RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify"
+RECAPTCHA_SERCRET = "6LcSMwoUAAAAAEIO6z5s2FO4QNjz0pZqeD0mZqRZ"
 
 un = "cd4fun_u"
 pwd = "mlmlml"
@@ -297,6 +297,7 @@ class UserRestView(View):
         key_mgr = cherrypy.request.key
         email_valid = cherrypy.request.email_valid
         users = meta.tables[User.TABLE_NAME]
+        #teacherinfos = meta.tables[TeacherInfo.TABLE_NAME]
 
         # get user info
         if cherrypy.request.method == "GET":
@@ -368,14 +369,14 @@ class UserRestView(View):
         elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
 
-            #self.check_key(data, ("recapcha", "users", ))
+            self.check_key(data, ("recapcha", "users", ))
 
-            # check gogle recaptch, human check
-            #r = http_get(RECAPTCHA_URL, params={
-            #    "secret": RECAPTCHA_SERCRET,
-            #    "response": data["recapcha"]})
-            #if not r.json()["success"]:
-            #    raise cherrypy.HTTPError(400, ErrMsg.NOT_HUMAN)
+            # check gogle recaptcha, human check
+            r = http_get(RECAPTCHA_URL, params={
+                "secret": RECAPTCHA_SERCRET,
+                "response": data["recapcha"]})
+            if not r.json()["success"]:
+                raise cherrypy.HTTPError(400, ErrMsg.NOT_HUMAN)
 
             # check create user json
             usersjson = data["users"]
@@ -401,13 +402,35 @@ class UserRestView(View):
                 uid = rst.fetchone()["id"]
 
                 key_mgr.update_key(key, uid)                
-                
-                #ekey = email_valid.new_mail(uid)
-                #send_email_valid(ekey,
-                #    usersjson[0]["email"], usersjson[0]["userid"])
-                stmt = update(users).where(users.c.id==uid).values({"active": True, "type": "1"})
-                conn.execute(stmt)
 
+                #print("user id:", str(usersjson[0]["userid"]),"\n")
+                
+                ekey = email_valid.new_mail(uid)
+                send_email_valid(ekey,
+                    usersjson[0]["email"], usersjson[0]["userid"])
+
+                #=================================================================================#
+                #stmt = update(users).where(users.c.id==uid).values({"active": True, "type": "0"})
+                #conn.execute(stmt)
+
+                # create teacher_info db
+                #j = {
+                #    "id": uid,
+                #    "name": usersjson[0]["userid"],
+                #    "phone": "",
+                #    "class_permission": "{scratch_1, scratch_03, python_01}",
+                #    "summary": "",
+                #    "tid": uid,
+                #    }
+                #ins = teacherinfos.insert()
+                #rst = conn.execute(ins, j)
+
+                #if rst.is_insert:
+                #    cherrypy.response.status = 201
+                #    return {"success": True}
+                #else:
+                #    raise cherrypy.HTTPError(503)
+                #=================================================================================#
 
                 return {
                     "key": key,

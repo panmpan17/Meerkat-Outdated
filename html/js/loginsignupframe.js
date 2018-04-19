@@ -64,9 +64,9 @@ function signup () {
 	nickname = $("[name=signup-nickname]")[0].value;
 	job = $("[name=signup-job]")[0].value;
 	
-	//human = grecaptcha.getResponse()
+	human = grecaptcha.getResponse()
 	//active = "True";
-	type = "1";
+	//type = "1";
 	
 	// check every things is not empty and valid
 	if (userid && password && repassword && email && birth && nickname) {
@@ -117,8 +117,8 @@ function signup () {
 		url: host + "user/",
 		type: "POST",
 		dataType: "json",
-		//data: JSON.stringify({"recapcha": human, users: [json]}),
-		data: JSON.stringify({users: [json]}),
+		data: JSON.stringify({"recapcha": human, users: [json]}),
+		//data: JSON.stringify({users: [json]}),
 		contentType: "application/json; charset=utf-8",
 		success: function (msg) {
 			storeCookie("id", msg["lastrowid"]);
