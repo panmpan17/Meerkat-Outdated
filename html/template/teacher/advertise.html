@@ -157,6 +157,7 @@
 <main>
 	<div class="container-fluid">
 		<br>
+		<!-- 鄉鎮縣市 filter -->
 		<div class="col-md-3 col-sm-4 col-xs-12" hidden>
 			<div class="mynav-sidebar">
 				<div id="cities-btn" class="item" onclick="toggle('cities');hide('towns')"> 縣市</div>
@@ -166,6 +167,7 @@
 			</div>
 			<br>
 		</div>
+		<!-- 教師名片 all -->
 		<div id="cards" class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12"></div>
 	</div>
 </main>
@@ -179,6 +181,7 @@
 				<span id="teacher-name"></span>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			</div>
+			<!-- more information -->
 			<div id="teacher-adclass-cards" class="modal-body"></div>
 			<div id="teacher-contact-link" class="modal-footer"></div>
 		</div>
@@ -228,7 +231,7 @@
 			<br>
 			<div class="describe">{3}</div>
 			<div class="morebtn {7}">
-				<a class="btn btn-orange" onclick="show_teacher_adclass({5})">更多</a>
+				<a class="btn btn-orange" onclick="show_teacher_adclass({5})"> 更多 </a>
 			</div>
 		</button>`
 
@@ -332,7 +335,8 @@
 			$("#towns")[0].innerHTML = html;
 			$("#towns").show()
 		}
-
+		
+		// show all teacher cards
 		function display_teacher (city_index, town_index) {
 			teachers_ids = new Set()
 			if (town_index == -1) {
@@ -344,11 +348,15 @@
 				teachers_ids = cities_teachers[city_index][town_index]
 			}
 
-			html = ""
-			unic_index = 0
+			html = "";
+			unic_index = 0;
+			var cards = []; 
+			
 			$.each(Array.from(teachers_ids), function (_, t_id) {
 				t_data = teachers_data[t_id]
 				contact_link = ""
+				card_score = 0 // for sort
+				
 				$.each(t_data["contact_link"], function (k, v) {
 					if (k == "Email") {
 						contact_link += format(
@@ -356,6 +364,7 @@
 							k,
 							"mailto: " + v,
 							)
+						card_score += 0.1;
 					}
 					else {
 						if (v.startsWith("http://") || v.startsWith("https://")) {
@@ -364,6 +373,7 @@
 								k,
 								v,
 								)
+							card_score += 0.1;
 						}
 						else {
 							contact_link += format(
@@ -371,6 +381,7 @@
 								k,
 								v,
 								)
+							card_score += 0.1;
 						}
 					}
 				})
@@ -382,10 +393,12 @@
 
 				if (t_data["avatar"] != undefined) {
 					avatar = "/downloads/avatar/" + t_data["avatar"] + "?timedummy=" + (new Date().getTime());
+					card_score +=1
 				}
 				else {
 					avatar = "/html/images/unic/" + unic_images[unic_index];
 					unic_index ++;
+					//card_score += 0.1;
 					if (unic_index == unic_images.length) {
 						unic_index = 0;
 					}
@@ -409,13 +422,28 @@
 				if (summary.length > 45) {
 					morebtn = true;
 					summary = summary.substring(0, 45);
+					card_score +=1
 				}
 
 				if (morebtn) {
 					summary += "⋯⋯"
 				}
 				summary = summary.replace(/\n/g, "<br>");
-
+				
+				cards.push({
+					t_id: t_id,
+					nickname: t_data["nickname"],
+					email: t_data["email"],
+					contact_link: contact_link,
+					summary: summary,
+					avatar: avatar,
+					toped: toped,
+					morebtn: morebtn,
+					card_score: card_score
+				});
+				
+				// parse data
+				/*
 				html += format(
 					CARD_F,
 					t_data["nickname"],
@@ -426,13 +454,35 @@
 					t_id,
 					toped,
 					morebtn,
+					card_score,
 					)
+				*/
 			})
 
+			cards = cards.sort(function(a,b){return a.card_score < b.card_score? 1: -1;});
+			
+			// set card data
+			for(i=0; i< cards.length; ++i)
+			{
+				html += format(
+					CARD_F,
+					cards[i].nickname,
+					cards[i].email,
+					cards[i].contact_link,
+					cards[i].summary,
+					cards[i].avatar,
+					cards[i].t_id,
+					cards[i].toped,
+					cards[i].morebtn,
+					cards[i].card_score,
+					)
+			}
+						
 			$("#cards")[0].innerHTML = html;
 			$('[data-toggle="popover"]').popover()
 		}
 
+		
 		function summary_add_link (summary) {
 			links = http_re.exec(summary)
 			if (links.length > 0) {
@@ -450,6 +500,7 @@
 			return summary
 		}
 
+		// show the teacher detail info.
 		function show_teacher_adclass (tid) {
 			$("#adclass-frame").modal("show");
 
@@ -458,8 +509,9 @@
 
 			contact_link = ""
 			$.each(teacher["contact_link"], function (k, v) {
-				contact_link += format(
-					`<a style="border: 1px solid #FF8300;color: #FF8300; padding: 5px;font-size: 18px">{0}: {1}</a>`,
+				contact_link += " "+format(
+					`<input class="btn btn-orange" type="button" value='{0}' onclick="location.href='{1}'">`,
+					//`<a style="border: 1px #FF8300;color: #FF8300; padding: 5px;font-size: 18px">{0}: {1}</a>`,
 					k,
 					v,
 					)
