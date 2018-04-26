@@ -152,6 +152,7 @@ function logout () {
 	window.location.reload();
 }
 
+/*
 function red () {
 	key = getCookie("key");
 	id = getCookie("id");
@@ -174,7 +175,7 @@ function red () {
 	})
 	
 }
-
+*/
 
 function showinfo () {
 	key = getCookie("key");
@@ -237,7 +238,7 @@ function showinfo () {
 			}
 			
 			// for test
-			
+			/*
 			if (msg["nickname"] != 'Greentea')
 			{
 				try {
@@ -245,6 +246,7 @@ function showinfo () {
 				}
 				catch(err) {}
 			}
+			*/
 			
 			$("#info-frame").modal("show");
 		},

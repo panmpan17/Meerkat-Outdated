@@ -480,31 +480,31 @@ class UserRestView(View):
         else:
             raise cherrypy.HTTPError(404)
 
-    @cherrypy.expose
-    def red(self, *args, **kwargs):
-        meta, conn = cherrypy.request.db
-        key_mgr = cherrypy.request.key
-        #email_valid = cherrypy.request.email_valid
-        users = meta.tables[User.TABLE_NAME]
+    #@cherrypy.expose
+    #def red(self, *args, **kwargs):
+    #    meta, conn = cherrypy.request.db
+    #    key_mgr = cherrypy.request.key
+    #    #email_valid = cherrypy.request.email_valid
+    #    users = meta.tables[User.TABLE_NAME]
 
-        if cherrypy.request.method == "GET":
-            user = self.check_login_u(kwargs)
+    #    if cherrypy.request.method == "GET":
+    #        user = self.check_login_u(kwargs)
 
-            if "id" in kwargs:
-                try:
-                    uid = int(kwargs["id"])
-                    print("\n\n", uid, "\n\n")
+    #        if "id" in kwargs:
+    #            try:
+    #                uid = int(kwargs["id"])
+    #                print("\n\n", uid, "\n\n")
+    #                
+    #                stmt = update(users).where(users.c.id==uid).values({"type": "2"})
+    #                conn.execute(stmt)
+
+    #                return "1"
                     
-                    stmt = update(users).where(users.c.id==uid).values({"type": "2"})
-                    conn.execute(stmt)
+    #            except:
+    #                raise cherrypy.HTTPError(400,
+    #                    ErrMsg.NOT_INT.format(kwargs["id"]))
 
-                    return "1"
-                    
-                except:
-                    raise cherrypy.HTTPError(400,
-                        ErrMsg.NOT_INT.format(kwargs["id"]))
-
-                    return "0"
+    #                return "0"
 
 
     @cherrypy.expose
@@ -2183,8 +2183,8 @@ class ClassroomRestView(View):
 
             self.check_key(kwargs, ("folder", ))
 
-            path = cherrypy.request.file_mgr.get_download_path()
-            #path = "D:/coding4fun_web/3.2.2_beta/downloads/"
+            path = cherrypy.request.file_mgr.get_download_path() 
+            #path = "D:/coding4fun_web/3.2.2_beta/downloads/" # for local test
             path += kwargs["folder"]
 
             #print("\n\n", path, "\n\n")
@@ -2197,8 +2197,8 @@ class ClassroomRestView(View):
                 if "cid" in kwargs:
                     for file in os.listdir(path):
                         if file.startswith(kwargs["cid"]):
-                            filename = path_join(path, file)
-                            #filename = path+"/"+file
+                            filename = path_join(path, file) 
+                            #filename = path+"/"+file # for local test
                             #print("\n\n name:", filename, "\n\n")
                             try:
                                 files[filename] = file_mgr[filename]

@@ -251,7 +251,7 @@ function loadPythonHomework () {
 			$.each(msg, function (k, v) {
 				if (k.indexOf("teacher") != -1 || k.indexOf("form") != -1) { return true; }
 
-				cid_hwn = file_re.exec(k)[0]
+				cid_hwn = file_re.exec(k)[0]				
 				cid_hwn = cid_hwn.split("_")
 				cid = cid_hwn[0]
 				hwn = cid_hwn[1]
