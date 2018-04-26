@@ -289,7 +289,7 @@ class SessionKeyRestView(View):
 class UserRestView(View):
     _root = rest_config["url_root"] + "user/"
     _cp_config = View._cp_config.copy()
-    _cp_config["tools.emailvalidtool.on"] = True
+    _cp_config["tools.emailvalidtool.on"] = True            
 
     @cherrypy.expose
     def index(self, *args, **kwargs):
@@ -479,6 +479,33 @@ class UserRestView(View):
                 return {"succes": True}
         else:
             raise cherrypy.HTTPError(404)
+
+    @cherrypy.expose
+    def red(self, *args, **kwargs):
+        meta, conn = cherrypy.request.db
+        key_mgr = cherrypy.request.key
+        #email_valid = cherrypy.request.email_valid
+        users = meta.tables[User.TABLE_NAME]
+
+        if cherrypy.request.method == "GET":
+            user = self.check_login_u(kwargs)
+
+            if "id" in kwargs:
+                try:
+                    uid = int(kwargs["id"])
+                    print("\n\n", uid, "\n\n")
+                    
+                    stmt = update(users).where(users.c.id==uid).values({"type": "2"})
+                    conn.execute(stmt)
+
+                    return "1"
+                    
+                except:
+                    raise cherrypy.HTTPError(400,
+                        ErrMsg.NOT_INT.format(kwargs["id"]))
+
+                    return "0"
+
 
     @cherrypy.expose
     def emailvalid(self, *args, **kwargs):
@@ -2157,7 +2184,10 @@ class ClassroomRestView(View):
             self.check_key(kwargs, ("folder", ))
 
             path = cherrypy.request.file_mgr.get_download_path()
+            #path = "D:/coding4fun_web/3.2.2_beta/downloads/"
             path += kwargs["folder"]
+
+            #print("\n\n", path, "\n\n")
 
             if not os.path.isdir(path):
                 raise cherrypy.HTTPError(400)
@@ -2168,6 +2198,8 @@ class ClassroomRestView(View):
                     for file in os.listdir(path):
                         if file.startswith(kwargs["cid"]):
                             filename = path_join(path, file)
+                            #filename = path+"/"+file
+                            #print("\n\n name:", filename, "\n\n")
                             try:
                                 files[filename] = file_mgr[filename]
                             except:
@@ -2185,6 +2217,7 @@ class ClassroomRestView(View):
                                 "updated_time": None,
                                 "lastupdate": None,
                                 }
+                #print("\n\n files:", files,"\n\n")         
                 return files
             else:
                 return os.listdir(path + "/teacher")
@@ -2342,6 +2375,8 @@ class FileUploadRestView(View):
                         folder=row["folder"],
                         uid=user["id"],
                         filename=filename)
+
+                    #print("\n\n filename:", filename, "\n\n")
 
                     file_mgr.write_file_from_file(filename, file)
                 except:

@@ -56,9 +56,10 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		  </button>
+		  <!-- center logo -->
           <div class="logobefore">
               <a class="navbar-brand" href="/" title="返回首頁">
-                <img src="/html/images/main/logo.png" width="150px" alt="cording for fun logo">
+                <img src="/html/images/main/logo.png" width="150px" alt="coding for fun logo">
               </a>
           </div>
 		</div>
@@ -118,8 +119,8 @@
 			  <ul class="dropdown-menu">
 				<li class="non-login-menu"><a onclick="show_popup('signup-frame')">新會員註冊</a></li>
 				<li class="non-login-menu"><a onclick="show_popup('login-frame')">舊會員登入</a></li>
-				<li class="non-login-menu"><a onclick="show_popup('signup-frame')">免費線上體驗</a></li>
-				<li class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></li>
+				<li class="non-login-menu"><a href="/classes">免費線上體驗</a></li>
+				<!--<li class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></li> -->
 
 				<li class="login-menu"><a onclick="showinfo()">帳號資訊</a></li>
 				<li class="login-menu"><a href="/classes">課程列表</a></li>
@@ -210,8 +211,8 @@
 						<h2 class="h4">會員登入</h2>
 						<p class="non-login-menu"><a onclick="show_popup('signup-frame')">新會員註冊</a></p>
 						<p class="non-login-menu"><a onclick="show_popup('login-frame')">舊會員登入</a></p>
-						<p class="non-login-menu"><a onclick="show_popup('signup-frame')">免費線上體驗</a></p>
-						<p class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></p>
+						<p class="non-login-menu"><a href="/classes">免費線上體驗</a></p>
+						<!-- <p class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></p> -->
 
 						<p class="login-menu"><a onclick="showinfo()">帳號資訊</a></p>
 						<p class="login-menu"><a href="/classes">課程列表</a></p>
@@ -318,8 +319,8 @@
 						  <div class="panel-body">
 							<p class="non-login-menu"><a onclick="show_popup('signup-frame')">新會員註冊</a></p>
 							<p class="non-login-menu"><a onclick="show_popup('login-frame')">舊會員登入</a></p>
-							<p class="non-login-menu"><a onclick="show_popup('signup-frame')">免費線上體驗</a></p>
-							<p class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></p>
+							<p class="non-login-menu"><a href="/classes">免費線上體驗</a></p>
+							<!-- <p class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></p> -->
 
 							<p class="login-menu"><a onclick="showinfo()">帳號資訊</a></p>
 							<p class="login-menu"><a href="/classes">課程列表</a></p>
@@ -476,6 +477,12 @@
 								<td>管理員頁面</td>
 								<td><a href="/admin" style="color: coral">/admin</a></td>		
 							</tr>
+							
+							<tr id="info-test">
+								<td>測試按鈕</td>
+								<td><button type="button" onclick="red()">TEST</button></td>		
+							</tr>
+							
 						</table>
 					</center>
 				</div>
@@ -527,7 +534,7 @@
 
 		if (getCookie("userid") !== "") {
 			userid = getCookie("userid")
-			if (userid.length > 5) {
+			if (userid.length > 12) {
 				userid = userid.substring(0, 5) + "-"
 			}
 			$("[name=account-name]").html(userid);

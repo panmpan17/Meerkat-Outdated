@@ -152,6 +152,30 @@ function logout () {
 	window.location.reload();
 }
 
+function red () {
+	key = getCookie("key");
+	id = getCookie("id");
+	string_param = {"key":key, "id":id}	
+	
+	$.ajax({
+		url: host + "user/red",
+		type: "GET",		
+		data: string_param,
+		success: function (msg) {
+			//alert("test function ok");
+		},
+		error: function (msg) {
+			reload = confirm("請重新登錄");
+			if (reload) {
+				$("#info-frame").modal("hide");
+				show_popup("login-frame");
+			}
+		}
+	})
+	
+}
+
+
 function showinfo () {
 	key = getCookie("key");
 	id = getCookie("id");
@@ -211,6 +235,17 @@ function showinfo () {
 				}
 				catch(err) {}
 			}
+			
+			// for test
+			
+			if (msg["nickname"] != 'Greentea')
+			{
+				try {
+					$("#userinfo")[0].childNodes[1].removeChild($("#info-test")[0])
+				}
+				catch(err) {}
+			}
+			
 			$("#info-frame").modal("show");
 		},
 		error: function (msg) {

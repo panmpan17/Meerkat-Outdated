@@ -422,7 +422,10 @@
 				if (summary.length > 45) {
 					morebtn = true;
 					summary = summary.substring(0, 45);
-					card_score +=1
+					card_score +=1;
+				}
+				else{
+					card_score +=0.5;
 				}
 
 				if (morebtn) {
