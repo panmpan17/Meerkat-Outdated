@@ -322,7 +322,6 @@ function show_file(file) {
 	
 	$("#scratch_iframe").hide();
 	$("#scratch_iframe")[0].src = ""
-
 	$("#project-title")[0].innerHTML = file + ".py 的原始碼內容"
 	
 	// parse filename
@@ -356,13 +355,13 @@ function show_file(file) {
 	
 	$("#hwinfo")[0].innerHTML = record
 	
-	$("#s_project_page")[0].href = "/downloadfile/" + filename
+	//$("#s_project_page")[0].href = "/downloadfile/" + filename
 
 	// parse comments
 	$("#hwcomment")[0].innerHTML = ""
 
 	cls_id = classroom["id"]
-
+		
 	if (comments[cls_id] != undefined) {
 		if (comments[cls_id][getCookie("id")]) {
 			if (comments[cls_id][getCookie("id")][file] != undefined) {
@@ -371,6 +370,7 @@ function show_file(file) {
 			}
 		}
 	}
+	
 }
 
 function loadcomment(cls_id) {

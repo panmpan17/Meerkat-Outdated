@@ -253,10 +253,14 @@ function loadPythonHomework () {
 
 				cid_hwn = file_re.exec(k)[0]				
 				cid_hwn = cid_hwn.split("_")
+				//cid_hwn = cid_hwn.split("_beta/downloads/56129736-484a-11e8-96ff-b06ebfcc0473")
+				//cid_bad = cid_hwn[1]
+				//cid = cid_bad.substring(1, cid_bad.indexOf("_"))
 				cid = cid_hwn[0]
 				hwn = cid_hwn[1]
 				if (hwn.indexOf(".") != -1) {
 					hwn = hwn.substring(0, hwn.indexOf("."))
+					//hwn = hwn.substring(4, hwn.indexOf("."))
 				}
 
 				homework.add(hwn)
