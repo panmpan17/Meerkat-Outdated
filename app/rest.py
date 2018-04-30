@@ -4,6 +4,7 @@ import os
 import re
 import json
 
+from hashlib import sha256 as hashsha256
 from app.email_html import Email
 from app.model import ErrMsg, User, Question, Answer, Post
 from app.model import Teacher, TeacherInfo, AdArea, Classroom, AdClass
@@ -15,6 +16,7 @@ from datetime import time as Time
 from requests import get as http_get
 from requests import post as http_post
 from _thread import start_new_thread
+from random import choice as ranchoice
 
 from sqlalchemy import desc, not_
 from sqlalchemy.sql import select, update, and_, or_, join, outerjoin
@@ -25,6 +27,8 @@ PY_FILE_RE = r"(test|hw)1?[0-9]-[0-9]{1,2}\.py"
 ADVERTISE_LIMIT = 5
 RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify"
 RECAPTCHA_SERCRET = "6LcSMwoUAAAAAEIO6z5s2FO4QNjz0pZqeD0mZqRZ"
+
+ALPHABET = "abcdefghijklmnopqrstuvwwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 un = "cd4fun_u"
 pwd = "mlmlml"
@@ -44,6 +48,9 @@ def GMT(t):
     fmt = '%Y / %m / %d %H:%M'
     return t.strftime(fmt)
 
+def sha256hex(string):
+    return hashsha256(string.encode()).hexdigest()
+
 def count_page(r):
     if (r % 10) == 0:
         return (r // 10)
@@ -59,8 +66,14 @@ def send_email_valid(key, addr, userid):
     cnt = Email.REGIST_VALID.format(url=url, code=key)
     http_post(Email.URL, params={
         "addrs": [addr],
-        "sub": "Email 認證 - " + userid,
+        "sub": "Coding 4 Fun Email 認證 - " + userid,
         "cnt": cnt})
+
+def send_new_password(addr, userid, newpass):
+    http_post(Email.URL, params={
+        "addrs": [addr],
+        "sub": "Coding 4 Fun 忘記密碼 - " + userid,
+        "cnt": Email.NEW_PASSWORD.format(userid=userid, newpass=newpass)})
 
 def path_join(path1, path2):
     return os.path.join(path1, path2)
@@ -480,33 +493,6 @@ class UserRestView(View):
         else:
             raise cherrypy.HTTPError(404)
 
-    #@cherrypy.expose
-    #def red(self, *args, **kwargs):
-    #    meta, conn = cherrypy.request.db
-    #    key_mgr = cherrypy.request.key
-    #    #email_valid = cherrypy.request.email_valid
-    #    users = meta.tables[User.TABLE_NAME]
-
-    #    if cherrypy.request.method == "GET":
-    #        user = self.check_login_u(kwargs)
-
-    #        if "id" in kwargs:
-    #            try:
-    #                uid = int(kwargs["id"])
-    #                print("\n\n", uid, "\n\n")
-    #                
-    #                stmt = update(users).where(users.c.id==uid).values({"type": "2"})
-    #                conn.execute(stmt)
-
-    #                return "1"
-                    
-    #            except:
-    #                raise cherrypy.HTTPError(400,
-    #                    ErrMsg.NOT_INT.format(kwargs["id"]))
-
-    #                return "0"
-
-
     @cherrypy.expose
     def emailvalid(self, *args, **kwargs):
         meta, conn = cherrypy.request.db
@@ -554,7 +540,54 @@ class UserRestView(View):
         key_mgr = cherrypy.request.key
         users = meta.tables[User.TABLE_NAME]
 
-        if cherrypy.request.method == "PUT":
+        if cherrypy.request.method == "GET":
+            self.check_key(kwargs, ("userid", ))
+
+            rst = conn.execute(select([users.c.id]).where(
+                users.c.userid==kwargs["userid"]))
+            row = rst.fetchone()
+
+            if not row:
+                return {"success": False, "reason": "userid not exist"}
+            return {"success": True, "id": row["id"]}
+
+        elif cherrypy.request.method == "POST":
+            data = cherrypy.request.json
+
+            self.check_key(data, (
+                "id",
+                "userid",
+                "nickname",
+                "email",
+                ))
+
+            try:
+                uid = int(data["id"])
+            except:
+                raise cherrypy.HTTPError(400)
+
+            rst = conn.execute(select([users.c.id]).where(and_(
+                users.c.id==uid,
+                users.c.userid==data["userid"],
+                users.c.nickname==data["nickname"],
+                users.c.email==data["email"],
+                )))
+            row = rst.fetchone()
+            if not row:
+                return {"success": False, "reason": "comfirm failed"}
+
+            newpass = "".join([ranchoice(ALPHABET) for i in range(8)])
+            hashpass = sha256hex(newpass)
+
+            try:
+                conn.execute(update(users).where(users.c.id==uid).values(
+                    {"password": hashpass}))
+                send_new_password(data["email"], data["userid"], newpass)
+                return {"success": True}
+            except:
+                raise cherrypy.HTTPError(503)
+
+        elif cherrypy.request.method == "PUT":
             data = cherrypy.request.json
             user = self.check_login_u(data)
 
@@ -805,10 +838,10 @@ class QuestionRestView(View):
 
                 addrs = [
                     #"panmpan@gmail.com",
-                    #"shalley.tsay@gmail.com",
-                    #"joanie0610@gmail.com",
-                    #"jskblack@gmail.com",
-                    #"chienhsiang.chang@gmail.com",
+                    "shalley.tsay@gmail.com",
+                    "joanie0610@gmail.com",
+                    "jskblack@gmail.com",
+                    "chienhsiang.chang@gmail.com",
                     ]
 
                 self.send_new_question_email(addrs, qid, title, content)

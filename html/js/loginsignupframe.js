@@ -428,3 +428,62 @@ function change_baseinfo () {
 		}
 	})
 }
+
+function fgpwdcheckuserid () {
+	userid = $("#fgpwd-userid")[0].value;
+
+	$.ajax({
+		url: host + "user/password",
+		data:{
+			"userid": userid
+		},
+		success: function (msg) {
+			if (msg["success"]) {
+				$("#fgpwd-step1").hide();
+				$("#fgpwd-step2").show(300);
+				id = $("#fgpwd-id")[0].value = msg["id"];
+			}
+			else {
+				$("#fgpwd-step1-errormsg")[0].innerHTML = "這帳號不存在";
+			}
+		}
+	})
+}
+
+function fgpwdsendmail () {
+	id = $("#fgpwd-id")[0].value;
+	userid = $("#fgpwd-userid")[0].value;
+	nickname = $("#fgpwd-nickname")[0].value;
+	email = $("#fgpwd-email")[0].value;
+
+	$.ajax({
+		url: host + "user/password",
+		type: "POST",
+		dataType: "json",
+		data: JSON.stringify({
+			"id": id,
+			"userid": userid,
+			"nickname": nickname,
+			"email": email,
+		}),
+		contentType: "application/json; charset=utf-8",
+		success: function (msg) {
+			if (msg["success"]) {
+				$("#fgpwd-id")[0].value = "";
+				$("#fgpwd-userid")[0].value = "";
+				$("#fgpwd-nickname")[0].value = "";
+				$("#fgpwd-email")[0].value = "";
+
+				$("#fgpwd-step1").show();
+				$("#fgpwd-step2").hide();
+
+				hide_popup("forget-pwd-frame");
+				console.log(msg)
+				alert("更改成功去檢查 Email");
+			}
+			else {
+				$("#fgpwd-step1-errormsg")[0].innerHTML = "認證失敗";
+			}
+		}
+	})
+}

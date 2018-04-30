@@ -356,7 +356,8 @@
 				<button class="btn btn-orange" onclick="login();">登入</button>
 				<br><br>
 				<a onclick="hide_popup('login-frame');show_popup('signup-frame');" style="cursor: pointer;color:gray;font-size: 16px;">註冊</a>
-				<!-- <a onclick="hide('login-frame');show('forget-pwd-frame')" style="color:gray;font-size: 16px;margin-left: 20px">忘記密碼</a> -->
+				<br>
+				<a onclick="hide_popup('login-frame');show_popup('forget-pwd-frame');" style="cursor: pointer;color:gray;font-size: 16px;">忘記密碼</a>
 			</center>
 		</div>
 	</div>
@@ -381,6 +382,28 @@
 				前有星號代表必填項目
 				<br><br>
 				<a onclick="hide_popup('signup-frame');show_popup('login-frame');" style="cursor: pointer;color:gray;font-size: 16px;">登入</a>
+			</center>
+		</div>
+	</div>
+	<!-- forget password -->
+	<div id="forget-pwd-frame" class="popup-frame" hidden>
+		<a class="close" onclick="hide_popup('forget-pwd-frame');">X</a><br>
+		<div>
+			<center>
+				<h1>忘記密碼</h1><br><br>
+				<div id="fgpwd-step1">
+					<br><br>
+					<input id="fgpwd-userid" class="my-form" type="text" placeholder="帳號"><br><br>
+					<div id="fgpwd-step1-errormsg" class="login-errorms"></div><br>
+					<button class="btn btn-orange" onclick="fgpwdcheckuserid()">檢查帳號</button>
+				</div>
+				<div id="fgpwd-step2" hidden>
+					<input id="fgpwd-id" type="text" hidden>
+					<input id="fgpwd-nickname" class="my-form" type="text" placeholder="暱稱驗證"><br><br>
+					<input id="fgpwd-email" class="my-form" type="text" placeholder="Email 驗證">
+					<br><br>
+					<button class="btn btn-orange" onclick="fgpwdsendmail()">身份驗證</button>
+				</div>
 			</center>
 		</div>
 	</div>
@@ -485,21 +508,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- forget password -->
-	<div id="forget-pwd-frame" class="loginsignup-frame" hidden>
-		<div class="loginsignup-frame-inside">
-			<a id="closeloginframe" onclick="hide('forget-pwd-frame');" style="">X</a>
-			<br>
-			<div class="frame-content" style="padding-top: 0%;">
-				<center>
-					<h1>忘記密碼</h1><br><br>
-					<input placeholder="帳號 或 Email" name="fgpwd-userid" type="text"><br><br>
-					<button id="submit" onclick="">確認</button>
-				</center>
-			</div>
-		</div>
-	</div>
-
 	{% block bcontent %}{% endblock %}
 
 	

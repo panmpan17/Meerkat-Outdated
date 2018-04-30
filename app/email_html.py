@@ -28,3 +28,13 @@ class Email:
 	</body>
 	</html>
 	"""
+
+	NEW_PASSWORD = """
+	<html>
+	<body>
+		<h3>{userid} 的新密碼</h3>
+		<span>用以下的密碼登入 {userid}:</span><br>
+		<span style="color:lightgray;">{newpass}</span>
+	</body
+	</html>
+	"""
