@@ -244,6 +244,7 @@ a ,a:hover ,a:focus {
 	width:100%;
 	margin-top: -35px;
 }
+
 .dropdown-menu>li>a{
 	display: block;
     font-weight: 300 !important;

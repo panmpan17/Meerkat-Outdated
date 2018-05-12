@@ -2,7 +2,12 @@
 <html lang="zh-TW"><!--  manifest="/html/main.appcache"> -->
 <head>
 	<meta charset="utf-8">
+	<!-- http-equiv -->
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- <meta name="author" content="林宏一"> -->
 	<meta name="copyright" content="樂學科技">
@@ -32,6 +37,12 @@
 	{% block css %}{% endblock %}
 	<script src="//s3-ap-northeast-1.amazonaws.com/justfont-user-script/jf-54162.js"></script>
 	<script src="/html/js/jquery.min.js"></script>
+	<script src="/html/js/sha256.js"></script>
+	<script src="/html/js/bootstrap.js"></script>
+	<!-- <script src="/html/slick/slick.js" type="text/javascript" charset="utf-8"></script> -->
+	<script src="https://www.google.com/recaptcha/api.js"></script>
+	<script src="/html/js/loginsignupframe.js"></script>
+	<script src="/html/js/base.js"></script>
 </head>
 	<script type="text/javascript">var _jf = _jf || [];_jf.push(['p','54162']);_jf.push(['_setFont','xingothic-tc-w5','css','.xingothic-tc-w5']);_jf.push(['_setFont','xingothic-tc-w5','alias','xingothic-tc']);_jf.push(['_setFont','xingothic-tc-w5','weight',500]);_jf.push(['_setFont','xingothic-tc-w2','css','.xingothic-tc-w2']);_jf.push(['_setFont','xingothic-tc-w2','alias','xingothic-tc']);_jf.push(['_setFont','xingothic-tc-w2','weight',200]);_jf.push(['_setFont','xingothic-tc-w7','css','.xingothic-tc-w7']);_jf.push(['_setFont','xingothic-tc-w7','alias','xingothic-tc']);_jf.push(['_setFont','xingothic-tc-w7','weight',700]);(function(f,q,c,h,e,i,r,d){var k=f._jf;if(k.constructor===Object){return}var l,t=q.getElementsByTagName("html")[0],a=function(u){for(var v in k){if(k[v][0]==u){if(false===k[v][1].call(k)){break}}}},j=/\S+/g,o=/[\t\r\n\f]/g,b=/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,g="".trim,s=g&&!g.call("\uFEFF\xA0")?function(u){return u==null?"":g.call(u)}:function(u){return u==null?"":(u+"").replace(b,"")},m=function(y){var w,z,v,u,x=typeof y==="string"&&y;if(x){w=(y||"").match(j)||[];z=t[c]?(" "+t[c]+" ").replace(o," "):" ";if(z){u=0;while((v=w[u++])){if(z.indexOf(" "+v+" ")<0){z+=v+" "}}t[c]=s(z)}}},p=function(y){var w,z,v,u,x=arguments.length===0||typeof y==="string"&&y;if(x){w=(y||"").match(j)||[];z=t[c]?(" "+t[c]+" ").replace(o," "):"";if(z){u=0;while((v=w[u++])){while(z.indexOf(" "+v+" ")>=0){z=z.replace(" "+v+" "," ")}}t[c]=y?s(z):""}}},n;k.push(["_eventActived",function(){p(h);m(e)}]);k.push(["_eventInactived",function(){p(h);m(i)}]);k.addScript=n=function(u,A,w,C,E,B){E=E||function(){};B=B||function(){};var x=q.createElement("script"),z=q.getElementsByTagName("script")[0],v,y=false,D=function(){x.src="";x.onerror=x.onload=x.onreadystatechange=null;x.parentNode.removeChild(x);x=null;a("_eventInactived");B()};if(C){v=setTimeout(function(){D()},C)}x.type=A||"text/javascript";x.async=w;x.onload=x.onreadystatechange=function(G,F){if(!y&&(!x.readyState||/loaded|complete/.test(x.readyState))){y=true;if(C){clearTimeout(v)}x.src="";x.onerror=x.onload=x.onreadystatechange=null;x.parentNode.removeChild(x);x=null;if(!F){setTimeout(function(){E()},200)}}};x.onerror=function(H,G,F){if(C){clearTimeout(v)}D();return true};x.src=u;z.parentNode.insertBefore(x,z)};a("_eventPreload");m(h);n(r,"text/javascript",false,3000)})(this,this.document,"className","jf-loading","jf-active","jf-inactive","//d3gc6cgx8oosp4.cloudfront.net/js/stable/v/5.0.3/id/229417479829");</script>
 <body>
@@ -45,9 +56,10 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		  </button>
+		  <!-- center logo -->
           <div class="logobefore">
               <a class="navbar-brand" href="/" title="返回首頁">
-                <img src="/html/images/main/logo.png" width="150px" alt="cording for fun logo">
+                <img src="/html/images/main/logo.png" width="150px" alt="coding for fun logo">
               </a>
           </div>
 		</div>
@@ -107,8 +119,8 @@
 			  <ul class="dropdown-menu">
 				<li class="non-login-menu"><a onclick="show_popup('signup-frame')">新會員註冊</a></li>
 				<li class="non-login-menu"><a onclick="show_popup('login-frame')">舊會員登入</a></li>
-				<li class="non-login-menu"><a onclick="show_popup('signup-frame')">免費線上體驗</a></li>
-				<li class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></li>
+				<li class="non-login-menu"><a href="/classes">免費線上體驗</a></li>
+				<!--<li class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></li> -->
 
 				<li class="login-menu"><a onclick="showinfo()">帳號資訊</a></li>
 				<li class="login-menu"><a href="/classes">課程列表</a></li>
@@ -159,7 +171,7 @@
 						</div>
 					</div>
 					<div class="row social new_mailto">
-						<div><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span><a href="mailto: coding4fun.tw@gmail.com ">&nbsp;&nbsp;coding4fun.tw@gmail.com </a></div>
+						<div><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span><a href="mailto: coding4fun.info@gmail.com ">&nbsp;&nbsp;coding4fun.info@gmail.com </a></div>
 					</div>
 				</div>
 				<div class="footer_padding">
@@ -187,7 +199,7 @@
 						<p><a href="/ourteam">樂學團隊</a></p>
 	                    <p><a href="/aboutmilestone">樂學事記</a></p>
 						<p><a href="https://coding4funblog.wordpress.com/" target="_blank">部落格</a></p>
-						<p><a href="/aboutmedia">樂學新聞</a></p>
+						<p><a href="/report">樂學新聞</a></p>
 					</div>
 					<div class="col-lg-1 footernavlg">
 						<h2 class="h4">我要發問</h2>
@@ -199,8 +211,8 @@
 						<h2 class="h4">會員登入</h2>
 						<p class="non-login-menu"><a onclick="show_popup('signup-frame')">新會員註冊</a></p>
 						<p class="non-login-menu"><a onclick="show_popup('login-frame')">舊會員登入</a></p>
-						<p class="non-login-menu"><a onclick="show_popup('signup-frame')">免費線上體驗</a></p>
-						<p class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></p>
+						<p class="non-login-menu"><a href="/classes">免費線上體驗</a></p>
+						<!-- <p class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></p> -->
 
 						<p class="login-menu"><a onclick="showinfo()">帳號資訊</a></p>
 						<p class="login-menu"><a href="/classes">課程列表</a></p>
@@ -274,7 +286,8 @@
 							<p><a href="/ourteam">樂學團隊</a></p>
 							<p><a href="/aboutmilestone">樂學事記</a></p>
 							<p><a href="https://coding4funblog.wordpress.com/" target="_blank">部落格</a></p>
-							<p><a href="/aboutmedia">樂學新聞</a></p>
+							<!-- <p><a href="/aboutmedia">樂學新聞</a></p> -->
+							<p><a href="/report">樂學新聞</a></p>
 						  </div>
 						</div>
 					  </div>
@@ -306,8 +319,8 @@
 						  <div class="panel-body">
 							<p class="non-login-menu"><a onclick="show_popup('signup-frame')">新會員註冊</a></p>
 							<p class="non-login-menu"><a onclick="show_popup('login-frame')">舊會員登入</a></p>
-							<p class="non-login-menu"><a onclick="show_popup('signup-frame')">免費線上體驗</a></p>
-							<p class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></p>
+							<p class="non-login-menu"><a href="/classes">免費線上體驗</a></p>
+							<!-- <p class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></p> -->
 
 							<p class="login-menu"><a onclick="showinfo()">帳號資訊</a></p>
 							<p class="login-menu"><a href="/classes">課程列表</a></p>
@@ -321,7 +334,8 @@
 			</div>
 			<div class="row">
 				<div class="col-sm-12 copyright">
-					<p>Copyright © 2017 Coding For Fun 樂學科技股份有限公司,All Rights Reserved</p>
+					<p>Copyright © 2017 Coding For Fun 樂學科技股份有限公司, All Rights Reserved</p>
+					<p>v3.2.3</p>
 				</div>
 			</div>
 		</div>
@@ -342,7 +356,8 @@
 				<button class="btn btn-orange" onclick="login();">登入</button>
 				<br><br>
 				<a onclick="hide_popup('login-frame');show_popup('signup-frame');" style="cursor: pointer;color:gray;font-size: 16px;">註冊</a>
-				<!-- <a onclick="hide('login-frame');show('forget-pwd-frame')" style="color:gray;font-size: 16px;margin-left: 20px">忘記密碼</a> -->
+				<br>
+				<a onclick="hide_popup('login-frame');show_popup('forget-pwd-frame');" style="cursor: pointer;color:gray;font-size: 16px;">忘記密碼</a>
 			</center>
 		</div>
 	</div>
@@ -351,20 +366,44 @@
 		<a id="closeloginframe" onclick="hide_popup('signup-frame')">X</a><br>
 		<div>
 			<center>
-				<h1>註冊</h1><br><br>
-				<input class="my-form" placeholder="帳號 8-32 (英文字母, 數字, @.)" name="signup-userid" type="text"><br><br>
-				<input class="my-form" placeholder="密碼 8-32 (英文字母, 數字, @.)" name="signup-password" type="password"><br><br>
-				<input class="my-form" placeholder="確認密碼" name="signup-repassword" type="password"><br><br>
-				<input class="my-form" placeholder="Email" name="signup-email" type="text"><br><br>
-				<input class="my-form" placeholder="暱稱 (16 字以下)" name="signup-nickname" type="text" maxlength="16"><br><br>
-				<input id="number" class="my-form" max=2010 min=1950 value=2000 placeholder="出生年" name="signup-birth_year" type="number"><br><br>
-				<input class="my-form" placeholder="Job (可不填)" name="signup-job" type="text"><br><br>
+				<h1>註冊一個新帳號</h1><br><br>
+				<font color="Red">*</font> <input class="my-form" placeholder="帳號 3-16 (最少3個英文字母)" name="signup-userid" type="text"><br><br>
+				<font color="Red">*</font> <input class="my-form" placeholder="密碼 8-32 (必須包含英文字母和數字)" name="signup-password" type="password"><br><br>
+				<font color="Red">*</font> <input class="my-form" placeholder="確認密碼" name="signup-repassword" type="password"><br><br>
+				<font color="Red">*</font> <input class="my-form" placeholder="Email" name="signup-email" type="text"><br><br>
+				<font color="Red">*</font> <input class="my-form" placeholder="暱稱 (16 字以下)" name="signup-nickname" type="text" maxlength="16"><br><br>
+				<font color="Red">*</font> <input id="number" class="my-form" max=2010 min=1950 placeholder="出生年" name="signup-birth_year" type="number"><br><br>
+				<input class="my-form" placeholder="你的職業, 若在學請填學校&年級" name="signup-job" type="text"><br><br>
 				<div class="g-recaptcha" data-sitekey="6LcSMwoUAAAAAJoZ5gXYx0b6Qv9Ag75o9rn3qpMw"></div>
 				<div id="signup-errormsg" class="login-errorms">
 				</div><br>
 				<button class="btn btn-orange" onclick="signup();">註冊</button>
 				<br><br>
+				前有星號代表必填項目
+				<br><br>
 				<a onclick="hide_popup('signup-frame');show_popup('login-frame');" style="cursor: pointer;color:gray;font-size: 16px;">登入</a>
+			</center>
+		</div>
+	</div>
+	<!-- forget password -->
+	<div id="forget-pwd-frame" class="popup-frame" hidden>
+		<a class="close" onclick="hide_popup('forget-pwd-frame');">X</a><br>
+		<div>
+			<center>
+				<h1>忘記密碼</h1><br><br>
+				<div id="fgpwd-step1">
+					<br><br>
+					<input id="fgpwd-userid" class="my-form" type="text" placeholder="帳號"><br><br>
+					<div id="fgpwd-step1-errormsg" class="login-errorms"></div><br>
+					<button class="btn btn-orange" onclick="fgpwdcheckuserid()">檢查帳號</button>
+				</div>
+				<div id="fgpwd-step2" hidden>
+					<input id="fgpwd-id" type="text" hidden>
+					<input id="fgpwd-nickname" class="my-form" type="text" placeholder="暱稱驗證"><br><br>
+					<input id="fgpwd-email" class="my-form" type="text" placeholder="Email 驗證">
+					<br><br>
+					<button class="btn btn-orange" onclick="fgpwdsendmail()">身份驗證</button>
+				</div>
 			</center>
 		</div>
 	</div>
@@ -461,6 +500,7 @@
 								<td>管理員頁面</td>
 								<td><a href="/admin" style="color: coral">/admin</a></td>		
 							</tr>
+							
 						</table>
 					</center>
 				</div>
@@ -468,35 +508,13 @@
 			</div>
 		</div>
 	</div>
-	<!-- forget password -->
-	<div id="forget-pwd-frame" class="loginsignup-frame" hidden>
-		<div class="loginsignup-frame-inside">
-			<a id="closeloginframe" onclick="hide('forget-pwd-frame');" style="">X</a>
-			<br>
-			<div class="frame-content" style="padding-top: 0%;">
-				<center>
-					<h1>忘記密碼</h1><br><br>
-					<input placeholder="帳號 或 Email" name="fgpwd-userid" type="text"><br><br>
-					<button id="submit" onclick="">確認</button>
-				</center>
-			</div>
-		</div>
-	</div>
-
 	{% block bcontent %}{% endblock %}
 
-	<script src="/html/js/sha256.js"></script>
-	<script src="/html/js/bootstrap.js"></script>
-	<!-- <script src="/html/slick/slick.js" type="text/javascript" charset="utf-8"></script> -->
-	<script src="https://www.google.com/recaptcha/api.js"></script>
-	<script src="/html/js/loginsignupframe.js"></script>
-	<script src="/html/js/base.js"></script>
+	
 	<script>
 		// JavaScript Document
 		$(function(){
-			// 幫 a.scrolltop 加上 click 事件
 			$('a.scrolltop').click(function(){
-				// 讓捲軸用動畫的方式移動到 0 的位置
 				var $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $('html') : $('body')) : $('html,body');
 				$body.animate({
 					scrollTop: 0
@@ -519,7 +537,7 @@
 
 		if (getCookie("userid") !== "") {
 			userid = getCookie("userid")
-			if (userid.length > 5) {
+			if (userid.length > 12) {
 				userid = userid.substring(0, 5) + "-"
 			}
 			$("[name=account-name]").html(userid);

@@ -4,6 +4,7 @@ import os
 import re
 import json
 
+from hashlib import sha256 as hashsha256
 from app.email_html import Email
 from app.model import ErrMsg, User, Question, Answer, Post
 from app.model import Teacher, TeacherInfo, AdArea, Classroom, AdClass
@@ -15,6 +16,7 @@ from datetime import time as Time
 from requests import get as http_get
 from requests import post as http_post
 from _thread import start_new_thread
+from random import choice as ranchoice
 
 from sqlalchemy import desc, not_
 from sqlalchemy.sql import select, update, and_, or_, join, outerjoin
@@ -25,6 +27,8 @@ PY_FILE_RE = r"(test|hw)1?[0-9]-[0-9]{1,2}\.py"
 ADVERTISE_LIMIT = 5
 RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify"
 RECAPTCHA_SERCRET = "6LcSMwoUAAAAAEIO6z5s2FO4QNjz0pZqeD0mZqRZ"
+
+ALPHABET = "abcdefghijklmnopqrstuvwwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 un = "cd4fun_u"
 pwd = "mlmlml"
@@ -44,6 +48,9 @@ def GMT(t):
     fmt = '%Y / %m / %d %H:%M'
     return t.strftime(fmt)
 
+def sha256hex(string):
+    return hashsha256(string.encode()).hexdigest()
+
 def count_page(r):
     if (r % 10) == 0:
         return (r // 10)
@@ -59,8 +66,14 @@ def send_email_valid(key, addr, userid):
     cnt = Email.REGIST_VALID.format(url=url, code=key)
     http_post(Email.URL, params={
         "addrs": [addr],
-        "sub": "Email 認證 - " + userid,
+        "sub": "Coding 4 Fun Email 認證 - " + userid,
         "cnt": cnt})
+
+def send_new_password(addr, userid, newpass):
+    http_post(Email.URL, params={
+        "addrs": [addr],
+        "sub": "Coding 4 Fun 忘記密碼 - " + userid,
+        "cnt": Email.NEW_PASSWORD.format(userid=userid, newpass=newpass)})
 
 def path_join(path1, path2):
     return os.path.join(path1, path2)
@@ -289,7 +302,7 @@ class SessionKeyRestView(View):
 class UserRestView(View):
     _root = rest_config["url_root"] + "user/"
     _cp_config = View._cp_config.copy()
-    _cp_config["tools.emailvalidtool.on"] = True
+    _cp_config["tools.emailvalidtool.on"] = True            
 
     @cherrypy.expose
     def index(self, *args, **kwargs):
@@ -297,6 +310,7 @@ class UserRestView(View):
         key_mgr = cherrypy.request.key
         email_valid = cherrypy.request.email_valid
         users = meta.tables[User.TABLE_NAME]
+        #teacherinfos = meta.tables[TeacherInfo.TABLE_NAME]
 
         # get user info
         if cherrypy.request.method == "GET":
@@ -370,7 +384,7 @@ class UserRestView(View):
 
             self.check_key(data, ("recapcha", "users", ))
 
-            # check gogle recaptch, human check
+            # check gogle recaptcha, human check
             r = http_get(RECAPTCHA_URL, params={
                 "secret": RECAPTCHA_SERCRET,
                 "response": data["recapcha"]})
@@ -385,6 +399,7 @@ class UserRestView(View):
             for user in usersjson:
                 u = User()
                 result = u.validate_json(user)
+                #print(user, "+", result, "\n")
                 if isinstance(result, Exception):
                     raise(result)
 
@@ -399,10 +414,36 @@ class UserRestView(View):
                 key = str(uuid())
                 uid = rst.fetchone()["id"]
 
-                key_mgr.update_key(key, uid)
+                key_mgr.update_key(key, uid)                
+
+                #print("user id:", str(usersjson[0]["userid"]),"\n")
+                
                 ekey = email_valid.new_mail(uid)
                 send_email_valid(ekey,
                     usersjson[0]["email"], usersjson[0]["userid"])
+
+                #=================================================================================#
+                #stmt = update(users).where(users.c.id==uid).values({"active": True, "type": "0"})
+                #conn.execute(stmt)
+
+                # create teacher_info db
+                #j = {
+                #    "id": uid,
+                #    "name": usersjson[0]["userid"],
+                #    "phone": "",
+                #    "class_permission": "{scratch_1, scratch_03, python_01}",
+                #    "summary": "",
+                #    "tid": uid,
+                #    }
+                #ins = teacherinfos.insert()
+                #rst = conn.execute(ins, j)
+
+                #if rst.is_insert:
+                #    cherrypy.response.status = 201
+                #    return {"success": True}
+                #else:
+                #    raise cherrypy.HTTPError(503)
+                #=================================================================================#
 
                 return {
                     "key": key,
@@ -507,7 +548,54 @@ class UserRestView(View):
         key_mgr = cherrypy.request.key
         users = meta.tables[User.TABLE_NAME]
 
-        if cherrypy.request.method == "PUT":
+        if cherrypy.request.method == "GET":
+            self.check_key(kwargs, ("userid", ))
+
+            rst = conn.execute(select([users.c.id]).where(
+                users.c.userid==kwargs["userid"]))
+            row = rst.fetchone()
+
+            if not row:
+                return {"success": False, "reason": "userid not exist"}
+            return {"success": True, "id": row["id"]}
+
+        elif cherrypy.request.method == "POST":
+            data = cherrypy.request.json
+
+            self.check_key(data, (
+                "id",
+                "userid",
+                "nickname",
+                "email",
+                ))
+
+            try:
+                uid = int(data["id"])
+            except:
+                raise cherrypy.HTTPError(400)
+
+            rst = conn.execute(select([users.c.id]).where(and_(
+                users.c.id==uid,
+                users.c.userid==data["userid"],
+                users.c.nickname==data["nickname"],
+                users.c.email==data["email"],
+                )))
+            row = rst.fetchone()
+            if not row:
+                return {"success": False, "reason": "comfirm failed"}
+
+            newpass = "".join([ranchoice(ALPHABET) for i in range(8)])
+            hashpass = sha256hex(newpass)
+
+            try:
+                conn.execute(update(users).where(users.c.id==uid).values(
+                    {"password": hashpass}))
+                send_new_password(data["email"], data["userid"], newpass)
+                return {"success": True}
+            except:
+                raise cherrypy.HTTPError(503)
+
+        elif cherrypy.request.method == "PUT":
             data = cherrypy.request.json
             user = self.check_login_u(data)
 
@@ -757,7 +845,7 @@ class QuestionRestView(View):
                 content = data["content"]
 
                 addrs = [
-                    "panmpan@gmail.com",
+                    #"panmpan@gmail.com",
                     "shalley.tsay@gmail.com",
                     "joanie0610@gmail.com",
                     "jskblack@gmail.com",
@@ -2136,8 +2224,11 @@ class ClassroomRestView(View):
 
             self.check_key(kwargs, ("folder", ))
 
-            path = cherrypy.request.file_mgr.get_download_path()
+            path = cherrypy.request.file_mgr.get_download_path() 
+            #path = "D:/coding4fun_web/3.2.2_beta/downloads/" # for local test
             path += kwargs["folder"]
+
+            #print("\n\n", path, "\n\n")
 
             if not os.path.isdir(path):
                 raise cherrypy.HTTPError(400)
@@ -2147,7 +2238,9 @@ class ClassroomRestView(View):
                 if "cid" in kwargs:
                     for file in os.listdir(path):
                         if file.startswith(kwargs["cid"]):
-                            filename = path_join(path, file)
+                            filename = path_join(path, file) 
+                            #filename = path+"/"+file # for local test
+                            #print("\n\n name:", filename, "\n\n")
                             try:
                                 files[filename] = file_mgr[filename]
                             except:
@@ -2165,6 +2258,7 @@ class ClassroomRestView(View):
                                 "updated_time": None,
                                 "lastupdate": None,
                                 }
+                #print("\n\n files:", files,"\n\n")         
                 return files
             else:
                 return os.listdir(path + "/teacher")
@@ -2322,6 +2416,8 @@ class FileUploadRestView(View):
                         folder=row["folder"],
                         uid=user["id"],
                         filename=filename)
+
+                    #print("\n\n filename:", filename, "\n\n")
 
                     file_mgr.write_file_from_file(filename, file)
                 except:

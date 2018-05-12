@@ -252,12 +252,16 @@ function loadPythonHomework () {
 			$.each(msg, function (k, v) {
 				if (k.indexOf("teacher") != -1 || k.indexOf("form") != -1) { return true; }
 
-				cid_hwn = file_re.exec(k)[0]
+				cid_hwn = file_re.exec(k)[0]				
 				cid_hwn = cid_hwn.split("_")
+				//cid_hwn = cid_hwn.split("_beta/downloads/56129736-484a-11e8-96ff-b06ebfcc0473")
+				//cid_bad = cid_hwn[1]
+				//cid = cid_bad.substring(1, cid_bad.indexOf("_"))
 				cid = cid_hwn[0]
 				hwn = cid_hwn[1]
 				if (hwn.indexOf(".") != -1) {
 					hwn = hwn.substring(0, hwn.indexOf("."))
+					//hwn = hwn.substring(4, hwn.indexOf("."))
 				}
 
 				homework.add(hwn)
@@ -890,6 +894,7 @@ function checkChangeStudent () {
 	c_names = [];
 	c_sids = []
 
+	// check python account data
 	if (classroom["type"].startsWith("python")) {
 		data = $("#change-students")[0].value.split("\n")
 
@@ -938,6 +943,7 @@ function checkChangeStudent () {
 		$("#change-students-table").show()
 		$("#bg").show()
 	}
+	// check scratch, scratch advance data
 	else {
 		data = $("#change-students")[0].value.split("\n")
 

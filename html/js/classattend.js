@@ -35,6 +35,7 @@ PY_FILE_HW = `<div class="py_file_hw" onclick="show_file('{0}')">
 	{0}
 </div>`
 
+
 PY_UNIT_BTN = `<br><div class="dropdown">
 	<button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 	課程 <span id="lessonbtn"></span> <i class="fa fa-sort" aria-hidden="true"></i>
@@ -196,6 +197,7 @@ function loadfilehomework(folder, cls_id) {
 			$.each(msg, function (k, v) {
 				if (python_homework_re.test(k)) {
 					cid_hwn = k.split("_")
+					//cid_hwn = k.split("56129736-484a-11e8-96ff-b06ebfcc0473/49_")
 					cid = cid_hwn[0]
 					hwn = cid_hwn[1]
 					if (hwn.indexOf(".") != -1) {
@@ -230,6 +232,7 @@ function loadfilehomework(folder, cls_id) {
 			homeworks[cls_id] = homework
 			if (units.length > 0) {
 				buttonsgroup = PY_UNIT_BTN
+				
 				$.each(units, function (_, i) {
 					unit = i.replace("test", "課程 ")
 					unit = unit.replace("hw", "功課 ")
@@ -310,45 +313,54 @@ function parse_file(Text) {
 	return Text
 }
 
-record_format = "上傳次數: {0}<br>更新上傳時間: {1}"
+record_format = "<br>上傳次數: {0}<br><br>更新上傳時間: {1}"
+py_format = "{0}/{1}_{2}.py"
 function show_file(file) {
 	$("#project").modal("show");
 	$("#file").show();
 	$("#scratch_iframe").hide();
 
 	$("#scratch_iframe")[0].src = ""
+	$("#project-title")[0].innerHTML = file + ".py 的原始碼內容"
+	
+	// parse filename
+	filename = format(py_format,
+		classroom["folder"],
+		getCookie("id"),
+		file
+		)
 
+	// parse content
+	$.ajax({
+		url: "downloads/" + filename,
+		cache: false,
+		success: function (msg) {
+			$("#file")[0].innerHTML = parse_file(msg)			
+		}
+	})
+
+	// parse file attribute
 	filepath = files[classroom["id"]][file]
 	updated_time = file_record[filepath]["updated_time"]
 	if (updated_time == null) { updated_time = "無紀錄" }
 
 	lastupdate = file_record[filepath]["lastupdate"]
 	if (lastupdate == null) { lastupdate = "無紀錄" }
-
+	
 	record = format(record_format,
 		updated_time,
 		lastupdate,
-		)
-	$("#hwinfo")[0].innerHTML = record
-
+		)		
 	
-	filname = format("{0}/{1}_{2}.py",
-		classroom["folder"],
-		getCookie("id"),
-		file)
-	$("#s_project_page")[0].href = "/downloadfile/" + filname
+	$("#hwinfo")[0].innerHTML = record
+	
+	//$("#s_project_page")[0].href = "/downloadfile/" + filename
+
+	// parse comments
 	$("#hwcomment")[0].innerHTML = ""
 
-	$.ajax({
-		url: "downloads/" + filname,
-		cache: false,
-		success: function (msg) {
-			$("#file")[0].innerHTML = parse_file(msg)
-		}
-	})
-
 	cls_id = classroom["id"]
-
+		
 	if (comments[cls_id] != undefined) {
 		if (comments[cls_id][getCookie("id")]) {
 			if (comments[cls_id][getCookie("id")][file] != undefined) {
@@ -357,6 +369,7 @@ function show_file(file) {
 			}
 		}
 	}
+	
 }
 
 function loadcomment(cls_id) {

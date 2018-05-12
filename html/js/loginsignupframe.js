@@ -37,7 +37,7 @@ function login () {
 				p1 = error.responseText.indexOf("<p>") + 3
 				errortype = error.responseText.substring(p1, error.responseText.indexOf("</p>", p1))
 				if (errortype == "Username or password wrong") {
-					errormsg.innerHTML = "帳號密碼不正確";
+					errormsg.innerHTML = "帳號或密碼不正確";
 				}
 				else if (errortype.indexOf("disable") > -1) {
 					errormsg.innerHTML = "帳號已被封鎖"
@@ -47,7 +47,7 @@ function login () {
 		})
 	}
 	else {
-		errormsg.innerHTML = "請不要留空白"
+		errormsg.innerHTML = "帳號或密碼欄位請不要留空白"
 		show("login-errormsg");
 		return 
 	}
@@ -63,18 +63,21 @@ function signup () {
 	birth = $("[name=signup-birth_year]")[0].value;
 	nickname = $("[name=signup-nickname]")[0].value;
 	job = $("[name=signup-job]")[0].value;
-
+	
 	human = grecaptcha.getResponse()
-
+	//active = "True";
+	//type = "1";
+	
 	// check every things is not empty and valid
 	if (userid && password && repassword && email && birth && nickname) {
-		id_valid = matchRE(id_pass_re, userid);
+		//id_valid = matchRE(id_pass_re, userid);
 		pass_valid = matchRE(id_pass_re, password);
 		email_valid = matchRE(email_re, email);
+		/*
 		if (!id_valid) {
 			errormsg.innerHTML = "帳號並不符合格式";
 			return
-		}
+		}*/
 		if (!pass_valid) {
 			errormsg.innerHTML = "密碼並不符合格式";
 			return
@@ -85,10 +88,10 @@ function signup () {
 		}
 	}
 	else {
-		errormsg.innerHTML = "請不要留空白";
+		errormsg.innerHTML = "必填項目請不要留空白";
 		return
 	}
-
+	
 	password = sha256(password);
 	repassword = sha256(repassword);
 	if (password != repassword) {
@@ -102,6 +105,8 @@ function signup () {
 		"email":email,
 		"birth_year":birth,
 		"nickname":nickname,
+		//"active":active,
+		//"type":type,
 	}
 
 	if (job) {
@@ -113,12 +118,13 @@ function signup () {
 		type: "POST",
 		dataType: "json",
 		data: JSON.stringify({"recapcha": human, users: [json]}),
+		//data: JSON.stringify({users: [json]}),
 		contentType: "application/json; charset=utf-8",
 		success: function (msg) {
 			storeCookie("id", msg["lastrowid"]);
 			storeCookie("userid", msg["userid"]);
 			storeCookie("key", msg["key"]);
-
+			
 			window.location.reload();
 		},
 		error: function (error) {
@@ -135,6 +141,7 @@ function signup () {
 			return 
 		}
 	})
+	
 }
 
 function logout () {
@@ -144,6 +151,31 @@ function logout () {
 
 	window.location.reload();
 }
+
+/*
+function red () {
+	key = getCookie("key");
+	id = getCookie("id");
+	string_param = {"key":key, "id":id}	
+	
+	$.ajax({
+		url: host + "user/red",
+		type: "GET",		
+		data: string_param,
+		success: function (msg) {
+			//alert("test function ok");
+		},
+		error: function (msg) {
+			reload = confirm("請重新登錄");
+			if (reload) {
+				$("#info-frame").modal("hide");
+				show_popup("login-frame");
+			}
+		}
+	})
+	
+}
+*/
 
 function showinfo () {
 	key = getCookie("key");
@@ -204,6 +236,18 @@ function showinfo () {
 				}
 				catch(err) {}
 			}
+			
+			// for test
+			/*
+			if (msg["nickname"] != 'Greentea')
+			{
+				try {
+					$("#userinfo")[0].childNodes[1].removeChild($("#info-test")[0])
+				}
+				catch(err) {}
+			}
+			*/
+			
 			$("#info-frame").modal("show");
 		},
 		error: function (msg) {
@@ -381,6 +425,65 @@ function change_baseinfo () {
 		},
 		error: function (err) {
 			console.log(err)
+		}
+	})
+}
+
+function fgpwdcheckuserid () {
+	userid = $("#fgpwd-userid")[0].value;
+
+	$.ajax({
+		url: host + "user/password",
+		data:{
+			"userid": userid
+		},
+		success: function (msg) {
+			if (msg["success"]) {
+				$("#fgpwd-step1").hide();
+				$("#fgpwd-step2").show(300);
+				id = $("#fgpwd-id")[0].value = msg["id"];
+			}
+			else {
+				$("#fgpwd-step1-errormsg")[0].innerHTML = "這帳號不存在";
+			}
+		}
+	})
+}
+
+function fgpwdsendmail () {
+	id = $("#fgpwd-id")[0].value;
+	userid = $("#fgpwd-userid")[0].value;
+	nickname = $("#fgpwd-nickname")[0].value;
+	email = $("#fgpwd-email")[0].value;
+
+	$.ajax({
+		url: host + "user/password",
+		type: "POST",
+		dataType: "json",
+		data: JSON.stringify({
+			"id": id,
+			"userid": userid,
+			"nickname": nickname,
+			"email": email,
+		}),
+		contentType: "application/json; charset=utf-8",
+		success: function (msg) {
+			if (msg["success"]) {
+				$("#fgpwd-id")[0].value = "";
+				$("#fgpwd-userid")[0].value = "";
+				$("#fgpwd-nickname")[0].value = "";
+				$("#fgpwd-email")[0].value = "";
+
+				$("#fgpwd-step1").show();
+				$("#fgpwd-step2").hide();
+
+				hide_popup("forget-pwd-frame");
+				console.log(msg)
+				alert("更改成功去檢查 Email");
+			}
+			else {
+				$("#fgpwd-step1-errormsg")[0].innerHTML = "認證失敗";
+			}
 		}
 	})
 }

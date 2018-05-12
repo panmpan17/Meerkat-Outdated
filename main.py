@@ -219,7 +219,7 @@ class App():
         files = ["scratch_1_update.json", "python_01_update.json", "scratch_03.json"]
 
         for f in files:
-            class_ = json.load(open(f"{dirname}/{f}"))
+            class_ = json.load(open(f"{dirname}/{f}", encoding="utf-8"))
             classes.new_class(class_["id"], class_)
         return classes
 
