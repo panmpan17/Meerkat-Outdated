@@ -91,15 +91,15 @@
 		<div id="answer-div" style="display: none;">
 			<br>
 			<textarea id="answer-content" placeholder="請在這裡回答問題"></textarea><br>
-			<label id="answer-upload" class="multi-file-btn" for-list="f1-a f2-a f3-a">
-				<button class="btn btn-orange">+ 上傳檔案</button>
+			<label id="answer-upload" class="multi-file-btn btn btn-orange" for-list="f1-a f2-a f3-a">
+				+ 上傳檔案
 			</label>
+			<table id="answer-upload-files" class="multi-files"></table>
 			<div class="notes">
 				* 只能上傳 3 個檔案 <br>
 				* 每個檔案大小不能超過 10 mb<br>
 				* 支援檔案類型: .py .sb .sb2 .png .gif .jpeg .jpg
 			</div>
-			<table id="answer-upload-files" class="multi-files"></table>
 
 			<form method="post" enctype="multipart/form-data" id="answerform" hidden>
 				<input id="f1-a" name="file1" class="multi-file-input" type="file" accept=".py,.sb,.sb2,.png,.gif,.jpeg,.jpg">
@@ -146,15 +146,15 @@
 		<div class="row">
 			<div class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0" style="padding-left: 30px;padding-right: 30px">
 				<button class="btn btn-orange" onclick="ask()" style="float:right;">發問</button>
-				<label id="question-upload" class="multi-file-btn" for-list="f1-q f2-q f3-q">
-					<button class="btn btn-orange">+ 上傳檔案</button>
+				<label id="question-upload" class="multi-file-btn btn btn-orange" for-list="f1-q f2-q f3-q">
+					+ 上傳檔案
 				</label>
+				<table id="question-upload-files" class="multi-files"></table>
 				<div class="notes">
 					* 只能上傳 3 個檔案 <br>
 					* 每個檔案大小不能超過 10 mb<br>
 					* 支援檔案類型: .py .sb .sb2 .png .gif .jpeg .jpg
 				</div>
-				<table id="question-upload-files" class="multi-files"></table>
 			</div>
 		</div>
 		<form method="post" enctype="multipart/form-data" id="questionform" hidden>
