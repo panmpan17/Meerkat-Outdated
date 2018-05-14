@@ -172,12 +172,6 @@
 						<td id="userinfo-userid"></td>		
 					</tr>
 					<tr>
-						<td>密碼</td>
-						<td>
-							<input id="userinfo-password" type="password">
-						</td>		
-					</tr>
-					<tr>
 						<td>積分</td>
 						<td id="userinfo-point"></td>		
 					</tr>
@@ -235,18 +229,7 @@
 					</tr>
 					<tr>
 						<td>帳戶類型</td>
-						<td>
-							<select id="userinfo-type">
-								<option value="0">普通使用者</option>
-								<option value="1">老師</option>
-								<option value="2">管理者</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<button class="btn btn-orange" onclick="change_info()">更改資訊</button>
-						</td>
+						<td id="userinfo-type"></td>
 					</tr>
 				</table>
 			</div>
@@ -324,59 +307,24 @@ function show_detail (uid) {
 			$("#userinfo-active")[0].checked = msg["active"]
 			$("#userinfo-disabled")[0].checked = msg["disabled"];
 
-			$("#userinfo-type")[0].selectedIndex = msg["type"]
-			// if (msg["type"] == 0) {
-			// 	$("#userinfo-type")[0].innerHTML = "一般使用者"
-			// 	$("#show-teacherinfo").hide();
-			// }
-			// else if (msg["type"] == 1) {
-			// 	$("#userinfo-type")[0].innerHTML = "老師"
-			// 	$("#show-teacherinfo").show();
-			// }
-			// else if (msg["type"] == 2) {
-			// 	$("#userinfo-type")[0].innerHTML = "管理者"
-			// 	$("#show-teacherinfo").show();
-			// }
+			if (msg["type"] == 0) {
+				$("#userinfo-type")[0].innerHTML = "一般使用者"
+				$("#show-teacherinfo").hide();
+			}
+			else if (msg["type"] == 1) {
+				$("#userinfo-type")[0].innerHTML = "老師"
+				$("#show-teacherinfo").show();
+			}
+			else if (msg["type"] == 2) {
+				$("#userinfo-type")[0].innerHTML = "管理者"
+				$("#show-teacherinfo").show();
+			}
 
 			$("#userinfo-level")[0].innerHTML = "一般";
 			point = msg["point"];
 			if (point > 200) {$("#userinfo-level")[0].innerHTML = "鑽石"}
 			else if (point > 100) {$("#userinfo-level")[0].innerHTML = "白金"}
 			else if (point > 20) {$("#userinfo-level")[0].innerHTML = "黃金"}
-		}
-	})
-}
-
-function change_info () {
-	active =  $("#userinfo-active")[0].checked;
-	disabled = $("#userinfo-disabled")[0].checked;
-	type = parseInt($("#userinfo-type")[0].value);
-	password = $("#userinfo-password")[0].value;
-
-	var json = {
-		"key": getCookie("key"),
-		"uid": selected_user,
-		"admin": true,
-		"active": active,
-		"disabled": disabled,
-		"type": type
-		}
-
-	if (password != "") {
-		json["password"] = sha256(password)
-	}
-
-	$.ajax({
-		url: host + "user/",
-		type: "PUT",
-		dataType: "json",
-		data: JSON.stringify(json),
-		contentType: "application/json; charset=utf-8",
-		success: function (msg) {
-			alert("成功更改 !");
-		},
-		error: function (err) {
-			console.log(msg);
 		}
 	})
 }

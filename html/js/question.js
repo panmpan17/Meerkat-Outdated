@@ -513,7 +513,7 @@ function ask() {
 				errortype = error.responseText.substring(p1, error.responseText.indexOf("</p>", p1))
 
 				if (errortype == "User is not active") {
-					alert("請先進行email認證後才能發表問題")
+					alert("帳號需要 Email 認證")
 					return;
 				}
 

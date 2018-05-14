@@ -295,13 +295,13 @@
 						$.each(msg["avatar"], function (_, image) {
 							teachers_data[parseInt(image)]["avatar"] = image
 						})
-						// display_towns_btn(city, city_index);
+						display_towns_btn(city, city_index);
 						display_teacher(city_index, -1);
 					}
 				})
 			}
 			else {
-				// display_towns_btn(city, city_index);
+				display_towns_btn(city, city_index);
 				display_teacher(city_index, -1);
 			}
 		}
@@ -347,25 +347,12 @@
 			else {
 				teachers_ids = cities_teachers[city_index][town_index]
 			}
-			teachers_ids = Array.from(teachers_ids)
 
 			html = "";
 			unic_index = 0;
 			var cards = []; 
 			
-
-			teacher_id_seq = []
-			
-			$.each(teachers_ids, function (_, t_id) {
-				if (teachers_data[t_id]["summary"] != "") {
-					teacher_id_seq.splice(0, 0, t_id);
-				}
-				else {
-					teacher_id_seq.push(t_id)
-				}
-			})
-
-			$.each(teacher_id_seq, function (_, t_id) {
+			$.each(Array.from(teachers_ids), function (_, t_id) {
 				t_data = teachers_data[t_id]
 				contact_link = ""
 				card_score = 0 // for sort

@@ -458,26 +458,18 @@ class UserRestView(View):
 
             user = self.check_login_u(data)
 
-            if "admin" in data:
+            if "disabled" in data:
                 if not user["admin"]:
                     raise cherrypy.HTTPError(401)
 
                 try:
                     uid = int(data["uid"])
-                    type_ = int(data["type"])
                 except:
-                    raise cherrypy.HTTPError(400)
+                    raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("uid"))
 
-                json = {
-                    "type": type_,
-                    "disabled": data["disabled"],
-                    "active": data["active"],
-                    }
-
-                if "password" in data:
-                    json["password"] = data["password"]
-
-                stmt = update(users).where(users.c.id==uid).values(json)
+                stmt = update(users).where(
+                    users.c.id==uid).values(
+                    {"disabled": data["disabled"]})
                 ins = conn.execute(stmt)
 
                 cherrypy.response.status = 201

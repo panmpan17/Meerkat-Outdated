@@ -251,16 +251,12 @@
 	</div>
 {% endblock %}
 {% block bcontent %}
-<div id="project" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<a href="javascript:;" onclick="stopVideo()"><span aria-hidden="true" style="color: black;">&Chi;</span></a>
-				</button>
-			</div>
-
-			<div class="modal-body" id="yt-player">
+	<!--
+	<div id="project" class="loginsignup-frame" hidden>
+		<div class="loginsignup-frame-inside">
+			<a id="closeloginframe" onclick="hide('project');" style="">X</a>
+			<br>
+			<div class="frame-content" style="padding-top: 0%;padding-left: 20px;">
 				<h3 class="modal-title" id="project-title"></h3>
 				<br>
 				<iframe id="scratch_iframe" width="580" height="500" frameborder="0"></iframe>
@@ -274,21 +270,19 @@
 					<button type="button" class="btn btn-warning">看程式</button>
 				</a>
 			</div>
-		</a>
 		</div>
 	</div>
-</div>
-
-<div id="howtoupload" class="loginsignup-frame" hidden>
-	<div class="loginsignup-frame-inside">
-		<a id="closeloginframe" onclick="hide('howtoupload');" style="">X</a>
-		<br>
-		<div class="frame-content" style="padding-top: 0%;padding-left: 20px;">
-			<h3>如何上傳作業</h3>
-			<img src="/html/images/howtoupload-scratch.png" alt="">
+	<div id="howtoupload" class="loginsignup-frame" hidden>
+		<div class="loginsignup-frame-inside">
+			<a id="closeloginframe" onclick="hide('howtoupload');" style="">X</a>
+			<br>
+			<div class="frame-content" style="padding-top: 0%;padding-left: 20px;">
+				<h3>如何上傳作業</h3>
+				<img src="/html/images/howtoupload-scratch.png" alt="">
+			</div>
 		</div>
 	</div>
-</div>
+	-->
 {% endblock %}
 {% block script %}
 <script src="/html/slick/slick.js"></script>

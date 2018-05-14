@@ -160,7 +160,7 @@ function loadscratchhomwork(student_id, cls_id) {
 }
 
 function play_scratch_project(project_id, cls_id, hw_s) {
-	$("#project").modal("show");
+	show("project")
 	show("scratch_iframe")
 	hide("file")
 
@@ -316,8 +316,10 @@ function parse_file(Text) {
 record_format = "<br>上傳次數: {0}<br><br>更新上傳時間: {1}"
 py_format = "{0}/{1}_{2}.py"
 function show_file(file) {
-	$("#project").modal("show");
-	$("#file").show();
+	//show("project")
+	$('#project').modal('show');
+	//$("#file").show();
+	
 	$("#scratch_iframe").hide();
 	$("#scratch_iframe")[0].src = ""
 	$("#project-title")[0].innerHTML = file + ".py 的原始碼內容"
