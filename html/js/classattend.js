@@ -319,7 +319,6 @@ function show_file(file) {
 	$("#project").modal("show");
 	$("#file").show();
 	$("#scratch_iframe").hide();
-
 	$("#scratch_iframe")[0].src = ""
 	$("#project-title")[0].innerHTML = file + ".py 的原始碼內容"
 	
