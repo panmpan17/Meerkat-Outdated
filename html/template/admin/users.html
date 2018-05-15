@@ -126,10 +126,10 @@
 {% block content %}
 <main>
 	<div style="width: 90%;padding-left: 10%">
+		<br><br>		
+		<a href="/admin/"><button class="btn btn-orange"> 管理主頁 </button></a>
 		<br><br>
-		<a href="/admin/"><button class="btn btn-orange">< 回去</button></a>
-		<br><br>
-		<div id="search-bar">
+		<div id="search-bar">			
 			<input id="userid-field" class="form-control" type="text" placeholder="帳號: ">
 			<input id="id-field" class="form-control" type="text" placeholder="Id: ">
 		</div>
@@ -137,11 +137,13 @@
 		<table id="userstable">
 			<thead>
 				<tr>
-					<th>Id</th>
+					<th>ID</th>
 					<th>帳號</th>
 					<th>Email</th>
 					<th>暱稱</th>
+					<th>帳戶類型</th>
 					<th>註冊日期</th>
+					<th>最後登入時間</th>
 				</tr>
 			</thead>
 			<tbody id="users"></tbody>
@@ -151,11 +153,13 @@
 </main>
 {% endblock %}
 {% block bcontent %}
+
+<!-- user information -->
 <div class="modal fade" id="userinfo-frame" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button id="show-teacherinfo" class="btn btn-orange" data-toggle="modal" data-target="#teacherinfo-frame" onclick="show_teacher_detail()">更改教師資料</button>
+				<button id="show-teacherinfo" class="btn btn-orange" data-toggle="modal" data-target="#teacherinfo-frame" onclick="show_teacher_detail()">更改使用者權限</button>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<a href="javascript:;"><span aria-hidden="true" style="color: black;">&Chi;</span></a>
 				</button>
@@ -211,10 +215,12 @@
 						<td>工作</td>
 						<td id="userinfo-job"></td>		
 					</tr>
+					<!--
 					<tr>
 						<td>管理者</td>
 						<td id="userinfo-admin"></td>		
 					</tr>
+					-->
 					<tr>
 						<td>被封鎖</td>
 						<td>
@@ -237,6 +243,7 @@
 	</div>
 </div>
 
+<!-- teacher information -->
 <div id="teacherinfo-frame" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -250,6 +257,23 @@
 				姓名: <span id="teacher-name"></span><br>
 				電話: <span id="teacher-phone"></span><br>
 				<br>
+				<dl class="check-list-right" id="userlevel">
+					<dt>修改使用者權限</dt>
+					<dd>
+						<input name="user_permission" type="checkbox" id="normal_user" value="0">
+						<label for="normal_user">一般使用者</label>
+					</dd>
+					<dd>
+						<input name="user_permission" type="checkbox" id="teacher_user" value="1">
+						<label for="teacher_user">教師身分</label>
+					</dd>
+					<dd>
+						<input name="user_permission" type="checkbox" id="super_user" value="2">
+						<label for="super_user">管理員身分</label>
+					</dd>
+				</dl>
+				<button class="btn btn-orange" onclick="change_type()">更改權限</button>
+				
 				<dl class="check-list-right" id="classlist">
 					<dt>教學課程權限</dt>
 					<dd>
@@ -284,7 +308,9 @@ user_format = `\
 	<td>{2}</td>
 	<td>{3}</td>
 	<td>{4}</td>
-</tr>\
+	<td>{5}</td>
+	<td>{6}</td>
+</tr>
 `
 
 function show_detail (uid) {
@@ -303,13 +329,16 @@ function show_detail (uid) {
 			$("#userinfo-birth")[0].innerHTML = msg["birth_year"];
 			$("#userinfo-createat")[0].innerHTML = msg["create_at"];
 			$("#userinfo-job")[0].innerHTML = msg["job"];
-			$("#userinfo-admin")[0].innerHTML = msg["admin"];
-			$("#userinfo-active")[0].checked = msg["active"]
+			//$("#userinfo-admin")[0].innerHTML = msg["admin"];
+			$("#userinfo-active")[0].checked = msg["active"];
 			$("#userinfo-disabled")[0].checked = msg["disabled"];
 
+						
 			if (msg["type"] == 0) {
 				$("#userinfo-type")[0].innerHTML = "一般使用者"
-				$("#show-teacherinfo").hide();
+				$("#show-teacherinfo").show();
+				$("#userlevel").show();
+				$("#classlist").hide();
 			}
 			else if (msg["type"] == 1) {
 				$("#userinfo-type")[0].innerHTML = "老師"
@@ -321,7 +350,8 @@ function show_detail (uid) {
 			}
 
 			$("#userinfo-level")[0].innerHTML = "一般";
-			point = msg["point"];
+			
+			point = msg["point"];			
 			if (point > 200) {$("#userinfo-level")[0].innerHTML = "鑽石"}
 			else if (point > 100) {$("#userinfo-level")[0].innerHTML = "白金"}
 			else if (point > 20) {$("#userinfo-level")[0].innerHTML = "黃金"}
@@ -335,6 +365,7 @@ function show_teacher_detail () {
 		data: {"key": getCookie("key"), "uid": selected_user},
 		success: function (msg) {
 			info = msg["teacherinfo"];
+
 			$("#teacher-name")[0].innerHTML = info["name"];
 			$("#teacher-phone")[0].innerHTML = info["phone"];
 			// $("#teacher-summary")[0].innerHTML = info["summary"];
@@ -346,6 +377,35 @@ function show_teacher_detail () {
 		},
 		error: function (err) {
 			console.log(err)
+		}
+	})	
+	
+}
+
+function change_type () {
+	var class_type = []
+	
+	$.each($("[name=user_permission]"), function (_, type) {
+		if (type.checked) {
+			class_type.push(type.value);
+		}
+	})
+
+	$.ajax({
+		url: host + "user/",
+		type: "PUT",
+		dataType: "json",
+		data: JSON.stringify({
+			"mode": "set_type",
+			"key": getCookie("key"),
+			"uid": selected_user,
+			"type": class_type}),
+		contentType: "application/json; charset=utf-8",
+		success: function (msg) {
+			alert("成功更改 !")
+		},
+		error: function (err) {
+			console.log(msg);
 		}
 	})
 }
@@ -381,7 +441,8 @@ $("#userid-field").on("input change", function (e) {
 	value = e.currentTarget.value
 	first_chr = String(value[0])
 
-	$("#users").html("")
+	$("#users").html("")	
+	
 	if (alphabet_index[first_chr] != undefined) {
 		users_show = []
 		$.each(alphabet_index[first_chr], function (_, i) {
@@ -389,18 +450,32 @@ $("#userid-field").on("input change", function (e) {
 				users_show.push(users[i])
 			}
 		})
-
+		
+		
 		$.each(users_show, function (_, user) {
+			
+			if(user["type"] == 2)
+				type_str = "管理者"
+			else if(user["type"] == 1)
+				type_str = "教師"
+			else
+				type_str = "一般"
+			
 			$("#users")[0].innerHTML += format(
 				user_format,
 				user["id"],
 				user["userid"],
 				user["email"],
 				user["nickname"],
+				type_str,
 				user["create_at"],
+				user["last_login"],
 				)
+			
 		})
+		
 	}
+     
 })
 
 $("#id-field").on("input change", function (e) {
@@ -410,21 +485,31 @@ $("#id-field").on("input change", function (e) {
 	$("#users").html("")
 	$.each(users, function (_, user) {
 		if (user["id"] == id) {
+			
+			if(user["type"] == 2)
+				type_str = "管理者"
+			else if(user["type"] == 1)
+				type_str = "教師"
+			else
+				type_str = "一般"
+			
 			$("#users")[0].innerHTML += format(
 				user_format,
 				user["id"],
 				user["userid"],
 				user["email"],
 				user["nickname"],
+				type_str,
 				user["create_at"],
+				user["last_login"],
 				)
-			return false;
 		}
 	})
 })
 
 
 $(document).ready(function () {
+	
 	$.ajax({
 		url: host + "user/",
 		type: "GET",

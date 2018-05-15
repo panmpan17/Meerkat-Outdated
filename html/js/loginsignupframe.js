@@ -152,31 +152,6 @@ function logout () {
 	window.location.reload();
 }
 
-/*
-function red () {
-	key = getCookie("key");
-	id = getCookie("id");
-	string_param = {"key":key, "id":id}	
-	
-	$.ajax({
-		url: host + "user/red",
-		type: "GET",		
-		data: string_param,
-		success: function (msg) {
-			//alert("test function ok");
-		},
-		error: function (msg) {
-			reload = confirm("請重新登錄");
-			if (reload) {
-				$("#info-frame").modal("hide");
-				show_popup("login-frame");
-			}
-		}
-	})
-	
-}
-*/
-
 function showinfo () {
 	key = getCookie("key");
 	id = getCookie("id");
@@ -188,7 +163,7 @@ function showinfo () {
 		success: function (msg) {
 			$("#change-nickname")[0].value = msg["nickname"]
 			$("#info-userid")[0].innerHTML = msg["userid"];
-			// $("#info-point")[0].innerHTML = msg["point"];
+			$("#info-point")[0].innerHTML = msg["point"];
 			$("#info-nick")[0].innerHTML = msg["nickname"];
 			$("#info-birth")[0].innerHTML = msg["birth_year"];
 			$("#info-job")[0].innerHTML = msg["job"];
@@ -200,11 +175,11 @@ function showinfo () {
 				$("#info-email")[0].innerHTML = msg["email"];
 			}
 
-			// $("#info-level")[0].innerHTML = "一般";
-			// point = msg["point"];
-			// if (point > 200) {$("#info-level")[0].innerHTML = "鑽石"}
-			// else if (point > 100) {$("#info-level")[0].innerHTML = "白金"}
-			// else if (point > 20) {$("#info-level")[0].innerHTML = "黃金"}
+			$("#info-level")[0].innerHTML = "一般";
+			point = msg["point"];
+			if (point > 1000) {$("#info-level")[0].innerHTML = "鑽石"}
+			else if (point > 500) {$("#info-level")[0].innerHTML = "白金"}
+			else if (point > 100) {$("#info-level")[0].innerHTML = "黃金"}
 
 			if (msg["active"]) {
 				$("#info-active #success").show();
@@ -236,17 +211,6 @@ function showinfo () {
 				}
 				catch(err) {}
 			}
-			
-			// for test
-			/*
-			if (msg["nickname"] != 'Greentea')
-			{
-				try {
-					$("#userinfo")[0].childNodes[1].removeChild($("#info-test")[0])
-				}
-				catch(err) {}
-			}
-			*/
 			
 			$("#info-frame").modal("show");
 		},

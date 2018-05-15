@@ -190,7 +190,10 @@ class User(object):
             "userid": row["userid"],
             "email": row["email"],
             "nickname": row["nickname"],
+            "type": row["type"],
+            "point": row["point"],
             "create_at": GMT(row["create_at"]),
+            "last_login": GMT(row["last_login"]),
             "disabled": row["disabled"],
             }
 

@@ -3,6 +3,7 @@ import logging, logging.config
 import os
 import re
 import json
+import time
 
 from hashlib import sha256 as hashsha256
 from app.email_html import Email
@@ -273,6 +274,8 @@ class SessionKeyRestView(View):
         meta, conn = cherrypy.request.db
 
         if cherrypy.request.method == "GET":
+            
+            
             self.check_key(kwargs, ("userid", "password", ))
 
             users = meta.tables[User.TABLE_NAME]
@@ -292,6 +295,31 @@ class SessionKeyRestView(View):
 
                 key = str(uuid())
                 key_mgr.update_key(key, row["id"])
+
+
+                # update last login and add point                
+                get_now_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))                
+
+                get_point_sql = select([users.c.id, users.c.point, users.c.last_login]).where( users.c.id == row["id"] )
+                point_rst = conn.execute(get_point_sql)
+                user_data = point_rst.fetchone()
+
+                datetime_str = str(user_data["last_login"])
+                no_float_datetime = datetime_str.split('.')
+                #print(no_float_datetime[0])
+                time_gap = time.mktime(time.strptime(str(get_now_time), "%Y-%m-%d %H:%M:%S")) - time.mktime(time.strptime(str(no_float_datetime[0]), "%Y-%m-%d %H:%M:%S"))        
+
+                
+                now_point = user_data["point"]
+                
+                if time_gap >= 60: #60*60*3 => 8hr + 1 point
+                    #now_point += 1
+                    SLOT = 60*60*3
+                    now_point += time_gap/SLOT
+                
+                
+                date_sql = update(users).where(users.c.id==row["id"]).values({"last_login": get_now_time, "point": now_point})
+                conn.execute(date_sql)                                
 
                 return {"key":key,
                     "lastrowid": row["id"],
@@ -317,6 +345,7 @@ class UserRestView(View):
             user = self.check_login_u(kwargs)
 
             if "id" in kwargs:
+                
                 try:
                     q_uid = int(kwargs["id"])
                 except:
@@ -341,8 +370,11 @@ class UserRestView(View):
                     return User.mk_dict(row)
 
                 # otherwise return part of info
+                #print("\n\n", User.mk_info(row) ,"\n\n")
                 return User.mk_info(row)
+            
             elif "nicknames[]" in kwargs:
+
                 if not user["admin"]:
                     raise cherrypy.HTTPError(401)
 
@@ -359,6 +391,7 @@ class UserRestView(View):
                     id_2_nick[row["id"]] = [row["userid"], row["nickname"]]
 
                 return id_2_nick
+            
             else:
                 # need admin to access
                 if not user["admin"]:
@@ -378,6 +411,7 @@ class UserRestView(View):
                 rows = rst.fetchall()
 
                 return [User.mk_info(u) for u in rows]
+            
         # create user
         elif cherrypy.request.method == "POST":
             data = cherrypy.request.json
@@ -474,6 +508,72 @@ class UserRestView(View):
 
                 cherrypy.response.status = 201
                 return {"success": True}
+            
+            elif "mode" in data:
+                teacherinfos = meta.tables[TeacherInfo.TABLE_NAME]                
+                
+                try:
+                    uid = int(data["uid"])
+                except:
+                    raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("uid"))
+
+                user_type = 0
+
+                if data["type"] == ['1']:
+                    user_type = 1
+                elif data["type"] == ['2']:
+                    user_type = 2
+                else:
+                    user_type = 0
+
+                #check teacher info
+                ss = select([teacherinfos]).where(teacherinfos.c.id==uid)
+                rst = conn.execute(ss)
+                row = rst.fetchone()
+                
+
+                if row == None:
+                    #print("\n\n need to create teacher db\n\n")
+
+                    user_sql = select([users]).where(users.c.id==uid)
+                    get_user_data = conn.execute(user_sql)
+                    row_data = get_user_data.fetchone()
+
+                    
+                    j = {
+                        "id": uid,
+                        "name": row_data["userid"],
+                        "phone": "",
+                        "class_permission": "{scratch_1}",
+                        "summary": "",
+                        "tid": uid,
+                        }
+                    #print("\n\n", row_data["userid"], "\n\n")
+                    ins = teacherinfos.insert()
+                    rst = conn.execute(ins, j)
+
+                    if rst.is_insert:
+                        # set user table
+                        stmt = update(users).where(
+                               users.c.id==uid).values({"type": user_type})
+                        user_ins = conn.execute(stmt)
+                        
+                        cherrypy.response.status = 201
+                        return {"success": True}
+                else:
+                    teacher_id = row["id"]
+                    teacher_name = row["name"]
+                    #print("\n\n", teacher_id, " ", teacher_name, "\n\n")
+                    # set user table
+                    stmt = update(users).where(
+                           users.c.id==uid).values({"type": user_type})
+
+                    user_ins = conn.execute(stmt)
+                        
+                    cherrypy.response.status = 201
+                    return {"success": True}
+
+            
             else:
                 json = {}
                 if "nickname" in data:
