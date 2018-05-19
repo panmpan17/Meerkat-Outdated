@@ -141,6 +141,7 @@
 					<th>帳號</th>
 					<th>Email</th>
 					<th>暱稱</th>
+					<th>積分</th>
 					<th>帳戶類型</th>
 					<th>註冊日期</th>
 					<th>最後登入時間</th>
@@ -310,6 +311,7 @@ user_format = `\
 	<td>{4}</td>
 	<td>{5}</td>
 	<td>{6}</td>
+	<td>{7}</td>
 </tr>
 `
 
@@ -467,6 +469,7 @@ $("#userid-field").on("input change", function (e) {
 				user["userid"],
 				user["email"],
 				user["nickname"],
+				user["point"],
 				type_str,
 				user["create_at"],
 				user["last_login"],
@@ -499,6 +502,7 @@ $("#id-field").on("input change", function (e) {
 				user["userid"],
 				user["email"],
 				user["nickname"],
+				user["point"],
 				type_str,
 				user["create_at"],
 				user["last_login"],

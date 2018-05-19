@@ -312,10 +312,10 @@ class SessionKeyRestView(View):
                 
                 now_point = user_data["point"]
                 
-                if time_gap >= 60: #60*60*3 => 8hr + 1 point
-                    #now_point += 1
-                    SLOT = 60*60*3
-                    now_point += time_gap/SLOT
+                if time_gap >= 600: # 10mins +1p
+                    now_point += 1
+                    #SLOT = 60*60*3
+                    #now_point += time_gap/SLOT
                 
                 
                 date_sql = update(users).where(users.c.id==row["id"]).values({"last_login": get_now_time, "point": now_point})
