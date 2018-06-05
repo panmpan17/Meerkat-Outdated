@@ -213,14 +213,14 @@ function changeclassroomtype() {
 	$("#students_info").show()
 	$("#hoverimg").show()
 
-	if ((type == "scratch_1") || (type == "scratch_03") || (type == "teacher_1")) 
+	if ((type == "scratch_1") || (type == "scratch_02") || (type == "scratch_03") || (type == "teacher_1")) 
 	{
-		// Scratch level 1, advance
+		// Scratch create info 
 		$("#hoverimg")[0].src = "html/images/scratch_table.png"
 	}
 	else 
 	{
-		// Python level 1
+		// Python create info
 		$("#hoverimg")[0].src = "html/images/python_table.png"
 	}
 }

@@ -265,9 +265,9 @@ class UserCaseHandler(object):
     def scratchcs1(self):
         return render("scratchcs1.html")
 
-    # @cherrypy.expose
-    # def scratchcs2(self):
-    #     return render("scratchcs2.html")
+    @cherrypy.expose
+    def scratchcs2(self):
+        return render("scratchcs2.html")
 
     @cherrypy.expose
     def scratchcs3(self):
