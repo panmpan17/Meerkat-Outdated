@@ -70,14 +70,14 @@ function signup () {
 	
 	// check every things is not empty and valid
 	if (userid && password && repassword && email && birth && nickname) {
-		//id_valid = matchRE(id_pass_re, userid);
+		id_valid = matchRE(id_pass_re, userid);
 		pass_valid = matchRE(id_pass_re, password);
 		email_valid = matchRE(email_re, email);
-		/*
+		
 		if (!id_valid) {
 			errormsg.innerHTML = "帳號並不符合格式";
 			return
-		}*/
+		}
 		if (!pass_valid) {
 			errormsg.innerHTML = "密碼並不符合格式";
 			return
