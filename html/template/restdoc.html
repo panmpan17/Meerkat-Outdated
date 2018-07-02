@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Restful API's Document</title>
+	<style>
+		h3.path {
+			border: 3px solid #868770;
+			background: #a0a098;
+			padding: 3px;
+			color: #f4cf49;
+			border-radius: 3px;
+		}
+
+		h5.method {
+			color: #4996f4;
+		}
+
+		table {
+			border-collapse: collapse;
+		}
+
+		td, th {
+			border: 1px solid #ddd;
+			padding: 8px;
+		}
+
+		/*tr:nth-child(even) {background-color: #f2f2f2;}*/
+	</style>
+</head>
+<body>
+	<article>
+		<h3 class="path">logon/</h3>
+		<p>
+			<h5 class="method">GET</h5>
+			使用者登入
+			<table class="input-args">
+				<tr>
+					<td>userid</td>
+					<td>String, 使用者的帳號</td>
+				</tr>
+				<tr>
+					<td>password</td>
+					<td>String, 使用者密碼 (SHA256 加密)</td>
+				</tr>
+			</table>
+			<br>
+			<table class="output">
+				<tr>
+					<td>key</td>
+					<td>String, restful api key</td>
+				</tr>
+				<tr>
+					<td>lastrowid</td>
+					<td>Integer, 使用者 id</td>
+				</tr>
+				<tr>
+					<td>userid</td>
+					<td>String, 使用者 userid</td>
+				</tr>
+			</table>
+		</p>
+	</article>
+
+	<article>
+		<h3 class="path">user/</h3>
+		<p>
+			<h5 class="method">GET</h5>
+			抓取單一使用者資料、多個使用者暱稱、所有使用者
+			<table class="input-args">
+				<tr>
+					<th colspan="2">單一使用者資料</th>
+				</tr>
+				<tr>
+					<td>id</td>
+					<td>String, 要抓取資料的使用者</td>
+				</tr>
+				<tr>
+					<th colspan="2">多個使用者暱稱</th>
+				</tr>
+				<tr>
+					<td>nicknames</td>
+					<td>List of Integer, 使用者 id 組成的 list</td>
+				</tr>
+				<tr>
+					<th colspan="2">所有使用者</th>
+				</tr>
+				<tr>
+					<td colspan="2">不需要</td>
+				</tr>
+			</table>
+			<!-- TODO -->
+			<table class="output">
+				<tr>
+					<th colspan="2">單一使用者資料</th>
+				</tr>
+				<tr>
+					<th colspan="2">多個使用者暱稱</th>
+				</tr>
+				<tr>
+					<th colspan="2">所有使用者</th>
+				</tr>
+			</table>
+		</p>
+		<p>
+			<h5 class="method">POST</h5>
+			創建新使用者
+			<table class="input-args">
+				<tr>
+					<td>recapcha</td>
+					<td>Google Recaptch 的回傳資料</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						使用者資料的 List
+						<table>
+							<tr>
+								<td>userid</td>
+								<td>String, 使用者帳號</td>
+							</tr>
+							<tr>
+								<td>password</td>
+								<td>String, 使用者密碼 (SHA256 加密)</td>
+							</tr>
+							<tr>
+								<td>birth_Year</td>
+								<td>Integer, 使用者出生年</td>
+							</tr>
+							<tr>
+								<td>nickname</td>
+								<td>String, 使用者暱稱</td>
+							</tr>
+							<tr>
+								<td>job</td>
+								<td>String, 使用者工作</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<table class="output">
+				<tr>
+					<td>key</td>
+					<td>String, restful api key</td>
+				</tr>
+				<tr>
+					<td>lastrowid</td>
+					<td>Integer, 使用者 id</td>
+				</tr>
+				<tr>
+					<td>userid</td>
+					<td>String, 使用者 userid</td>
+				</tr>
+			</table>
+		</p>
+
+		<p>
+			<h5 class="method">PUT</h5>
+			封解鎖使用者、使用者權限、更新使用者資訊
+			<table class="input-args">
+				<tr>
+					<th colspan="2">封解鎖使用者</th>
+				</tr>
+				<tr>
+					<td>key</td>
+					<td>String, restful api key</td>
+				</tr>
+				<tr>
+					<td>uid</td>
+					<td>Integer, 使用者 id</td>
+				</tr>
+				<tr>
+					<td>disabled</td>
+					<td>Boolean, 使用者封鎖 Booleam 質</td>
+				</tr>
+				<tr>
+					<th colspan="2">使用者權限</th>
+				</tr>
+				<tr>
+					<td>key</td>
+					<td>String, restful api key</td>
+				</tr>
+				<tr>
+					<td>uid</td>
+					<td>Integer, 使用者 id</td>
+				</tr>
+				<tr>
+					<td>disabled</td>
+					<td>Boolean, 使用者封鎖 Booleam 質</td>
+				</tr>
+				<tr>
+					<th colspan="2">更新使用者資訊</th>
+				</tr>
+			</table>
+		</p>	
+	</article>
+	<script>
+		
+	</script>
+</body>
+</html>

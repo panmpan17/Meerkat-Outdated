@@ -84,7 +84,7 @@ function deleteadclass(aid) {
 	}
 	json = {"key": getCookie("key"), "aid": aid}
 	$.ajax({
-		url: host + "adclass?" + $.param(json),
+		url: host + "adclass/?" + $.param(json),
 		type: "DELETE",
 		success: function(result) {
 			loadadclass();

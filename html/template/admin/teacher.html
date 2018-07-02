@@ -4,319 +4,206 @@
 <link rel="stylesheet" href="/html/css/editor.css">
 <link rel="stylesheet" href="/html/css/checklist.css">
 <style>
-	.preview a {
-		color:orange;
-		text-decoration:none;
+	.container {
+		display: flex;
 	}
 
-	table {
-		font-family: arial, sans-serif;
-		border-collapse: collapse;
-		width: 100%;
-	}
-
-	.table td,
-	.table th {
-		border: 1px solid #dddddd;
+	.container article {
+		padding: 15px;
+		margin: 5px;
+		cursor: pointer;
 		text-align: left;
-		padding: 8px;
-		font-size: 20px;
+		background: rgb(230, 230, 230);
 	}
 
-	.table tr {
-		cursor: pointer;
-		background-color: white;
-	}
-
-	.table tr.i:nth-child(even) {
-		background-color: #F39C12;
-	}
-	.table tr.i:nth-child(odd) {
-		background-color: #F1C40F;
-	}
-
-	i.fa-minus,
-	i.fa-plus {
-		cursor: pointer;
-	}
-
-	td> ul {
-		margin: 2px;
-		list-style: none;
-	}
-
-	td> ul> li:before {
-		content:"#";
-		color: #66d;
-	}
-
-	td> ul> li {
-		/*display:inline;*/
-		padding-right: 15px;
-	}
-
-	#sidebtn1 {
-		float: right;
-		font-size: 16px;
-		width: 30px;
-		height: 90px;
-		background: #063044;
+	.container article:hover {
+		background: rgb(150, 150, 150);
 		color: white;
-		word-spacing: 30px;
-		text-align: center;
+	}
+
+	.container tr {
 		cursor: pointer;
+		/*color: black;*/
+		font-weight: 400;
 	}
 
-	#sidebtn1:hover {
-		background: white;
-		color: #063044;
-	}
-
-	#sidebtn2 {
-		margin-top: 95px;
-		margin-right: -30px;
-		float: right;
-		font-size: 16px;
-		width: 30px;
-		height: 90px;
-		background: #063044;
+	.container article:hover tr:not(:hover) {
 		color: white;
-		word-spacing: 30px;
-		text-align: center;
-		cursor: pointer;
 	}
 
-	#sidebtn2:hover {
+	.container tr.hover:hover {
 		background: white;
-		color: #063044;
+		color: black;
+	}
+
+	.container tr td,
+	.container tr th {
+		padding: 10px;
 	}
 </style>
 {% endblock %}
 {% block content %}
 <main>
 	<br><br>
-	<a href="/admin/" style="padding-left: 14%"><button class="btn btn-orange">< 回去</button></a>
+	<a href="/admin/" style="padding-left: 14%"><button class="btn btn-orange">管理主頁</button></a>
 	<br><br>
-	<div class="container text-center">
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Id</th>
-					<th>帳號</th>
-					<th>名字</th>
-					<th>電話</th>
-				</tr>
-			</thead>
-			<tbody id="teachers"></tbody>
-		</table>
-	</div>
+	<div id="teacherinfos" class="container"></div>
 	<br><br><br><br><br>
 </main>
 {% endblock %}
 {% block bcontent %}
-<div class="modal fade" id="teacher-info-frame" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div id="classroom-frame" class="modal fade" tabindex="-1" role="dialog">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<a href="javascript:;"><span aria-hidden="true" style="color: black;">&Chi;</span></a>
-				</button>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 id="classroom-name" class="modal-title"></h4>
 			</div>
-
-			<div class="modal-body" id="yt-player">
-				<input id="dangerous" type="checkbox">  Id 有沒有跟 User 重複<br>
-				<input id="selectall" onclick="selectall(this)" type="checkbox"> 全選 <br>
-				<table>
+			<div class="modal-body">
+				課程類型: <span id="classroom-type"></span><br>
+				學生人數: <span id="classroom-student-num"></span><br>
+				創建日期: <span id="classroom-create-at"></span><br>
+				<table class="table table-sm">
 					<thead>
 						<tr>
-							<th>城市</th>
-							<th>鄉鎮</th>
+							<th>姓名</th>
+							<th>帳號</th>
 						</tr>
 					</thead>
-					<tbody id="adarea"></tbody>
+					<tbody id="classroom-student"></tbody>
 				</table>
-				<hr>
-				<table>
-					<thead>
-						<tr>
-							<th>地址</th>
-							<th>開始時間</th>
-							<th>類型</th>
-						</tr>
-					</thead>
-					<tbody id="adclass"></tbody>
-				</table>
-				<hr>
-				<table>
-					<thead>
-						<tr>
-							<th>名稱</th>
-							<th>類型</th>
-							<th>建立時間</th>
-						</tr>
-					</thead>
-					<tbody id="classroom"></tbody>
-				</table><br>
-				<input id="newuserid" type="text" placeholder="要連到的使用者帳號">
-				<button class="btn btn-orange" onclick="update()">更改</button>
 			</div>
-		</a>
 		</div>
 	</div>
 </div>
 {% endblock %}
 {% block script %}
-<script src="/html/js/taiwan_town.js"></script>
-<script>
-	selected_teacher = null;
-	teachers_info_format = `<tr class="i" onclick="openteacher({0})">
-		<td>{0}</td>
-		<td>{1}</td>
-		<td>{2}</td>
-		<td>{3}</td>
-	</tr>`
+<script type="text/javascript">
+	CLASS_TO = {
+		"python_01": "Python 初級",
+		"scratch_1": "Scratch 初級",
+		"scratch_02": "Scratch 動畫",
+		"scratch_03": "Scratch 應用",
+		"teacher_1": "教師訓練",
+	}
+	classrooms = {};
+	students = {};
 
-	tow_field_format = `<tr>
-		<td><input id="{2}" class="update-select" type="checkbox" /></td>
-		<td>{0}</td>
-		<td>{1}</td>
-	</tr>`
+	TR_FORMAT = `<td>{0}</td>
+	<td>{1}</td>
+	<td>{2}</td>
+	<td>{3}</td>`
 
-	three_field_format = `<tr>
-		<td><input id="{3}" class="update-select" type="checkbox" /></td>
-		<td>{0}</td>
-		<td>{1}</td>
-		<td>{2}</td>
-	</tr>`
+	function toggle_classroomlist (article_ele) {
+		var clsr_list_ele = article_ele.children[2];
+		article_ele.classList.toggle("expend");
+		if (article_ele.classList.contains("expend")) {
+			clsr_list_ele.append($("<tr class='head'><th>名稱</th><th>類型</th><th>人數</th><th>創建時間</th></tr>")[0]);
 
-	function openteacher (id) {
-		selected_teacher = id;
-		$("#teacher-info-frame").modal("show");
-		$("#dangerous")[0].checked = teachers[id]["dangerous"];
-		$("#selectall")[0].checked = false;
-		$("#selectall")[0].name = id
+			$.each(classrooms[article_ele.id], function (i, classroom) {
+				li_ele = $(`<tr class="hover"></tr>`)[0]
+				li_ele.id = classroom["id"]
+				li_ele.innerHTML = format(TR_FORMAT,
+					classroom["name"],
+					CLASS_TO[classroom["type"]],
+					classroom["students_cid"].length,
+					classroom["create_at"],
+					)
 
-		if (teachers[id]["suggest"] != undefined) {
-			$("#newuserid")[0].value = teachers[id]["suggest"]
+				clsr_list_ele.append(li_ele)
+			})
 		}
 		else {
-			$("#newuserid")[0].value = ""
+			clsr_list_ele.innerHTML = "";
 		}
-		
-		var adareas_html = "";
-		var adclasses_html = "";
-		var classrooms_html = "";
-
-		$.each(teachers[id]["adareas"], function (_, adarea) {
-			city = cities[adarea["city"]]
-			adareas_html += format(tow_field_format,
-				city,
-				city_towns[city][adarea["town"]],
-				"adarea-" + adarea["id"],
-				id,
-				)
-		})
-
-		$.each(teachers[id]["adclasses"], function (_, adclass) {
-			adclasses_html += format(three_field_format,
-				adclass["address"],
-				adclass["date"],
-				adclass["type"],
-				"adclass-" + adclass["id"],
-				id,
-				)
-		})
-
-		$.each(teachers[id]["classrooms"], function (_, classroom) {
-			classrooms_html += format(three_field_format,
-				classroom["name"],
-				classroom["type"],
-				classroom["create_at"],
-				"classroom-" + classroom["id"],
-				id,
-				)
-		})
-
-		$("#adarea")[0].innerHTML = adareas_html;
-		$("#adclass")[0].innerHTML = adclasses_html;
-		$("#classroom")[0].innerHTML = classrooms_html;
 	}
 
-	function selectall (e) {
-		console.log(e.checked)
-		$.each($(".update-select"), function (_, i) {
-			i.checked = e.checked
+	function popup_classroom (t_id, clsr_id) {
+		classroom = classrooms[t_id][clsr_id];
+		$("#classroom-name")[0].innerHTML = classroom["name"];
+		$("#classroom-student-num")[0].innerHTML = classroom["students_cid"].length;
+		$("#classroom-type")[0].innerHTML = CLASS_TO[classroom["type"]];
+		$("#classroom-create-at")[0].innerHTML = classroom["create_at"];
+
+		html = "";
+		$.each(classroom["students_cid"], function (index, cid) {
+			html += format(`<tr><td>{0}</td><td>{1}</td></tr>`,
+				classroom["students_name"][index],
+				students[cid][0],
+				)
 		})
+		$("#classroom-student")[0].innerHTML = html;
+		$("#classroom-frame").modal("show");
 	}
 
-	function update () {
-		var newuserid = $("#newuserid")[0].value
-		var classrooms_id = [];
-		var adarea_id = [];
-		var adclass_id = [];
-
-		if (newuserid == "") {
-			alert("不可留空");
-			return;
-		}
-
-		$.each($(".update-select"), function (_, i) {
-			select_id = i.id
-			type = select_id.substring(0, select_id.indexOf("-"));
-			var id = select_id.substring(select_id.indexOf("-") + 1);
-			id = parseInt(id);
-			if (type == "adarea") {
-				adarea_id.push(id);
-			}
-			else if (type == "adclass") {
-				adclass_id.push(id);
-			}
-			else {
-				classrooms_id.push(id);
-			}
-		})
-		json = {
-			"key": getCookie("key"),
-			"teacher": selected_teacher,
-			"classrooms": classrooms_id,
-			"adarea": adarea_id,
-			"adclass": adclass_id,
-			"newuserid": newuserid,
-		}
-
-		console.log(classrooms_id, adarea_id, adclass_id)
-		$.ajax({
-			url: host + "teachermerge/",
-			type: "PUT",
-			dataType: "json",
-			data: JSON.stringify(json),
-			contentType: "application/json; charset=utf-8",
-			success: function (msg) {
-				alert("成功更改 !")
-			},
-			error: function (err) {
-				console.log(err)
-			}
-		})
-	}
-
-	teachers = null
 	$.ajax({
-		url: host + "teachermerge/",
+		url: host + "teacher/",
 		data: {"key": getCookie("key")},
-		success: function (msg) {
-			teachers = msg
-			var teacher_info_table_html = ""
-			$.each(teachers, function (_, teacher) {
-				teacher_info_table_html += format(teachers_info_format,
-					teacher["id"],
-					teacher["userid"],
-					teacher["name"],
-					teacher["phone"],
-					)
+		success: function(msg) {
+			var ids = new Set();
+			$.each(msg["teacherinfos"], function (_, teacher) {
+				if (classrooms[teacher["id"]] == undefined) {
+					classrooms[teacher["id"]] = {}
+
+					article = $("<article>")[0]
+					article.append($("<h3>" + teacher["name"] + "</h3>")[0]);
+					article.append($("<p>" + teacher["phone"] + "</p>")[0]);
+					article.append($(`<table></table>`)[0]);
+					article.id = teacher["id"]
+
+					article.addEventListener("click", function (e) {
+						if (e.target.tagName == "TR" || e.target.parentNode.tagName == "TR") {
+							var tr_ele = e.target;
+
+							if (e.target.parentNode.tagName == "TR") {
+								tr_ele = tr_ele.parentNode;
+							}
+
+							var teacher_id = tr_ele.parentNode.parentNode.id;
+							var classroom_id = tr_ele.id;
+							popup_classroom(teacher_id, classroom_id);
+							return;
+						}
+						else if (e.target.tagName != "ARTICLE") {
+							article_tag = e.target.parentNode
+						}
+						else {
+							article_tag = e.target
+						}
+
+						toggle_classroomlist(article_tag);
+					});
+
+					$("#teacherinfos")[0].append(article);
+				}
+
+				if (teacher["clsrid"] != null) {
+					classrooms[teacher["id"]][teacher["clsrid"]] = {
+						"id": teacher["clsrid"],
+						"name": teacher["clsrname"],
+						"students_name": teacher["students_name"],
+						"students_cid": teacher["students_cid"],
+						"create_at": teacher["create_at"],
+						"type": teacher["type"],
+					}
+
+					$.each(teacher["students_cid"], function (_, id) {
+						ids.add(id);
+					})
+				}
 			})
-			$("#teachers")[0].innerHTML = teacher_info_table_html
+
+			$.ajax({
+				url: host + "user/",
+				data: {
+					"key": getCookie("key"),
+					"nicknames": Array.from(ids).sort(),
+				},
+				success: function (msg) {
+					students = msg;
+				}
+			});
 		}
-	})
+	});
 </script>
 {% endblock %}
