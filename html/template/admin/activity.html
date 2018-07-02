@@ -600,13 +600,12 @@
 			return
 		}
 
-		json = {
-			"key": getCookie("key"),
-			"nicknames": Array.from(ids).sort(),
-		}
 		$.ajax({
 			url: host + "user/",
-			data: json,
+			data: {
+				"key": getCookie("key"),
+				"nicknames": Array.from(ids).sort(),
+			},
 			success: function (msg) {
 				$.each(msg, function (k, v) {
 					names[k] = v

@@ -176,7 +176,7 @@ function changeclassroom (cls_id) {
 			url: host + "classroom/check_folder",
 			data: {
 				"folder": classroom["folder"],
-				"tkey": getCookie("teacher-key"),
+				"key": getCookie("key"),
 				"student": true},
 			success: function (msg) {
 				files_records = msg
@@ -267,7 +267,7 @@ function changeclassroom (cls_id) {
 		url: host + "classroom/check_folder",
 		data: {
 			"folder": classroom["folder"],
-			"tkey": getCookie("teacher-key")},
+			"key": getCookie("key")},
 		success: function (msg) {
 			$("#filelist")[0].innerHTML = ""
 			$.each(msg, function (_, i) {
