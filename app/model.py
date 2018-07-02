@@ -549,6 +549,19 @@ class TeacherInfo(object):
             "contact_link": row["contact_link"],
             }
 
+    @classmethod
+    def mk_classroom_dict(cls, row):
+        return {
+            "id": row["id"],
+            "name": row["name"],
+            "phone": row["phone"],
+            "summary": row["summary"],
+            "contact_link": row["contact_link"],
+
+            "clsrid": row["clsrid"],
+            "clsrname": row["clsrname"],
+        }
+
 class Classroom(object):
     TABLE_NAME = "tb_classroom"
     classroom_t = None

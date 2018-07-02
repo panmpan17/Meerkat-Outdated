@@ -116,38 +116,34 @@ class AdminHandler(object):
 
         return render("admin/teacher.html")
 
-    @cherrypy.expose
-    def activity(self):
-        a = self.checkadmin()
-        if not a:
-            raise cherrypy.HTTPRedirect("/")
+    # @cherrypy.expose
+    # def activity(self):
+    #     a = self.checkadmin()
+    #     if not a:
+    #         raise cherrypy.HTTPRedirect("/")
 
-        return render("admin/activity.html")
+    #     return render("admin/activity.html")
 
-    @cherrypy.expose
-    def report(self):
-        a = self.checkadmin()
-        if not a:
-            raise cherrypy.HTTPRedirect("/")
+    # @cherrypy.expose
+    # def report(self):
+    #     a = self.checkadmin()
+    #     if not a:
+    #         raise cherrypy.HTTPRedirect("/")
 
-        return render("admin/report.html")
+    #     return render("admin/report.html")
 
-    @cherrypy.expose
-    def presentation(self):
-        a = self.checkadmin()
-        if not a:
-            raise cherrypy.HTTPRedirect("/")
+    # @cherrypy.expose
+    # def presentation(self):
+    #     a = self.checkadmin()
+    #     if not a:
+    #         raise cherrypy.HTTPRedirect("/")
 
-        return render("admin/presentation.html")
+    #     return render("admin/presentation.html")
 
-    @cherrypy.expose
-    def teacherinfo(self):
-        a = self.checkadmin()
-        if not a:
-            raise cherrypy.HTTPRedirect("/")
+    # @cherrypy.expose
+    # def teacherinfo(self):
+    #     a = self.checkadmin()
+    #     if not a:
+    #         raise cherrypy.HTTPRedirect("/")
 
-        return render("admin/teacherinfo.html")
-
-
-
-
+    #     return render("admin/teacherinfo.html")
