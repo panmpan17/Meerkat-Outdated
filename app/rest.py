@@ -1516,7 +1516,11 @@ class TeacherRestView(View):
                         teacherinfos.c.contact_link,
                         classrooms.c.id.label("clsrid"),
                         classrooms.c.name.label("clsrname"),
-                        ]).select_from(outerjoin(teacherinfos, classrooms, teacherinfos.c.id==classrooms.c.teacher))
+                        classrooms.c.students_name.label("students_name"),
+                        classrooms.c.students_cid.label("students_cid"),
+                        classrooms.c.type.label("type"),
+                        classrooms.c.create_at.label("create_at"),
+                        ]).select_from(outerjoin(teacherinfos, classrooms,teacherinfos.c.id==classrooms.c.teacher))
                     rst = conn.execute(ss)
                     rows = rst.fetchall()
 

@@ -10,32 +10,35 @@
 
 	.container article {
 		padding: 15px;
+		margin: 5px;
 		cursor: pointer;
 		text-align: left;
+		background: rgb(230, 230, 230);
 	}
 
 	.container article:hover {
-		background: rgba(150, 150, 150);
+		background: rgb(150, 150, 150);
 		color: white;
 	}
 
-	.container ul {
-		padding: 0;
-	}
-
-	.container li {
-		list-style: none;
-		color: black;
+	.container tr {
+		cursor: pointer;
+		/*color: black;*/
 		font-weight: 400;
 	}
 
-	.container article:hover li:not(:hover) {
+	.container article:hover tr:not(:hover) {
 		color: white;
 	}
 
-	.container li:hover {
+	.container tr.hover:hover {
 		background: white;
 		color: black;
+	}
+
+	.container tr td,
+	.container tr th {
+		padding: 10px;
 	}
 </style>
 {% endblock %}
@@ -49,19 +52,63 @@
 </main>
 {% endblock %}
 {% block bcontent %}
+<div id="classroom-frame" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 id="classroom-name" class="modal-title"></h4>
+			</div>
+			<div class="modal-body">
+				課程類型: <span id="classroom-type"></span><br>
+				學生人數: <span id="classroom-student-num"></span><br>
+				創建日期: <span id="classroom-create-at"></span><br>
+				<table class="table table-sm">
+					<thead>
+						<tr>
+							<th>姓名</th>
+							<th>帳號</th>
+						</tr>
+					</thead>
+					<tbody id="classroom-student"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock %}
 {% block script %}
 <script type="text/javascript">
-	classrooms = {}
+	CLASS_TO = {
+		"python_01": "Python 初級",
+		"scratch_1": "Scratch 初級",
+		"scratch_02": "Scratch 動畫",
+		"scratch_03": "Scratch 應用",
+		"teacher_1": "教師訓練",
+	}
+	classrooms = {};
+	students = {};
+
+	TR_FORMAT = `<td>{0}</td>
+	<td>{1}</td>
+	<td>{2}</td>
+	<td>{3}</td>`
 
 	function toggle_classroomlist (article_ele) {
 		var clsr_list_ele = article_ele.children[2];
 		article_ele.classList.toggle("expend");
 		if (article_ele.classList.contains("expend")) {
+			clsr_list_ele.append($("<tr class='head'><th>名稱</th><th>類型</th><th>人數</th><th>創建時間</th></tr>")[0]);
+
 			$.each(classrooms[article_ele.id], function (i, classroom) {
-				li_ele = $("<li></li>")[0]
+				li_ele = $(`<tr class="hover"></tr>`)[0]
 				li_ele.id = classroom["id"]
-				li_ele.innerHTML = classroom["name"]
+				li_ele.innerHTML = format(TR_FORMAT,
+					classroom["name"],
+					CLASS_TO[classroom["type"]],
+					classroom["students_cid"].length,
+					classroom["create_at"],
+					)
 
 				clsr_list_ele.append(li_ele)
 			})
@@ -71,24 +118,50 @@
 		}
 	}
 
+	function popup_classroom (t_id, clsr_id) {
+		classroom = classrooms[t_id][clsr_id];
+		$("#classroom-name")[0].innerHTML = classroom["name"];
+		$("#classroom-student-num")[0].innerHTML = classroom["students_cid"].length;
+		$("#classroom-type")[0].innerHTML = CLASS_TO[classroom["type"]];
+		$("#classroom-create-at")[0].innerHTML = classroom["create_at"];
+
+		html = "";
+		$.each(classroom["students_cid"], function (index, cid) {
+			html += format(`<tr><td>{0}</td><td>{1}</td></tr>`,
+				classroom["students_name"][index],
+				students[cid][0],
+				)
+		})
+		$("#classroom-student")[0].innerHTML = html;
+		$("#classroom-frame").modal("show");
+	}
+
 	$.ajax({
 		url: host + "teacher/",
 		data: {"key": getCookie("key")},
 		success: function(msg) {
-			console.log(msg);
+			var ids = new Set();
 			$.each(msg["teacherinfos"], function (_, teacher) {
 				if (classrooms[teacher["id"]] == undefined) {
-					classrooms[teacher["id"]] = []
+					classrooms[teacher["id"]] = {}
 
 					article = $("<article>")[0]
 					article.append($("<h3>" + teacher["name"] + "</h3>")[0]);
 					article.append($("<p>" + teacher["phone"] + "</p>")[0]);
-					article.append($(`<ul></ul>`)[0]);
+					article.append($(`<table></table>`)[0]);
 					article.id = teacher["id"]
 
 					article.addEventListener("click", function (e) {
-						if (e.target.tagName == "LI") {
-							console.log("popup");
+						if (e.target.tagName == "TR" || e.target.parentNode.tagName == "TR") {
+							var tr_ele = e.target;
+
+							if (e.target.parentNode.tagName == "TR") {
+								tr_ele = tr_ele.parentNode;
+							}
+
+							var teacher_id = tr_ele.parentNode.parentNode.id;
+							var classroom_id = tr_ele.id;
+							popup_classroom(teacher_id, classroom_id);
 							return;
 						}
 						else if (e.target.tagName != "ARTICLE") {
@@ -104,11 +177,32 @@
 					$("#teacherinfos")[0].append(article);
 				}
 
-				classrooms[teacher["id"]].push({
-					"id": teacher["clsrid"],
-					"name": teacher["clsrname"],
-				})
+				if (teacher["clsrid"] != null) {
+					classrooms[teacher["id"]][teacher["clsrid"]] = {
+						"id": teacher["clsrid"],
+						"name": teacher["clsrname"],
+						"students_name": teacher["students_name"],
+						"students_cid": teacher["students_cid"],
+						"create_at": teacher["create_at"],
+						"type": teacher["type"],
+					}
+
+					$.each(teacher["students_cid"], function (_, id) {
+						ids.add(id);
+					})
+				}
 			})
+
+			$.ajax({
+				url: host + "user/",
+				data: {
+					"key": getCookie("key"),
+					"nicknames": Array.from(ids).sort(),
+				},
+				success: function (msg) {
+					students = msg;
+				}
+			});
 		}
 	});
 </script>

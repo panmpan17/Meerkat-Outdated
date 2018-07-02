@@ -560,6 +560,10 @@ class TeacherInfo(object):
 
             "clsrid": row["clsrid"],
             "clsrname": row["clsrname"],
+            "students_name": row["students_name"],
+            "students_cid": row["students_cid"],
+            "type": row["type"],
+            "create_at": GMT(row["create_at"]),
         }
 
 class Classroom(object):
