@@ -926,8 +926,8 @@ function checkChangeStudent () {
 				$("#bg").hide()
 				if (msg["none"].length >= 1) {
 					$.each(msg["none"], function (_, i) {
-						$("#cid" + i)[0].classList.remove("bg-success")
-						$("#cid" + i)[0].classList.add("bg-danger")
+						$("#cid-" + i)[0].classList.remove("bg-success")
+						$("#cid-" + i)[0].classList.add("bg-danger")
 					})
 					$("#change-student-btn")[0].disabled = true
 					c_names = null
@@ -987,8 +987,8 @@ function checkChangeStudent () {
 			success: function (msg) {
 				console.log(msg)
 				$.each(msg["none"], function (_, i) {
-					$("#cid" + i)[0].classList.remove("bg-success")
-					$("#cid" + i)[0].classList.add("bg-danger")
+					$("#cid-" + i)[0].classList.remove("bg-success")
+					$("#cid-" + i)[0].classList.add("bg-danger")
 				})
 			}
 		})
