@@ -1,5 +1,5 @@
 // this one check user's userid password
-id_pass_re = new RegExp("[a-zA-Z0-9@\.]{8,32}");
+id_pass_re = new RegExp("[a-zA-Z0-9@\.]{3,16}");
 // file_re = new RegExp("[0-9]+_[0-9]+")
 email_re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 function matchRE(r, text) {
@@ -75,15 +75,15 @@ function signup () {
 		email_valid = matchRE(email_re, email);
 		
 		if (!id_valid) {
-			errormsg.innerHTML = "帳號並不符合格式";
+			errormsg.innerHTML = "帳號並不符合格式, 至少需要3個字以上, 包含英文以及數字";
 			return
 		}
 		if (!pass_valid) {
-			errormsg.innerHTML = "密碼並不符合格式";
+			errormsg.innerHTML = "密碼並不符合格式, 必須同時包含英文與數字";
 			return
 		}
 		if (!email_valid) {
-			errormsg.innerHTML = "Email 並不正確";
+			errormsg.innerHTML = "輸入的Email格式有誤請檢查";
 			return
 		}
 	}
