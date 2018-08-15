@@ -1,0 +1,151 @@
+<html>
+<title>Coding for Fun Summer Camp</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="gb2312">
+<link rel=" stylesheet " href="https://www.w3schools.com/w3css/4/w3.css ">
+
+<body>
+
+    <style>
+        div.w3-content {
+            width: 75%;
+        }
+
+        article.w3-container {
+            margin: 10px;
+        }
+
+        #tail-logo {
+            margin: 20px 25px;
+        }
+
+        #title {
+            margin-top: 2px;
+            margin-right: 25px;
+            margin-bottom: 20px;
+            margin-left: 25px;
+        }
+
+        #course-intro {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        #free-course {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    </style>
+
+    <div class="w3-container w3-teal ">
+        <h2 class="w3-center ">今年暑假最熱門的夏令營</h2>
+        <h3 class="w3-center ">Coding for Fun</h3>
+    </div>
+    <br>
+
+    <div class="w3-container w3-center ">
+        <h3>暑假除了玩水的新選擇！學會寫遊戲！</h3>
+        <h3>寫程式就像在水裡自由自在的游著</h3>
+        <h3>Coding For Fun 的課程是一種翻轉教室學習方式：讓您輕鬆學習，想像無限！</h3>
+    </div>
+    <br>
+
+    <div class="w3-content w3-display-container ">
+        <img class="mySlides " src="html/images/ads/01.JPG " style="width:100% ">
+        <img class="mySlides " src="html/images/ads/02.JPG " style="width:100% ">
+        <img class="mySlides " src="html/images/ads/03.JPG " style="width:100% ">
+        <img class="mySlides " src="html/images/ads/04.JPG " style="width:100% ">
+        <img class="mySlides " src="html/images/ads/05.JPG " style="width:100% ">
+        <img class="mySlides " src="html/images/ads/06.JPG " style="width:100% ">
+        <img class="mySlides " src="html/images/ads/07.JPG " style="width:100% ">
+        <img class="mySlides " src="html/images/ads/08.JPG " style="width:100% ">
+        <img class="mySlides " src="html/images/ads/09.JPG " style="width:100% ">
+        <img class="mySlides " src="html/images/ads/10.JPG " style="width:100% ">
+
+        <button class="w3-button w3-black w3-display-left " onclick="plusDivs(-1) ">&#10094;</button>
+        <button class="w3-button w3-black w3-display-right " onclick="plusDivs(1) ">&#10095;</button>
+    </div>
+    <br>
+    <article class="w3-container w3-center ">
+        <p class="w3-xlarge ">玩遊戲，是靈活運用大腦的方式
+            <br> 寫程式，是無拘無束創作的藝術
+            <br>
+            <br> 你是否想過，玩遊戲的時候，是你在操控遊戲，還是你被遊戲操控？
+            <br> 結合玩遊戲與寫程式，創造一個屬於自己的遊戲世界
+        </p>
+    </article>
+    <br>
+    <section id="free-course " class="w3-container w3-center w3-Amber ">
+        <h3>等一等，我有辦法學程式嗎？</h3>
+        <h3>歡迎參加免費體驗</h3>
+        <br>
+        <h3>我要報名體驗課！</h3>
+        <h4>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdT8UVsoxBZYkUjecEMrmWP9Rk0iuGvYM4mdOQ-ImaJlrP-Mw/viewform ">
+                點我前往報名</a>
+        </h4>
+        <br>
+    </section>
+    <br>
+    <section id="course-intro " class="w3-container w3-center w3-blue ">
+        <p class="w3-xlarge ">來不及報名夏令營該怎麼辦？
+            <br> Learning forever, coding forever!
+            <br> 2018秋季班課程新選擇！
+        </p>
+        <h4>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf0IcTG_dWln8bggyIXYYaccd87Iw8mgJaET9-_amdauiP8nA/viewform ">
+                點我前往課程簡介</a>
+        </h4>
+    </section>
+    <center>
+
+    </center>
+
+    <br>
+    <div class="w3-container w3-teal">
+        <img id="tail-logo" src="html/images/ads/logo.png" style="width:30%">
+        <p id="title">快樂學程式體驗館
+            <br> 台北市中正區忠孝東路一段138號3樓
+            <br> 聯絡電話 (02) 2341-5471</p>
+    </div>
+
+
+
+    <script>
+        var slideIndex = 1;
+        showDivs(slideIndex);
+
+        function plusDivs(n) {
+            showDivs(slideIndex += n);
+        }
+
+        function showDivs(n) {
+            var i;
+            var x = document.getElementsByClassName("mySlides ");
+            if (n > x.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = x.length }
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none ";
+            }
+            x[slideIndex - 1].style.display = "block ";
+        }
+
+        var myIndex = 0;
+        carousel();
+
+        function carousel() {
+            var i;
+            var x = document.getElementsByClassName("mySlides ");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none ";
+            }
+            myIndex++;
+            if (myIndex > x.length) { myIndex = 1 }
+            x[myIndex - 1].style.display = "block ";
+            setTimeout(carousel, 8000);
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,159 @@
+<html>
+<title>My game, do myself!</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="gb2312">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<body>
+
+    <style>
+        div.w3-content {
+            width: 75%;
+        }
+
+        article.w3-container {
+            margin: 10px;
+        }
+
+        #tail-logo {
+            margin: 20px 25px;
+        }
+
+        #title {
+            margin-top: 2px;
+            margin-right: 25px;
+            margin-bottom: 20px;
+            margin-left: 25px;
+        }
+
+        #course-intro {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        #free-course {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    </style>
+
+    <div class="w3-container w3-teal">
+        <h3 class="w3-center">殺怪攻城、角色養成～太落伍
+            <br> 自己的遊戲自己寫，才夠酷！
+        </h3>
+    </div>
+    <br>
+
+    <div class="w3-container w3-center">
+        <h3>你還在玩別人設計的遊戲嗎？還被困在設計好的關卡中嗎？</h3>
+        <h3>自己的遊戲自己寫，讓你不只會玩，更學會寫遊戲！</h3>
+    </div>
+    <br>
+
+    <div class="w3-content w3-display-container">
+        <img class="mySlides" src="html/images/ads/01.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/02.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/03.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/04.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/05.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/06.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/07.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/08.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/09.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/10.JPG" style="width:100%">
+
+        <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+        <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+    </div>
+    <br>
+    <article class="w3-container w3-center">
+        <p class="w3-xlarge">樂學程式學院，
+            <br>透過 Scratch寫遊戲，
+            <br> 打破你對遊戲的想像。
+            <br> 從零建構、
+            <br>創造獨一無二的遊戲世界。
+            <br> 透過積木式的程式學習，
+            <br>奠定基礎，向上延伸，
+            <br> 遊戲開發中的流程、畫面、
+            <br>遊戲規則與關卡設計，
+            <br> 這些最酷的事都透過雙手打造！
+        </p>
+    </article>
+
+    <article class="w3-container w3-center">
+        <p class="w3-xlarge">製作遊戲再也不是夢想，
+            <br>就從此刻起，
+            <br> 加入我們的航程，
+            <br>一起搭上遊戲製作的船艦！
+            <br> 跟著一群 Gamers 和
+            <br>Makers 腦力激盪，
+            <br> 激起 Scratch 遊戲程式的浪花～</p>
+    </article>
+
+
+    <br>
+    <section id="free-course" class="w3-container w3-center w3-Amber">
+        <br> 歡迎對兒童程式開發有興趣的你/妳，
+        <br> 跟著在 Scratch 有豐富開發經驗的老師們，
+        <br> 大量引導與遊戲製作企劃，搭配電腦課程，
+        <br> 並運用數理知識與生活經驗結合，
+        <br> 培養孩子成為跨領域創客
+        <br>
+        <br>
+        <h3>歡迎參加免費體驗</h3>
+        <h4>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdT8UVsoxBZYkUjecEMrmWP9Rk0iuGvYM4mdOQ-ImaJlrP-Mw/viewform">
+                點我前往報名</a>
+        </h4>
+        <br>
+    </section>
+
+
+    <br>
+    <div class="w3-container w3-teal">
+        <img id="tail-logo" src="html/images/ads/logo.png" style="width:30%">
+        <p id="title">快樂學程式體驗館
+            <br> 台北市中正區忠孝東路一段138號3樓
+            <br> 聯絡電話 (02) 2341-5471</p>
+    </div>
+
+
+
+    <script>
+        var slideIndex = 1;
+        showDivs(slideIndex);
+
+        function plusDivs(n) {
+            showDivs(slideIndex += n);
+        }
+
+        function showDivs(n) {
+            var i;
+            var x = document.getElementsByClassName("mySlides");
+            if (n > x.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = x.length }
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            x[slideIndex - 1].style.display = "block";
+        }
+
+        var myIndex = 0;
+        carousel();
+
+        function carousel() {
+            var i;
+            var x = document.getElementsByClassName("mySlides");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            myIndex++;
+            if (myIndex > x.length) { myIndex = 1 }
+            x[myIndex - 1].style.display = "block";
+            setTimeout(carousel, 5000);
+        }
+
+    </script>
+
+</body>
+
+</html>

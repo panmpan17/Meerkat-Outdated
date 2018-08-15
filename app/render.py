@@ -31,6 +31,7 @@ access_deny = """
 
 # template_dir = os.path.join(os.path.dirname(__file__), 'template')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader("html/template"))
+jinja_env2 = jinja2.Environment(loader = jinja2.FileSystemLoader("html/template", encoding='gbk'))
 abs_cwd = os.path.join(os.getcwd(), os.path.dirname(__file__))
 
 def render(src, params={}):
@@ -38,6 +39,11 @@ def render(src, params={}):
     t = jinja_env.get_template(src)
     return t.render(params)
 
+def render_ads(src, params={}):
+    # print(os.getcwd())
+    t = jinja_env2.get_template(src)
+    return t.render(params)
+	
 render_config = {
     "url_root":"/",
     }
@@ -312,6 +318,18 @@ class UserCaseHandler(object):
     @cherrypy.expose
     def contactus(self):
         return render("contactus.html")
+		
+    @cherrypy.expose
+    def ads1(self):
+        return render_ads("ads/p1-gamemyself.html")
+
+    @cherrypy.expose
+    def ads2(self):
+        return render_ads("ads/p2-customlearning.html")
+		
+    @cherrypy.expose
+    def ads3(self):
+        return render_ads("ads/p3-summercamp.html")
 
 class ClassHandler(object):
     _root = "/class/"
