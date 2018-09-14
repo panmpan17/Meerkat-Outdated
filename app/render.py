@@ -321,7 +321,7 @@ class UserCaseHandler(object):
 		
     @cherrypy.expose
     def ads1(self):
-        return render_ads("ads/p1-gamemyself.html")
+        return render("ads/p1-gamemyself.html")
 
     @cherrypy.expose
     def ads2(self):

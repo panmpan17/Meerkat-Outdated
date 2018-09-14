@@ -5,7 +5,8 @@ import json
 
 class App():
     SITE_CONF = {
-        "server.socket_host": "0.0.0.0",
+        # "server.socket_host": "0.0.0.0",
+        "server.socket_host": "192.168.50.54",
         "server.socket_port": 80,
         "server.thread_pool": 100,
         "server.max_request_body_size": 0, # no size limitation of body for chunked/streaming

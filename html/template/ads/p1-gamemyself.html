@@ -1,159 +1,318 @@
+<!DOCTYPE html>
 <html>
-<title>My game, do myself!</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" charset="gb2312">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
-<body>
+  <head>
 
-    <style>
-        div.w3-content {
-            width: 75%;
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="樂學程式學院辦學宗旨要讓孩子快樂學習程式,輕鬆踏出程式設計的第一步。以學生為本、以程式為體的翻轉教室學習,還能養成自學的好習慣,讓家長看見孩子的自信和轉變。彈指之間為自己的未來創造無限可能。">
+    <meta name="copyright" content="樂學科技">
+	<meta name="author" content="Coding4fun">
 
-        article.w3-container {
-            margin: 10px;
-        }
+    <title>My game, do it myself!</title>
 
-        #tail-logo {
-            margin: 20px 25px;
-        }
+    <!-- Bootstrap core CSS -->
+    <link href="html/template/ads/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-        #title {
-            margin-top: 2px;
-            margin-right: 25px;
-            margin-bottom: 20px;
-            margin-left: 25px;
-        }
+    <!-- Custom fonts for this template -->
+    <link href="html/template/ads/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
 
-        #course-intro {
-            margin-left: 10px;
-            margin-right: 10px;
-        }
+    <!-- Plugin CSS -->
+    <link href="html/template/ads/vendor/magnific-popup/magnific-popup.css" rel="stylesheet">
 
-        #free-course {
-            margin-left: 10px;
-            margin-right: 10px;
-        }
-    </style>
-
-    <div class="w3-container w3-teal">
-        <h3 class="w3-center">���ֹ��ǡ���ɫ�B�ɡ�̫����
-            <br> �Լ����[���Լ������ŉ�ᣡ
-        </h3>
-    </div>
-    <br>
-
-    <div class="w3-container w3-center">
-        <h3>��߀����e���OӋ���[��᣿߀�������OӋ�õ��P���І᣿</h3>
-        <h3>�Լ����[���Լ�����׌�㲻ֻ���棬���W�����[��</h3>
-    </div>
-    <br>
-
-    <div class="w3-content w3-display-container">
-        <img class="mySlides" src="html/images/ads/01.JPG" style="width:100%">
-        <img class="mySlides" src="html/images/ads/02.JPG" style="width:100%">
-        <img class="mySlides" src="html/images/ads/03.JPG" style="width:100%">
-        <img class="mySlides" src="html/images/ads/04.JPG" style="width:100%">
-        <img class="mySlides" src="html/images/ads/05.JPG" style="width:100%">
-        <img class="mySlides" src="html/images/ads/06.JPG" style="width:100%">
-        <img class="mySlides" src="html/images/ads/07.JPG" style="width:100%">
-        <img class="mySlides" src="html/images/ads/08.JPG" style="width:100%">
-        <img class="mySlides" src="html/images/ads/09.JPG" style="width:100%">
-        <img class="mySlides" src="html/images/ads/10.JPG" style="width:100%">
-
-        <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
-        <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
-    </div>
-    <br>
-    <article class="w3-container w3-center">
-        <p class="w3-xlarge">���W��ʽ�WԺ��
-            <br>͸�^ Scratch���[��
-            <br> �����㌦�[�������
-            <br> ���㽨����
-            <br>���쪚һ�o�����[�����硣
-            <br> ͸�^�eľʽ�ĳ�ʽ�W����
-            <br>�춨���A���������죬
-            <br> �[���_�l�е����̡����桢
-            <br>�[��Ҏ�t�c�P���OӋ��
-            <br> �@Щ�����¶�͸�^�p�ִ��죡
-        </p>
-    </article>
-
-    <article class="w3-container w3-center">
-        <p class="w3-xlarge">�u���[����Ҳ���ǉ��룬
-            <br>�͏Ĵ˿���
-            <br> �����҂��ĺ��̣�
-            <br>һ������[���u���Ĵ�Ş��
-            <br> ����һȺ Gamers ��
-            <br>Makers �X�����U��
-            <br> ���� Scratch �[���ʽ���˻���</p>
-    </article>
+    <!-- Custom styles for this template -->
+    <link href="html/template/ads/css/p1-creative.css" rel="stylesheet">
 
 
-    <br>
-    <section id="free-course" class="w3-container w3-center w3-Amber">
-        <br> �gӭ����ͯ��ʽ�_�l���dȤ����/����
-        <br> ������ Scratch ���S���_�l�����ώ�����
-        <br> ���������c�[���u���󄝣�������X�n�̣�
-        <br> �K�\�Ô���֪�R�c����Y�ϣ�
-        <br> ���B���ӳɞ���I�򄓿�
-        <br>
-        <br>
-        <h3>�gӭ�������M�w�</h3>
-        <h4>
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdT8UVsoxBZYkUjecEMrmWP9Rk0iuGvYM4mdOQ-ImaJlrP-Mw/viewform">
-                �c��ǰ������</a>
-        </h4>
-        <br>
+  </head>
+
+  <body id="page-top">
+
+    <!-- Navigation -->	
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">樂學程式學院</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#courses">Courses</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#contact">Contact us</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+	
+	
+    <header class="masthead text-center text-white d-flex">
+      <div class="container my-auto">
+        <div class="row">
+          <div class="col-lg-10 mx-auto">
+            <h1 class="text-uppercase shadow-text">
+              <strong>殺怪攻城、角色養成～太落伍</strong>
+			  <br>
+			  <strong>自己的遊戲自己寫，才夠酷！</strong>
+            </h1>
+            <hr>
+          </div>
+          <div class="col-lg-8 mx-auto">
+            <p class="text-strong text-lighted mb-5 shadow-text" >你還在玩別人設計的遊戲嗎？還被困在設計好的關卡中嗎？<br> 自己的遊戲自己寫，讓你不只會玩，更學會寫遊戲！</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="bg-primary" id="about">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto text-center">
+            <h2 class="section-heading text-white text-strong shadow-text">樂學程式學院</h2>
+			<img src="html/template/ads/img/p1/logo.png">
+            <hr class="light my-4">
+            <p class="text-faded mb-4">透過 Scratch寫遊戲，打破你對遊戲的想像。
+            <br> 從零建構、創造獨一無二的遊戲世界。
+            <br> 透過積木式的程式學習，奠定基礎，向上延伸，
+            <br> 遊戲開發中的流程、畫面、遊戲規則與關卡設計，
+            <br> 這些最酷的事都透過雙手打造！</p>
+            <a class="btn btn-light btn-xl js-scroll-trigger" href="https://docs.google.com/forms/d/e/1FAIpQLSdT8UVsoxBZYkUjecEMrmWP9Rk0iuGvYM4mdOQ-ImaJlrP-Mw/viewform">快來參加免費體驗課程</a>
+          </div>
+        </div>
+      </div>
     </section>
 
+	<!-- 樂學課程 -->
+    <section id="courses">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <h2 class="section-heading text-strong">樂學課程</h2>
+            <hr class="my-4">
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-3 col-md-6 text-center">
+            <div class="service-box mt-5 mx-auto">
+              <!-- <i class="fas fa-4x fa-gem text-primary mb-3 sr-icon-1"></i> -->
+			  <img src="html/template/ads/img/p1/scratch.png">
+              <h3 class="mb-3">Scratch 基礎班</h3>
+              <p class="text-muted mb-0">在探索、遊戲與創作中，了解 Scratch 的全貌，給孩子全方位的學習，開啟學習程式興趣，養成孩子探索與嘗試的自學能力</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 text-center">
+            <div class="service-box mt-5 mx-auto">
+              <!-- <i class="fas fa-4x fa-paper-plane text-primary mb-3 sr-icon-2"></i> -->
+			  <img src="html/template/ads/img/p1/scratch2.png">
+              <h3 class="mb-3">Scratch 程式工作坊</h3>
+              <p class="text-muted mb-0">本著翻轉教室的自主精神，引導孩子創作、分析問題、解決問題，讓孩子多元發展，展現自己的巧思與設計，培養運算思維</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 text-center">
+            <div class="service-box mt-5 mx-auto">
+              <!-- <i class="fas fa-4x fa-code text-primary mb-3 sr-icon-3"></i> -->
+              <img src="html/template/ads/img/p1/python.png">
+			  <h3 class="mb-3">Python 基礎班</h3>
+              <p class="text-muted mb-0">嘗試並理解程式語言為何要這樣設計，了解程式的架構與運作方式。邊學邊動手，克服打字與思考的障礙，培養自學以及解決問題的能力</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 text-center">
+            <div class="service-box mt-5 mx-auto">
+              <!-- <i class="fas fa-4x fa-heart text-primary mb-3 sr-icon-4"></i> -->
+			  <img src="html/template/ads/img/p1/udacity.png">
+              <h3 class="mb-3">Udacity 工作坊</h3>
+              <p class="text-muted mb-0">根據 Udacity 的開放課程 (http://www.udacity.com) 提供實體課程。了解學生特質與興趣，建議不同的課程。自主學習，老師輔助學生克服英文障礙，並培養解決問題的能力</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <br>
-    <div class="w3-container w3-teal">
-        <img id="tail-logo" src="html/images/ads/logo.png" style="width:30%">
-        <p id="title">�옷�W��ʽ�w��^
-            <br> ̨���������^��Т�|·һ��138̖3��
-            <br> �j�Ԓ (02) 2341-5471</p>
-    </div>
+	<!-- images -->
+    <section class="p-0" id="portfolio">
+      <div class="container-fluid p-0">
+        <div class="row no-gutters popup-gallery">
+          <div class="col-lg-4 col-sm-6">
+              <a class="portfolio-box" href="html/template/ads/img/p1/01.JPG">
+			  <img class="img-fluid" src="html/template/ads/img/p1/01.JPG" alt="">
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    專題製作
+                  </div>
+                  <div class="project-name">
+                    運用動畫和遊戲提升學習樂趣
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-4 col-sm-6">
+            <a class="portfolio-box" href="html/template/ads/img/p1/02.JPG">
+              <img class="img-fluid" src="html/template/ads/img/p1/02.JPG" alt="">
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    口語表達
+                  </div>
+                  <div class="project-name">
+                    練習發表、口說與增強邏輯能力
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-4 col-sm-6">
+            <a class="portfolio-box" href="html/template/ads/img/p1/03.JPG">
+              <img class="img-fluid" src="html/template/ads/img/p1/03.JPG" alt="">
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    團體討論
+                  </div>
+                  <div class="project-name">
+                    集思廣益，提升創造力
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-4 col-sm-6">
+            <a class="portfolio-box" href="html/template/ads/img/p1/04.JPG" >
+              <img class="img-fluid" src="html/template/ads/img/p1/04.JPG" alt="">
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    程式研究
+                  </div>
+                  <div class="project-name">
+                    培養好奇、探究問題的根本
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-4 col-sm-6">
+            <a class="portfolio-box" href="html/template/ads/img/p1/05.JPG">
+              <img class="img-fluid" src="html/template/ads/img/p1/05.JPG" alt="">
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    自主學習
+                  </div>
+                  <div class="project-name">
+                    嘗試不同解決問題的方法
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-4 col-sm-6">
+            <a class="portfolio-box" href="html/template/ads/img/p1/06.JPG">
+              <img class="img-fluid" src="html/template/ads/img/p1/06.JPG" alt="">
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    Coding for Fun
+                  </div>
+                  <div class="project-name">
+                    快樂學程式
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <section class="bg-dark text-white">
+      <div class="container text-center">
+        <h4 class="mb-4">歡迎對兒童程式開發有興趣的你/妳，
+		<br>跟著在 Scratch 有豐富開發經驗的老師們，
+        <br> 大量引導與遊戲製作企劃，搭配電腦課程，並運用數理知識與生活經驗結合，
+        <br> 培養孩子成為跨領域創客</h4>
+        <a class="btn btn-light btn-xl sr-button" href="https://docs.google.com/forms/d/e/1FAIpQLSdT8UVsoxBZYkUjecEMrmWP9Rk0iuGvYM4mdOQ-ImaJlrP-Mw/viewform">報名免費體驗課程</a>
+      </div>
+    </section>
 
+	<!--
+	<section id="">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <h2 class="section-heading">Scratch 能力測驗</h2>
+            <hr class="my-4">
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-3 col-md-6 text-center">
+            <div class="service-box mt-5 mx-auto">
+              <i class="fas fa-4x fa-gem text-primary mb-3 sr-icon-1"></i>
+              <h3 class="mb-3">IMG</h3>
+              <p class="text-muted mb-0">XXX</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 text-center">
+            <div class="service-box mt-5 mx-auto">
+              <i class="fas fa-4x fa-heart text-primary mb-3 sr-icon-4"></i>
+              <h3 class="mb-3">Description</h3>
+              <p class="text-muted mb-0">abcd</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+	-->
+	
+    <section id="contact">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto text-center">
+            <h2 class="section-heading">Contact US!</h2>
+			<img src="html/template/ads/img/p1/unic-5.png">
+            <hr class="my-4">
+            <p class="mb-5 tail-info">彈指之間，創建未來<br><br>快樂學程式體驗館<br>台北市中正區忠孝東路一段138號3樓</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-4 ml-auto text-center">
+            <i class="fas fa-phone fa-3x mb-3 sr-contact-1"></i>
+            <p>(02) 2341-5471</p>
+          </div>
+          <div class="col-lg-4 mr-auto text-center">
+            <i class="fas fa-envelope fa-3x mb-3 sr-contact-2"></i>
+            <p>
+              <a href="mailto:your-email@your-domain.com">coding4fun.info@gmail.com</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <script>
-        var slideIndex = 1;
-        showDivs(slideIndex);
+    <!-- Bootstrap core JavaScript -->
+    <script src="html/template/ads/vendor/jquery/jquery.min.js"></script>
+    <script src="html/template/ads/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-        function plusDivs(n) {
-            showDivs(slideIndex += n);
-        }
+    <!-- Plugin JavaScript -->
+    <script src="html/template/ads/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="html/template/ads/vendor/scrollreveal/scrollreveal.min.js"></script>
+    <script src="html/template/ads/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
 
-        function showDivs(n) {
-            var i;
-            var x = document.getElementsByClassName("mySlides");
-            if (n > x.length) { slideIndex = 1 }
-            if (n < 1) { slideIndex = x.length }
-            for (i = 0; i < x.length; i++) {
-                x[i].style.display = "none";
-            }
-            x[slideIndex - 1].style.display = "block";
-        }
+    <!-- Custom scripts for this template -->
+    <script src="html/template/ads/js/p1-creative.js"></script>
 
-        var myIndex = 0;
-        carousel();
-
-        function carousel() {
-            var i;
-            var x = document.getElementsByClassName("mySlides");
-            for (i = 0; i < x.length; i++) {
-                x[i].style.display = "none";
-            }
-            myIndex++;
-            if (myIndex > x.length) { myIndex = 1 }
-            x[myIndex - 1].style.display = "block";
-            setTimeout(carousel, 7000);
-        }
-
-    </script>
-
-</body>
+  </body>
 
 </html>
