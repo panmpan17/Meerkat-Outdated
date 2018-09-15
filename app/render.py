@@ -325,7 +325,7 @@ class UserCaseHandler(object):
 
     @cherrypy.expose
     def ads2(self):
-        return render_ads("ads/p2-customlearning.html")
+        return render("ads/p2-customlearning.html")
 		
     @cherrypy.expose
     def ads3(self):

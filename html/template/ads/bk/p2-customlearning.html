@@ -1,0 +1,151 @@
+<html>
+<title>Flipping classroom</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="gb2312">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<body>
+
+    <style>
+        div.w3-content {
+            width: 75%;
+        }
+
+        article.w3-container {
+            margin: 10px;
+        }
+
+        #tail-logo {
+            margin: 20px 25px;
+        }
+
+        #title {
+            margin-top: 2px;
+            margin-right: 25px;
+            margin-bottom: 20px;
+            margin-left: 25px;
+        }
+
+        #course-intro {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        #free-course {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    </style>
+
+    <div class="w3-container w3-teal">
+        <h2 class="w3-center">Coding For Fun 的翻轉教室</h2>
+        <h3 class="w3-center">學習由自己掌握</h3>
+    </div>
+    <br>
+
+    <div class="w3-container w3-center">
+        <h3>學習程式再也不是
+            <br>無止盡的修改與模仿</h3>
+        <h3>在樂學程式學院，
+            <br>我們更強調自學與解決問題能力。</h3>
+    </div>
+    <br>
+
+    <div class="w3-content w3-display-container">
+        <img class="mySlides" src="html/images/ads/01.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/02.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/03.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/04.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/05.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/06.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/07.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/08.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/09.JPG" style="width:100%">
+        <img class="mySlides" src="html/images/ads/10.JPG" style="width:100%">
+
+        <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+        <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+    </div>
+    <br>
+    <article class="w3-container w3-center">
+        <p class="w3-xlarge">首間採用「翻轉教室」
+            <br>方式教授程式課程，
+            <br> 讓學習不再是
+            <br>一成不變的你說我聽，
+            <br> 孩子遠比您想像的
+            <br>更能掌握學習進度。
+            <br>
+            <br> 老師現場引導，
+            <br>協助學生吸收與理解，
+            <br> 翻轉教室不只讓
+            <br>學生提升吸收成效，
+            <br> 也透過動手做，
+            <br>紮實思考深度與廣度。</p>
+    </article>
+    <br>
+    <article class="w3-container w3-center">
+        <p class="w3-xlarge">每位學生皆依照自己的
+            <br>理解速度學程式，
+            <br> 再也不用在班上
+            <br>等待/追趕別人的進度。
+            <br> 按照自己的步調開心學習！
+        </p>
+    </article>
+    <br>
+    <section id="free-course" class="w3-container w3-center w3-Amber">
+        <h3>歡迎參加免費體驗</h3>
+        <br>
+        <h3>我要報名體驗課！</h3>
+        <h4>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdT8UVsoxBZYkUjecEMrmWP9Rk0iuGvYM4mdOQ-ImaJlrP-Mw/viewform">
+                點我前往報名</a>
+        </h4>
+        <br>
+    </section>
+    <br>
+    <div class="w3-container w3-teal">
+        <img id="tail-logo" src="html/images/ads/logo.png" style="width:30%">
+        <p id="title">快樂學程式體驗館
+            <br> 台北市中正區忠孝東路一段138號3樓
+            <br> 聯絡電話 (02) 2341-5471</p>
+    </div>
+
+
+    <script>
+        var slideIndex = 1;
+        showDivs(slideIndex);
+
+        function plusDivs(n) {
+            showDivs(slideIndex += n);
+        }
+
+        function showDivs(n) {
+            var i;
+            var x = document.getElementsByClassName("mySlides");
+            if (n > x.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = x.length }
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            x[slideIndex - 1].style.display = "block";
+        }
+
+        var myIndex = 0;
+        carousel();
+
+        function carousel() {
+            var i;
+            var x = document.getElementsByClassName("mySlides");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            myIndex++;
+            if (myIndex > x.length) { myIndex = 1 }
+            x[myIndex - 1].style.display = "block";
+            setTimeout(carousel, 7000);
+        }
+
+    </script>
+
+</body>
+
+</html>
