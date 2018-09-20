@@ -327,9 +327,17 @@ class UserCaseHandler(object):
     def ads2(self):
         return render("ads/p2-customlearning.html")
 		
+    #@cherrypy.expose
+    #def ads3(self):
+    #    return render_ads("ads/p3-summercamp.html")
+
     @cherrypy.expose
-    def ads3(self):
-        return render_ads("ads/p3-summercamp.html")
+    def ads4(self):
+        return render("ads/p4-teachertraining.html")
+
+    @cherrypy.expose
+    def ads5(self):
+        return render("ads/p5-startnewbusiness.html")
 
 class ClassHandler(object):
     _root = "/class/"
