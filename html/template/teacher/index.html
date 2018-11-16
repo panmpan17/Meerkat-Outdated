@@ -947,11 +947,22 @@
 			}
 			catch (err) {}
 		});
-	</script>
 
-	<script src="html/js/teacher/classroom.js" type="text/javascript" charset="utf-8"></script>
-	<script src="html/js/teacher/createclassroom.js" type="text/javascript" charset="utf-8"></script>
-	<script src="html/js/teacher/ad.js" type="text/javascript" charset="utf-8"></script>
+		var NONCACHE_SCRIPT = [
+			"html/js/teacher/classroom.js",
+			"html/js/teacher/createclassroom.js",
+			"html/js/teacher/ad.js",
+		];
+
+		(function(){
+			var timestamp = new Date().getTime();
+			for (var url of NONCACHE_SCRIPT) {
+				var script = $("<script>");
+				script[0].src = url + "?d=" + timestamp;
+				$("body").append(script);
+			}
+		})();
+	</script>
 </body>
 
 </html>
