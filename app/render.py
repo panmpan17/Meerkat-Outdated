@@ -2,8 +2,6 @@ import cherrypy
 import os
 import jinja2
 from uuid import uuid1 as uuid
-from app.model import Classroom, Teacher
-from sqlalchemy.sql import select, and_
 import requests
 
 
@@ -30,23 +28,27 @@ access_deny = """
 """
 
 # template_dir = os.path.join(os.path.dirname(__file__), 'template')
-jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader("html/template"))
-jinja_env2 = jinja2.Environment(loader = jinja2.FileSystemLoader("html/template", encoding='gbk'))
+jinja_env = jinja2.Environment(
+    loader=jinja2.FileSystemLoader("html/template"))
+jinja_env2 = jinja2.Environment(
+    loader=jinja2.FileSystemLoader("html/template", encoding='gbk'))
 abs_cwd = os.path.join(os.getcwd(), os.path.dirname(__file__))
+
 
 def render(src, params={}):
     # print(os.getcwd())
     t = jinja_env.get_template(src)
     return t.render(params)
 
+
 def render_ads(src, params={}):
     # print(os.getcwd())
     t = jinja_env2.get_template(src)
     return t.render(params)
-	
-render_config = {
-    "url_root":"/",
-    }
+
+
+render_config = {"url_root": "/"}
+
 
 class UserCaseHandler(object):
     _root = "/"
@@ -55,10 +57,9 @@ class UserCaseHandler(object):
         "tools.keytool.on": True,
         "tools.emailvalidtool.on": True,
         "tools.dbtool.on": True,
-        "tools.clsromtool.on": True,
-        # "tools.caching.on": True,
-        # "tools.caching.delay": 3600,
-        }
+        "tools.clsromtool.on": True}
+    # "tools.caching.on": True,
+    # "tools.caching.delay": 3600,
 
     @staticmethod
     def error_404(status, message, traceback, version):
@@ -75,7 +76,7 @@ class UserCaseHandler(object):
             cookie = cherrypy.request.cookie
             try:
                 key = str(cookie["key"].value)
-            except:
+            except Exception:
                 raise cherrypy.HTTPRedirect("/")
 
             key_valid = key_mgr.get_key(key)
@@ -103,7 +104,7 @@ class UserCaseHandler(object):
                     size += len(data)
                     f.write(data)
                 f.close()
-            except:
+            except Exception:
                 if os.path.isfile(filename):
                     os.remove(filename)
                 filesname.pop()
@@ -121,7 +122,7 @@ class UserCaseHandler(object):
                     size += len(data)
                     f2.write(data)
                 f2.close()
-            except:
+            except Exception:
                 if os.path.isfile(filename):
                     os.remove(filename)
                 filesname.pop()
@@ -139,32 +140,31 @@ class UserCaseHandler(object):
                     size += len(data)
                     f3.write(data)
                 f3.close()
-            except:
+            except Exception:
                 if os.path.isfile(filename):
                     os.remove(filename)
                 filesname.pop()
 
             filesname = [f.replace(path, "/downloads/") for f in filesname]
-                    
+
             # link file to question
             r = None
             cookie = cherrypy.request.cookie
-            data = {
-                "key":key,
-                "filepath":filesname
-            }
+            data = {"key": key, "filepath": filesname}
 
             if "questionkey" in kwargs:
                 id_ = int(kwargs["questionkey"])
                 data["qid"] = id_
 
-                r = requests.post("http://0.0.0.0/rest/1/question/fileattach", json=data)
+                r = requests.post("http://0.0.0.0/rest/1/question/fileattach",
+                                  json=data)
                 print(r.text, id_)
             elif "answerkey" in kwargs:
                 id_ = str(kwargs["answerkey"])
                 data["aid"] = id_
 
-                r = requests.post("http://0.0.0.0/rest/1/answer/fileattach", json=data)
+                r = requests.post("http://0.0.0.0/rest/1/answer/fileattach",
+                                  json=data)
             else:
                 raise cherrypy.HTTPRedirect("/question")
 
@@ -226,7 +226,7 @@ class UserCaseHandler(object):
         cookie = cherrypy.request.cookie
         try:
             key = str(cookie["key"].value)
-        except:
+        except Exception:
             raise cherrypy.HTTPRedirect("/")
 
         r = requests.put("http://0.0.0.0/rest/1/user/emailvalid", json={
@@ -258,7 +258,8 @@ class UserCaseHandler(object):
         path += "/".join(args)
         print(path)
         if os.path.isfile(path):
-            return cherrypy.lib.static.serve_file(path, "application/octet-stream", "")
+            return cherrypy.lib.static.serve_file(
+                path, "application/octet-stream", "")
         else:
             raise cherrypy.HTTPError(404)
 
@@ -318,7 +319,7 @@ class UserCaseHandler(object):
     @cherrypy.expose
     def contactus(self):
         return render("contactus.html")
-		
+
     @cherrypy.expose
     def ads1(self):
         return render("ads/p1-gamemyself.html")
@@ -326,9 +327,8 @@ class UserCaseHandler(object):
     @cherrypy.expose
     def ads2(self):
         return render("ads/p2-customlearning.html")
-		
-    #@cherrypy.expose
-    #def ads3(self):
+    # @cherrypy.expose
+    # def ads3(self):
     #    return render_ads("ads/p3-summercamp.html")
 
     @cherrypy.expose
@@ -339,11 +339,10 @@ class UserCaseHandler(object):
     def ads5(self):
         return render("ads/p5-startnewbusiness.html")
 
+
 class ClassHandler(object):
     _root = "/class/"
-    _cp_config = {
-        "tools.classestool.on": True,
-        }
+    _cp_config = {"tools.classestool.on": True}
 
     @cherrypy.expose
     def c(self, class_id):
@@ -353,12 +352,12 @@ class ClassHandler(object):
             raise cherrypy.HTTPError(404)
         return render("class.html", {"class_id": class_id, "subject": subject})
 
+
 class TeacherHandler(object):
     _root = "/teacher/"
     _cp_config = {
         "tools.keytool.on": True,
-        "tools.filetool.on": True,
-        }
+        "tools.filetool.on": True}
 
     @cherrypy.expose
     def index(self, *args, **kwargs):
@@ -376,7 +375,7 @@ class TeacherHandler(object):
             try:
                 key = str(cookie["key"].value)
                 id_ = str(cookie["id"].value)
-            except:
+            except Exception:
                 raise cherrypy.HTTPRedirect("/")
 
             key_valid = key_mgr.get_key(key)
@@ -390,7 +389,7 @@ class TeacherHandler(object):
                 if not os.path.isdir(path + "avatar/"):
                     os.mkdir(path + "avatar/")
 
-                filename = path + f"avatar/{id_}"#.{type_}"
+                filename = path + f"avatar/{id_}"  # .{type_}"
                 f = open(filename, "wb")
                 while True:
                     data = avatar_file.file.read(8192)
@@ -398,7 +397,7 @@ class TeacherHandler(object):
                         break
                     f.write(data)
                 f.close()
-            except:
+            except Exception:
                 if os.path.isfile(filename):
                     os.remove(filename)
 
@@ -410,8 +409,6 @@ class TeacherHandler(object):
     def advertise(self):
         return render("teacher/advertise.html")
 
-
-
-
-
-
+    @cherrypy.expose
+    def prove(self):
+        return render("teacher/prove.html")
