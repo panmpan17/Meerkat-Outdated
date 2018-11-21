@@ -569,6 +569,13 @@ class UserRestView(View):
             raise cherrypy.HTTPError(404)
 
     @cherrypy.expose
+    def me(self, *args, **kwargs):
+        if cherrypy.request.method == "GET":
+            return self.check_login_u(kwargs)
+        else:
+            raise cherrypy.HTTPError(404)
+
+    @cherrypy.expose
     def emailvalid(self, *args, **kwargs):
         meta, conn = cherrypy.request.db
         email_valid = cherrypy.request.email_valid

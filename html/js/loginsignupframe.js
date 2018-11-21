@@ -153,74 +153,7 @@ function logout () {
 }
 
 function showinfo () {
-	key = getCookie("key");
-	id = getCookie("id");
-	string_param = {"key":key, "id":id}
-	$.ajax({
-		url: host + "user/",
-		type: "GET",
-		data: string_param,
-		success: function (msg) {
-			$("#change-nickname")[0].value = msg["nickname"]
-			$("#info-userid")[0].innerHTML = msg["userid"];
-			$("#info-point")[0].innerHTML = msg["point"];
-			$("#info-nick")[0].innerHTML = msg["nickname"];
-			$("#info-birth")[0].innerHTML = msg["birth_year"];
-			$("#info-job")[0].innerHTML = msg["job"];
-
-			if (msg["active"]) {
-				$("#info-email")[0].innerHTML = msg["email"];
-			}
-			else {
-				$("#info-email")[0].innerHTML = msg["email"];
-			}
-
-			$("#info-level")[0].innerHTML = "一般";
-			point = msg["point"];
-			if (point > 1000) {$("#info-level")[0].innerHTML = "鑽石"}
-			else if (point > 500) {$("#info-level")[0].innerHTML = "白金"}
-			else if (point > 100) {$("#info-level")[0].innerHTML = "黃金"}
-
-			if (msg["active"]) {
-				$("#info-active #success").show();
-				$("#info-active #resent").hide();
-				$("#info-active #checkcode").hide();
-			}
-			else {
-				$("#info-active #success").hide();
-
-				if (msg["email_valid"]) {
-					$("#info-active #checkcode").show();
-					$("#info-active #resent").hide();
-				}
-				else {
-					$("#info-active #checkcode").hide();
-					$("#info-active #resent").show();
-				}
-			}
-
-			if (!msg["admin"]) {
-				try {
-					$("#userinfo")[0].childNodes[1].removeChild($("#info-admin")[0])
-				}
-				catch(err) {}
-			}
-			if (msg["type"] == 0) {
-				try {
-					$("#userinfo")[0].childNodes[1].removeChild($("#info-teacher")[0])
-				}
-				catch(err) {}
-			}
-			
-			$("#info-frame").modal("show");
-		},
-		error: function (msg) {
-			reload = confirm("請重新登錄");
-			if (reload) {
-				show_popup("login-frame");
-			}
-		}
-	})
+	$("#info-frame").modal("show");
 }
 
 function resentmail () {
@@ -451,3 +384,92 @@ function fgpwdsendmail () {
 		}
 	})
 }
+
+
+$(document).ready(function() {
+	key = getCookie("key");
+	if (key == "") {
+		$(".login-menu").hide();
+		return;
+	}
+
+	$.ajax({
+		url: host + "user/me",
+		type: "GET",
+		data: {"key":key},
+		success: function (msg) {
+			// Set account menu bar name
+			if (msg.userid.length > 12) {
+				msg.userid = msg.userid.substring(0, 5) + "-"
+			}
+			$("[name=account-name]").html(msg.userid);
+			$(".non-login-menu").hide();
+
+			// Set info popup context
+			$("#change-nickname")[0].value = msg.nickname;
+			$("#info-userid")[0].innerHTML = msg.userid;
+			$("#info-point")[0].innerHTML = msg.point;
+			$("#info-nick")[0].innerHTML = msg.nickname;
+			$("#info-birth")[0].innerHTML = msg.birth_year;
+			$("#info-job")[0].innerHTML = msg.job;
+
+			if (msg.active) {
+				$("#info-email")[0].innerHTML = msg.email;
+			}
+			else {
+				$("#info-email")[0].innerHTML = msg.email;
+			}
+
+			$("#info-level")[0].innerHTML = "一般";
+			point = msg.point;
+			if (point > 1000) {$("#info-level")[0].innerHTML = "鑽石"}
+			else if (point > 500) {$("#info-level")[0].innerHTML = "白金"}
+			else if (point > 100) {$("#info-level")[0].innerHTML = "黃金"}
+
+			if (msg.active) {
+				$("#info-active #success").show();
+				$("#info-active #resent").hide();
+				$("#info-active #checkcode").hide();
+			}
+			else {
+				$("#info-active #success").hide();
+
+				if (msg.email_valid) {
+					$("#info-active #checkcode").show();
+					$("#info-active #resent").hide();
+				}
+				else {
+					$("#info-active #checkcode").hide();
+					$("#info-active #resent").show();
+				}
+			}
+
+			if (!msg.admin) {
+				try {
+					$("#userinfo")[0].childNodes[1].removeChild($("#info-admin")[0])
+				}
+				catch(err) {}
+			}
+			else {
+				var adminelement = $(`<li class="login-menu"><a href="/admin">管理員</a></li>`)[0];
+				var dropdown = $("#login-menu-dropdown")[0]
+				dropdown.insertBefore(adminelement,dropdown.children[dropdown.children.length - 1]);
+			}
+			if (msg.type == 0) {
+				try {
+					$("#userinfo")[0].childNodes[1].removeChild($("#info-teacher")[0])
+				}
+				catch(err) {}
+			}
+			else {
+				var teacherelement = $(`<li class="login-menu"><a href="/teacher">教師</a></li>`)[0];
+				var dropdown = $("#login-menu-dropdown")[0]
+				dropdown.insertBefore(teacherelement,dropdown.children[dropdown.children.length - 2]);
+			}
+		},
+		error: function (msg) {
+			$(".login-menu").hide();
+			return;
+		}
+	})
+});
