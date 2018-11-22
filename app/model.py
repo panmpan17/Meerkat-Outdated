@@ -2,10 +2,9 @@ from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from sqlalchemy import Boolean, DateTime, Text, ARRAY, JSON, Time, Date
 from datetime import datetime, timedelta
 from cherrypy import HTTPError as httperror
-from uuid import uuid1
 from hashlib import sha256
-import os
 # from pytz import timezone
+
 
 def GMT(t):
     # G = timezone("GMT")
@@ -14,11 +13,13 @@ def GMT(t):
         t += timedelta(hours=8)
         fmt = '%Y / %m / %d %H:%M'
         return t.strftime(fmt)
-    except:
+    except Exception:
         return None
+
 
 def hash(v):
     return sha256(v.encode()).hexdigest()
+
 
 class ErrMsg:
     NOT_DICT = "Must be a dictionary"
@@ -26,6 +27,7 @@ class ErrMsg:
     MISS_PARAM = "The '{}' is missing."
     NOT_INT = "'{}' must be a integer"
     CANT_INPUT = "This param is autoincrement '{}'"
+
 
 class User(object):
     TABLE_NAME = "tb_user"
@@ -46,24 +48,30 @@ class User(object):
 
     @classmethod
     def create_schema(cls, db_engine, db_meta, euf=None):
-        cls.user_t = Table(cls.TABLE_NAME, db_meta,
+        cls.user_t = Table(
+            cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
-            Column("userid", String, nullable=False, autoincrement=False, unique=True),
+            Column("userid", String, nullable=False, autoincrement=False,
+                   unique=True),
             Column("password", String, nullable=False, autoincrement=False),
             Column("email", String, nullable=False, autoincrement=False),
             Column("birth_year", Integer, nullable=False, autoincrement=False),
             Column("nickname", String, nullable=False, autoincrement=False),
             Column("job", String, nullable=True, autoincrement=False),
-            Column("point", Integer, default=0, nullable=True, autoincrement=True),
-            # Column("admin", Boolean, default=False, nullable=True, autoincrement=True),
-            Column("expert", Integer, default=0, nullable=True, autoincrement=True),
-            Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
-            Column("last_login", DateTime, default=datetime.utcnow, onupdate=datetime.utcnow,
-                autoincrement=True),
-            Column("active", Boolean, default=False, nullable=True, autoincrement=True),
-            Column("disabled", Boolean, default=False, nullable=True, autoincrement=True),
-            Column("type", Integer, nullable=True, autoincrement=True, default=0),
-            )
+            Column("point", Integer, default=0, nullable=True,
+                   autoincrement=True),
+            Column("expert", Integer, default=0, nullable=True,
+                   autoincrement=True),
+            Column("create_at", DateTime, default=datetime.utcnow,
+                   autoincrement=True),
+            Column("last_login", DateTime, default=datetime.utcnow,
+                   onupdate=datetime.utcnow, autoincrement=True),
+            Column("active", Boolean, default=False, nullable=True,
+                   autoincrement=True),
+            Column("disabled", Boolean, default=False, nullable=True,
+                   autoincrement=True),
+            Column("type", Integer, nullable=True, autoincrement=True,
+                   default=0))
         cls.user_t.create(db_engine, checkfirst=True)
         # cls.creat_user(db_meta, db_engine)
         # if euf:
@@ -75,10 +83,10 @@ class User(object):
         f = open(filename)
         r = f.read()
         f.close()
-        l = r.split("[\SPLIT/]")
+        user_list = r.split("[\\SPLIT/]")
 
         users_ = []
-        for u in l:
+        for u in user_list:
             ujson = u.split("\n")
             ujson.remove("")
             j = {"admin": False}
@@ -104,8 +112,8 @@ class User(object):
 
         for u in users_:
             try:
-                rst = conn.execute(ins, u)
-            except:
+                conn.execute(ins, u)
+            except Exception:
                 pass
 
     @classmethod
@@ -118,14 +126,13 @@ class User(object):
             "nickname": row["nickname"],
             "job": row["job"],
             "point": row["point"],
-            "admin": row["type"]==cls.ADMIN,
+            "admin": row["type"] == cls.ADMIN,
             "type": row["type"],
             "expert": row["expert"],
             "create_at": GMT(row["create_at"]),
             "last_login": GMT(row["last_login"]),
             "active": row["active"],
-            "disabled": row["disabled"],
-            }
+            "disabled": row["disabled"]}
 
     @classmethod
     def mk_dict_teacher(cls, row):
@@ -137,7 +144,7 @@ class User(object):
             "nickname": row["nickname"],
             "job": row["job"],
             "point": row["point"],
-            "admin": row["type"]==cls.ADMIN,
+            "admin": row["type"] == cls.ADMIN,
             "type": row["type"],
             "expert": row["expert"],
             "create_at": GMT(row["create_at"]),
@@ -151,8 +158,7 @@ class User(object):
             "whole_city": row["whole_city"],
             "class_permission": row["class_permission"],
             "summary": row["summary"],
-            "contact_link": row["contact_link"],
-            }
+            "contact_link": row["contact_link"]}
     # users,
     # teacherinfos.name,
     # teacherinfos.phone,
@@ -172,7 +178,7 @@ class User(object):
     #         "nickname": row["nickname"],
     #         "job": row["job"],
     #         "point": row["point"],
-    #         "admin": row["admin"], 
+    #         "admin": row["admin"],
     #         "expert": row["expert"],
     #         "create_at": GMT(row["create_at"]),
     #         "last_login": GMT(row["last_login"]),
@@ -194,8 +200,7 @@ class User(object):
             "point": row["point"],
             "create_at": GMT(row["create_at"]),
             "last_login": GMT(row["last_login"]),
-            "disabled": row["disabled"],
-            }
+            "disabled": row["disabled"]}
 
     def validate_json(self, json):
         if (not isinstance(json, dict)) or (json == {}):
@@ -208,7 +213,7 @@ class User(object):
         for col in User.user_t.columns:
             if (not col.nullable) and (not col.autoincrement):
                 val = self.__getattribute__(col.name)
-                if val == None:
+                if val is None:
                     return httperror(400, ErrMsg.MISS_PARAM.format(col.name))
                 if isinstance(col.type, String):
                     val = val.strip("\t\n\r")
@@ -218,10 +223,11 @@ class User(object):
                     try:
                         val = int(self.__getattribute__(col.name))
                         self.__setattr__(col.name, val)
-                    except:
+                    except Exception:
                         return httperror(400, ErrMsg.NOT_INT.format(col.name))
             # elif col.nullable == True:
                 # check nullable attributes
+
 
 class Question(object):
     TABLE_NAME = "tb_question"
@@ -235,19 +241,26 @@ class Question(object):
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
-        cls.question_t = Table(cls.TABLE_NAME, db_meta,
+        cls.question_t = Table(
+            cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
             Column("title", String, nullable=False, autoincrement=False),
             Column("content", Text, nullable=False, autoincrement=False),
             Column("type", Integer, nullable=False, autoincrement=False),
-            Column("solved", Boolean, default=False, nullable=True, autoincrement=True),
-            Column("last_reply", DateTime, default=datetime.utcnow, autoincrement=True),
-            Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
-            Column("writer", Integer, ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
-            Column("file1", String, nullable=True, autoincrement=False, default=""),
-            Column("file2", String, nullable=True, autoincrement=False, default=""),
-            Column("file3", String, nullable=True, autoincrement=False, default=""),
-            )
+            Column("solved", Boolean, default=False, nullable=True,
+                   autoincrement=True),
+            Column("last_reply", DateTime, default=datetime.utcnow,
+                   autoincrement=True),
+            Column("create_at", DateTime, default=datetime.utcnow,
+                   autoincrement=True),
+            Column("writer", Integer, ForeignKey("tb_user.id"), nullable=False,
+                   autoincrement=False),
+            Column("file1", String, nullable=True, autoincrement=False,
+                   default=""),
+            Column("file2", String, nullable=True, autoincrement=False,
+                   default=""),
+            Column("file3", String, nullable=True, autoincrement=False,
+                   default=""))
         cls.question_t.create(db_engine, checkfirst=True)
         return cls.question_t
 
@@ -264,8 +277,7 @@ class Question(object):
             "writer_id": row["writer"],
             "file1": row["file1"],
             "file2": row["file2"],
-            "file3": row["file3"],
-            }
+            "file3": row["file3"]}
         return j
 
     @classmethod
@@ -282,8 +294,7 @@ class Question(object):
             "file1": row["file1"],
             "file2": row["file2"],
             "file3": row["file3"],
-            "writer": row["nickname"],
-            }
+            "writer": row["nickname"]}
         return j
 
     @classmethod
@@ -298,18 +309,15 @@ class Question(object):
                 "create_at": GMT(row["create_at"]),
 
                 "answer_writer": answer_row["nickname"],
-                "answer_create_at": GMT(answer_row["create_at"]),
-                }
+                "answer_create_at": GMT(answer_row["create_at"])}
+
         return {
-                "id": row["id"],
-                "title": row["title"],
-                "writer": row["writer_nickname"],
-                "type": row["type"],
-                "solved": row["solved"],
-                "create_at": GMT(row["create_at"]),
-
-                }
-
+            "id": row["id"],
+            "title": row["title"],
+            "writer": row["writer_nickname"],
+            "type": row["type"],
+            "solved": row["solved"],
+            "create_at": GMT(row["create_at"])}
 
     def validate_json(self, json):
         if (not isinstance(json, dict)) or (json == {}):
@@ -324,7 +332,7 @@ class Question(object):
         for col in Question.question_t.columns:
             if (not col.nullable) and (not col.autoincrement):
                 val = self.__getattribute__(col.name)
-                if val == None:
+                if val is None:
                     return httperror(400, ErrMsg.MISS_PARAM.format(col.name))
                 if isinstance(col.type, String):
                     val = val.strip("\t\n\r")
@@ -333,8 +341,9 @@ class Question(object):
                     try:
                         val = int(self.__getattribute__(col.name))
                         self.__setattr__(col.name, val)
-                    except:
+                    except Exception:
                         return httperror(400, ErrMsg.NOT_INT.format(col.name))
+
 
 class Answer(object):
     TABLE_NAME = "tb_comment"
@@ -347,18 +356,23 @@ class Answer(object):
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
-        cls.answer_t = Table(cls.TABLE_NAME, db_meta,
+        cls.answer_t = Table(
+            cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
-            Column("content", Text, nullable=False, autoincrement=False),
+            Column("content", Text, nullable=False,
+                   autoincrement=False),
             Column("writer", Integer, ForeignKey("tb_user.id"),
-                nullable=False, autoincrement=False),
+                   nullable=False, autoincrement=False),
             Column("answer_to", Integer, ForeignKey("tb_question.id"),
-                nullable=False, autoincrement=False),
-            Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
-            Column("file1", String, nullable=True, autoincrement=False, default=""),
-            Column("file2", String, nullable=True, autoincrement=False, default=""),
-            Column("file3", String, nullable=True, autoincrement=False, default=""),
-            )
+                   nullable=False, autoincrement=False),
+            Column("create_at", DateTime, default=datetime.utcnow,
+                   autoincrement=True),
+            Column("file1", String, nullable=True, autoincrement=False,
+                   default=""),
+            Column("file2", String, nullable=True, autoincrement=False,
+                   default=""),
+            Column("file3", String, nullable=True, autoincrement=False,
+                   default=""))
         cls.answer_t.create(db_engine, checkfirst=True)
         return cls.answer_t
 
@@ -372,8 +386,7 @@ class Answer(object):
             "create_at": GMT(row["create_at"]),
             "file1": row["file1"],
             "file2": row["file2"],
-            "file3": row["file3"],
-            }
+            "file3": row["file3"]}
         return j
 
     def validate_json(self, json):
@@ -389,7 +402,7 @@ class Answer(object):
         for col in Answer.answer_t.columns:
             if (not col.nullable) and (not col.autoincrement):
                 val = self.__getattribute__(col.name)
-                if val == None:
+                if val is None:
                     return httperror(400, ErrMsg.MISS_PARAM.format(col.name))
                 if isinstance(col.type, String):
                     val = val.strip("\t\n\r")
@@ -398,8 +411,9 @@ class Answer(object):
                     try:
                         val = int(self.__getattribute__(col.name))
                         self.__setattr__(col.name, val)
-                    except:
+                    except Exception:
                         return httperror(400, ErrMsg.NOT_INT.format(col.name))
+
 
 class Post(object):
     TABLE_NAME = "tb_post"
@@ -411,12 +425,13 @@ class Post(object):
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
-        cls.post_t = Table(cls.TABLE_NAME, db_meta,
+        cls.post_t = Table(
+            cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
             # Column("title", String, nullable=False, autoincrement=False),
             Column("content", Text, nullable=False, autoincrement=False),
-            Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
-            )
+            Column("create_at", DateTime, default=datetime.utcnow,
+                   autoincrement=True))
         cls.post_t.create(db_engine, checkfirst=True)
         return cls.post_t
 
@@ -426,43 +441,34 @@ class Post(object):
             "id": row["id"],
             # "title": row["title"],
             "content": row["content"],
-            "create_at": GMT(row["create_at"]),
-            }
+            "create_at": GMT(row["create_at"])}
 
-# class ClassManage(object):
-#     TABLE_NAME = "tb_classmanage"
-#     classmanage_t = None
 
-#     @classmethod
-#     def create_schema(cls, db_engine, db_meta):
-#         cls.classmanage_t = Table(cls.TABLE_NAME, db_meta,
-#             Column("uid", Integer, ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
-#             Column("class_access", ARRAY(String), nullable=True, default=[], autoincrement=True),
-#             Column("class_record", JSON, nullable=True, default={}, autoincrement=True),
-#             )
-#         cls.classmanage_t.create(db_engine, checkfirst=True)
-#         return cls.classmanage_t
-
-########################################
 class Teacher(object):
     TABLE_NAME = "tb_teacher"
     teacher_t = None
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
-        cls.teacher_t = Table(cls.TABLE_NAME, db_meta,
+        cls.teacher_t = Table(
+            cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
-            Column("userid", String, nullable=False, autoincrement=False, unique=True),
+            Column("userid", String, nullable=False, autoincrement=False,
+                   unique=True),
             Column("password", String, nullable=False, autoincrement=False),
             Column("name", String, nullable=False, autoincrement=False),
             Column("phone", String, nullable=False, autoincrement=False),
-            Column("ext_area", Integer, nullable=True, autoincrement=True, default=0),
-            Column("whole_city", Integer, nullable=True, autoincrement=True, default=0),
-            Column("disabled", Boolean, default=False, nullable=True, autoincrement=True),
-            Column("class_permission", ARRAY(String), nullable=False, autoincrement=False),
+            Column("ext_area", Integer, nullable=True, autoincrement=True,
+                   default=0),
+            Column("whole_city", Integer, nullable=True, autoincrement=True,
+                   default=0),
+            Column("disabled", Boolean, default=False, nullable=True,
+                   autoincrement=True),
+            Column("class_permission", ARRAY(String), nullable=False,
+                   autoincrement=False),
             Column("summary", Text, nullable=False, autoincrement=False),
-            Column("contact_link", JSON, nullable=False, autoincrement=True, default={}),
-            )
+            Column("contact_link", JSON, nullable=False, autoincrement=True,
+                   default={}))
         cls.teacher_t.create(db_engine, checkfirst=True)
         return cls.teacher_t
 
@@ -478,22 +484,21 @@ class Teacher(object):
             "disabled": row["disabled"],
             "class_permission": row["class_permission"],
             "summary": row["summary"],
-            "contact_link": row["contact_link"],
-            }
+            "contact_link": row["contact_link"]}
 
     @classmethod
     def mk_dict_adarea_adclass(cls, row):
         enddate = row["enddate"]
-        if enddate != None:
+        if enddate is not None:
             enddate = enddate.strftime("%Y 年 %m 月 %d 日")
         date = row["enddate"]
-        if date != None:
+        if date is not None:
             date = date.strftime("%Y 年 %m 月 %d 日")
         start_time = row["start_time"]
-        if start_time != None:
+        if start_time is not None:
             start_time = start_time.strftime("%I:%M %p")
         end_time = row["end_time"]
-        if end_time != None:
+        if end_time is not None:
             end_time = end_time.strftime("%I:%M %p")
         return {
             "id": row["id"],
@@ -514,8 +519,8 @@ class Teacher(object):
             "enddate": enddate,
             "start_time": start_time,
             "end_time": end_time,
-            "weekdays": row["weekdays"],
-            }
+            "weekdays": row["weekdays"]}
+
 
 class TeacherInfo(object):
     TABLE_NAME = "tb_teacherinfo"
@@ -523,16 +528,21 @@ class TeacherInfo(object):
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
-        cls.teacherinfo_t = Table(cls.TABLE_NAME, db_meta,
-            Column("id", Integer, primary_key=False, autoincrement=False, nullable=False),
+        cls.teacherinfo_t = Table(
+            cls.TABLE_NAME, db_meta,
+            Column("id", Integer, primary_key=False, autoincrement=False,
+                   nullable=False),
             Column("name", String, nullable=False, autoincrement=False),
             Column("phone", String, nullable=False, autoincrement=False),
-            Column("ext_area", Integer, nullable=True, autoincrement=True, default=0),
-            Column("whole_city", Integer, nullable=True, autoincrement=True, default=0),
-            Column("class_permission", ARRAY(String), nullable=False, autoincrement=False),
+            Column("ext_area", Integer, nullable=True, autoincrement=True,
+                   default=0),
+            Column("whole_city", Integer, nullable=True, autoincrement=True,
+                   default=0),
+            Column("class_permission", ARRAY(String), nullable=False,
+                   autoincrement=False),
             Column("summary", Text, nullable=False, autoincrement=False),
-            Column("contact_link", JSON, nullable=False, autoincrement=True, default={}),
-            )
+            Column("contact_link", JSON, nullable=False, autoincrement=True,
+                   default={}))
         cls.teacherinfo_t.create(db_engine, checkfirst=True)
         return cls.teacherinfo_t
 
@@ -546,8 +556,7 @@ class TeacherInfo(object):
             "whole_city": row["whole_city"],
             "class_permission": row["class_permission"],
             "summary": row["summary"],
-            "contact_link": row["contact_link"],
-            }
+            "contact_link": row["contact_link"]}
 
     @classmethod
     def mk_classroom_dict(cls, row):
@@ -566,26 +575,36 @@ class TeacherInfo(object):
             "create_at": GMT(row["create_at"]),
         }
 
+
 class Classroom(object):
     TABLE_NAME = "tb_classroom"
     classroom_t = None
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
-        cls.classroom_t = Table(cls.TABLE_NAME, db_meta,
+        cls.classroom_t = Table(
+            cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
             Column("name", String, nullable=False, autoincrement=False),
-            Column("teacher", ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
-            Column("students_name", ARRAY(String), nullable=False, autoincrement=False),
-            Column("students_cid", ARRAY(Integer), nullable=False, autoincrement=False),
-            Column("students_sid", ARRAY(String), nullable=False, autoincrement=False),
-            Column("folder", String, nullable=True, autoincrement=True, default=""),
-            Column("comment", JSON, nullable=True, default={}, autoincrement=True),
-            Column("progress", Integer, nullable=False, default=10, autoincrement=True),
-            Column("links", ARRAY(String), nullable=True, default=[], autoincrement=True),
-            Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
-            Column("type", String, nullable=True, autoincrement=False),
-            )
+            Column("teacher", ForeignKey("tb_user.id"), nullable=False,
+                   autoincrement=False),
+            Column("students_name", ARRAY(String), nullable=False,
+                   autoincrement=False),
+            Column("students_cid", ARRAY(Integer), nullable=False,
+                   autoincrement=False),
+            Column("students_sid", ARRAY(String), nullable=False,
+                   autoincrement=False),
+            Column("folder", String, nullable=True, autoincrement=True,
+                   default=""),
+            Column("comment", JSON, nullable=True, default={},
+                   autoincrement=True),
+            Column("progress", Integer, nullable=False, default=10,
+                   autoincrement=True),
+            Column("links", ARRAY(String), nullable=True, default=[],
+                   autoincrement=True),
+            Column("create_at", DateTime, default=datetime.utcnow,
+                   autoincrement=True),
+            Column("type", String, nullable=True, autoincrement=False))
         cls.classroom_t.create(db_engine, checkfirst=True)
         return cls.classroom_t
 
@@ -602,9 +621,10 @@ class Classroom(object):
                 "comment": row["comment"],
                 "folder": row["folder"],
                 "links": row["links"],
-                "type": row["type"],
-                }
-        students = list(zip(row["students_name"], row["students_cid"], row["students_sid"]))
+                "type": row["type"]}
+
+        students = list(zip(row["students_name"], row["students_cid"],
+                            row["students_sid"]))
         return {
             "id": row["id"],
             "name": row["name"],
@@ -614,8 +634,7 @@ class Classroom(object):
             "comment": row["comment"],
             "folder": row["folder"],
             "links": row["links"],
-            "type": row["type"],
-            }
+            "type": row["type"]}
 
     @classmethod
     def mk_info(cls, row, sid):
@@ -627,8 +646,8 @@ class Classroom(object):
                 "create_at": GMT(row["create_at"]),
                 "folder": row["folder"],
                 "links": row["links"],
-                "type": row["type"],
-                }
+                "type": row["type"]}
+
         students = dict(zip(row["students_cid"], row["students_sid"]))
         return {
             "id": row["id"],
@@ -638,8 +657,8 @@ class Classroom(object):
             "create_at": GMT(row["create_at"]),
             "folder": row["folder"],
             "links": row["links"],
-            "type": row["type"],
-            }
+            "type": row["type"]}
+
 
 class SingleClass(object):
     TABLE_NAME = "tb_singleclass"
@@ -647,14 +666,17 @@ class SingleClass(object):
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
-        cls.singleclass = Table(cls.TABLE_NAME, db_meta,
+        cls.singleclass = Table(
+            cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
-            Column("students", ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
-            Column("process", String, nullable=True, autoincrement=True, default=""),
-            Column("dead_line", Date, nullable=False, autoincrement=False),
-            )
+            Column("students", ForeignKey("tb_user.id"), nullable=False,
+                   autoincrement=False),
+            Column("process", String, nullable=True, autoincrement=True,
+                   default=""),
+            Column("dead_line", Date, nullable=False, autoincrement=False),)
         cls.singleclass.create(db_engine, checkfirst=True)
         return cls.singleclass
+
 
 class AdArea(object):
     TABLE_NAME = "tb_adarea"
@@ -662,12 +684,13 @@ class AdArea(object):
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
-        cls.advertise_t = Table(cls.TABLE_NAME, db_meta,
+        cls.advertise_t = Table(
+            cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
-            Column("teacher", ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
+            Column("teacher", ForeignKey("tb_user.id"), nullable=False,
+                   autoincrement=False),
             Column("city", Integer, nullable=False, autoincrement=False),
-            Column("town", Integer, nullable=False, autoincrement=False),
-            )
+            Column("town", Integer, nullable=False, autoincrement=False))
         cls.advertise_t.create(db_engine, checkfirst=True)
         return cls.advertise_t
 
@@ -677,8 +700,8 @@ class AdArea(object):
             "id": row["id"],
             "teacher": row["teacher"],
             "city": row["city"],
-            "town": row["town"],
-            }
+            "town": row["town"]}
+
 
 class AdClass(object):
     TABLE_NAME = "tb_adclass"
@@ -686,24 +709,26 @@ class AdClass(object):
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
-        cls.advertise_t = Table(cls.TABLE_NAME, db_meta,
+        cls.advertise_t = Table(
+            cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
-            Column("teacher", ForeignKey("tb_user.id"), nullable=False, autoincrement=False),
+            Column("teacher", ForeignKey("tb_user.id"), nullable=False,
+                   autoincrement=False),
             Column("address", String, nullable=False, autoincrement=False),
             Column("type", String, nullable=False, autoincrement=False),
             Column("date", Date, nullable=False, autoincrement=False),
             Column("enddate", Date, nullable=True, autoincrement=False),
             Column("start_time", Time, nullable=False, autoincrement=False),
             Column("end_time", Time, nullable=False, autoincrement=False),
-            Column("weekdays", ARRAY(Integer), nullable=False, autoincrement=False)
-            )
+            Column("weekdays", ARRAY(Integer), nullable=False,
+                   autoincrement=False))
         cls.advertise_t.create(db_engine, checkfirst=True)
         return cls.advertise_t
 
     @classmethod
     def mk_dict(cls, row):
         enddate = row["enddate"]
-        if enddate != None:
+        if enddate is not None:
             enddate = row["enddate"].strftime("%Y 年 %m 月 %d 日")
         return {
             "id": row["id"],
@@ -713,8 +738,8 @@ class AdClass(object):
             "enddate": enddate,
             "start_time": row["start_time"].strftime("%I:%M %p"),
             "end_time": row["end_time"].strftime("%I:%M %p"),
-            "weekdays": row["weekdays"],
-            }
+            "weekdays": row["weekdays"]}
+
 
 class Activity(object):
     TABLE_NAME = "tb_activity"
@@ -722,7 +747,8 @@ class Activity(object):
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
-        cls.activity_t = Table(cls.TABLE_NAME, db_meta,
+        cls.activity_t = Table(
+            cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
             Column("name", String, nullable=False, autoincrement=False),
             Column("repeat", Integer, nullable=False, autoincrement=False),
@@ -730,11 +756,13 @@ class Activity(object):
             Column("date", Date, nullable=True, autoincrement=False),
             Column("addr", String, nullable=False, autoincrement=False),
             Column("summary", Text, nullable=False, autoincrement=False),
-            Column("present", ARRAY(Integer), nullable=True, autoincrement=True, default=[]),
-            Column("participant", ARRAY(Integer), nullable=True, autoincrement=True, default=[]),
-            Column("disabled", Boolean, default=False, nullable=True, autoincrement=True),
-            Column("point", Integer, nullable=False, autoincrement=False),
-            )
+            Column("present", ARRAY(Integer), nullable=True,
+                   autoincrement=True, default=[]),
+            Column("participant", ARRAY(Integer), nullable=True,
+                   autoincrement=True, default=[]),
+            Column("disabled", Boolean, default=False, nullable=True,
+                   autoincrement=True),
+            Column("point", Integer, nullable=False, autoincrement=False))
         cls.activity_t.create(db_engine, checkfirst=True)
         return cls.activity_t
 
@@ -742,7 +770,7 @@ class Activity(object):
     def mk_info(cls, row):
         try:
             date = row["date"].strftime("%Y 年 %m 月 %d 日")
-        except:
+        except Exception:
             date = ""
         return {
             "id": row["id"],
@@ -752,14 +780,13 @@ class Activity(object):
             "date": date,
             "addr": row["addr"],
             "summary": row["summary"],
-            "participant": row["participant"],
-            }
+            "participant": row["participant"]}
 
     @classmethod
     def mk_dict(cls, row):
         try:
             date = row["date"].strftime("%Y 年 %m 月 %d 日")
-        except:
+        except Exception:
             date = ""
         return {
             "id": row["id"],
@@ -772,8 +799,8 @@ class Activity(object):
             "participant": row["participant"],
             "present": row["present"],
             "disabled": row["disabled"],
-            "point": row["point"],
-            }
+            "point": row["point"]}
+
 
 class Report(object):
     TABLE_NAME = "tb_report"
@@ -781,17 +808,20 @@ class Report(object):
 
     @classmethod
     def create_schema(cls, db_engine, db_meta):
-        cls.report_t = Table(cls.TABLE_NAME, db_meta,
+        cls.report_t = Table(
+            cls.TABLE_NAME, db_meta,
             Column("id", Integer, primary_key=True, autoincrement=True),
             Column("title", String, nullable=False, autoincrement=False),
             Column("summary", Text, nullable=False, autoincrement=False),
             Column("file", String, nullable=True, autoincrement=False),
             Column("writer", Integer, ForeignKey("tb_user.id"),
-                nullable=False, autoincrement=False),
-            Column("status", Integer, nullable=True, default=0, autoincrement=True),
-            Column("create_at", DateTime, default=datetime.utcnow, autoincrement=True),
-            Column("reply", Text, nullable=True, default="", autoincrement=True),
-            )
+                   nullable=False, autoincrement=False),
+            Column("status", Integer, nullable=True, default=0,
+                   autoincrement=True),
+            Column("create_at", DateTime, default=datetime.utcnow,
+                   autoincrement=True),
+            Column("reply", Text, nullable=True, default="",
+                   autoincrement=True))
         cls.report_t.create(db_engine, checkfirst=True)
         return cls.report_t
 
@@ -806,6 +836,4 @@ class Report(object):
             "nickname": row["nickname"],
             "status": row["status"],
             "create_at": GMT(row["create_at"]),
-            "reply": row["reply"],
-            }
-
+            "reply": row["reply"]}

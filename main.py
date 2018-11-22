@@ -1,16 +1,26 @@
 import cherrypy
-import logging, logging.config
 import os
 import json
+import sys
+import argparse
+
+from cherryplugin.cherrpy_sa import SAPlugin, SATool
+from cherryplugin.session_mgr import KeyMgrPlugin, KeyMgrTool
+from cherryplugin.classes_load import ClassesTool
+from cherryplugin.email_valid import EmailValidPlugin, EmailValidTool
+from cherryplugin.file_mgr import FilePlugin, FileTool
+from cherryplugin.classroom_mgr import ClassroomMgrPlugin, ClassroomMgrTool
+
 
 class App():
     SITE_CONF = {
         "server.socket_host": "0.0.0.0",
-        #"server.socket_host": "192.168.50.2",
+        # "server.socket_host": "192.168.50.2",
         "server.socket_port": 80,
         "server.thread_pool": 100,
-        "server.max_request_body_size": 0, # no size limitation of body for chunked/streaming
-        "server.socket_timeout": 3, # set socket timeout to 3 seconds    }
+        "server.max_request_body_size": 0,
+        # no size limitation of body for chunked/streaming
+        "server.socket_timeout": 3,  # set socket timeout to 3 seconds    }
     }
     LOG_CONF = {
         "version": 1,
@@ -91,6 +101,7 @@ class App():
         },
 
     }
+
     def __init__(self):
         self.render_config = {
             "/html": {
@@ -106,12 +117,6 @@ class App():
         }
 
     def subsribe_plugin(self, path, euf, db_str):
-        from cherryplugin.cherrpy_sa import SAPlugin, SATool
-        from cherryplugin.session_mgr import KeyMgrPlugin, KeyMgrTool
-        from cherryplugin.classes_load import ClassesTool
-        from cherryplugin.email_valid import EmailValidPlugin, EmailValidTool
-        from cherryplugin.file_mgr import FilePlugin, FileTool
-        from cherryplugin.classroom_mgr import ClassroomMgrPlugin, ClassroomMgrTool
 
         import app.model as model
 
@@ -129,8 +134,7 @@ class App():
             model.AdClass,
 
             model.Activity,
-            model.Report,
-            ]
+            model.Report]
 
         sa_plugin = SAPlugin(cherrypy.engine, db_str=db_str, tables=tables)
         sa_plugin.subscribe()
@@ -161,8 +165,7 @@ class App():
         cherrypy.tree.mount(
             handler(),
             handler._root,
-            config=config,
-            )
+            config=config)
 
     def start(self, db_str, path, euf):
         import app.rest as restapi
@@ -195,7 +198,7 @@ class App():
         # self.mount(restapi.TeacherMergeView, restview_config)
         # self.mount(restapi.ReportRestView, restview_config)
         # self.mount(restapi.PresentationRestView, restview_config)
-        
+
         self.mount(render.UserCaseHandler, self.render_config)
         self.mount(render.ClassHandler, self.render_config)
         self.mount(render.TeacherHandler, self.render_config)
@@ -205,8 +208,7 @@ class App():
 
         cherrypy.config.update(self.site_conf)
         cherrypy.config.update(
-            {"error_page.404": render.UserCaseHandler.error_404}
-            )
+            {"error_page.404": render.UserCaseHandler.error_404})
         cherrypy.engine.start()
         cherrypy.engine.block()
 
@@ -217,18 +219,19 @@ class App():
         classes = ClassesPlugin(cherrypy.engine)
 
         dirname = "classes"
-        files = ["scratch_1_update.json", "python_01_update.json", "scratch_02.json", "scratch_03.json"]
+        files = ["scratch_1_update.json", "python_01_update.json",
+                 "scratch_02.json", "scratch_03.json"]
 
         for f in files:
             class_ = json.load(open(f"{dirname}/{f}", encoding="utf-8"))
             classes.new_class(class_["id"], class_)
         return classes
 
+
 if __name__ == "__main__":
-    import sys, argparse
     class dumy:
         pass
-    
+
     psr = argparse.ArgumentParser(description='Start up demo app of Cherrypy.')
     psr.add_argument('-dbusr')
     psr.add_argument('-dbpsw')
@@ -242,7 +245,7 @@ if __name__ == "__main__":
 
     if vs.dbusr or vs.dbpsw or vs.dbhst or vs.dbprt or vs.dbname:
         if not(vs.dbusr and vs.dbpsw and vs.dbhst and vs.dbprt and vs.dbname):
-            print ("option dbusr, dbpsw, dbhst, dbprt, and dbname must specify altogether!")
+            print("Missing dbusr, dbpsw, dbhst, dbprt, and dbname")
             exit(1)
         db_str = "postgresql://{}:{}@{}:{}/{}?client_encoding=utf8".format(
             vs.dbusr, vs.dbpsw, vs.dbhst, vs.dbprt, vs.dbname)

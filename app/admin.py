@@ -1,27 +1,25 @@
 import cherrypy
 import jinja2
-from app.model import User, Post
+from app.model import User
 import os
-import requests
 
-#from sqlalchemy import desc
 from sqlalchemy.sql import select, and_
-#from sqlalchemy.exc import IntegrityError
 
-jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader("html/template"))
+jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader("html/template"))
+
 
 def render(src, params={}):
     # print(os.getcwd())
     t = jinja_env.get_template(src)
     return t.render(params)
 
+
 class AdminHandler(object):
     _root = "/admin/"
     _cp_config = {
         "tools.keytool.on": True,
         "tools.dbtool.on": True,
-        "tools.filetool.on": True,
-        }
+        "tools.filetool.on": True}
     link_fmt = """<a href="{url}" target="_blank">{string}</a>"""
 
     def checkadmin(self):
@@ -39,8 +37,8 @@ class AdminHandler(object):
             return False
 
         ss = select([users.c.type]).where(and_(
-            users.c.id==key_valid[1],
-            users.c.type==User.ADMIN))
+            users.c.id == key_valid[1],
+            users.c.type == User.ADMIN))
         rst = conn.execute(ss)
         row = rst.fetchone()
         if not row:
@@ -68,7 +66,7 @@ class AdminHandler(object):
         a = self.checkadmin()
         if not a:
             raise cherrypy.HTTPRedirect("/")
-            
+
         return render("admin/questions.html")
 
     @cherrypy.expose
