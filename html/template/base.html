@@ -50,7 +50,6 @@
 	<script src="/html/js/bootstrap.js"></script>
 	<!-- <script src="/html/slick/slick.js" type="text/javascript" charset="utf-8"></script> -->
 	<script src="https://www.google.com/recaptcha/api.js"></script>
-	<script src="/html/js/loginsignupframe.js"></script>
 	<script src="/html/js/base.js"></script>
 </head>
 	<script type="text/javascript">var _jf = _jf || [];_jf.push(['p','54162']);_jf.push(['_setFont','xingothic-tc-w5','css','.xingothic-tc-w5']);_jf.push(['_setFont','xingothic-tc-w5','alias','xingothic-tc']);_jf.push(['_setFont','xingothic-tc-w5','weight',500]);_jf.push(['_setFont','xingothic-tc-w2','css','.xingothic-tc-w2']);_jf.push(['_setFont','xingothic-tc-w2','alias','xingothic-tc']);_jf.push(['_setFont','xingothic-tc-w2','weight',200]);_jf.push(['_setFont','xingothic-tc-w7','css','.xingothic-tc-w7']);_jf.push(['_setFont','xingothic-tc-w7','alias','xingothic-tc']);_jf.push(['_setFont','xingothic-tc-w7','weight',700]);(function(f,q,c,h,e,i,r,d){var k=f._jf;if(k.constructor===Object){return}var l,t=q.getElementsByTagName("html")[0],a=function(u){for(var v in k){if(k[v][0]==u){if(false===k[v][1].call(k)){break}}}},j=/\S+/g,o=/[\t\r\n\f]/g,b=/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,g="".trim,s=g&&!g.call("\uFEFF\xA0")?function(u){return u==null?"":g.call(u)}:function(u){return u==null?"":(u+"").replace(b,"")},m=function(y){var w,z,v,u,x=typeof y==="string"&&y;if(x){w=(y||"").match(j)||[];z=t[c]?(" "+t[c]+" ").replace(o," "):" ";if(z){u=0;while((v=w[u++])){if(z.indexOf(" "+v+" ")<0){z+=v+" "}}t[c]=s(z)}}},p=function(y){var w,z,v,u,x=arguments.length===0||typeof y==="string"&&y;if(x){w=(y||"").match(j)||[];z=t[c]?(" "+t[c]+" ").replace(o," "):"";if(z){u=0;while((v=w[u++])){while(z.indexOf(" "+v+" ")>=0){z=z.replace(" "+v+" "," ")}}t[c]=y?s(z):""}}},n;k.push(["_eventActived",function(){p(h);m(e)}]);k.push(["_eventInactived",function(){p(h);m(i)}]);k.addScript=n=function(u,A,w,C,E,B){E=E||function(){};B=B||function(){};var x=q.createElement("script"),z=q.getElementsByTagName("script")[0],v,y=false,D=function(){x.src="";x.onerror=x.onload=x.onreadystatechange=null;x.parentNode.removeChild(x);x=null;a("_eventInactived");B()};if(C){v=setTimeout(function(){D()},C)}x.type=A||"text/javascript";x.async=w;x.onload=x.onreadystatechange=function(G,F){if(!y&&(!x.readyState||/loaded|complete/.test(x.readyState))){y=true;if(C){clearTimeout(v)}x.src="";x.onerror=x.onload=x.onreadystatechange=null;x.parentNode.removeChild(x);x=null;if(!F){setTimeout(function(){E()},200)}}};x.onerror=function(H,G,F){if(C){clearTimeout(v)}D();return true};x.src=u;z.parentNode.insertBefore(x,z)};a("_eventPreload");m(h);n(r,"text/javascript",false,3000)})(this,this.document,"className","jf-loading","jf-active","jf-inactive","//d3gc6cgx8oosp4.cloudfront.net/js/stable/v/5.0.3/id/229417479829");</script>
@@ -126,15 +125,15 @@
 				  <span class="caret"></span>
 			  </a>
 			  <ul id="login-menu-dropdown" class="dropdown-menu">
-				<li class="non-login-menu"><a onclick="show_popup('signup-frame')">新會員註冊</a></li>
-				<li class="non-login-menu"><a onclick="show_popup('login-frame')">舊會員登入</a></li>
+				<li class="non-login-menu"><a href="#" onclick="show_popup('signup-frame')">新會員註冊</a></li>
+				<li class="non-login-menu"><a href="#" onclick="show_popup('login-frame')">舊會員登入</a></li>
 				<li class="non-login-menu"><a href="/classes">免費線上體驗</a></li>
 				<!--<li class="non-login-menu"><a onclick="show_popup('login-frame')">完整付費課程</a></li> -->
 
-				<li class="login-menu"><a onclick="showinfo()">帳號資訊</a></li>
+				<li class="login-menu"><a href="#" onclick="showinfo()">帳號資訊</a></li>
 				<li class="login-menu"><a href="/classes">課程列表</a></li>
 				<li class="login-menu"><a href="/classattend">繳交作業</a></li>
-				<li class="login-menu"><a onclick="logout()">登出</a></li>
+				<li class="login-menu"><a href="#" onclick="logout()">登出</a></li>
 			  </ul>
 			</li>
 		  </ul>
@@ -542,14 +541,41 @@
 
 	
 	<script>
+		var TIMESTAMP;
+		var JAVASCRIPTS = [
+			"/html/js/loginsignupframe.js",
+		];
+
 		// JavaScript Document
 		$(function(){
+			// 從 server 抓取 server 啟動的 timestamp,
+			// 把 JAVSCRIPTS 的檔案夾上 timestamp
+			// 在其他地方把 noncache 的檔案加入 JAVASCRIPS 即可
+			$.ajax({
+				url: "http://0.0.0.0/timestamp",
+				success: function (msg) {
+					TIMESTAMP = msg;
+
+					console.log(JAVASCRIPTS);
+					for (var url of JAVASCRIPTS) {
+						var script = $("<script>");
+						script[0].src = url + "?d=" + TIMESTAMP;
+						$("body").append(script);
+					}
+				}});
+
 			$('a.scrolltop').click(function(){
 				var $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $('html') : $('body')) : $('html,body');
 				$body.animate({
 					scrollTop: 0
 				}, 600);
 				return false;
+			});
+
+			$('ul.nav li.dropdown').hover(function() {
+			  $(this).find('.dropdown-menu').stop(true, true).fadeIn(100);
+			}, function() {
+			  $(this).find('.dropdown-menu').stop(true, true).fadeOut(100);
 			});
 		});
 

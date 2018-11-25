@@ -287,17 +287,6 @@
 {% block script %}
 <script src="/html/slick/slick.js"></script>
 <script>
-	var NONCACHE_SCRIPT = [
-		"/html/js/classattend.js",
-	];
-
-	(function(){
-		var timestamp = new Date().getTime();
-		for (var url of NONCACHE_SCRIPT) {
-			var script = $("<script>");
-			script[0].src = url + "?d=" + timestamp;
-			$("body").append(script);
-		}
-	})();
+	JAVASCRIPTS.push("/html/js/classattend.js");
 </script>
 {% endblock %}

@@ -1,9 +1,11 @@
 import cherrypy
 import os
 import jinja2
-from uuid import uuid1 as uuid
 import requests
+from uuid import uuid1 as uuid
+from datetime import datetime
 
+TIMESTAMP = str(datetime.now().timestamp())
 
 access_deny = """
 <head>
@@ -180,14 +182,6 @@ class UserCaseHandler(object):
             return render("question.html")
         # return cherrypy.request.method
 
-    # @cherrypy.expose
-    # def about(self):
-    #     return render("about.html")
-
-    # @cherrypy.expose
-    # def mission(self):
-    #     return render("mission.html")
-
     @cherrypy.expose
     def classes(self):
         return render("viewclasses.html")
@@ -196,17 +190,9 @@ class UserCaseHandler(object):
     def news(self):
         return render("news.html")
 
-    # @cherrypy.expose
-    # def hourofcode(self):
-    #     raise cherrypy.HTTPRedirect("/class/c/hourofcode")
-
     @cherrypy.expose
     def scratch(self):
         raise cherrypy.HTTPRedirect("/class/c/scratch_1")
-
-    # @cherrypy.expose
-    # def resource(self):
-    #     return render("resource.html")
 
     @cherrypy.expose
     def classattend(self, *args, **kwargs):
@@ -235,14 +221,6 @@ class UserCaseHandler(object):
             raise cherrypy.HTTPRedirect("/")
 
         return render("active.html")
-
-    # @cherrypy.expose
-    # def mission(self):
-    #     return render("mission.html")
-
-    # @cherrypy.expose
-    # def report(self):
-    #     return render("report.html")
 
     @cherrypy.expose
     def presentation(self):
@@ -338,6 +316,10 @@ class UserCaseHandler(object):
     @cherrypy.expose
     def ads5(self):
         return render("ads/p5-startnewbusiness.html")
+
+    @cherrypy.expose
+    def timestamp(self):
+        return TIMESTAMP
 
 
 class ClassHandler(object):

@@ -209,18 +209,7 @@
 <script src="http://www.youtube.com/iframe_api"></script>
 <div id="noncache"></div>
 <script>
-	var NONCACHE_SCRIPT = [
-		"/html/js/question.js",
-	];
-
-	(function(){
-		var timestamp = new Date().getTime();
-		for (var url of NONCACHE_SCRIPT) {
-			var script = $("<script>");
-			script[0].src = url + "?d=" + timestamp;
-			$("body").append(script);
-		}
-	})();
+	JAVASCRIPTS.push("/html/js/question.js");
 
 	function playVideo() {
 		$('#player')[0].src = "https://www.youtube.com/embed/epJKYQiJP8w?enablejsapi=1";

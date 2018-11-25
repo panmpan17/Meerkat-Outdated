@@ -903,7 +903,7 @@
 			$('[data-toggle="popover"]').popover();
 		})
 
-		$(document).on('ready', function() {
+		function StartLoading() {
 			key = getCookie("key")
 			if (key == "") {location.pathname = "/"}
 			$.ajax({
@@ -946,7 +946,7 @@
 				}
 			}
 			catch (err) {}
-		});
+		}
 
 		var NONCACHE_SCRIPT = [
 			"html/js/teacher/classroom.js",
@@ -955,12 +955,18 @@
 		];
 
 		(function(){
-			var timestamp = new Date().getTime();
-			for (var url of NONCACHE_SCRIPT) {
-				var script = $("<script>");
-				script[0].src = url + "?d=" + timestamp;
-				$("body").append(script);
-			}
+			$.ajax({
+				url: "http://0.0.0.0/timestamp",
+				success: function (timestamp) {
+					console.log(timestamp, NONCACHE_SCRIPT);
+					for (var url of NONCACHE_SCRIPT) {
+						var script = $("<script>");
+						script[0].src = url + "?d=" + timestamp;
+						$("body").append(script);
+					}
+
+					StartLoading();
+				}});
 		})();
 	</script>
 </body>

@@ -137,17 +137,6 @@
 {% endblock %}
 {% block script %}
 	<script>
-		var NONCACHE_SCRIPT = [
-			"/html/js/viewclass.js",
-		];
-
-		(function(){
-			var timestamp = new Date().getTime();
-			for (var url of NONCACHE_SCRIPT) {
-				var script = $("<script>");
-				script[0].src = url + "?d=" + timestamp;
-				$("body").append(script);
-			}
-		})();
+		JAVASCRIPTS.push("/html/js/viewclass.js");
 	</script>
 {% endblock %}
