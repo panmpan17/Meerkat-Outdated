@@ -255,6 +255,7 @@
 					method: "GET",
 					data: {"city": city_index},
 					success: function (msg) {
+						console.log(msg);
 						cities_teachers[city_index] = {}
 
 						$.each(msg["teachers"], function (_, teacher) {
@@ -293,7 +294,8 @@
 						})
 
 						$.each(msg["avatar"], function (_, image) {
-							teachers_data[parseInt(image)]["avatar"] = image
+							if (teachers_data[parseInt(image)] != undefined)
+								teachers_data[parseInt(image)]["avatar"] = image
 						})
 						display_towns_btn(city, city_index);
 						display_teacher(city_index, -1);

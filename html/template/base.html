@@ -95,7 +95,9 @@
 			  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">樂學師資<span class="caret"></span></a>
 			  <ul class="dropdown-menu">
 				<li><a href="/teacher/advertise">找老師</a></li>
+				<li><a href="https://docs.google.com/forms/d/e/1FAIpQLSeL73c3z7hxkFToS9tkpEMVAgCqCqIt2JqsbJh8eecrP0EeJA/viewform" target="_blank">派師或合作</a></li>
 				<li><a href="/presentation">成為老師</a></li>
+				<li><a href="/teacher/prove">實證</a></li>
 			  </ul>
 			</li>
 			<li class="dropdown">
@@ -552,7 +554,7 @@
 			// 把 JAVSCRIPTS 的檔案夾上 timestamp
 			// 在其他地方把 noncache 的檔案加入 JAVASCRIPS 即可
 			$.ajax({
-				url: "http://0.0.0.0/timestamp",
+				url: window.location.origin + "/timestamp",
 				success: function (msg) {
 					TIMESTAMP = msg;
 

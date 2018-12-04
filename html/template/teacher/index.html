@@ -956,7 +956,7 @@
 
 		(function(){
 			$.ajax({
-				url: "http://0.0.0.0/timestamp",
+				url: window.location.origin + "/timestamp",
 				success: function (timestamp) {
 					console.log(timestamp, NONCACHE_SCRIPT);
 					for (var url of NONCACHE_SCRIPT) {

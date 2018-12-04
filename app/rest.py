@@ -333,7 +333,7 @@ class UserRestView(View):
 
                 try:
                     q_uid = int(kwargs["id"])
-                except (ValueError, IndexError):
+                except (ValueError, KeyError):
                     raise cherrypy.HTTPError(
                         400, ErrMsg.NOT_INT.format(kwargs["id"]))
 
@@ -479,7 +479,7 @@ class UserRestView(View):
 
                 try:
                     uid = int(data["uid"])
-                except (ValueError, IndexError):
+                except (ValueError, KeyError):
                     raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("uid"))
 
                 stmt = update(users).where(users.c.id == uid).values(
@@ -494,7 +494,7 @@ class UserRestView(View):
 
                 try:
                     uid = int(data["uid"])
-                except (ValueError, IndexError):
+                except (ValueError, KeyError):
                     raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("uid"))
 
                 user_type = 0
@@ -641,7 +641,7 @@ class UserRestView(View):
 
             try:
                 uid = int(data["id"])
-            except (ValueError, IndexError):
+            except (ValueError, KeyError):
                 raise cherrypy.HTTPError(400)
 
             rst = conn.execute(select([users.c.id]).where(and_(
@@ -802,7 +802,7 @@ class QuestionRestView(View):
             if "id" in kwargs:
                 try:
                     qid = int(kwargs["id"])
-                except (ValueError, IndexError):
+                except (ValueError, KeyError):
                     raise cherrypy.HTTPError(
                         400, ErrMsg.NOT_INT.format(kwargs["id"]))
 
@@ -824,7 +824,7 @@ class QuestionRestView(View):
             if "writer" in kwargs:
                 try:
                     uid = int(kwargs["writer"])
-                except (ValueError, IndexError):
+                except (ValueError, KeyError):
                     raise cherrypy.HTTPError(
                         400, ErrMsg.NOT_INT.format(kwargs["writer"]))
 
@@ -843,7 +843,7 @@ class QuestionRestView(View):
             elif "answer" in kwargs:
                 try:
                     uid = int(kwargs["answer"])
-                except (ValueError, IndexError):
+                except (ValueError, KeyError):
                     raise cherrypy.HTTPError(
                         400, ErrMsg.NOT_INT.format(kwargs["answer"]))
 
@@ -855,7 +855,7 @@ class QuestionRestView(View):
             if "type" in kwargs:
                 try:
                     type_ = int(kwargs["type"])
-                except (ValueError, IndexError):
+                except (ValueError, KeyError):
                     raise cherrypy.HTTPError(
                         400, ErrMsg.NOT_INT.format("type"))
 
@@ -863,7 +863,7 @@ class QuestionRestView(View):
 
             try:
                 page = int(kwargs["page"])
-            except (ValueError, IndexError):
+            except (ValueError, KeyError):
                 page = 0
 
             ss = ss.order_by(desc(questions.c.create_at))
@@ -876,7 +876,7 @@ class QuestionRestView(View):
 
             try:
                 question_l = rows[page:page + 10]
-            except IndexError:
+            except KeyError:
                 question_l = rows[page:-1]
 
             questions_list = []
@@ -938,7 +938,7 @@ class QuestionRestView(View):
             user = self.check_login_u(data)
             try:
                 qid = int(data["qid"])
-            except (ValueError, IndexError):
+            except (ValueError, KeyError):
                 raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("qid"))
 
             if "solved" in data:
@@ -1070,7 +1070,7 @@ class AnswerRestView(View):
         if cherrypy.request.method == "GET":
             try:
                 qid = int(kwargs["qid"])
-            except (ValueError, IndexError):
+            except (ValueError, KeyError):
                 raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("qid"))
 
             ss = select([answers]).where(answers.c.answer_to == qid).\
@@ -1169,7 +1169,7 @@ class AnswerRestView(View):
             self.check_key(data, ("filepath", ))
             try:
                 aid = int(data["aid"])
-            except (ValueError, IndexError):
+            except (ValueError, KeyError):
                 raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("aid"))
 
             file_path = data["filepath"]
@@ -1514,7 +1514,7 @@ class TeacherRestView(View):
 
                 try:
                     uid = int(kwargs["uid"])
-                except (ValueError, IndexError):
+                except (ValueError, KeyError):
                     ss = select([
                         teacherinfos.c.id,
                         teacherinfos.c.name,
@@ -1560,7 +1560,7 @@ class TeacherRestView(View):
 
             try:
                 uid = int(data["id"])
-            except (ValueError, IndexError):
+            except (ValueError, KeyError):
                 raise cherrypy.HTTPError(400)
 
             ss = select([users.c.id]).where(users.c.id == uid)
@@ -1615,7 +1615,7 @@ class TeacherRestView(View):
                 if not user["admin"]:
                     raise cherrypy.HTTPError(401)
 
-                self.check_key(data, ("class_permission"))
+                self.check_key(data, ("class_permission", ))
                 # "userid",
                 # "name",
                 # "phone",
@@ -1625,7 +1625,7 @@ class TeacherRestView(View):
 
                 try:
                     uid = int(data["uid"])
-                except (ValueError, IndexError):
+                except (ValueError, KeyError):
                     raise cherrypy.HTTPError(400)
 
                 # try:
@@ -1714,52 +1714,32 @@ class AdAreaRestView(View):
 
                 try:
                     city = int(kwargs["city"])
-                except (ValueError, IndexError):
+                except (ValueError, KeyError):
                     raise cherrypy.HTTPError(400)
 
-                if city == -1:
-                    ss = select([
-                        users.c.nickname,
-                        users.c.email,
-                        # teacherinfos.c.name,
-                        teacherinfos.c.id,
-                        # teacherinfos.c.phone,
-                        teacherinfos.c.summary,
-                        teacherinfos.c.contact_link,
+                ss = select([
+                    users.c.nickname,
+                    users.c.email,
+                    # teacherinfos.c.name,
+                    teacherinfos.c.id,
+                    # teacherinfos.c.phone,
+                    teacherinfos.c.summary,
+                    teacherinfos.c.contact_link,
 
-                        adareas.c.city,
-                        adareas.c.town,
+                    adareas.c.city,
+                    adareas.c.town,
 
-                        adclasses.c.id.label("adclassid"),
-                        adclasses.c.address,
-                        adclasses.c.type,
-                        adclasses.c.date,
-                        adclasses.c.enddate,
-                        adclasses.c.start_time,
-                        adclasses.c.end_time,
-                        adclasses.c.weekdays])
-                else:
-                    ss = select([
-                        users.c.nickname,
-                        users.c.email,
-                        # teacherinfos.c.name,
-                        teacherinfos.c.id,
-                        # teacherinfos.c.phone,
-                        teacherinfos.c.summary,
-                        teacherinfos.c.contact_link,
+                    adclasses.c.id.label("adclassid"),
+                    adclasses.c.address,
+                    adclasses.c.type,
+                    adclasses.c.date,
+                    adclasses.c.enddate,
+                    adclasses.c.start_time,
+                    adclasses.c.end_time,
+                    adclasses.c.weekdays])
 
-                        adareas.c.city,
-                        adareas.c.town,
-
-                        adclasses.c.id.label("adclassid"),
-                        adclasses.c.address,
-                        adclasses.c.type,
-                        adclasses.c.date,
-                        adclasses.c.enddate,
-                        adclasses.c.start_time,
-                        adclasses.c.end_time,
-                        adclasses.c.weekdays]).where(
-                            adareas.c.city == city)
+                if city != -1:
+                    ss = ss.where(adareas.c.city == city)
 
                 j1 = teacherinfos.outerjoin(
                     adareas, teacherinfos.c.id == adareas.c.teacher).outerjoin(
@@ -1767,12 +1747,13 @@ class AdAreaRestView(View):
                     teacherinfos.c.id == adclasses.c.teacher).outerjoin(
                     users, teacherinfos.c.id == users.c.id)
 
-                ss = ss.where(users.c.disabled is False).select_from(j1)
+                ss = ss.where(users.c.disabled == False).select_from(j1)
                 rst = conn.execute(ss)
                 rows = rst.fetchall()
 
+                print(rows)
                 if len(rows) == 0:
-                    return []
+                    return {"teachers": [], "avatar": []}
 
                 path = cherrypy.request.file_mgr.get_download_path()
                 avatar = []
@@ -1803,7 +1784,7 @@ class AdAreaRestView(View):
             try:
                 city = int(data["city"])
                 town = int(data["town"])
-            except (ValueError, IndexError):
+            except (ValueError, KeyError):
                 raise cherrypy.NOT_INT.format("city or town")
 
             ss = select([adareas.c.id]).where(adareas.c.teacher == tid)
@@ -1834,12 +1815,12 @@ class AdAreaRestView(View):
                     raise cherrypy.HTTPError(400)
                 try:
                     tid = int(kwargs["id"])
-                except (ValueError, IndexError):
+                except (ValueError, KeyError):
                     raise cherrypy.HTTPError(400)
 
             try:
                 aid = int(kwargs["aid"])
-            except (ValueError, IndexError):
+            except (ValueError, KeyError):
                 raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format(aid))
 
             # delete answer
@@ -1940,7 +1921,7 @@ class AdClassRestView(View):
 
             try:
                 aid = int(kwargs["aid"])
-            except (ValueError, IndexError):
+            except (ValueError, KeyError):
                 raise cherrypy.HTTPError(400, ErrMsg.NOT_INT.format("aid"))
 
             # delete answer
@@ -2160,23 +2141,21 @@ class ClassroomRestView(View):
 
             self.check_key(kwargs, ("folder", ))
 
-            path = cherrypy.request.file_mgr.get_download_path()
-            # path = "D:/coding4fun_web/3.2.2_beta/downloads/" # for local test
-            path += kwargs["folder"]
-
-            # print("\n\n", path, "\n\n")
+            path = os.path.join(cherrypy.request.file_mgr.get_download_path(),
+                                kwargs["folder"])
 
             if not os.path.isdir(path):
-                raise cherrypy.HTTPError(400)
+                os.mkdir(path)
+                os.mkdir(os.path.join(path, "/teacher"))
 
             if "student" in kwargs:
                 files = {}
                 if "cid" in kwargs:
+                    # Look for the file start with certain id
                     for file in os.listdir(path):
                         if file.startswith(kwargs["cid"]):
                             filename = path_join(path, file)
-                            # filename = path+"/"+file # for local test
-                            # print("\n\n name:", filename, "\n\n")
+
                             try:
                                 files[filename] = file_mgr[filename]
                             except Exception:
@@ -2184,6 +2163,7 @@ class ClassroomRestView(View):
                                     "updated_time": None,
                                     "lastupdate": None}
                 else:
+                    # Return all of the students files
                     for file in os.listdir(path):
                         filename = path_join(path, file)
                         try:
@@ -2192,10 +2172,15 @@ class ClassroomRestView(View):
                             files[filename] = {
                                 "updated_time": None,
                                 "lastupdate": None}
-                # print("\n\n files:", files,"\n\n")
+
                 return files
             else:
-                return os.listdir(path + "/teacher")
+                # return teachers files
+                try:
+                    return os.listdir(path + "/teacher")
+                except FileNotFoundError:
+                    os.mkdir(path + "/teacher")
+                    return []
         else:
             raise cherrypy.HTTPError(404)
 
@@ -2236,7 +2221,7 @@ class ClassroomRestView(View):
 
             try:
                 student = int(data["student"])
-            except (ValueError, IndexError):
+            except (ValueError, KeyError):
                 raise cherrypy.HTTPError(
                     400, ErrMsg.NOT_INT.format(data["student"]))
 
@@ -2322,8 +2307,12 @@ class FileUploadRestView(View):
             if not row:
                 raise cherrypy.HTTPError(400)
 
-            path = file_mgr.get_download_path()
-            fileformat = path + "{folder}/{uid}_{filename}"
+            path = os.path.join(
+                file_mgr.get_download_path(),
+                row["folder"])  # + "{uid}_{filename}"
+
+            if not os.path.exists(path):
+                os.mkdir(path)
 
             homework = kwargs["homwork"]
             if not isinstance(homework, list):
@@ -2339,15 +2328,14 @@ class FileUploadRestView(View):
                     section = filename[:filename.find("-")]
                     try:
                         sections[section] += 1
-                    except IndexError:
+                    except KeyError:
                         sections[section] = 1
 
                     filename.replace("test", "")
 
-                    filename = fileformat.format(
-                        folder=row["folder"],
-                        uid=user["id"],
-                        filename=filename)
+                    filename = os.path.join(
+                        path,
+                        str(user["id"]) + "_" + filename)
 
                     file_mgr.write_file_from_file(filename, file)
                 except Exception:
@@ -2377,7 +2365,7 @@ class FileUploadRestView(View):
 
             try:
                 rid = int(kwargs["rid"])
-            except (ValueError, IndexError):
+            except (ValueError, KeyError):
                 raise cherrypy.HTTPRedirect("/report")
 
             ss = select([reports.c.id]).where(reports.c.id == kwargs["rid"])
@@ -2448,9 +2436,14 @@ class FileUploadRestView(View):
 
             path = os.path.join(
                 file_mgr.get_download_path(),
-                row["folder"],
-                "teacher")
+                row["folder"])
 
+            if not os.path.exists(path):
+                os.mkdir(path)
+
+            path = os.path.join(path, "teacher")
+
+            filename = ""
             try:
                 if not os.path.exists(path):
                     os.mkdir(path)
@@ -2458,9 +2451,10 @@ class FileUploadRestView(View):
                 filename = path + "/" + kwargs["annoce"].filename
                 file_mgr.write_file_from_file(filename, kwargs["annoce"])
             except Exception:
+                logging.exception("")
                 if os.path.isfile(filename):
                     os.remove(filename)
-                raise cherrypy.HTTPRedirect("/report")
+                raise cherrypy.HTTPRedirect("/teacher")
 
             raise cherrypy.HTTPRedirect("/teacher")
         else:
@@ -2524,7 +2518,7 @@ class ActivityRestView(View):
 
                 ss = select([activities]).where(and_(
                     activities.c.repeat != 0,
-                    activities.c.disabled is False))
+                    activities.c.disabled == False))
                 rst = conn.execute(ss)
                 rows = rst.fetchall()
 
@@ -2628,7 +2622,7 @@ class ActivityRestView(View):
 
                 try:
                     int(data["point"])
-                except (ValueError, IndexError):
+                except (ValueError, KeyError):
                     raise cherrypy.HTTPError(400)
 
                 if not isinstance(data["presents"], list):
