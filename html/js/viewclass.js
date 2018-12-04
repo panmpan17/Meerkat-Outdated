@@ -141,21 +141,23 @@ $.ajax({
         cardstext = "";
         login_as = msg["login"]
         console.log(msg)
-
+		
         if (msg["login"]) {
             available_class = msg["available_class"]
 
             var unic_index = 0;
             $.each(msg["info"], function (_, i) {
                 classess_info[i["id"]] = i
-                unic_index++;
+                
+				
+				img_index = unic_index%5;
 
                 if (available_class[i["id"]] != undefined) {
                     cardstext += format(card_format,
                         i["subject"],
                         i["summary"],
                         i["id"],
-                        "/html/images/unic/" + unic_images[unic_index],
+                        "/html/images/unic/" + unic_images[img_index],
                         )
                 }
                 else {
@@ -164,7 +166,7 @@ $.ajax({
                             i["subject"],
                             i["summary"],
                             i["id"],
-                            "/html/images/unic/" + unic_images[unic_index],
+                            "/html/images/unic/" + unic_images[img_index],
                             )
                     }
                     else {
@@ -173,7 +175,7 @@ $.ajax({
                                 i["subject"],
                                 i["summary"],
                                 i["id"],
-                                "/html/images/unic/" + unic_images[unic_index],
+                                "/html/images/unic/" + unic_images[img_index],
                                 )
                         }
                         else {
@@ -181,11 +183,12 @@ $.ajax({
                                 i["subject"],
                                 i["summary"],
                                 i["id"],
-                                "/html/images/unic/" + unic_images[unic_index],
+                                "/html/images/unic/" + unic_images[img_index],
                                 )
                         }
                     }
                 }
+				unic_index++;
             })
         } 
         else {
@@ -194,13 +197,15 @@ $.ajax({
             $.each(msg["info"], function (_, i) {
                 classess_info[i["id"]] = i
 
+				img_index = unic_index%5;
+				
                 if (i["trial"].length != 0) {
                     if (i["permission"] == null) {
                         cardstext += format(card_noaccess_format,
                             i["subject"],
                             i["summary"],
                             i["id"],
-                            "/html/images/unic/" + unic_images[unic_index],
+                            "/html/images/unic/" + unic_images[img_index],
                             )
                     }
                     else {
@@ -208,7 +213,7 @@ $.ajax({
                             i["subject"],
                             i["summary"],
                             i["id"],
-                            "/html/images/unic/" + unic_images[unic_index],
+                            "/html/images/unic/" + unic_images[img_index],
                             )
                     }
                 }
@@ -217,7 +222,7 @@ $.ajax({
                         i["subject"],
                         i["summary"],
                         i["id"],
-                        "/html/images/unic/" + unic_images[unic_index],
+                        "/html/images/unic/" + unic_images[img_index],
                         )
                 }
 
