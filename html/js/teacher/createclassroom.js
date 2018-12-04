@@ -31,7 +31,8 @@ function check_students() {
 	}
 
 	type = $("#select-type")[0].value
-	if (type == "scratch_1" || type == "teacher_1" || type == "scratch_03") {
+	
+	if (type == "scratch_1" || type == "teacher_1" || type == "scratch_03" || type == "scratch_04") {
 		check_students_scratch()
 	}
 	else if (type == 'python_01' || type == "python_trial") {
@@ -213,14 +214,17 @@ function changeclassroomtype() {
 	$("#students_info").show()
 	$("#hoverimg").show()
 
-	if ((type == "scratch_1") || (type == "scratch_02") || (type == "scratch_03") || (type == "teacher_1")) 
-	{
-		// Scratch create info 
-		$("#hoverimg")[0].src = "html/images/scratch_table.png"
-	}
-	else 
+	
+	if ( type == "python_01" ) 
 	{
 		// Python create info
 		$("#hoverimg")[0].src = "html/images/python_table.png"
 	}
+	else 	
+	{
+		// Scratch create info 
+		// scratch_1, scratch_02, scratch_03, scratch_04, teacher_1
+		$("#hoverimg")[0].src = "html/images/scratch_table.png"
+	}
+	
 }
