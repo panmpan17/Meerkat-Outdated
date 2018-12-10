@@ -1,5 +1,5 @@
-{"description": "",
- "description-video": "",
+{"description": "<span id=\"describe-title\">課程介紹</span>",
+ "description-video": "https://storage.googleapis.com/coding4fun-class-video/scratch-04/0-1.mp4",
  "id": "scratch_04",
  "lessons": [
       {"title": "專案一 進階迷宮",
@@ -70,7 +70,7 @@
             "class_name": "附加技巧 - 移動的怪物 (2)",
             "description": "",
             "video": "https://storage.googleapis.com/coding4fun-class-video/scratch-04/p1/1-11.mp4"}
-        ]},
+      ]},
       {"title": "專案二 撲克牌配對",
       "content": [
             {"answer": "",
@@ -133,7 +133,7 @@
             "class_name": "2-10 建立遊戲的完整流程",
             "description": "",
             "video": "https://storage.googleapis.com/coding4fun-class-video/scratch-04/p2/2-10.mp4"}
-        ]},
+      ]},
       {"title": "專案三 猜數字1A2B",
       "content": [
             {"answer": "",
@@ -202,8 +202,8 @@
             "class_name": "3-11 遊戲的優化與改良",
             "description": "",
             "video": "https://storage.googleapis.com/coding4fun-class-video/scratch-04/p3/3-11.mp4"}
-        ]},
-		{"title": "專案四 貓咪爬樓梯",
+      ]},
+	  {"title": "專案四 貓咪爬樓梯",
         "content": [
             {"answer": "",
             "type": "video",
@@ -289,8 +289,8 @@
             "class_name": "4-14 完成遊戲作品",
             "description": "",
             "video": "https://storage.googleapis.com/coding4fun-class-video/scratch-04/p4/4-14.mp4"}
-        ]},
-		{"title": "專案五 寵物遊戲",
+      ]},
+	  {"title": "專案五 寵物遊戲",
         "content": [
             {"answer": "",
             "type": "video",
@@ -358,7 +358,46 @@
             "class_name": "5-11 寵物遊戲的專案目標",
             "description": "",
             "video": "https://storage.googleapis.com/coding4fun-class-video/scratch-04/p5/5-11.mp4"}
-        ]}
+      ]},
+	  {"title": "專案六 互動故事",
+        "content": [
+            {"answer": "",
+            "type": "video",
+            "buttons": [],
+            "class_name": "6-1 互動故事介紹",
+            "description": "",
+            "video": "https://storage.googleapis.com/coding4fun-class-video/scratch-04/p6/6-1.mp4"},
+            {"answer": "",
+            "type": "video",
+            "buttons": [["勇者冒險成長球", "../../BraveStory"]],
+            "class_name": "6-2 故事流程設計",
+            "description": "",
+            "video": "https://storage.googleapis.com/coding4fun-class-video/scratch-04/p6/6-2.mp4"},
+            {"answer": "",
+            "type": "video",
+            "buttons": [],
+            "class_name": "6-3 故事心智圖",
+            "description": "",
+            "video": "https://storage.googleapis.com/coding4fun-class-video/scratch-04/p6/6-3.mp4"},
+            {"answer": "",
+            "type": "video",
+            "buttons": [],
+            "class_name": "6-4 設計一個互動故事吧!",
+            "description": "",
+            "video": "https://storage.googleapis.com/coding4fun-class-video/scratch-04/p6/6-4.mp4"},
+            {"answer": "",
+            "type": "video",
+            "buttons": [],
+            "class_name": "6-5 附加技巧 - 章節切換 (1)",
+            "description": "",
+            "video": "https://storage.googleapis.com/coding4fun-class-video/scratch-04/p6/6-5.mp4"},
+            {"answer": "",
+            "type": "video",
+            "buttons": [],
+            "class_name": "6-6 附加技巧 - 章節切換 (2)",
+            "description": "",
+            "video": "https://storage.googleapis.com/coding4fun-class-video/scratch-04/p6/6-6.mp4"}
+      ]}
     ],
  "permission": "class",
  "subject": "Scratch 進階班",

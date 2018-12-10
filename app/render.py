@@ -316,6 +316,11 @@ class UserCaseHandler(object):
     @cherrypy.expose
     def ads5(self):
         return render("ads/p5-startnewbusiness.html")
+		
+	# only for scratch_04 course
+    @cherrypy.expose
+    def BraveStory(self):
+        return render("scratch6-2.html")	
 
     @cherrypy.expose
     def timestamp(self):
