@@ -35,7 +35,7 @@ function check_students() {
 	if (type == "scratch_1" || type == "teacher_1" || type == "scratch_03" || type == "scratch_04") {
 		check_students_scratch()
 	}
-	else if (type == 'python_01' || type == "python_trial") {
+	else if (type == 'python_01' || type == "python_trial" || type == "thunkable" ) {
 		check_students_python()
 	}
 	else {
@@ -215,7 +215,7 @@ function changeclassroomtype() {
 	$("#hoverimg").show()
 
 	
-	if ( type == "python_01" ) 
+	if ( type == "python_01" || type == "thunkable" ) 
 	{
 		// Python create info
 		$("#hoverimg")[0].src = "html/images/python_table.png"

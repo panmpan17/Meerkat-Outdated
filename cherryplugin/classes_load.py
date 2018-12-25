@@ -62,7 +62,7 @@ class ClassesPlugin(plugins.SimplePlugin):
 
 	def get_class_all_info(self):
 		classes_json = []
-		v = ["scratch_1", "python_01", "scratch_02", "scratch_03", "scratch_04"]
+		v = ["scratch_1", "python_01", "scratch_02", "scratch_03", "scratch_04", "thunkable"]
 
 		for c in v:
 			j = {
