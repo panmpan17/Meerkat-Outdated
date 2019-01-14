@@ -207,7 +207,7 @@
         "content": [
             {"answer": "",
             "type": "video",
-            "buttons": [["小朋友下樓梯", "http://want.game.tw/game/smallgame428.html"]],
+            "buttons": [["小朋友下樓梯", "http://easygame.tw/g428.html"]],
             "class_name": "4-1 爬樓梯遊戲介紹",
             "description": "",
             "video": "https://storage.googleapis.com/coding4fun-class-video/scratch-04/p4/4-1.mp4"},

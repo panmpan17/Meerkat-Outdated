@@ -12,7 +12,7 @@
        {"answer": "",
         "type": "video",
         "buttons": [["下載 Scratch 2.0",
-                     "http://scratch.mit.edu/scratch2download/"]],
+                     "https://scratch.mit.edu/download/scratch2#installation"]],
         "class_name": "1-2 Scratch 2.0",
         "description": "",
         "video": "https://www.youtube.com/embed/VSkHtJX_cvA?rel=0"},
