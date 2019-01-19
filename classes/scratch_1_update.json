@@ -1107,7 +1107,7 @@
         "video": "https://www.youtube.com/embed/Kc5kkqrhpLU?rel=0"}
     ]}
     ],
- "permission": null,
+ "permission": "class",
  "subject": "Scratch 基礎課程",
  "summary": "適合小學五年級以上<br>歡迎自學，每堂課 2 小時<br>請使用 Google Chrome 瀏覽器",
  "time": "10 堂課",
