@@ -133,6 +133,9 @@
 			<input id="userid-field" class="form-control" type="text" placeholder="帳號: ">
 			<input id="id-field" class="form-control" type="text" placeholder="Id: ">
 		</div>
+		<div class="text-right">
+			<button id="getuser_button" class="btn btn-orange" onclick="getUsers()">抓取使用者 (等失敗訊息在按)</button>
+		</div>
 		<br>
 		<table id="userstable">
 			<thead>
@@ -523,14 +526,13 @@ $("#id-field").on("input change", function (e) {
 	})
 })
 
-
-$(document).ready(function () {
-	
+function getUsers () {
 	$.ajax({
 		url: host + "user/",
 		type: "GET",
 		data: {"key": getCookie("key")},
 		success: function (msg) {
+			$("#getuser_button").hide();
 			$.each(msg, function (_, i) {
 				users[i["id"]] = i
 
@@ -540,8 +542,15 @@ $(document).ready(function () {
 				}
 				alphabet_index[first_chr].push(i["id"])
 			})
+		},
+		error: function (error) {
+			alert("抓取失敗, 使用 '抓取使用者' 試試");
+			console.log(error);
+			$("#getuser_button").show();
 		}
-	})
-})
+	});
+};
+
+$(document).ready(getUsers());
 </script>
 {% endblock %}
