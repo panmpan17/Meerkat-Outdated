@@ -73,12 +73,14 @@ function check_students_scratch() {
 		sid = sid.toLowerCase();
 		sid_colors[sid] = false;
 
+		// Don't check scratch account when createing classroom (Temporary)
 		// check scratch user exist
-		$.ajax("https://scratch.mit.edu/users/" + sid).done(function (msg) {
-			sname = msg.substring(msg.indexOf("<title>") + 7, msg.indexOf(" on Scratch</title>"));
-			sname = sname.toLowerCase();
-			sid_colors[sname] = true;
-		})
+		// $.ajax("https://scratch.mit.edu/users/" + sid).done(function (msg) {
+		// 	sname = msg.substring(msg.indexOf("<title>") + 7, msg.indexOf(" on Scratch</title>"));
+		// 	sname = sname.toLowerCase();
+		// 	sid_colors[sname] = true;
+		// })
+		sid_colors[sid] = true;
 		$("#students")[0].innerHTML += format(student_field_scratch_format,
 			name,
 			cid,
@@ -111,7 +113,7 @@ function check_students_scratch() {
 			else {
 				document.getElementById("sid-" + k).classList.add("bg-danger")
 			}
-		})
+		});
 		$("#bg").hide();
 
 		if ($(".bg-danger").length == 0) {
